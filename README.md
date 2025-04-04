@@ -1,7 +1,10 @@
-<a href="https://git.io/streak-stats"><img src="http://github-readme-streak-stats.herokuapp.com?user=ambooka&theme=dark" alt="GitHub Streak" /></a>
+<!--- snake -->
+<div align="center">
+  <img  src="https://github.com/1999AZZAR/1999AZZAR/blob/readme/resources/grid-snake.svg"
+       alt="snake" /></a>
+</div>
 
-
-[![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=ambooka&theme=dark)](https://git.io/streak-stats)
+[![GitHub Streak](https://nirzak-streak-stats.vercel.app?user=ambooka&theme=dark)](https://git.io/streak-stats)
 
 
 <p>
