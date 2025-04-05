@@ -1,11 +1,22 @@
+<img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=D9BED1&height=120&section=header" alt="header"/> 
+
+
+<h1  align="center"><strong>Msah Ambooka</strong> </h1>
+ <h3 align="center"> Computer Science Graduate | AI Enthusiast | Software Developer | Seeker of Elegant Solutions </h3>
+ <p align="center">
+  <a href="https://github.com/zakaBouj"><img src="https://img.shields.io/badge/Commits-2116-brightgreen?style=flat&logo=git" alt="Commits"></a>
+  <a href="https://github.com/pulls"><img src="https://img.shields.io/badge/PRs-104-purple?style=flat&logo=github" alt="PRs"></a>
+  <a href="https://github.com/issues"><img src="https://img.shields.io/badge/Issues-130-red?style=flat&logo=github" alt="Issues"></a>
+  <a href="https://github.com/zakaBouj"><img src="https://img.shields.io/badge/Contributions-1003-blueviolet?style=flat&logo=github" alt="Contributions"></a>
+</p>
 <!--- snake -->
 <div align="center">
   <img  src="https://github.com/1999AZZAR/1999AZZAR/blob/readme/resources/grid-snake.svg"
        alt="snake" /></a>
 </div>
 
- 
-<img align="right" src="https://github.com/7oSkaaa/7oSkaaa/blob/main/Images/Right_Side.gif?raw=true" width="30%">
+ <div align='right'><img align="right" src="https://github.com/7oSkaaa/7oSkaaa/blob/main/Images/Right_Side.gif?raw=true" width="30%">
+</div>
 
 
 [![GitHub Streak](https://nirzak-streak-stats.vercel.app?user=ambooka&theme=dark)](https://git.io/streak-stats)
@@ -114,3 +125,6 @@
 ## Credit: [Ambooka](https://ambooka.io)
 
 <img src="https://views.whatilearened.today/views/github/bindian0509/bindian0509.svg?cache=remove"/>
+
+<img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=D9BED1&height=120&section=footer" alt="footer"/>
+
