@@ -2,7 +2,7 @@
 
 
 <h1  align="center"><strong>Msah Ambooka</strong> </h1>
- <h3 align="center"> Computer Science Graduate | AI Enthusiast | Software Developer | Seeker of Elegant Solutions </h3>
+ <p align="center"> Computer Science Graduate | AI Enthusiast | Software Developer | Seeker of Elegant Solutions </p>
  <p align="center">
   <a href="https://github.com/zakaBouj"><img src="https://img.shields.io/badge/Commits-2116-brightgreen?style=flat&logo=git" alt="Commits"></a>
   <a href="https://github.com/pulls"><img src="https://img.shields.io/badge/PRs-104-purple?style=flat&logo=github" alt="PRs"></a>
