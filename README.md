@@ -1,7 +1,7 @@
-# Hi there, I'm Ambooka! 👋
+# Hi there, I'm Abdulrahman Ambooka! 👋
 
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&section=header&text=Ambooka%20-%20AI%20%26%20Robotics%20Engineer&animation=fadeIn&fontSize=40" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&section=header&text=Abdulrahman%20Ambooka%20-%20AI%20%26%20Software%20Engineer&animation=fadeIn&fontSize=40" />
 </div>
 
 <div align="center">
@@ -9,16 +9,16 @@
 [![GitHub followers](https://img.shields.io/github/followers/ambooka?style=social&label=Follow)](https://github.com/ambooka)
 [![Visitors](https://komarev.com/ghpvc/?username=ambooka&label=Profile%20views&color=0e75b6&style=flat)](https://github.com/ambooka)
 [![GitHub stars](https://img.shields.io/github/stars/ambooka?style=social)](https://github.com/ambooka)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ambooka/)
-[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:ambooka@example.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/abdulrahman-ambooka/)
+[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:abdulrahmanambooka@gmail.com)
 
 </div>
 
 ## 🚀 About Me
 
-I'm a Computer Science graduate with a passion for Artificial Intelligence, Software Engineering, and Robotics. My academic journey has equipped me with strong foundations in algorithms, data structures, and machine learning, while my projects have allowed me to apply these concepts to build intelligent systems and solutions.
+I'm a Computer Science graduate from Maseno University specializing in **AI/MLOps Engineering** and **Cloud-Native Software Development**. I'm passionate about building scalable, intelligent systems that solve real-world problems through cutting-edge technology.
 
-I thrive on transforming complex problems into elegant software solutions, whether it's developing AI models, designing robust software architecture, or programming autonomous systems. My approach combines theoretical knowledge with practical implementation, always focusing on creating efficient, scalable, and innovative solutions that push technological boundaries.
+My expertise spans across **full-stack development**, **cloud infrastructure**, and **machine learning operations**, with proven experience in designing and deploying production-ready applications using modern frameworks and best practices.
 
 ## 📊 GitHub Stats & Activity
 
@@ -27,7 +27,7 @@ I thrive on transforming complex problems into elegant software solutions, wheth
 | | |
 | :---: | :---: |
 | **GitHub Stats** | **Top Languages** |
-| <img src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=radical&count_private=true&include_all_commits=true" /> | <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=radical&hide_title=true&hide=html,css,scss" /> |
+| <img src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=radical&count_private=true&include_all_commits=true" /> | <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=radical&hide_title=true" /> |
 | **Streak Stats** | **Activity Graph** |
 | <img src="https://github-readme-streak-stats.herokuapp.com/?user=ambooka&theme=radical" /> | <img src="https://github-readme-activity-graph.vercel.app/graph?username=ambooka&bg_color=0d1117&color=ffffff&line=ff0054&point=ffffff&area=true&hide_border=true" /> |
 
@@ -40,11 +40,12 @@ I thrive on transforming complex problems into elegant software solutions, wheth
   
 | Language | Proficiency | Primary Use |
 | :--- | :---: | :--- |
-| **Python** | Expert | AI/ML, Robotics, Automation |
-| **C++** | Advanced | Robotics, High-performance Systems |
-| **Java** | Advanced | Enterprise Applications, Android |
-| **JavaScript/TypeScript** | Intermediate | Web Development, Frontend |
-| **MATLAB** | Intermediate | Research, Signal Processing |
+| **Python** | Expert | AI/ML, Backend, Data Engineering |
+| **C#/.NET Core** | Expert | Backend APIs, Microservices |
+| **Java/Spring Boot** | Advanced | Enterprise Applications, Microservices |
+| **TypeScript/JavaScript** | Advanced | Full-Stack Development |
+| **Dart/Flutter** | Advanced | Cross-Platform Mobile |
+| **SQL** | Expert | Database Design & Optimization |
 
 </div>
 
@@ -53,162 +54,165 @@ I thrive on transforming complex problems into elegant software solutions, wheth
   
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-Expert-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-Advanced-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Advanced-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
-![Keras](https://img.shields.io/badge/Keras-Intermediate-D00000?style=for-the-badge&logo=keras&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV-Advanced-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Expert-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![MLOps](https://img.shields.io/badge/MLOps-Advanced-FF6B6B?style=for-the-badge&logo=databricks&logoColor=white)
+![Data Engineering](https://img.shields.io/badge/Data%20Engineering-Intermediate-8A2BE2?style=for-the-badge&logo=apachespark&logoColor=white)
 
 </div>
 
-### Robotics & Automation
+### Cloud & DevOps
 <div align="center">
   
-![ROS](https://img.shields.io/badge/ROS-Advanced-22314E?style=for-the-badge&logo=ros&logoColor=white)
-![Gazebo](https://img.shields.io/badge/Gazebo-Intermediate-010101?style=for-the-badge&logo=gazebo&logoColor=white)
-![Arduino](https://img.shields.io/badge/Arduino-Expert-00979D?style=for-the-badge&logo=arduino&logoColor=white)
-![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-Expert-A22846?style=for-the-badge&logo=raspberry-pi&logoColor=white)
-![KiCad](https://img.shields.io/badge/KiCad-Intermediate-314CB0?style=for-the-badge&logo=kicad&logoColor=white)
-![SolidWorks](https://img.shields.io/badge/SolidWorks-Intermediate-DA2C25?style=for-the-badge&logo=solidworks&logoColor=white)
+![Microsoft Azure](https://img.shields.io/badge/Azure-Expert-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Expert-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Advanced-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Expert-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![CI/CD](https://img.shields.io/badge/CI/CD-Expert-FF6B6B?style=for-the-badge&logo=githubactions&logoColor=white)
 
 </div>
 
-### Web & Cloud Technologies
+### Backend & APIs
 <div align="center">
   
-![React](https://img.shields.io/badge/React-Intermediate-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Node.js](https://img.shields.io/badge/Node.js-Intermediate-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Django](https://img.shields.io/badge/Django-Advanced-092E20?style=for-the-badge&logo=django&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Intermediate-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-Intermediate-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-Beginner-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Intermediate-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-Beginner-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-Intermediate-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Expert-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-Advanced-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![REST APIs](https://img.shields.io/badge/REST%20APIs-Expert-FF6B6B?style=for-the-badge&logo=api&logoColor=white)
+![GraphQL](https://img.shields.io/badge/GraphQL-Intermediate-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+![Microservices](https://img.shields.io/badge/Microservices-Expert-FF6B6B?style=for-the-badge&logo=microservices&logoColor=white)
 
 </div>
 
-### Development Tools & Platforms
+### Databases & Caching
 <div align="center">
   
-![Git](https://img.shields.io/badge/Git-Expert-F05032?style=for-the-badge&logo=git&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-Advanced-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Android Studio](https://img.shields.io/badge/Android%20Studio-Intermediate-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-Intermediate-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
-![Adobe XD](https://img.shields.io/badge/Adobe%20XD-Beginner-FF61F6?style=for-the-badge&logo=adobe-xd&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Expert-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Azure SQL](https://img.shields.io/badge/Azure%20SQL-Expert-0078D4?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-Advanced-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-Intermediate-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+</div>
+
+### Frontend & Mobile
+<div align="center">
+  
+![Flutter](https://img.shields.io/badge/Flutter-Expert-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+![React](https://img.shields.io/badge/React-Advanced-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-Intermediate-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
+![Bloc Pattern](https://img.shields.io/badge/Bloc%20Pattern-Expert-0175C2?style=for-the-badge&logo=bloc&logoColor=white)
 
 </div>
 
 ## 🎯 Areas of Expertise
 
-### 🤖 AI & Machine Learning
-Developing intelligent systems using neural networks, computer vision, and natural language processing.
+### 🤖 AI & MLOps Engineering
+Developing end-to-end machine learning pipelines, implementing MLOps principles, and deploying scalable AI solutions with automated training and deployment workflows.
 
-### 💻 Software Engineering
-Building scalable applications with modern frameworks, clean architecture, and best practices.
+### ☁️ Cloud-Native Development
+Architecting and deploying scalable applications using microservices, containerization (Docker/Kubernetes), and cloud infrastructure on Microsoft Azure.
 
-### 🦾 Robotics
-Programming autonomous systems, sensor integration, and motion planning algorithms.
+### 📱 Full-Stack Development
+Building responsive web and cross-platform mobile applications with modern frameworks like Flutter, React, and .NET Core.
 
-### 📊 Data Science
-Extracting insights from complex datasets and building predictive models for decision making.
+### 🔧 Backend & API Design
+Designing high-performance RESTful and GraphQL APIs, implementing microservices architecture, and optimizing database performance.
 
-## 🎯 Featured Projects
+## 🚀 Featured Projects
 
-### 🤖 Autonomous Navigation System
-**Tech:** Python, ROS, C++, OpenCV, Lidar
+### 💰 Fintech Mobile Wallet App
+**Tech:** Flutter, .NET Core, Azure, PostgreSQL, Docker
 
-A comprehensive autonomous navigation system for mobile robots that integrates SLAM, path planning, and obstacle avoidance algorithms. The system reduces navigation errors by 40% compared to traditional approaches.
+A secure cross-platform mobile banking application featuring real-time transactions, biometric authentication, and cloud-native deployment. Built with clean architecture and state management using Bloc pattern.
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/autonomous-navigation)
-[![Paper](https://img.shields.io/badge/Research-Paper-lightgrey?style=for-the-badge)](https://github.com/ambooka/autonomous-navigation/blob/main/paper.pdf)
+[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/fintech-wallet)
+[![Flutter](https://img.shields.io/badge/Flutter-Mobile-02569B?style=for-the-badge&logo=flutter)](https://github.com/ambooka/fintech-wallet)
 
-### 🧠 Deep Learning Model Optimizer
-**Tech:** Python, TensorFlow, NumPy, CUDA
+### 🎓 Enterprise E-Learning Platform
+**Tech:** Open edX, Python, Java Spring Boot, Azure Kubernetes, MySQL
 
-Framework for optimizing neural network architectures for edge devices, achieving 30% reduction in inference time while maintaining 98% of original accuracy through pruning and quantization techniques.
+A customized Open edX platform with microservices architecture, featuring custom XBlocks, LTI integrations, and containerized deployment on Azure Kubernetes Service.
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/model-optimizer)
-[![Live Demo](https://img.shields.io/badge/Web-Demo-green?style=for-the-badge)](https://ambooka.github.io/model-optimizer-demo)
+[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/elearning-platform)
+[![Open edX](https://img.shields.io/badge/Open%20edX-Platform-00A4DC?style=for-the-badge)](https://github.com/ambooka/elearning-platform)
 
-### 🏭 Industrial Automation Platform
-**Tech:** Python, JavaScript, Django, React, MQTT
+### 🚨 Real-time Fraud Detection System
+**Tech:** Python, TensorFlow, FastAPI, Azure ML, Scikit-learn
 
-A full-stack IoT platform for industrial automation that processes sensor data in real-time and provides predictive maintenance insights, reducing downtime by 25% in pilot implementations.
+An end-to-end ML pipeline for transaction fraud detection achieving 94% accuracy. Features automated model retraining, real-time inference APIs, and MLOps practices with Azure Machine Learning.
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/industrial-automation)
-[![Documentation](https://img.shields.io/badge/API-Docs-orange?style=for-the-badge)](https://ambooka.github.io/industrial-automation-docs)
+[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/fraud-detection)
+[![MLOps](https://img.shields.io/badge/MLOps-Pipeline-FF6B6B?style=for-the-badge)](https://github.com/ambooka/fraud-detection)
+
+### 🌱 Smart Agriculture IoT Platform
+**Tech:** Azure IoT Hub, Flutter, .NET Core, Cosmos DB, Azure Functions
+
+A cloud-based IoT platform for precision agriculture, featuring real-time sensor monitoring, predictive analytics for crop optimization, and cross-platform mobile dashboard.
+
+[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/agriculture-iot)
+[![Azure IoT](https://img.shields.io/badge/Azure%20IoT-Platform-0078D4?style=for-the-badge&logo=microsoft-azure)](https://github.com/ambooka/agriculture-iot)
+
+### 📖 Luhya Quran App
+**Tech:** Flutter, .NET Core, Azure SQL, Docker, Azure App Services
+
+A cross-platform Quran application with full-text search, offline capability, and cloud-native deployment. Features optimized database design and responsive UI.
+
+[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/luhya-quran-app)
+[![App Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://ambooka.github.io/luhya-quran-demo)
+
+## 💼 Professional Experience
+
+### Software Engineer (Cloud, AI & MLOps Focus)
+**Self-Employed (Remote)** | *Mar 2024 – Present*
+- Architected and deployed cloud-native applications on Azure using .NET Core microservices with Docker and Kubernetes
+- Implemented MLOps pipelines using GitHub Actions, automating testing and deployment of machine learning models
+- Engineered high-performance RESTful and GraphQL APIs for scalable data and model serving
+- Optimized Azure SQL databases, achieving 20% reduction in application load times
+
+### Full-Stack Developer
+**Mulunji Group (Nairobi / Remote)** | *Jan 2024 – Jun 2024*
+- Led development of cross-platform applications using Flutter and .NET Core backend
+- Deployed cloud-native solutions on Azure App Services with containerized architecture
+- Implemented responsive UI/UX with state management using Bloc pattern
+- Collaborated with design teams to translate mockups into production-ready features
+
+### Mobile & Web Developer
+**Art And Hearts (Kilifi / Remote)** | *Mar 2024 – Sep 2024*
+- Developed high-performance frontend components using React and Flutter
+- Integrated REST and GraphQL APIs for dynamic content consumption
+- Implemented state management solutions and conducted performance optimization
+
+## 🎓 Education & Certifications
+
+### Education
+**BSc Computer Science**  
+*Maseno University* | *Expected Nov 2025*  
+- **Relevant Coursework:** Cloud Computing, Distributed Systems, Software Architecture, Machine Learning
+- **Thesis:** "Scalable Microservices Architecture for Cloud-Native Applications"
+
+### Certifications & Awards
+- **Microsoft Certified: Azure Fundamentals (AZ-900)**
+- **1st Place, DigitalMall Hackathon (2024)**
+- **IoT Category Winner & Software Runner-up** | Interschool IT & Innovation Symposium
 
 ## 📈 Project Metrics
 
 <div align="center">
 
-| Project | Stars | Forks | Contributors | Activity |
-| :--- | :---: | :---: | :---: | :---: |
-| **Autonomous Navigation** | ![Stars](https://img.shields.io/github/stars/ambooka/autonomous-navigation?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/autonomous-navigation?style=social) | 3 | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/autonomous-navigation?color=blue) |
-| **Model Optimizer** | ![Stars](https://img.shields.io/github/stars/ambooka/model-optimizer?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/model-optimizer?style=social) | 1 | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/model-optimizer?color=blue) |
-| **Industrial Automation** | ![Stars](https://img.shields.io/github/stars/ambooka/industrial-automation?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/industrial-automation?style=social) | 5 | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/industrial-automation?color=blue) |
+| Project | Stars | Forks | Activity |
+| :--- | :---: | :---: | :---: |
+| **Fintech Wallet** | ![Stars](https://img.shields.io/github/stars/ambooka/fintech-wallet?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/fintech-wallet?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/fintech-wallet?color=blue) |
+| **E-learning Platform** | ![Stars](https://img.shields.io/github/stars/ambooka/elearning-platform?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/elearning-platform?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/elearning-platform?color=blue) |
+| **Fraud Detection** | ![Stars](https://img.shields.io/github/stars/ambooka/fraud-detection?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/fraud-detection?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/fraud-detection?color=blue) |
 
 </div>
-
-## 💬 Recommendations
-
-> "I had the pleasure of supervising this talented computer science graduate on an AI research project. Their innovative approach to machine learning problems and strong programming skills resulted in a publication-worthy project. They demonstrate exceptional talent in both theoretical concepts and practical implementation."
->
-> **Dr. Emily Chen** - Research Supervisor (May 2023)
-
-> "Working alongside this developer on our robotics project was impressive. They designed the navigation algorithm that significantly improved our robot's efficiency. Their software architecture skills and understanding of AI integration in physical systems exceeded expectations for someone at their career stage."
->
-> **Mark Johnson** - Robotics Team Lead (February 2023)
-
-> "This developer built our company's AI-powered analytics dashboard from scratch. The system processes real-time data and provides actionable insights through an intuitive interface. Their full-stack development skills and machine learning expertise delivered exceptional value to our organization."
->
-> **Sarah Williams** - Product Manager (November 2022)
-
-> "In my advanced algorithms course, this student stood out with their exceptional problem-solving abilities and innovative thinking. Their final project on neural network optimization demonstrated deep understanding of both computer science fundamentals and cutting-edge AI techniques."
->
-> **Prof. Robert Kim** - Algorithms Professor (August 2022)
-
-## 🎓 Education & Experience
-
-### Education
-**B.S. in Computer Science with AI Specialization**  
-*University of Technology, City* (2018-2022)  
-- **GPA:** 3.8/4.0
-- **Thesis:** "Optimizing Path Planning Algorithms for Multi-Agent Robotics Systems"
-- **Relevant Coursework:** Machine Learning, Computer Vision, Robotics, Algorithms, Distributed Systems
-
-### Professional Experience
-**AI Research Intern** - Tech Innovations Inc. (May 2021 - August 2021)
-- Developed and optimized computer vision models for object detection in autonomous systems
-- Implemented reinforcement learning algorithms that improved system performance by 25%
-- Collaborated with a team of 5 researchers on a publication about efficient neural architectures
-
-**Robotics Software Developer** - University Robotics Lab (January 2020 - May 2021)
-- Designed navigation algorithms for multi-robot coordination
-- Built simulation environments using Gazebo and ROS
-- Reduced computation time for path planning by 40% through algorithm optimization
-
-## 📚 Publications & Research
-
-- **Ambooka, A.**, et al. (2022). "Efficient Path Planning for Multi-Agent Systems in Dynamic Environments". *Journal of Robotics and Automation*, 15(3), 245-263. [DOI](https://doi.org/10.1000/xyz123)
-
-- **Ambooka, A.**, & Researcher, B. (2021). "Neural Architecture Optimization for Edge Devices". *Proceedings of the International Conference on Artificial Intelligence*, 112-125. [DOI](https://doi.org/10.1000/xyz124)
-
-## 🏆 Certifications & Awards
-
-- **NVIDIA Deep Learning Institute Certificate** - Fundamentals of Deep Learning (2022)
-- **Best Project Award** - University Tech Symposium (2021)
-- **Google Cloud Certified** - Professional Data Engineer (2021)
-- **First Place** - National Robotics Competition (2020)
 
 ## 📫 Let's Connect!
 
 <div align="center">
   
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect%20Professionally-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ambooka/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect%20Professionally-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/abdulrahman-ambooka/)
+[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=for-the-badge&logo=gmail)](mailto:abdulrahmanambooka@gmail.com)
 [![Portfolio](https://img.shields.io/badge/Portfolio-View%20My%20Work-black?style=for-the-badge&logo=firefox)](https://ambooka.github.io)
-[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=for-the-badge&logo=gmail)](mailto:ambooka@example.com)
 [![Twitter](https://img.shields.io/badge/Twitter-Follow%20Me-blue?style=for-the-badge&logo=twitter)](https://twitter.com/ambooka)
-[![ResearchGate](https://img.shields.io/badge/ResearchGate-Read%20Publications-green?style=for-the-badge&logo=researchgate)](https://www.researchgate.net/profile/Ambooka)
 
 </div>
 
@@ -217,12 +221,14 @@ A full-stack IoT platform for industrial automation that processes sensor data i
 - GitHub Stats by [anuraghazra](https://github.com/anuraghazra/github-readme-stats)
 - Streak Stats by [DenverCoder1](https://github.com/DenverCoder1/github-readme-streak-stats)
 - Activity Graph by [ashutosh00710](https://github.com/ashutosh00710/github-readme-activity-graph)
-- Snake Animation by [Platane](https://github.com/Platane/snk)
+- Badges by [shields.io](https://shields.io)
 
 ---
 
 <div align="center">
   
-⭐️ From [Ambooka](https://github.com/ambooka) | Last Updated: ![Last Updated](https://img.shields.io/badge/dynamic/json?label=Last%20Updated&query=%24.last_updated&url=https%3A%2F%2Fraw.githubusercontent.com%2Fambooka%2Fambooka%2Fmain%2Fdata.json&color=blue)
+⭐️ From [Abdulrahman Ambooka](https://github.com/ambooka) | Open to new opportunities in AI/ML Engineering & Cloud Development!
+
+**Last Updated:** ![Last Updated](https://img.shields.io/badge/dynamic/json?label=Last%20Updated&query=%24.last_updated&url=https%3A%2F%2Fraw.githubusercontent.com%2Fambooka%2Fambooka%2Fmain%2Fdata.json&color=blue)
 
 </div>
