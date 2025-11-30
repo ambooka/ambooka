@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Send } from "lucide-react";
 
 interface ContactProps {
   isActive?: boolean
@@ -91,7 +92,7 @@ export default function Contact({ isActive = false }: ContactProps) {
             type="submit"
             disabled={!isFormValid}
           >
-            <ion-icon name="paper-plane"></ion-icon>
+            <Send className="w-5 h-5" />
             <span>Send Message</span>
           </button>
         </form>
