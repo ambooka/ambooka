@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import { Download, FileText, Loader2 } from 'lucide-react'
+import { Book, BriefcaseBusiness, Download, FileText, Loader2 } from 'lucide-react'
 
 interface ResumeProps {
   isActive?: boolean
@@ -301,7 +301,7 @@ export default function Resume({ isActive = false }: ResumeProps) {
         <section className="timeline">
           <div className="title-wrapper">
             <div className="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
+              <Book />
             </div>
             <h3 className="h3">Education</h3>
           </div>
@@ -331,7 +331,7 @@ export default function Resume({ isActive = false }: ResumeProps) {
         <section className="timeline">
           <div className="title-wrapper">
             <div className="icon-box">
-              <ion-icon name="briefcase-outline"></ion-icon>
+              <BriefcaseBusiness />
             </div>
             <h3 className="h3">Experience</h3>
           </div>

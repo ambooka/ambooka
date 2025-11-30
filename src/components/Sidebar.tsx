@@ -3,6 +3,8 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import { ChevronDown, Calendar, Mail, Phone, PhoneIcon, MapPin } from "lucide-react";
+
 export default function Sidebar() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false)
 
@@ -29,7 +31,7 @@ export default function Sidebar() {
           onClick={() => setIsSidebarVisible(!isSidebarVisible)}
         >
           <span>{isSidebarVisible ? 'Hide Contacts' : 'Show Contacts'}</span>
-          <ion-icon name="chevron-down"></ion-icon>
+          <ChevronDown className="w-5 h-5" />
         </button>
       </div>
 
@@ -39,7 +41,7 @@ export default function Sidebar() {
         <ul className="contacts-list">
           <li className="contact-item">
             <div className="icon-box">
-              <ion-icon name="mail-outline"></ion-icon>
+              <Mail />
             </div>
             <div className="contact-info">
               <p className="contact-title">Email</p>
@@ -49,7 +51,7 @@ export default function Sidebar() {
 
           <li className="contact-item">
             <div className="icon-box">
-              <ion-icon name="phone-portrait-outline"></ion-icon>
+              <PhoneIcon />
             </div>
             <div className="contact-info">
               <p className="contact-title">Phone</p>
@@ -59,7 +61,7 @@ export default function Sidebar() {
 
           <li className="contact-item">
             <div className="icon-box">
-              <ion-icon name="calendar-outline"></ion-icon>
+              <Calendar />
             </div>
             <div className="contact-info">
               <p className="contact-title">Birthday</p>
@@ -69,7 +71,7 @@ export default function Sidebar() {
 
           <li className="contact-item">
             <div className="icon-box">
-              <ion-icon name="location-outline"></ion-icon>
+              <MapPin />
             </div>
             <div className="contact-info">
               <p className="contact-title">Location</p>

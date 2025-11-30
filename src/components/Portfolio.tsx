@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as Dialog from '@radix-ui/react-dialog'
 import { styled } from '@stitches/react'
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink, Github, ChevronDown, EyeIcon, Star } from 'lucide-react'
+
 
 // --- Styled Components ---
 
@@ -313,7 +314,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               >
                 <div className="select-value">{selectValue}</div>
                 <div className="select-icon">
-                  <ion-icon name="chevron-down"></ion-icon>
+                  <ChevronDown className="w-5 h-5" />
                 </div>
               </button>
 
@@ -345,7 +346,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                   >
                     <figure className="project-img">
                       <div className="project-item-icon-box">
-                        <ion-icon name="eye-outline"></ion-icon>
+                        <EyeIcon />
                       </div>
                       <img src={project.image} alt={project.title} loading="lazy" />
                     </figure>
@@ -353,7 +354,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     <p className="project-category">{project.language}</p>
                     {project.stars >= github.featuredThreshold && (
                       <span className="featured-badge">
-                        <ion-icon name="star"></ion-icon> Featured
+                        <Star /> Featured
                       </span>
                     )}
                   </button>
