@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { X } from "lucide-react";
 
 interface AboutProps {
   isActive?: boolean
@@ -198,7 +199,10 @@ export default function About({ isActive = false }: AboutProps) {
           <div className="overlay active" onClick={closeTestimonialModal}></div>
           <section className="testimonials-modal">
             <button className="modal-close-btn" onClick={closeTestimonialModal}>
-              <ion-icon name="close-outline"></ion-icon>
+              {/* <ion-icon name="close-outline"></ion-icon> */}
+              <X className="w-5 h-5" />
+
+
             </button>
             <div className="modal-img-wrapper">
               <figure className="modal-avatar-box">
