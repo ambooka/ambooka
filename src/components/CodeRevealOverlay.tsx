@@ -231,7 +231,7 @@ export default function CodeRevealOverlay() {
         // Tokenize the tag/content
         if (token.startsWith('<')) {
           // It's a tag
-          const tagMatch = token.match(/^<(\/?)(\w+)(.*?)(\/?)>$/s)
+          const tagMatch = token.match(/^<(\/?)(\w+)([\s\S]*?)(\/?)>$/)
           if (tagMatch) {
             const [, slash1, tagName, attrs, slash2] = tagMatch
 
@@ -391,31 +391,6 @@ export default function CodeRevealOverlay() {
       const pulse = (Math.sin(Date.now() / 350) + 1) / 2
       const secondaryPulse = (Math.sin(Date.now() / 500 + Math.PI / 2) + 1) / 2
 
-      // Ripple effect around cursor (more ethereal)
-      const ripple1 = (Date.now() % 2000) / 2000
-      const ripple2 = ((Date.now() + 1000) % 2000) / 2000
-
-      ctx.save()
-      // First ripple - cyan to purple gradient
-      ctx.globalAlpha = (1 - ripple1) * 0.2
-      ctx.strokeStyle = `rgba(${100 + ripple1 * 155}, 255, ${255 - ripple1 * 100}, 0.8)`
-      ctx.lineWidth = 2
-      ctx.shadowBlur = 10
-      ctx.shadowColor = '#00ffff'
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, 20 + ripple1 * 40, 0, Math.PI * 2)
-      ctx.stroke()
-
-      // Second ripple
-      ctx.globalAlpha = (1 - ripple2) * 0.2
-      ctx.strokeStyle = `rgba(${100 + ripple2 * 155}, 255, ${255 - ripple2 * 100}, 0.8)`
-      ctx.shadowBlur = 10
-      ctx.shadowColor = '#00ffff'
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, 20 + ripple2 * 40, 0, Math.PI * 2)
-      ctx.stroke()
-      ctx.restore()
-
       // Outer glow around entire reveal area for depth
       ctx.save()
       ctx.globalAlpha = 0.15 * breathe
@@ -548,6 +523,7 @@ export default function CodeRevealOverlay() {
             let currentX = startX
             ctx.textAlign = 'left'
             ctx.font = '13px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
+            const MAX_TEXT_WIDTH = 450 // Compact width limit
 
             // Calculate transition opacity
             const transitionOpacity = transitionState.isTransitioning
@@ -560,7 +536,16 @@ export default function CodeRevealOverlay() {
               let oldX = startX
               const fadeOutOpacity = 1 - transitionOpacity
 
-              oldLine.tokens.forEach(token => {
+              for (const token of oldLine.tokens) {
+                // Check for truncation
+                if (oldX - startX > MAX_TEXT_WIDTH) {
+                  ctx.fillStyle = 'rgba(248, 248, 242, 0.3)'
+                  ctx.globalAlpha = opacity * fadeOutOpacity
+                  ctx.fillText('...', oldX, lineY)
+                  ctx.globalAlpha = 1.0
+                  break
+                }
+
                 let color = 'rgba(248, 248, 242, 0.3)'
                 switch (token.type) {
                   case 'tag': color = 'rgba(255, 121, 198, 0.35)'; break;
@@ -576,11 +561,21 @@ export default function CodeRevealOverlay() {
                 ctx.fillText(token.text, oldX, lineY)
                 oldX += ctx.measureText(token.text).width
                 ctx.globalAlpha = 1.0
-              })
+              }
             }
 
             // Draw new code
-            line.tokens.forEach(token => {
+            for (const token of line.tokens) {
+              // Check for truncation
+              if (currentX - startX > MAX_TEXT_WIDTH) {
+                ctx.fillStyle = 'rgba(248, 248, 242, 0.3)'
+                const finalOpacity = transitionState.isTransitioning ? opacity * transitionOpacity : opacity
+                ctx.globalAlpha = finalOpacity
+                ctx.fillText('...', currentX, lineY)
+                ctx.globalAlpha = 1.0
+                break
+              }
+
               // Keep vibrant colors but with watermark opacity
               let color = 'rgba(248, 248, 242, 0.3)' // Default text - white
 
@@ -599,7 +594,7 @@ export default function CodeRevealOverlay() {
               ctx.fillText(token.text, currentX, lineY)
               currentX += ctx.measureText(token.text).width
               ctx.globalAlpha = 1.0
-            })
+            }
 
             ctx.shadowBlur = 0
           }
