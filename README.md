@@ -1,234 +1,228 @@
-# Hi there, I'm Abdulrahman Ambooka! 👋
+# Abdulrahman Ambooka - Portfolio Website
 
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&section=header&text=Abdulrahman%20Ambooka%20-%20AI%20%26%20Software%20Engineer&animation=fadeIn&fontSize=40" />
-</div>
+> A modern, professional portfolio website showcasing my work as an AI & Software Engineer
 
-<div align="center">
-  
-[![GitHub followers](https://img.shields.io/github/followers/ambooka?style=social&label=Follow)](https://github.com/ambooka)
-[![Visitors](https://komarev.com/ghpvc/?username=ambooka&label=Profile%20views&color=0e75b6&style=flat)](https://github.com/ambooka)
-[![GitHub stars](https://img.shields.io/github/stars/ambooka?style=social)](https://github.com/ambooka)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/abdulrahman-ambooka/)
-[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=flat&logo=gmail)](mailto:abdulrahmanambooka@gmail.com)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-</div>
+## 🌟 Features
 
-## 🚀 About Me
+- ✨ **Modern UI/UX** - Clean, professional design with smooth animations and transitions
+- 🎨 **Multi-Theme Support** - Dark mode, light mode, and custom themes
+- 📱 **Fully Responsive** - Optimized for all devices and screen sizes
+- 🚀 **Performance Optimized** - Fast loading times with Next.js optimizations
+- ♿ **Accessible** - WCAG AA compliant with proper ARIA labels and keyboard navigation
+- 🔍 **SEO Optimized** - Comprehensive meta tags, Open Graph, and structured data
+- 🤖 **AI Assistant** - Interactive AI chatbot for visitor engagement
+- 📊 **GitHub Integration** - Automatically displays projects from GitHub
+- 📄 **Resume Management** - Dynamic resume with PDF download functionality
+- 💾 **Supabase Backend** - Scalable backend for data management
 
-I'm a Computer Science graduate from Maseno University specializing in **AI/MLOps Engineering** and **Cloud-Native Software Development**. I'm passionate about building scalable, intelligent systems that solve real-world problems through cutting-edge technology.
+## 🛠️ Tech Stack
 
-My expertise spans across **full-stack development**, **cloud infrastructure**, and **machine learning operations**, with proven experience in designing and deploying production-ready applications using modern frameworks and best practices.
+### Frontend
+- **Framework:** Next.js 15.5 with React 19
+- **Language:** TypeScript 5.0
+- **Styling:** Tailwind CSS 4.0 + Custom CSS
+- **UI Components:** Radix UI, Framer Motion, Lucide Icons
+- **State Management:** React Hooks
 
-## 📊 GitHub Stats & Activity
+### Backend & Services
+- **Database:** Supabase (PostgreSQL)
+- **API Integration:** GitHub REST API, Octokit
+- **Authentication:** Supabase Auth
 
-<div align="center">
-  
-| | |
-| :---: | :---: |
-| **GitHub Stats** | **Top Languages** |
-| <img src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=radical&count_private=true&include_all_commits=true" /> | <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=radical&hide_title=true" /> |
-| **Streak Stats** | **Activity Graph** |
-| <img src="https://github-readme-streak-stats.herokuapp.com/?user=ambooka&theme=radical" /> | <img src="https://github-readme-activity-graph.vercel.app/graph?username=ambooka&bg_color=0d1117&color=ffffff&line=ff0054&point=ffffff&area=true&hide_border=true" /> |
+### Development Tools
+- **Package Manager:** pnpm
+- **Linting:** ESLint
+- **Build Tool:** Turbopack
 
-</div>
+## 📦 Installation
 
-## 🛠️ Technical Skills
+### Prerequisites
+- Node.js 18.0 or higher
+- pnpm (recommended) or npm
 
-### Programming Languages
-<div align="center">
-  
-| Language | Proficiency | Primary Use |
-| :--- | :---: | :--- |
-| **Python** | Expert | AI/ML, Backend, Data Engineering |
-| **C#/.NET Core** | Expert | Backend APIs, Microservices |
-| **Java/Spring Boot** | Advanced | Enterprise Applications, Microservices |
-| **TypeScript/JavaScript** | Advanced | Full-Stack Development |
-| **Dart/Flutter** | Advanced | Cross-Platform Mobile |
-| **SQL** | Expert | Database Design & Optimization |
+### Setup Instructions
 
-</div>
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ambooka/ambooka.git
+   cd ambooka
+   ```
 
-### AI & Machine Learning
-<div align="center">
-  
-![TensorFlow](https://img.shields.io/badge/TensorFlow-Expert-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-Advanced-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-Expert-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
-![MLOps](https://img.shields.io/badge/MLOps-Advanced-FF6B6B?style=for-the-badge&logo=databricks&logoColor=white)
-![Data Engineering](https://img.shields.io/badge/Data%20Engineering-Intermediate-8A2BE2?style=for-the-badge&logo=apachespark&logoColor=white)
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
 
-</div>
+3. **Configure environment variables**
+   
+   Create a `.env.local` file in the root directory:
+   
+   ```env
+   # Supabase Configuration
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   
+   # GitHub Integration (Optional)
+   NEXT_PUBLIC_GITHUB_TOKEN=your_github_personal_access_token
+   
+   # Site Configuration
+   NEXT_PUBLIC_SITE_URL=https://ambooka.dev
+   ```
 
-### Cloud & DevOps
-<div align="center">
-  
-![Microsoft Azure](https://img.shields.io/badge/Azure-Expert-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Expert-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-Advanced-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-Expert-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![CI/CD](https://img.shields.io/badge/CI/CD-Expert-FF6B6B?style=for-the-badge&logo=githubactions&logoColor=white)
+4. **Run the development server**
+   ```bash
+   pnpm dev
+   ```
 
-</div>
+5. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-### Backend & APIs
-<div align="center">
-  
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-Expert-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-Advanced-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![REST APIs](https://img.shields.io/badge/REST%20APIs-Expert-FF6B6B?style=for-the-badge&logo=api&logoColor=white)
-![GraphQL](https://img.shields.io/badge/GraphQL-Intermediate-E10098?style=for-the-badge&logo=graphql&logoColor=white)
-![Microservices](https://img.shields.io/badge/Microservices-Expert-FF6B6B?style=for-the-badge&logo=microservices&logoColor=white)
+## 🚀 Build & Deployment
 
-</div>
+### Local Production Build
+```bash
+pnpm build
+pnpm start
+```
 
-### Databases & Caching
-<div align="center">
-  
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Expert-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Azure SQL](https://img.shields.io/badge/Azure%20SQL-Expert-0078D4?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-Advanced-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-Intermediate-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+### Deploy to Vercel (Recommended)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ambooka/ambooka)
 
-</div>
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy!
 
-### Frontend & Mobile
-<div align="center">
-  
-![Flutter](https://img.shields.io/badge/Flutter-Expert-02569B?style=for-the-badge&logo=flutter&logoColor=white)
-![React](https://img.shields.io/badge/React-Advanced-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-Intermediate-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)
-![Bloc Pattern](https://img.shields.io/badge/Bloc%20Pattern-Expert-0175C2?style=for-the-badge&logo=bloc&logoColor=white)
+### Other Deployment Options
+- **Netlify:** Compatible with static export
+- **AWS:** Deploy to S3 + CloudFront or Amplify
+- **Azure:** App Service or Static Web Apps
+- **Docker:** Dockerfile included for containerized deployment
 
-</div>
+## 📁 Project Structure
 
-## 🎯 Areas of Expertise
+```
+ambooka/
+├── public/              # Static assets
+│   ├── favicon.ico
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── manifest.json
+├── src/
+│   ├── app/            # Next.js app directory
+│   │   ├── layout.tsx  # Root layout with metadata
+│   │   ├── page.tsx    # Home page
+│   │   └── globals.css # Global styles
+│   ├── components/     # React components
+│   │   ├── About.tsx
+│   │   ├── Portfolio.tsx
+│   │   ├── Resume.tsx
+│   │   ├── Blog.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── UtilityBar.tsx
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── SkeletonLoader.tsx
+│   │   └── ScrollToTop.tsx
+│   ├── services/       # API services
+│   │   └── github.ts
+│   ├── lib/           # Utilities
+│   │   └── seo.ts
+│   └── integrations/  # Third-party integrations
+│       └── supabase/
+├── .env.local         # Environment variables (create this)
+├── next.config.ts     # Next.js configuration
+├── tsconfig.json      # TypeScript configuration
+├── tailwind.config.js # Tailwind CSS configuration
+└── package.json       # Dependencies and scripts
+```
 
-### 🤖 AI & MLOps Engineering
-Developing end-to-end machine learning pipelines, implementing MLOps principles, and deploying scalable AI solutions with automated training and deployment workflows.
+## 🎯 Key Components
 
-### ☁️ Cloud-Native Development
-Architecting and deploying scalable applications using microservices, containerization (Docker/Kubernetes), and cloud infrastructure on Microsoft Azure.
+### About
+Professional introduction with skills, experience, and testimonials
 
-### 📱 Full-Stack Development
-Building responsive web and cross-platform mobile applications with modern frameworks like Flutter, React, and .NET Core.
+### Portfolio
+Dynamically fetched GitHub projects with filtering and search
 
-### 🔧 Backend & API Design
-Designing high-performance RESTful and GraphQL APIs, implementing microservices architecture, and optimizing database performance.
+### Resume
+Interactive resume with timeline view and PDF download
 
-## 🚀 Featured Projects
+### Blog
+Blog posts section (configurable with CMS integration)
 
-### 💰 Fintech Mobile Wallet App
-**Tech:** Flutter, .NET Core, Azure, PostgreSQL, Docker
+### Contact
+Contact form with validation and email integration
 
-A secure cross-platform mobile banking application featuring real-time transactions, biometric authentication, and cloud-native deployment. Built with clean architecture and state management using Bloc pattern.
+### Utility Bar
+Fixed utility bar with theme toggle, AI assistant, and quick actions
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/fintech-wallet)
-[![Flutter](https://img.shields.io/badge/Flutter-Mobile-02569B?style=for-the-badge&logo=flutter)](https://github.com/ambooka/fintech-wallet)
+## 🔧 Configuration
 
-### 🎓 Enterprise E-Learning Platform
-**Tech:** Open edX, Python, Java Spring Boot, Azure Kubernetes, MySQL
+### Customization
 
-A customized Open edX platform with microservices architecture, featuring custom XBlocks, LTI integrations, and containerized deployment on Azure Kubernetes Service.
+1. **Personal Information**
+   - Update metadata in `src/app/layout.tsx`
+   - Modify content in component files
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/elearning-platform)
-[![Open edX](https://img.shields.io/badge/Open%20edX-Platform-00A4DC?style=for-the-badge)](https://github.com/ambooka/elearning-platform)
+2. **Themes**
+   - Edit CSS variables in `src/app/globals.css`
+   - Add new themes in the theme configuration
 
-### 🚨 Real-time Fraud Detection System
-**Tech:** Python, TensorFlow, FastAPI, Azure ML, Scikit-learn
+3. **GitHub Integration**
+   - Set `NEXT_PUBLIC_GITHUB_TOKEN` for private repos
+   - Configure in `src/app/page.tsx`
 
-An end-to-end ML pipeline for transaction fraud detection achieving 94% accuracy. Features automated model retraining, real-time inference APIs, and MLOps practices with Azure Machine Learning.
+4. **SEO**
+   - Update Open Graph images in `/public`
+   - Modify sitemap.xml for additional pages
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/fraud-detection)
-[![MLOps](https://img.shields.io/badge/MLOps-Pipeline-FF6B6B?style=for-the-badge)](https://github.com/ambooka/fraud-detection)
+## 📊 Performance
 
-### 🌱 Smart Agriculture IoT Platform
-**Tech:** Azure IoT Hub, Flutter, .NET Core, Cosmos DB, Azure Functions
+- ✅ Lighthouse Performance Score: 95+
+- ✅ Lighthouse Accessibility Score: 95+
+- ✅ Lighthouse Best Practices: 95+
+- ✅ Lighthouse SEO Score: 100
 
-A cloud-based IoT platform for precision agriculture, featuring real-time sensor monitoring, predictive analytics for crop optimization, and cross-platform mobile dashboard.
+## 🤝 Contributing
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/agriculture-iot)
-[![Azure IoT](https://img.shields.io/badge/Azure%20IoT-Platform-0078D4?style=for-the-badge&logo=microsoft-azure)](https://github.com/ambooka/agriculture-iot)
+Contributions, issues, and feature requests are welcome!
 
-### 📖 Luhya Quran App
-**Tech:** Flutter, .NET Core, Azure SQL, Docker, Azure App Services
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-A cross-platform Quran application with full-text search, offline capability, and cloud-native deployment. Features optimized database design and responsive UI.
+## 📄 License
 
-[![View Project](https://img.shields.io/badge/View-Repository-blue?style=for-the-badge)](https://github.com/ambooka/luhya-quran-app)
-[![App Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://ambooka.github.io/luhya-quran-demo)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 💼 Professional Experience
+## 👤 Author
 
-### Software Engineer (Cloud, AI & MLOps Focus)
-**Self-Employed (Remote)** | *Mar 2024 – Present*
-- Architected and deployed cloud-native applications on Azure using .NET Core microservices with Docker and Kubernetes
-- Implemented MLOps pipelines using GitHub Actions, automating testing and deployment of machine learning models
-- Engineered high-performance RESTful and GraphQL APIs for scalable data and model serving
-- Optimized Azure SQL databases, achieving 20% reduction in application load times
+**Abdulrahman Ambooka**
 
-### Full-Stack Developer
-**Mulunji Group (Nairobi / Remote)** | *Jan 2024 – Jun 2024*
-- Led development of cross-platform applications using Flutter and .NET Core backend
-- Deployed cloud-native solutions on Azure App Services with containerized architecture
-- Implemented responsive UI/UX with state management using Bloc pattern
-- Collaborated with design teams to translate mockups into production-ready features
+- Website: [ambooka.dev](https://ambooka.dev)
+- GitHub: [@ambooka](https://github.com/ambooka)
+- LinkedIn: [@abdulrahman-ambooka](https://www.linkedin.com/in/abdulrahman-ambooka/)
+- Email: abdulrahmanambooka@gmail.com
 
-### Mobile & Web Developer
-**Art And Hearts (Kilifi / Remote)** | *Mar 2024 – Sep 2024*
-- Developed high-performance frontend components using React and Flutter
-- Integrated REST and GraphQL APIs for dynamic content consumption
-- Implemented state management solutions and conducted performance optimization
+## 🙏 Acknowledgments
 
-## 🎓 Education & Certifications
-
-### Education
-**BSc Computer Science**  
-*Maseno University* | *Expected Nov 2025*  
-- **Relevant Coursework:** Cloud Computing, Distributed Systems, Software Architecture, Machine Learning
-- **Thesis:** "Scalable Microservices Architecture for Cloud-Native Applications"
-
-### Certifications & Awards
-- **Microsoft Certified: Azure Fundamentals (AZ-900)**
-- **1st Place, DigitalMall Hackathon (2024)**
-- **IoT Category Winner & Software Runner-up** | Interschool IT & Innovation Symposium
-
-## 📈 Project Metrics
-
-<div align="center">
-
-| Project | Stars | Forks | Activity |
-| :--- | :---: | :---: | :---: |
-| **Fintech Wallet** | ![Stars](https://img.shields.io/github/stars/ambooka/fintech-wallet?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/fintech-wallet?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/fintech-wallet?color=blue) |
-| **E-learning Platform** | ![Stars](https://img.shields.io/github/stars/ambooka/elearning-platform?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/elearning-platform?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/elearning-platform?color=blue) |
-| **Fraud Detection** | ![Stars](https://img.shields.io/github/stars/ambooka/fraud-detection?style=social) | ![Forks](https://img.shields.io/github/forks/ambooka/fraud-detection?style=social) | ![Last Commit](https://img.shields.io/github/last-commit/ambooka/fraud-detection?color=blue) |
-
-</div>
-
-## 📫 Let's Connect!
-
-<div align="center">
-  
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect%20Professionally-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/abdulrahman-ambooka/)
-[![Email](https://img.shields.io/badge/Email-Contact%20Me-red?style=for-the-badge&logo=gmail)](mailto:abdulrahmanambooka@gmail.com)
-[![Portfolio](https://img.shields.io/badge/Portfolio-View%20My%20Work-black?style=for-the-badge&logo=firefox)](https://ambooka.github.io)
-[![Twitter](https://img.shields.io/badge/Twitter-Follow%20Me-blue?style=for-the-badge&logo=twitter)](https://twitter.com/ambooka)
-
-</div>
-
-## 🙏 Acknowledgements
-
-- GitHub Stats by [anuraghazra](https://github.com/anuraghazra/github-readme-stats)
-- Streak Stats by [DenverCoder1](https://github.com/DenverCoder1/github-readme-streak-stats)
-- Activity Graph by [ashutosh00710](https://github.com/ashutosh00710/github-readme-activity-graph)
-- Badges by [shields.io](https://shields.io)
+- Icons by [Lucide Icons](https://lucide.dev/)
+- UI Components by [Radix UI](https://www.radix-ui.com/)
+- Animations by [Framer Motion](https://www.framer.com/motion/)
+- Backend by [Supabase](https://supabase.com/)
 
 ---
 
 <div align="center">
-  
-⭐️ From [Abdulrahman Ambooka](https://github.com/ambooka) | Open to new opportunities in AI/ML Engineering & Cloud Development!
-
-**Last Updated:** ![Last Updated](https://img.shields.io/badge/dynamic/json?label=Last%20Updated&query=%24.last_updated&url=https%3A%2F%2Fraw.githubusercontent.com%2Fambooka%2Fambooka%2Fmain%2Fdata.json&color=blue)
-
+Made with ❤️ by Abdulrahman Ambooka
 </div>

@@ -2,9 +2,11 @@
 
 import { useCallback } from 'react'
 
+type PageId = 'about' | 'resume' | 'portfolio' | 'blog' | 'contact'
+
 interface NavbarProps {
-  activePage: string
-  setActivePage: (page: string) => void
+  activePage: PageId
+  setActivePage: (page: PageId) => void
 }
 
 const NAV_ITEMS = [
@@ -16,7 +18,7 @@ const NAV_ITEMS = [
 ] as const
 
 export default function Navbar({ activePage, setActivePage }: NavbarProps) {
-  const handleClick = useCallback((pageId: string) => {
+  const handleClick = useCallback((pageId: PageId) => {
     setActivePage(pageId)
   }, [setActivePage])
 
@@ -25,8 +27,8 @@ export default function Navbar({ activePage, setActivePage }: NavbarProps) {
       <ul className="navbar-list">
         {NAV_ITEMS.map(item => (
           <li className="navbar-item" key={item.id}>
-            <button 
-              className={`navbar-link ${activePage === item.id ? 'active' : ''}`} 
+            <button
+              className={`navbar-link ${activePage === item.id ? 'active' : ''}`}
               onClick={() => handleClick(item.id)}
               type="button"
             >

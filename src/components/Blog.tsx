@@ -3,10 +3,10 @@ interface BlogProps {
 }
 
 export default function Blog({ isActive = false }: BlogProps) {
-  const blogPosts = [
+  const blogItems = [
     {
       id: 1,
-      image: '/assets/images/blog-1.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'Design conferences in 2022',
@@ -14,7 +14,7 @@ export default function Blog({ isActive = false }: BlogProps) {
     },
     {
       id: 2,
-      image: '/assets/images/blog-2.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'Best fonts every designer',
@@ -22,7 +22,7 @@ export default function Blog({ isActive = false }: BlogProps) {
     },
     {
       id: 3,
-      image: '/assets/images/blog-3.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'Design digest #80',
@@ -30,7 +30,7 @@ export default function Blog({ isActive = false }: BlogProps) {
     },
     {
       id: 4,
-      image: '/assets/images/blog-4.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'UI interactions of the week',
@@ -38,7 +38,7 @@ export default function Blog({ isActive = false }: BlogProps) {
     },
     {
       id: 5,
-      image: '/assets/images/blog-5.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'The forgotten art of spacing',
@@ -46,7 +46,7 @@ export default function Blog({ isActive = false }: BlogProps) {
     },
     {
       id: 6,
-      image: '/assets/images/blog-6.jpg',
+      image: 'https://via.placeholder.com/800x600',
       category: 'Design',
       date: 'Feb 23, 2022',
       title: 'Design digest #79',
@@ -54,7 +54,11 @@ export default function Blog({ isActive = false }: BlogProps) {
     }
   ]
 
- return (
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = 'https://via.placeholder.com/800x600';
+  }
+
+  return (
     <article className={`blog ${isActive ? 'active' : ''}`} data-page="blog">
       <header>
         <h2 className="h2 article-title">Blog</h2>
@@ -62,11 +66,11 @@ export default function Blog({ isActive = false }: BlogProps) {
 
       <section className="blog-posts">
         <ul className="blog-posts-list">
-          {blogPosts.map(post => (
+          {blogItems.map(post => (
             <li key={post.id} className="blog-post-item">
               <a href="#">
                 <figure className="blog-banner-box">
-                  <img src={post.image} alt={post.title} loading="lazy" />
+                  <img src={post.image} alt={post.title} loading="lazy" onError={handleImageError} />
                 </figure>
 
                 <div className="blog-content">

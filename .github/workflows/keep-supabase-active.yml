@@ -1,0 +1,37 @@
+name: Keep Supabase Active
+
+# Runs every 3 days to prevent Supabase free tier from pausing
+# Supabase pauses after 7 days of inactivity, so 3 days is safe
+on:
+  schedule:
+    # Runs at 00:00 UTC every 3 days
+    - cron: '0 0 */3 * *'
+  
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Ping Supabase Keep-Alive Endpoint
+        run: |
+          echo "Pinging keep-alive endpoint..."
+          
+          # Replace with your actual deployed URL
+          # For Vercel: https://your-project.vercel.app/api/keep-alive
+          # For Netlify: https://your-project.netlify.app/api/keep-alive
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://ambooka.dev/api/keep-alive)
+          
+          if [ $RESPONSE -eq 200 ]; then
+            echo "✅ Keep-alive successful (HTTP $RESPONSE)"
+          else
+            echo "⚠️ Keep-alive returned HTTP $RESPONSE"
+            exit 1
+          fi
+      
+      - name: Log Activity
+        run: |
+          echo "Keep-alive ping completed at $(date)"
+          echo "Next scheduled run in 3 days"

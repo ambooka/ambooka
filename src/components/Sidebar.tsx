@@ -10,21 +10,21 @@ export default function Sidebar() {
     <aside className={`sidebar ${isSidebarVisible ? 'active' : ''}`} data-sidebar>
       <div className="sidebar-info">
         <figure className="avatar-box">
-          <Image 
-            src="/assets/images/my-avatar.png" 
-            alt="Msah Ambooka" 
-            width={80} 
+          <Image
+            src="/assets/images/my-avatar.png"
+            alt="Msah Ambooka"
+            width={80}
             height={80}
           />
         </figure>
 
         <div className="info-content">
           <h1 className="name" title="Msah Ambooka">Msah Ambooka</h1>
-          <p className="title">Web developer</p>
+          <p className="title">Software | AI  Enginner</p>
         </div>
 
-        <button 
-          className="info_more-btn" 
+        <button
+          className="info_more-btn"
           data-sidebar-btn
           onClick={() => setIsSidebarVisible(!isSidebarVisible)}
         >
@@ -82,22 +82,191 @@ export default function Sidebar() {
 
         <ul className="social-list">
           <li className="social-item">
-            <a href="#" className="social-link">
-              <ion-icon name="logo-facebook"></ion-icon>
+            <a
+              href="https://github.com/ambooka"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              title="GitHub"
+            >
+              <img
+                src="https://cdn.simpleicons.org/github/white"
+                alt="GitHub"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
             </a>
           </li>
           <li className="social-item">
-            <a href="#" className="social-link">
-              <ion-icon name="logo-twitter"></ion-icon>
+            <a
+              href="https://www.linkedin.com/in/abdulrahman-ambooka/"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+            >
+              <img
+                src="https://cdn.simpleicons.org/linkedin/white"
+                alt="LinkedIn"
+                width="18"
+                height="18"
+                loading="lazy"
+                style={{ filter: 'brightness(0) invert(1)' }}
+              />
             </a>
           </li>
           <li className="social-item">
-            <a href="#" className="social-link">
-              <ion-icon name="logo-instagram"></ion-icon>
+            <a
+              href="https://twitter.com/ambooka"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Twitter"
+              title="Twitter/X"
+            >
+              <img
+                src="https://cdn.simpleicons.org/x/white"
+                alt="Twitter/X"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
+            </a>
+          </li>
+          <li className="social-item">
+            <a
+              href="https://stackoverflow.com/users/your-id"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Stack Overflow"
+              title="Stack Overflow"
+            >
+              <img
+                src="https://cdn.simpleicons.org/stackoverflow/white"
+                alt="Stack Overflow"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
+            </a>
+          </li>
+          <li className="social-item">
+            <a
+              href="https://medium.com/@ambooka"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Medium"
+              title="Medium Blog"
+            >
+              <img
+                src="https://cdn.simpleicons.org/medium/white"
+                alt="Medium"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
+            </a>
+          </li>
+          <li className="social-item">
+            <a
+              href="https://wa.me/254111384390"
+              className="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              title="WhatsApp"
+            >
+              <img
+                src="https://cdn.simpleicons.org/whatsapp/25D366"
+                alt="WhatsApp"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
+            </a>
+          </li>
+          <li className="social-item">
+            <a
+              href="mailto:abdulrahmanambooka@gmail.com"
+              className="social-link"
+              aria-label="Email"
+              title="Email"
+            >
+              <img
+                src="https://cdn.simpleicons.org/gmail/EA4335"
+                alt="Email"
+                width="18"
+                height="18"
+                loading="lazy"
+              />
             </a>
           </li>
         </ul>
       </div>
+
+      <style jsx>{`
+        .social-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: center;
+          margin-top: 15px;
+          padding: 0 10px;
+        }
+
+        .social-link {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 8px;
+          background: var(--border-gradient-onyx);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .social-link::before {
+          content: attr(title);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-8px);
+          background: var(--onyx);
+          color: var(--white-2);
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          white-space: nowrap;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-link:hover::before {
+          opacity: 1;
+          transform: translateX(-50%) translateY(-4px);
+        }
+
+        .social-link:hover {
+          background: var(--bg-gradient-primary);
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-2);
+        }
+
+        .social-link img {
+          transition: transform 0.3s ease;
+        }
+
+        .social-link:hover img {
+          transform: scale(1.15);
+        }
+      `}</style>
     </aside>
   )
 }

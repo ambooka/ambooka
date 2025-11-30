@@ -24,12 +24,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [selectedTestimonial, setSelectedTestimonial] = useState(null)
 
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev)
-  
+
   const openModal = (testimonial: any) => {
     setSelectedTestimonial(testimonial)
     setIsModalOpen(true)
   }
-  
+
   const closeModal = () => {
     setIsModalOpen(false)
     setSelectedTestimonial(null)
