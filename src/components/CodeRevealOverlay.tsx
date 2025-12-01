@@ -368,6 +368,10 @@ export default function CodeRevealOverlay() {
       const breathe = (Math.sin(Date.now() / 1200) + 1) / 2
       const breatheScale = 1 + (breathe * 0.03) // 3% breathing effect
 
+      // Realistic X-ray intensity flicker (like medical imaging)
+      const flicker = 0.92 + (Math.random() * 0.08) // Random flicker between 92-100%
+      const xrayIntensity = flicker * (0.95 + breathe * 0.05)
+
       // Character position indicator with pulsing glow
       const pulse = (Math.sin(Date.now() / 350) + 1) / 2
       const secondaryPulse = (Math.sin(Date.now() / 500 + Math.PI / 2) + 1) / 2
@@ -408,12 +412,12 @@ export default function CodeRevealOverlay() {
         ctx.strokeRect(circleX - innerSize, circleY - innerSize, innerSize * 2, innerSize * 2)
       }
 
-      // Draw code with enhanced effects - more compact
-      ctx.font = '12px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
+      // Draw code with ultra-dense x-ray aesthetic
+      ctx.font = '11px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
       ctx.textAlign = 'left'
       ctx.shadowBlur = 0
 
-      const lineHeight = 16
+      const lineHeight = 14
       const totalTextHeight = lines.length * lineHeight
 
       // Calculate max line width
@@ -460,14 +464,12 @@ export default function CodeRevealOverlay() {
       const startX = scrollState.currentX
       const startY = scrollState.currentY
 
-      // MAGNIFICATION EFFECT (Lens) - Cinematic zoom
+      // REALISTIC X-RAY SCAN EFFECT
       ctx.save()
 
-      // NO CLIPPING - let gradient mask handle all the fading for seamless edges
-
-      // Apply 1.15x zoom centered on cursor for more dramatic effect
+      // Apply subtle zoom like looking through x-ray lens
       ctx.translate(circleX, circleY)
-      ctx.scale(1.15, 1.15)
+      ctx.scale(1.08, 1.08)
       ctx.translate(-circleX, -circleY)
 
       // Draw code lines with syntax highlighting
@@ -477,17 +479,17 @@ export default function CodeRevealOverlay() {
         if (lineY > circleY - springState.currentRadius - 40 && lineY < circleY + springState.currentRadius + 40) {
           const distY = Math.abs(lineY - circleY)
           const fadeFactor = Math.max(0, 1 - Math.pow(distY / springState.currentRadius, 1.3))
-          const opacity = 0.95 * fadeFactor
+          const opacity = 0.95 * fadeFactor * xrayIntensity // Apply x-ray flicker
 
           if (opacity > 0.02) {
-            // Line Numbers Gutter (compact watermark style)
-            const gutterWidth = 28
+            // Line Numbers Gutter (ultra-compact)
+            const gutterWidth = 24
             const lineNumX = startX - gutterWidth
 
-            ctx.fillStyle = isDark ? `rgba(200, 200, 200, ${opacity * 0.18})` : `rgba(60, 60, 60, ${opacity * 0.28})`
+            ctx.fillStyle = isDark ? `rgba(200, 200, 200, ${opacity * 0.2})` : `rgba(60, 60, 60, ${opacity * 0.32})`
             ctx.textAlign = 'right'
-            ctx.font = '10px "Fira Code", monospace'
-            ctx.fillText(line.lineNumber.toString(), lineNumX - 3, lineY)
+            ctx.font = '9px "Fira Code", monospace'
+            ctx.fillText(line.lineNumber.toString(), lineNumX - 2, lineY)
 
             // Draw Gutter Separator (very subtle)
             ctx.strokeStyle = `rgba(200, 200, 200, ${opacity * 0.08})`
@@ -503,11 +505,11 @@ export default function CodeRevealOverlay() {
               ctx.fillRect(startX - gutterWidth, lineY - 13, maxLineWidth + gutterWidth + 20, lineHeight)
             }
 
-            // Draw Tokens (compact watermark style with colors)
+            // Draw Tokens (ultra-dense x-ray style)
             let currentX = startX
             ctx.textAlign = 'left'
-            ctx.font = '12px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
-            const MAX_TEXT_WIDTH = 550 // Wider for multi-line content
+            ctx.font = '11px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
+            const MAX_TEXT_WIDTH = 600 // Wider for dense multi-line content
 
             // Calculate transition opacity
             const transitionOpacity = transitionState.isTransitioning
@@ -585,9 +587,46 @@ export default function CodeRevealOverlay() {
           }
         }
       })
-      ctx.restore() // End magnification
+      ctx.restore() // End x-ray scan effect
 
-      // Ultra-smooth gradient mask with exponential fade for seamless blending
+      // REALISTIC X-RAY SCAN LINES (moving)
+      ctx.save()
+      ctx.globalCompositeOperation = 'source-over'
+
+      // Horizontal scan lines
+      const scanSpeed = (Date.now() / 30) % (springState.currentRadius * 2)
+      for (let i = -springState.currentRadius; i < springState.currentRadius; i += 4) {
+        const lineY = circleY + i + scanSpeed - springState.currentRadius
+        const distFromCenter = Math.abs(lineY - circleY)
+        const scanOpacity = Math.max(0, 1 - distFromCenter / springState.currentRadius) * 0.08
+
+        if (scanOpacity > 0.01) {
+          ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${scanOpacity})` : `rgba(142, 14, 40, ${scanOpacity})`
+          ctx.lineWidth = 0.5
+          ctx.beginPath()
+          ctx.moveTo(circleX - springState.currentRadius, lineY)
+          ctx.lineTo(circleX + springState.currentRadius, lineY)
+          ctx.stroke()
+        }
+      }
+
+      // X-ray noise/grain effect
+      const noiseIntensity = 0.03 * breathe
+      for (let n = 0; n < 15; n++) {
+        const angle = Math.random() * Math.PI * 2
+        const dist = Math.random() * springState.currentRadius * 0.8
+        const noiseX = circleX + Math.cos(angle) * dist
+        const noiseY = circleY + Math.sin(angle) * dist
+
+        ctx.fillStyle = isDark
+          ? `rgba(201, 169, 97, ${Math.random() * noiseIntensity})`
+          : `rgba(142, 14, 40, ${Math.random() * noiseIntensity})`
+        ctx.fillRect(noiseX, noiseY, 1, 1)
+      }
+
+      ctx.restore()
+
+      // Ultra-smooth gradient mask with x-ray glow
       ctx.globalCompositeOperation = 'destination-in'
 
       // Calculate breathing radius for gradient
@@ -649,11 +688,71 @@ export default function CodeRevealOverlay() {
       }
     }
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        currentMouseX = touch.clientX
+        currentMouseY = touch.clientY
+        setMousePos({ x: touch.clientX, y: touch.clientY })
+
+        const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+
+        const charInfo = getCharacterAtPoint(touch.clientX, touch.clientY)
+        if (charInfo) {
+          currentCharInfo = charInfo
+          setCurrentChar(charInfo)
+        }
+
+        if (element !== currentHovered) {
+          // Trigger transition when element changes
+          if (currentHovered && cachedLines) {
+            transitionState.previousCode = cachedLines
+            transitionState.isTransitioning = true
+            transitionState.progress = 0
+            transitionState.startTime = Date.now()
+          }
+
+          currentHovered = element
+          setHoveredElement(element)
+          cachedCode = null
+        } else if (charInfo !== currentCharInfo) {
+          cachedCode = null
+        }
+      }
+    }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0]
+        currentMouseX = touch.clientX
+        currentMouseY = touch.clientY
+        setMousePos({ x: touch.clientX, y: touch.clientY })
+
+        const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
+        currentHovered = element
+        setHoveredElement(element)
+      }
+    }
+
+    const handleTouchEnd = () => {
+      // Keep the effect visible for a moment after touch ends
+      setTimeout(() => {
+        currentMouseX = -1000
+        currentMouseY = -1000
+        setMousePos({ x: -1000, y: -1000 })
+        currentHovered = null
+        setHoveredElement(null)
+      }, 300)
+    }
+
     const handleScroll = () => {
       cachedCode = null
     }
 
     document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('touchstart', handleTouchStart, { passive: false })
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    document.addEventListener('touchend', handleTouchEnd)
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', resizeCanvas)
 
@@ -668,7 +767,9 @@ export default function CodeRevealOverlay() {
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
-
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', resizeCanvas)
       cancelAnimationFrame(animationId)
@@ -747,7 +848,7 @@ export default function CodeRevealOverlay() {
           background: '#00ff88',
           boxShadow: '0 0 10px #00ff88'
         }}></span>
-        X-Ray Active <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ color: '#fff', fontWeight: 600 }}>Alt + X</span> to toggle
+        X-Ray Active <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ color: '#fff', fontWeight: 600 }}>Alt + X</span> to toggle <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ fontSize: '11px', opacity: 0.7 }}>Touch supported</span>
       </div>
     </>
   )
