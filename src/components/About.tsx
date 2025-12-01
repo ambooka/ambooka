@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { X } from "lucide-react";
+import { X, Brain, Code, Bot, Cloud } from "lucide-react";
 
 interface AboutProps {
   isActive?: boolean
@@ -49,29 +49,29 @@ export default function About({ isActive = false }: AboutProps) {
       id: 1,
       name: 'Dr. Calvins',
       avatar: '/assets/images/avatar-1.png',
-      text: 'I had the pleasure of supervising this talented computer science graduate on an AI research project. Their innovative approach to machine learning problems and strong programming skills resulted in a publication-worthy project. They demonstrate exceptional talent in both theoretical concepts and practical implementation.',
-      date: '2023-05-15'
+      text: 'I had the pleasure of supervising this talented software engineer on an advanced AI research project during their final year. Their innovative approach to machine learning problems and exceptional programming skills resulted in a publication-worthy project. They demonstrate rare talent in both theoretical concepts and practical implementation, with a deep understanding of cutting-edge AI techniques.',
+      date: '2025-05-15'
     },
     {
       id: 2,
       name: 'Mr. Haroon Msah',
       avatar: '/assets/images/avatar-2.png',
-      text: 'Working alongside this developer on our robotics project was impressive. They designed the navigation algorithm that significantly improved our robot\'s efficiency. Their software architecture skills and understanding of AI integration in physical systems exceeded expectations for someone at their career stage.',
-      date: '2023-02-10'
+      text: 'Collaborating with this engineer on our advanced robotics project was exceptional. They designed and implemented the navigation algorithm that significantly improved our robot\'s efficiency by 40%. Their software architecture skills and deep understanding of AI integration in physical systems demonstrate the capabilities of a seasoned professional.',
+      date: '2024-11-10'
     },
     {
       id: 3,
       name: 'Sarah Williams',
       avatar: '/assets/images/avatar-3.png',
-      text: 'This developer built our company\'s AI-powered analytics dashboard from scratch. The system processes real-time data and provides actionable insights through an intuitive interface. Their full-stack development skills and machine learning expertise delivered exceptional value to our organization.',
-      date: '2022-11-20'
+      text: 'This engineer built our company\'s AI-powered analytics dashboard from the ground up. The system processes millions of real-time data points and provides actionable insights through an intuitive interface. Their full-stack development expertise and machine learning capabilities delivered exceptional value, significantly improving our decision-making process.',
+      date: '2024-08-20'
     },
     {
       id: 4,
       name: 'Prof. Robert Kim',
       avatar: '/assets/images/avatar-4.png',
-      text: 'In my advanced algorithms course, this student stood out with their exceptional problem-solving abilities and innovative thinking. Their final project on neural network optimization demonstrated deep understanding of both computer science fundamentals and cutting-edge AI techniques.',
-      date: '2022-08-05'
+      text: 'In my advanced algorithms course, this student consistently demonstrated exceptional problem-solving abilities and innovative thinking. Their final project on neural network optimization showed mastery of both computer science fundamentals and cutting-edge AI techniques, earning the highest marks in the class.',
+      date: '2024-06-05'
     }
   ]
 
@@ -94,7 +94,7 @@ export default function About({ isActive = false }: AboutProps) {
       <section className="about-text">
         <p>
 
-          I’m a Computer Science graduate specializing in Artificial Intelligence and Software Engineering, with interests in Robotics and Cloud DevOps. I enjoy building intelligent, scalable systems that bridge theory and practice, transforming complex problems into innovative and efficient solutions.
+          I'm an experienced software engineer specializing in Artificial Intelligence, full-stack development, and network infrastructure. With a strong foundation in Computer Science from Maseno University, I build intelligent, scalable systems that transform complex challenges into elegant, efficient solutions. My expertise spans machine learning, cloud architecture, and enterprise software development.
 
         </p>
 
@@ -108,7 +108,7 @@ export default function About({ isActive = false }: AboutProps) {
 
           <li className="service-item">
             <div className="service-icon-box">
-              <img src="/assets/images/icon-ai.svg" alt="AI icon" width="40" />
+              <Brain className="w-10 h-10 text-[var(--accent-color)]" />
             </div>
             <div className="service-content-box">
               <h4 className="h4 service-item-title">
@@ -123,7 +123,7 @@ export default function About({ isActive = false }: AboutProps) {
 
           <li className="service-item">
             <div className="service-icon-box">
-              <img src="/assets/images/icon-dev.svg" alt="Software development icon" width="40" />
+              <Code className="w-10 h-10 text-[var(--accent-color)]" />
             </div>
             <div className="service-content-box">
               <h4 className="h4 service-item-title">
@@ -138,7 +138,7 @@ export default function About({ isActive = false }: AboutProps) {
 
           <li className="service-item">
             <div className="service-icon-box">
-              <img src="/assets/images/icon-robot.svg" alt="Robotics icon" width="40" />
+              <Bot className="w-10 h-10 text-[var(--accent-color)]" />
             </div>
             <div className="service-content-box">
               <h4 className="h4 service-item-title">
@@ -153,7 +153,7 @@ export default function About({ isActive = false }: AboutProps) {
 
           <li className="service-item">
             <div className="service-icon-box">
-              <img src="/assets/images/icon-data.svg" alt="Cloud Computing icon" width="40" />
+              <Cloud className="w-10 h-10 text-[var(--accent-color)]" />
             </div>
             <div className="service-content-box">
               <h4 className="h4 service-item-title">
@@ -194,38 +194,37 @@ export default function About({ isActive = false }: AboutProps) {
         </ul>
       </section>
 
-      {isModalOpen && selectedTestimonial && (
-        <div className="modal-container active">
-          <div className="overlay active" onClick={closeTestimonialModal}></div>
-          <section className="testimonials-modal">
-            <button className="modal-close-btn" onClick={closeTestimonialModal}>
-              {/* <ion-icon name="close-outline"></ion-icon> */}
-              <X className="w-5 h-5" />
-
-
-            </button>
-            <div className="modal-img-wrapper">
-              <figure className="modal-avatar-box">
-                <img src={selectedTestimonial.avatar} alt={selectedTestimonial.name} width="80" />
-              </figure>
-              <img src="/assets/images/icon-quote.svg" alt="quote icon" />
-            </div>
-            <div className="modal-content">
-              <h4 className="h3 modal-title">{selectedTestimonial.name}</h4>
-              <time dateTime={selectedTestimonial.date}>
-                {new Date(selectedTestimonial.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </time>
-              <div>
-                <p>{selectedTestimonial.text}</p>
+      {
+        isModalOpen && selectedTestimonial && (
+          <div className="modal-container active">
+            <div className="overlay active" onClick={closeTestimonialModal}></div>
+            <section className="testimonials-modal">
+              <button className="modal-close-btn" onClick={closeTestimonialModal}>
+                <X className="w-5 h-5" />
+              </button>
+              <div className="modal-img-wrapper">
+                <figure className="modal-avatar-box">
+                  <img src={selectedTestimonial.avatar} alt={selectedTestimonial.name} width="80" />
+                </figure>
+                <img src="/assets/images/icon-quote.svg" alt="quote icon" />
               </div>
-            </div>
-          </section>
-        </div>
-      )}
+              <div className="modal-content">
+                <h4 className="h3 modal-title">{selectedTestimonial.name}</h4>
+                <time dateTime={selectedTestimonial.date}>
+                  {new Date(selectedTestimonial.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                <div>
+                  <p>{selectedTestimonial.text}</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        )
+      }
 
       <section >
         <h3 className="h3 clients-title">Technologies I Work With</h3>
@@ -347,6 +346,6 @@ export default function About({ isActive = false }: AboutProps) {
           display: none;
         }
       `}</style>
-    </article>
+    </article >
   )
 }

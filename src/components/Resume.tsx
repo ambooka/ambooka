@@ -1,8 +1,6 @@
-'use client'
-
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import { Book, BriefcaseBusiness, Download, FileText, Loader2 } from 'lucide-react'
+import { Book, BriefcaseBusiness, Loader2 } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
 
 interface ResumeProps {
   isActive?: boolean
@@ -58,16 +56,9 @@ interface ResumeData {
 }
 
 export default function Resume({ isActive = false }: ResumeProps) {
-  const [resumeData, setResumeData] = useState<ResumeData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [downloadLoading, setDownloadLoading] = useState(false)
-
-  // Initialize Supabase client
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
 
   useEffect(() => {
     fetchResumeData()
@@ -78,25 +69,110 @@ export default function Resume({ isActive = false }: ResumeProps) {
       setLoading(true)
       setError(null)
 
-      // Fetch complete resume data using the stored procedure
-      const { data, error: fetchError } = await supabase.rpc('get_complete_resume')
+      // Fetch all resume data in parallel
+      const [personalInfoResult, educationResult, experienceResult, skillsResult] = await Promise.all([
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('education').select('*').order('start_date', { ascending: false }),
+        supabase.from('experience').select('*').order('start_date', { ascending: false }),
+        supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
+      ])
 
-      if (fetchError) {
-        throw new Error('Failed to fetch resume data')
-      }
+      if (personalInfoResult.error) throw personalInfoResult.error
+      if (educationResult.error) throw educationResult.error
+      if (experienceResult.error) throw experienceResult.error
+      if (skillsResult.error) throw skillsResult.error
 
-      if (!data) {
-        throw new Error('No resume data available')
-      }
-
-      setResumeData(data)
-    } catch (err) {
-      console.error('Error fetching resume:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load resume')
+      setResumeData({
+        personal_info: personalInfoResult.data,
+        education: educationResult.data || [],
+        experience: experienceResult.data || [],
+        skills: skillsResult.data || []
+      })
+    } catch (err: any) {
+      console.error('Error fetching resume data:', err)
+      setError(err.message || 'Failed to load resume data')
     } finally {
       setLoading(false)
     }
   }
+
+  // Map skill names to their logo URLs
+  const getSkillLogo = (skillName: string): string => {
+    const logoMap: Record<string, string> = {
+      // Languages
+      'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+      'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+      'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+      'Java': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
+      'C#': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg',
+      'C++': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg',
+
+      // Frontend
+      'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+      'Vue': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg',
+      'Angular': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg',
+      'HTML': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+      'CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+      'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg',
+
+      // Backend
+      'Node.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      '.NET Core': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg',
+      'Spring Boot': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg',
+      'Express': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg',
+      'Django': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg',
+      'Flask': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg',
+
+      // AI/ML
+      'TensorFlow': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg',
+      'PyTorch': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg',
+      'Keras': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/keras/keras-original.svg',
+
+      // Cloud
+      'Azure': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg',
+      'AWS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+      'Google Cloud': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg',
+
+      // DevOps
+      'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+      'Kubernetes': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg',
+      'Git': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
+      'GitHub': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+      'GitLab': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg',
+      'Jenkins': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg',
+
+      // Database
+      'PostgreSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
+      'MongoDB': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+      'MySQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+      'Redis': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg',
+
+      // Mobile
+      'Flutter': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg',
+      'React Native': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+
+      // Tools
+      'Linux': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg',
+      'Figma': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
+      'GraphQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg',
+      'Supabase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg',
+      'Firebase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg',
+      'Bash': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg',
+      'PowerShell': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/powershell/powershell-original.svg',
+      'Ansible': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ansible/ansible-original.svg',
+      'Terraform': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg',
+      'Nginx': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg',
+      'Apache': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg',
+      'Grafana': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg',
+      'Prometheus': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg',
+    }
+
+    return logoMap[skillName] || 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg'
+  }
+
+  // const fetchResumeData = async () => { ... } (Removed)
+
 
   const formatDate = (date: string | null, isCurrent: boolean): string => {
     if (isCurrent) return 'Present'
@@ -110,63 +186,6 @@ export default function Resume({ isActive = false }: ResumeProps) {
     return `${start} — ${end}`
   }
 
-  // Download ATS-friendly PDF using browser print
-  const downloadAsPDF = () => {
-    setDownloadLoading(true)
-
-    // Open the resume in a new window for printing
-    const printWindow = window.open(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf`,
-      '_blank'
-    )
-
-    // Add event listener for when the window loads
-    if (printWindow) {
-      printWindow.addEventListener('load', () => {
-        setTimeout(() => {
-          printWindow.print()
-          setDownloadLoading(false)
-        }, 500)
-      })
-    } else {
-      setDownloadLoading(false)
-      alert('Please allow pop-ups to download the resume')
-    }
-  }
-
-  // Alternative: Download as HTML that can be printed to PDF
-  const downloadAsHTML = async () => {
-    try {
-      setDownloadLoading(true)
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf`,
-        {
-          headers: {
-            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-          },
-        }
-      )
-
-      if (!response.ok) throw new Error('Failed to generate resume')
-
-      const html = await response.text()
-      const blob = new Blob([html], { type: 'text/html' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${resumeData?.personal_info?.full_name.replace(/\s+/g, '_')}_Resume.html`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (err) {
-      console.error('Error downloading resume:', err)
-      alert('Failed to download resume. Please try again.')
-    } finally {
-      setDownloadLoading(false)
-    }
-  }
 
   // Group skills by category
   const groupSkillsByCategory = (skills: Skill[]) => {
@@ -233,67 +252,14 @@ export default function Resume({ isActive = false }: ResumeProps) {
     )
   }
 
+
+
   const skillsGrouped = groupSkillsByCategory(resumeData.skills)
 
   return (
     <article className={`resume ${isActive ? 'active' : ''}`} data-page="resume">
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      <header>
         <h2 className="h2 article-title">Resume</h2>
-
-        {/* Download Buttons */}
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button
-            onClick={downloadAsPDF}
-            disabled={downloadLoading}
-            className="download-btn"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 16px',
-              background: 'var(--orange-yellow-crayola)',
-              border: 'none',
-              borderRadius: '8px',
-              color: 'var(--smoky-black)',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: downloadLoading ? 'not-allowed' : 'pointer',
-              opacity: downloadLoading ? 0.7 : 1,
-              transition: 'all 0.2s'
-            }}
-          >
-            {downloadLoading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <Download size={16} />
-            )}
-            Download PDF
-          </button>
-
-          <button
-            onClick={downloadAsHTML}
-            disabled={downloadLoading}
-            className="download-btn-secondary"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '8px 16px',
-              background: 'transparent',
-              border: '2px solid var(--orange-yellow-crayola)',
-              borderRadius: '8px',
-              color: 'var(--orange-yellow-crayola)',
-              fontSize: '14px',
-              fontWeight: '500',
-              cursor: downloadLoading ? 'not-allowed' : 'pointer',
-              opacity: downloadLoading ? 0.7 : 1,
-              transition: 'all 0.2s'
-            }}
-          >
-            <FileText size={16} />
-            Save as HTML
-          </button>
-        </div>
       </header>
 
       {/* Education Section */}
@@ -309,16 +275,33 @@ export default function Resume({ isActive = false }: ResumeProps) {
           <ol className="timeline-list">
             {resumeData.education.map((edu) => (
               <li key={edu.id} className="timeline-item">
-                <h4 className="h4 timeline-item-title">{edu.institution}</h4>
-                <span>{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                  <h4 className="h4 timeline-item-title">{edu.institution}</h4>
+                  <span>{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
+                </div>
                 {(edu.degree || edu.field_of_study) && (
-                  <p className="timeline-text" style={{ fontWeight: '600', marginTop: '8px' }}>
+                  <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '8px', fontSize: '15px' }}>
                     {edu.degree}{edu.degree && edu.field_of_study ? ' in ' : ''}{edu.field_of_study}
-                    {edu.grade && ` - ${edu.grade}`}
                   </p>
                 )}
+                {edu.grade && (
+                  <div style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '4px 12px',
+                    background: 'var(--border-gradient-onyx)',
+                    borderRadius: '20px',
+                    marginBottom: '12px',
+                    fontSize: '13px',
+                    fontWeight: '500'
+                  }}>
+                    <span style={{ fontSize: '16px' }}>🎓</span>
+                    {edu.grade}
+                  </div>
+                )}
                 {edu.description && (
-                  <p className="timeline-text">{edu.description}</p>
+                  <p className="timeline-text" style={{ marginTop: '8px' }}>{edu.description}</p>
                 )}
               </li>
             ))}
@@ -339,35 +322,55 @@ export default function Resume({ isActive = false }: ResumeProps) {
           <ol className="timeline-list">
             {resumeData.experience.map((exp) => (
               <li key={exp.id} className="timeline-item">
-                <h4 className="h4 timeline-item-title">{exp.position}</h4>
-                <span>{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
-                <p className="timeline-text" style={{ fontWeight: '600', marginTop: '8px' }}>
-                  {exp.company}{exp.location && ` - ${exp.location}`}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                  <h4 className="h4 timeline-item-title">{exp.position}</h4>
+                  <span>{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
+                </div>
+                <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '16px' }}>🏢</span>
+                  {exp.company}{exp.location && ` • ${exp.location}`}
                 </p>
                 {exp.description && (
-                  <p className="timeline-text">{exp.description}</p>
+                  <p className="timeline-text" style={{ marginBottom: '16px', fontStyle: 'italic' }}>{exp.description}</p>
                 )}
                 {exp.responsibilities && exp.responsibilities.length > 0 && (
-                  <ul style={{ marginTop: '8px', marginLeft: '20px' }}>
-                    {exp.responsibilities.map((resp, idx) => (
-                      <li key={idx} style={{ marginBottom: '4px' }}>{resp}</li>
-                    ))}
-                  </ul>
+                  <div style={{ marginBottom: '16px' }}>
+                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'block' }}>Key Responsibilities:</strong>
+                    <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {exp.responsibilities.map((resp, idx) => (
+                        <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{resp}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 {exp.achievements && exp.achievements.length > 0 && (
-                  <div style={{ marginTop: '8px' }}>
-                    <strong>Key Achievements:</strong>
-                    <ul style={{ marginTop: '4px', marginLeft: '20px' }}>
+                  <div style={{ marginBottom: '16px' }}>
+                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '16px' }}>⭐</span>
+                      Key Achievements:
+                    </strong>
+                    <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {exp.achievements.map((ach, idx) => (
-                        <li key={idx} style={{ marginBottom: '4px' }}>{ach}</li>
+                        <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{ach}</li>
                       ))}
                     </ul>
                   </div>
                 )}
                 {exp.technologies && exp.technologies.length > 0 && (
-                  <p className="timeline-text" style={{ marginTop: '8px', fontStyle: 'italic', fontSize: '14px' }}>
-                    <strong>Technologies:</strong> {exp.technologies.join(', ')}
-                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+                    {exp.technologies.map((tech, idx) => (
+                      <span key={idx} style={{
+                        padding: '4px 12px',
+                        background: 'var(--border-gradient-onyx)',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        color: 'var(--accent-color)'
+                      }}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </li>
             ))}
@@ -378,68 +381,183 @@ export default function Resume({ isActive = false }: ResumeProps) {
       {/* Skills Section */}
       {resumeData.skills && resumeData.skills.length > 0 && (
         <section className="skill">
-          <h3 className="h3 skills-title">My Skills</h3>
+          <h3 className="h3 skills-title">Technical Skills</h3>
 
-          <ul className="skills-list content-card">
-            {resumeData.skills
-              .filter(skill => skill.is_featured)
-              .map((skill) => (
-                <li key={skill.id} className="skills-item">
-                  <div className="title-wrapper">
-                    <h5 className="h5">{skill.name}</h5>
-                    {skill.proficiency_level && (
-                      <data value={skill.proficiency_level}>{skill.proficiency_level}%</data>
-                    )}
-                  </div>
-                  {skill.proficiency_level && (
-                    <div className="skill-progress-bg">
-                      <div
-                        className="skill-progress-fill"
-                        style={{ width: `${skill.proficiency_level}%` }}
-                      ></div>
-                    </div>
-                  )}
-                </li>
-              ))}
-          </ul>
-
-          {/* All Skills by Category */}
-          <div style={{ marginTop: '30px' }}>
-            <h4 className="h4" style={{ marginBottom: '20px' }}>All Skills by Category</h4>
-            {Object.entries(skillsGrouped).map(([category, skills]) => (
-              <div key={category} style={{ marginBottom: '20px' }}>
-                <h5
-                  className="h5"
-                  style={{
-                    textTransform: 'capitalize',
-                    marginBottom: '12px',
-                    color: 'var(--orange-yellow-crayola)'
-                  }}
-                >
-                  {category.replace('_', ' ')}
-                </h5>
-                <div style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '8px'
-                }}>
-                  {skills.map(skill => (
-                    <span
-                      key={skill.id}
+          {/* Core Competencies - Logo Cards */}
+          <div style={{ marginBottom: '40px' }}>
+            <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Core Competencies</h4>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+              gap: '16px'
+            }}>
+              {resumeData.skills
+                .filter(skill => skill.is_featured)
+                .map((skill) => (
+                  <div
+                    key={skill.id}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '20px 16px',
+                      background: 'var(--bg-secondary)',
+                      borderRadius: '16px',
+                      border: '1px solid var(--border-color)',
+                      boxShadow: 'var(--shadow-1)',
+                      transition: 'all var(--transition-2)',
+                      cursor: 'default',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-6px)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-3)';
+                      e.currentTarget.style.borderColor = 'var(--accent-color)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-1)';
+                      e.currentTarget.style.borderColor = 'var(--border-color)';
+                    }}
+                  >
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '3px',
+                      background: 'var(--text-gradient-primary)'
+                    }}></div>
+                    <img
+                      src={getSkillLogo(skill.name)}
+                      alt={skill.name}
                       style={{
-                        padding: '6px 12px',
-                        background: 'var(--border-gradient-onyx)',
-                        borderRadius: '6px',
-                        fontSize: '14px',
-                        border: '1px solid var(--jet)'
+                        width: '48px',
+                        height: '48px',
+                        objectFit: 'contain'
                       }}
-                    >
+                      loading="lazy"
+                    />
+                    <span style={{
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      color: 'var(--text-primary)',
+                      textAlign: 'center',
+                      lineHeight: '1.3'
+                    }}>
                       {skill.name}
                     </span>
-                  ))}
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          {/* All Skills by Category - Logo Cards */}
+          <div>
+            <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Skills by Category</h4>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              {Object.entries(skillsGrouped).map(([category, skills]) => (
+                <div key={category} className="content-card" style={{
+                  padding: '24px',
+                  borderRadius: '16px',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
+                  boxShadow: 'var(--shadow-1)',
+                  transition: 'all var(--transition-2)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '4px',
+                    background: 'var(--text-gradient-primary)',
+                    opacity: 0.8
+                  }}></div>
+                  <h5
+                    className="h5"
+                    style={{
+                      textTransform: 'capitalize',
+                      marginBottom: '20px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      color: 'var(--text-primary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <span style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: 'var(--accent-color)',
+                      display: 'inline-block'
+                    }}></span>
+                    {category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </h5>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                    gap: '16px'
+                  }}>
+                    {skills.map(skill => (
+                      <div
+                        key={skill.id}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '16px 12px',
+                          background: 'var(--border-gradient-onyx)',
+                          borderRadius: '12px',
+                          border: '1px solid transparent',
+                          transition: 'all var(--transition-2)',
+                          cursor: 'default',
+                          minHeight: '110px',
+                          justifyContent: 'center'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--accent-color)';
+                          e.currentTarget.style.transform = 'translateY(-4px)';
+                          e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'transparent';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      >
+                        <img
+                          src={getSkillLogo(skill.name)}
+                          alt={skill.name}
+                          style={{
+                            width: '40px',
+                            height: '40px',
+                            objectFit: 'contain'
+                          }}
+                          loading="lazy"
+                        />
+                        <span style={{
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          color: 'var(--text-secondary)',
+                          textAlign: 'center',
+                          lineHeight: '1.3'
+                        }}>
+                          {skill.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       )}

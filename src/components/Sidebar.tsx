@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { ChevronDown, Calendar, Mail, Phone, PhoneIcon, MapPin } from "lucide-react";
+import { ChevronDown, Calendar, Mail, Phone, PhoneIcon, MapPin, Linkedin } from "lucide-react";
 
 export default function Sidebar() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false)
@@ -22,7 +22,7 @@ export default function Sidebar() {
 
         <div className="info-content">
           <h1 className="name" title="Msah Ambooka">Msah Ambooka</h1>
-          <p className="title">Software | AI  Enginner</p>
+          <p className="title">Software | AI Engineer</p>
         </div>
 
         <button
@@ -110,14 +110,7 @@ export default function Sidebar() {
               aria-label="LinkedIn"
               title="LinkedIn"
             >
-              <img
-                src="https://cdn.simpleicons.org/linkedin/white"
-                alt="LinkedIn"
-                width="18"
-                height="18"
-                loading="lazy"
-                style={{ filter: 'brightness(0) invert(1)' }}
-              />
+              <Linkedin className="w-[18px] h-[18px]" />
             </a>
           </li>
           <li className="social-item">

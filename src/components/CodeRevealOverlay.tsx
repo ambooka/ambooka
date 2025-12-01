@@ -37,9 +37,7 @@ export default function CodeRevealOverlay() {
   const [hoveredElement, setHoveredElement] = useState<HTMLElement | null>(null)
   const [currentChar, setCurrentChar] = useState<CharacterInfo | null>(null)
   const [isEnabled, setIsEnabled] = useState(true)
-  const [copyFeedback, setCopyFeedback] = useState<{ show: boolean, x: number, y: number } | null>(null)
 
-  const copyFeedbackRef = useRef<{ show: boolean, x: number, y: number, startTime: number } | null>(null)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -113,9 +111,9 @@ export default function CodeRevealOverlay() {
     let lastHovered: HTMLElement | null = null
     let lastCharInfo: CharacterInfo | null = null
 
-    const MAX_RADIUS = 140
-    const SPRING_STIFFNESS = 0.3
-    const SPRING_DAMPING = 0.8
+    const MAX_RADIUS = 160
+    const SPRING_STIFFNESS = 0.15
+    const SPRING_DAMPING = 0.85
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth
@@ -320,24 +318,7 @@ export default function CodeRevealOverlay() {
       return lines
     }
 
-    // Click handler for copy
-    const onCanvasClick = (e: MouseEvent) => {
-      if (currentHovered && cachedLines) {
-        const dist = Math.sqrt(Math.pow(e.clientX - currentMouseX, 2) + Math.pow(e.clientY - currentMouseY, 2))
-        if (dist < springState.currentRadius) {
-          const codeText = cachedLines.map(l => l.tokens.map(t => t.text).join('')).join('\n')
-          navigator.clipboard.writeText(codeText)
 
-          copyFeedbackRef.current = {
-            show: true,
-            x: e.clientX,
-            y: e.clientY,
-            startTime: Date.now()
-          }
-        }
-      }
-    }
-    window.addEventListener('click', onCanvasClick)
 
     let lastFrameTime = Date.now()
 
@@ -391,12 +372,15 @@ export default function CodeRevealOverlay() {
       const pulse = (Math.sin(Date.now() / 350) + 1) / 2
       const secondaryPulse = (Math.sin(Date.now() / 500 + Math.PI / 2) + 1) / 2
 
+      // Check current theme
+      const isDark = document.documentElement.getAttribute('data-theme')?.includes('dark') || false
+
       // Outer glow around entire reveal area for depth
       ctx.save()
-      ctx.globalAlpha = 0.15 * breathe
+      ctx.globalAlpha = 0.2 * breathe
       ctx.shadowBlur = 40
-      ctx.shadowColor = 'rgba(0, 255, 255, 0.5)'
-      ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)'
+      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.6)' : 'rgba(142, 14, 40, 0.5)' // Gold for dark, burgundy for light
+      ctx.strokeStyle = isDark ? 'rgba(201, 169, 97, 0.2)' : 'rgba(142, 14, 40, 0.15)'
       ctx.lineWidth = 1
       ctx.beginPath()
       ctx.arc(circleX, circleY, springState.currentRadius * breatheScale, 0, Math.PI * 2)
@@ -408,28 +392,28 @@ export default function CodeRevealOverlay() {
         // Sync character box with breathing
         const boxScale = 1 + (breathe * 0.15)
 
-        // Outer glow ring
+        // Outer glow ring - burgundy for light mode, gold for dark mode
         ctx.shadowBlur = 12 + (charPulse * 8)
-        ctx.shadowColor = '#FFD700'
-        ctx.strokeStyle = `rgba(255, 215, 0, ${0.2 + (charPulse * 0.2)})`
+        ctx.shadowColor = isDark ? '#C9A961' : '#8E0E28' // Gold for dark, burgundy for light
+        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.3 + (charPulse * 0.2)})` : `rgba(142, 14, 40, ${0.4 + (charPulse * 0.3)})`
         ctx.lineWidth = 3
         const outerSize = 6 * boxScale
         ctx.strokeRect(circleX - outerSize, circleY - outerSize, outerSize * 2, outerSize * 2)
 
         // Inner indicator
         ctx.shadowBlur = 6
-        ctx.strokeStyle = `rgba(255, 215, 0, ${0.5 + (charPulse * 0.3)})`
+        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.6 + (charPulse * 0.3)})` : `rgba(142, 14, 40, ${0.7 + (charPulse * 0.3)})`
         ctx.lineWidth = 2
         const innerSize = 3 * boxScale
         ctx.strokeRect(circleX - innerSize, circleY - innerSize, innerSize * 2, innerSize * 2)
       }
 
-      // Draw code with enhanced effects
-      ctx.font = '13px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
+      // Draw code with enhanced effects - more compact
+      ctx.font = '12px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
       ctx.textAlign = 'left'
       ctx.shadowBlur = 0
 
-      const lineHeight = 18
+      const lineHeight = 16
       const totalTextHeight = lines.length * lineHeight
 
       // Calculate max line width
@@ -464,9 +448,9 @@ export default function CodeRevealOverlay() {
         scrollState.targetY = (circleY - springState.currentRadius) - scrollOffsetY + 30
       }
 
-      // Apply smooth scroll
-      const xResult = smoothLerp(scrollState.currentX, scrollState.targetX, scrollState.velocityX, 0.22)
-      const yResult = smoothLerp(scrollState.currentY, scrollState.targetY, scrollState.velocityY, 0.22)
+      // Apply cinematic slow-motion scroll
+      const xResult = smoothLerp(scrollState.currentX, scrollState.targetX, scrollState.velocityX, 0.12)
+      const yResult = smoothLerp(scrollState.currentY, scrollState.targetY, scrollState.velocityY, 0.12)
 
       scrollState.currentX = xResult.value
       scrollState.velocityX = xResult.velocity
@@ -476,14 +460,14 @@ export default function CodeRevealOverlay() {
       const startX = scrollState.currentX
       const startY = scrollState.currentY
 
-      // MAGNIFICATION EFFECT (Lens)
+      // MAGNIFICATION EFFECT (Lens) - Cinematic zoom
       ctx.save()
 
       // NO CLIPPING - let gradient mask handle all the fading for seamless edges
 
-      // Apply 1.1x zoom centered on cursor
+      // Apply 1.15x zoom centered on cursor for more dramatic effect
       ctx.translate(circleX, circleY)
-      ctx.scale(1.1, 1.1)
+      ctx.scale(1.15, 1.15)
       ctx.translate(-circleX, -circleY)
 
       // Draw code lines with syntax highlighting
@@ -496,14 +480,14 @@ export default function CodeRevealOverlay() {
           const opacity = 0.95 * fadeFactor
 
           if (opacity > 0.02) {
-            // Line Numbers Gutter (watermark style)
-            const gutterWidth = 35
+            // Line Numbers Gutter (compact watermark style)
+            const gutterWidth = 28
             const lineNumX = startX - gutterWidth
 
-            ctx.fillStyle = `rgba(200, 200, 200, ${opacity * 0.15})`
+            ctx.fillStyle = isDark ? `rgba(200, 200, 200, ${opacity * 0.18})` : `rgba(60, 60, 60, ${opacity * 0.28})`
             ctx.textAlign = 'right'
-            ctx.font = '11px "Fira Code", monospace'
-            ctx.fillText(line.lineNumber.toString(), lineNumX - 5, lineY)
+            ctx.font = '10px "Fira Code", monospace'
+            ctx.fillText(line.lineNumber.toString(), lineNumX - 3, lineY)
 
             // Draw Gutter Separator (very subtle)
             ctx.strokeStyle = `rgba(200, 200, 200, ${opacity * 0.08})`
@@ -519,11 +503,11 @@ export default function CodeRevealOverlay() {
               ctx.fillRect(startX - gutterWidth, lineY - 13, maxLineWidth + gutterWidth + 20, lineHeight)
             }
 
-            // Draw Tokens (watermark style with colors)
+            // Draw Tokens (compact watermark style with colors)
             let currentX = startX
             ctx.textAlign = 'left'
-            ctx.font = '13px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
-            const MAX_TEXT_WIDTH = 450 // Compact width limit
+            ctx.font = '12px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
+            const MAX_TEXT_WIDTH = 550 // Wider for multi-line content
 
             // Calculate transition opacity
             const transitionOpacity = transitionState.isTransitioning
@@ -546,14 +530,15 @@ export default function CodeRevealOverlay() {
                   break
                 }
 
-                let color = 'rgba(248, 248, 242, 0.3)'
+                // Theme-aware colors with higher opacity for light mode
+                let color = isDark ? 'rgba(248, 248, 242, 0.3)' : 'rgba(60, 60, 60, 0.45)'
                 switch (token.type) {
-                  case 'tag': color = 'rgba(255, 121, 198, 0.35)'; break;
-                  case 'attr': color = 'rgba(80, 250, 123, 0.32)'; break;
-                  case 'string': color = 'rgba(241, 250, 140, 0.3)'; break;
-                  case 'comment': color = 'rgba(98, 114, 164, 0.25)'; break;
-                  case 'keyword': color = 'rgba(139, 233, 253, 0.35)'; break;
-                  case 'text': color = 'rgba(248, 248, 242, 0.28)'; break;
+                  case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.35)' : 'rgba(142, 14, 40, 0.55)'; break; // Burgundy
+                  case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.32)' : 'rgba(45, 95, 63, 0.5)'; break; // Dark green
+                  case 'string': color = isDark ? 'rgba(241, 250, 140, 0.3)' : 'rgba(184, 134, 11, 0.5)'; break; // Dark gold
+                  case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.25)' : 'rgba(98, 114, 164, 0.4)'; break;
+                  case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.35)' : 'rgba(142, 14, 40, 0.6)'; break; // Burgundy
+                  case 'text': color = isDark ? 'rgba(248, 248, 242, 0.28)' : 'rgba(60, 60, 60, 0.42)'; break;
                 }
 
                 ctx.fillStyle = color
@@ -576,16 +561,16 @@ export default function CodeRevealOverlay() {
                 break
               }
 
-              // Keep vibrant colors but with watermark opacity
-              let color = 'rgba(248, 248, 242, 0.3)' // Default text - white
+              // Theme-aware colors for new code
+              let color = isDark ? 'rgba(248, 248, 242, 0.3)' : 'rgba(60, 60, 60, 0.45)'
 
               switch (token.type) {
-                case 'tag': color = 'rgba(255, 121, 198, 0.35)'; break;      // Pink
-                case 'attr': color = 'rgba(80, 250, 123, 0.32)'; break;      // Green
-                case 'string': color = 'rgba(241, 250, 140, 0.3)'; break;    // Yellow
-                case 'comment': color = 'rgba(98, 114, 164, 0.25)'; break;   // Gray
-                case 'keyword': color = 'rgba(139, 233, 253, 0.35)'; break;  // Cyan
-                case 'text': color = 'rgba(248, 248, 242, 0.28)'; break;     // White
+                case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.35)' : 'rgba(142, 14, 40, 0.55)'; break;      // Burgundy
+                case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.32)' : 'rgba(45, 95, 63, 0.5)'; break;      // Dark green
+                case 'string': color = isDark ? 'rgba(241, 250, 140, 0.3)' : 'rgba(184, 134, 11, 0.5)'; break;    // Dark gold
+                case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.25)' : 'rgba(98, 114, 164, 0.4)'; break;   // Gray
+                case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.35)' : 'rgba(142, 14, 40, 0.6)'; break;  // Burgundy
+                case 'text': color = isDark ? 'rgba(248, 248, 242, 0.28)' : 'rgba(60, 60, 60, 0.42)'; break;     // Dark
               }
 
               ctx.fillStyle = color
@@ -631,24 +616,7 @@ export default function CodeRevealOverlay() {
 
       ctx.restore()
 
-      // Draw Copy Feedback
-      if (copyFeedbackRef.current && copyFeedbackRef.current.show) {
-        const elapsed = Date.now() - copyFeedbackRef.current.startTime
-        if (elapsed > 1500) {
-          copyFeedbackRef.current = null
-        } else {
-          const alpha = Math.max(0, 1 - elapsed / 1500)
-          const floatY = copyFeedbackRef.current.y - 20 - (elapsed / 50)
 
-          ctx.save()
-          ctx.font = 'bold 14px "Inter", sans-serif'
-          ctx.fillStyle = `rgba(0, 255, 136, ${alpha})`
-          ctx.shadowColor = `rgba(0, 255, 136, ${alpha * 0.5})`
-          ctx.shadowBlur = 10
-          ctx.fillText('Copied! 📋', copyFeedbackRef.current.x + 20, floatY)
-          ctx.restore()
-        }
-      }
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -700,7 +668,7 @@ export default function CodeRevealOverlay() {
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('click', onCanvasClick)
+
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', resizeCanvas)
       cancelAnimationFrame(animationId)
@@ -737,17 +705,50 @@ export default function CodeRevealOverlay() {
   }
 
   return (
-    <canvas
-      ref={codeCanvasRef}
-      style={{
+    <>
+      <canvas
+        ref={codeCanvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 9998,
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 9998,
+        bottom: '30px',
+        right: '30px',
+        background: 'rgba(10, 10, 10, 0.85)',
+        backdropFilter: 'blur(8px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '10px 20px',
+        borderRadius: '30px',
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontFamily: '"Inter", sans-serif',
+        fontSize: '13px',
+        fontWeight: 500,
+        zIndex: 9999,
         pointerEvents: 'none',
-      }}
-    />
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        transition: 'opacity 0.3s ease'
+      }}>
+        <span style={{
+          display: 'inline-block',
+          width: '8px',
+          height: '8px',
+          borderRadius: '50%',
+          background: '#00ff88',
+          boxShadow: '0 0 10px #00ff88'
+        }}></span>
+        X-Ray Active <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ color: '#fff', fontWeight: 600 }}>Alt + X</span> to toggle
+      </div>
+    </>
   )
 }

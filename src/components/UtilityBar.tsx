@@ -11,8 +11,10 @@ import {
   Bot,
   User,
   Loader2,
-  Printer
+  Printer,
+  Download
 } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
 
 type Theme = 'premium-dark' | 'premium-light'
 
@@ -30,15 +32,32 @@ interface Message {
 }
 
 interface PersonalInfo {
-  full_name?: string
-  title?: string
-  email?: string
-  phone?: string
+  full_name: string
+  title: string
+  email: string
+  phone: string
+  summary: string
   location?: string
   linkedin_url?: string
   github_url?: string
   portfolio_url?: string
-  summary?: string
+}
+
+interface ResumeData {
+  personal_info: {
+    full_name: string
+    title: string
+    email: string
+    phone: string
+    summary: string
+    location?: string
+    linkedin_url?: string
+    github_url?: string
+    portfolio_url?: string
+  }
+  education: any[]
+  experience: any[]
+  skills: any[]
 }
 
 export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarProps) {
@@ -127,32 +146,16 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
   // -----------------------------
   // Personal info extraction (from HTML)
   // -----------------------------
+  // -----------------------------
+  // Personal info extraction (from DB)
+  // -----------------------------
   const fetchPersonalInfo = async () => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf`
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}` }
-      })
-
-      if (!res.ok) return
-
-      const html = await res.text()
-      const parser = new DOMParser()
-      const doc = parser.parseFromString(html, 'text/html')
-
-      const getText = (sel: string) => doc.querySelector(sel)?.textContent?.trim() ?? ''
-
-      const parsed: PersonalInfo = {
-        full_name: getText('.name') || getText('[data-name]') || getText('h1'),
-        title: getText('.title') || getText('[data-title]') || getText('h2'),
-        email: getText('[data-email]') || getText('a[href^="mailto:"]')?.replace(/^mailto:/, '') || '',
-        phone: getText('[data-phone]') || '',
-        linkedin_url: doc.querySelector('a[href*="linkedin.com"]')?.getAttribute('href') ?? '',
-        github_url: doc.querySelector('a[href*="github.com"]')?.getAttribute('href') ?? '',
-        portfolio_url: doc.querySelector('a[href*="http"]')?.getAttribute('href') ?? '',
-        summary: getText('.summary') || getText('[data-summary]') || ''
+      const { data, error } = await supabase.from('personal_info' as any).select('*').single()
+      if (error) throw error
+      if (data) {
+        setPersonalInfo(data)
       }
-      setPersonalInfo(parsed)
     } catch (err) {
       console.warn('Could not fetch personal info:', err)
     }
@@ -312,6 +315,136 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
   // -----------------------------
   // Resume: open modal, fetch HTML & blob fallback, print, download
   // -----------------------------
+  // -----------------------------
+  // Resume: fetch from DB, generate HTML, print
+  // -----------------------------
+  const generateResumeHTML = (data: ResumeData) => {
+    const { personal_info, education, experience, skills } = data
+
+    // Group skills
+    const skillsByCategory = skills.reduce((acc: any, skill: any) => {
+      const cat = skill.category || 'Other'
+      if (!acc[cat]) acc[cat] = []
+      acc[cat].push(skill.name)
+      return acc
+    }, {})
+
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>${personal_info.full_name} - Resume</title>
+        <style>
+          body { font-family: 'Inter', sans-serif; line-height: 1.5; color: #333; max-width: 800px; margin: 0 auto; padding: 40px; }
+          h1 { font-size: 28px; margin-bottom: 5px; color: #111; }
+          h2 { font-size: 18px; color: #666; margin-top: 0; margin-bottom: 20px; font-weight: 500; }
+          h3 { font-size: 16px; text-transform: uppercase; border-bottom: 2px solid #333; padding-bottom: 5px; margin-top: 30px; margin-bottom: 15px; letter-spacing: 1px; }
+          h4 { font-size: 16px; margin: 0; font-weight: 700; }
+          .contact-info { margin-bottom: 30px; font-size: 14px; color: #555; display: flex; gap: 15px; flex-wrap: wrap; }
+          .section { margin-bottom: 20px; }
+          .item { margin-bottom: 15px; }
+          .item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+          .date { font-size: 14px; color: #666; font-style: italic; }
+          .subtitle { font-size: 14px; font-weight: 600; color: #444; margin-bottom: 5px; }
+          .description { font-size: 14px; color: #444; margin-bottom: 5px; }
+          ul { margin: 5px 0; padding-left: 20px; }
+          li { font-size: 14px; margin-bottom: 3px; }
+          .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+          .skill-category { margin-bottom: 10px; }
+          .skill-category strong { display: block; font-size: 14px; margin-bottom: 3px; color: #333; text-transform: capitalize; }
+          .skill-tags { font-size: 13px; color: #555; }
+          @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <header>
+          <h1>${personal_info.full_name}</h1>
+          <h2>${personal_info.title}</h2>
+          <div class="contact-info">
+            <span>${personal_info.email}</span>
+            <span>${personal_info.phone}</span>
+            <span>${personal_info.location || 'Nairobi, Kenya'}</span>
+          </div>
+          <p>${personal_info.summary}</p>
+        </header>
+
+        <section>
+          <h3>Experience</h3>
+          ${experience.map((job: any) => `
+            <div class="item">
+              <div class="item-header">
+                <h4>${job.position}</h4>
+                <span class="date">${new Date(job.start_date).getFullYear()} - ${job.is_current ? 'Present' : new Date(job.end_date).getFullYear()}</span>
+              </div>
+              <div class="subtitle">${job.company}</div>
+              <p class="description">${job.description}</p>
+              <ul>
+                ${(job.responsibilities || []).map((r: string) => `<li>${r}</li>`).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </section>
+
+        <section>
+          <h3>Education</h3>
+          ${education.map((edu: any) => `
+            <div class="item">
+              <div class="item-header">
+                <h4>${edu.institution}</h4>
+                <span class="date">${new Date(edu.start_date).getFullYear()} - ${new Date(edu.end_date).getFullYear()}</span>
+              </div>
+              <div class="subtitle">${edu.degree} in ${edu.field_of_study}</div>
+              <p class="description">${edu.description}</p>
+            </div>
+          `).join('')}
+        </section>
+
+        <section>
+          <h3>Skills</h3>
+          <div class="skills-grid">
+            ${Object.entries(skillsByCategory).map(([cat, items]: [string, any]) => `
+              <div class="skill-category">
+                <strong>${cat.replace('_', ' ')}</strong>
+                <div class="skill-tags">${items.join(', ')}</div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      </body>
+      </html>
+    `
+  }
+
+  const fetchAndGenerateResume = async () => {
+    try {
+      // Fetch all data in parallel
+      const [personal, edu, exp, skills] = await Promise.all([
+        supabase.from('personal_info' as any).select('*').single(),
+        supabase.from('education' as any).select('*').order('start_date', { ascending: false }),
+        supabase.from('experience' as any).select('*').order('start_date', { ascending: false }),
+        supabase.from('skills' as any).select('*').order('proficiency_level', { ascending: false })
+      ])
+
+      if (personal.error) throw personal.error
+
+      const resumeData: ResumeData = {
+        personal_info: personal.data,
+        education: edu.data || [],
+        experience: exp.data || [],
+        skills: skills.data || []
+      }
+
+      return generateResumeHTML(resumeData)
+    } catch (err) {
+      console.error('Error generating resume:', err)
+      throw err
+    }
+  }
+
   const openResumeModal = async () => {
     setIsResumeModalOpen(true)
     setResumeHTML(null)
@@ -321,25 +454,13 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
     }
 
     try {
-      const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf?t=${Date.now()}`
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}` }
-      })
-
-      if (!res.ok) {
-        const errText = await res.text().catch(() => '')
-        throw new Error(`Failed to fetch resume: ${res.status} ${errText}`)
-      }
-
-      const html = await res.text()
+      const html = await fetchAndGenerateResume()
       setResumeHTML(html)
-
       const blob = new Blob([html], { type: 'text/html' })
       const blobUrl = URL.createObjectURL(blob)
       setResumeBlobUrl(blobUrl)
     } catch (err) {
-      console.error('Error fetching resume HTML', err)
-      setResumeHTML('<div style="padding:20px;color:#b91c1c;">Failed to load resume. Try again later.</div>')
+      setResumeHTML('<div style="padding:20px;color:#b91c1c;">Failed to load resume data. Please try again.</div>')
     }
   }
 
@@ -355,7 +476,12 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
   const printResumeAsPDF = async () => {
     setIsDownloading(true)
     try {
-      const printableUrl = resumeBlobUrl ?? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf?print=true&t=${Date.now()}`
+      const printableUrl = resumeBlobUrl
+      if (!printableUrl) {
+        alert('Resume not loaded yet')
+        setIsDownloading(false)
+        return
+      }
 
       const printWindow = window.open(printableUrl, '_blank', 'width=1000,height=800,scrollbars=yes,resizable=yes')
 
@@ -374,35 +500,22 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
         }
       }
 
-      if (resumeBlobUrl) {
-        const interval = setInterval(() => {
-          try {
-            if (printWindow && printWindow.document && printWindow.document.readyState === 'complete') {
-              clearInterval(interval)
-              onLoaded()
-              const closeChecker = setInterval(() => {
-                if (printWindow.closed) {
-                  clearInterval(closeChecker)
-                  setIsDownloading(false)
-                }
-              }, 500)
-            }
-          } catch {
-            // ignore cross-origin errors
+      const interval = setInterval(() => {
+        try {
+          if (printWindow && printWindow.document && printWindow.document.readyState === 'complete') {
+            clearInterval(interval)
+            onLoaded()
+            const closeChecker = setInterval(() => {
+              if (printWindow.closed) {
+                clearInterval(closeChecker)
+                setIsDownloading(false)
+              }
+            }, 500)
           }
-        }, 200)
-      } else {
-        const closeChecker = setInterval(() => {
-          if (printWindow.closed) {
-            clearInterval(closeChecker)
-            setIsDownloading(false)
-          }
-        }, 500)
-
-        setTimeout(() => {
-          setIsDownloading(false)
-        }, 30000)
-      }
+        } catch {
+          // ignore cross-origin errors
+        }
+      }, 200)
     } catch (err) {
       console.error('Print error', err)
       alert('Failed to open print dialog. Please try downloading the PDF directly.')
@@ -410,77 +523,22 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
     }
   }
 
-  // Direct PDF download function
   const downloadResumePDF = async () => {
     setIsDownloading(true)
     try {
-      // Use the PDF generation endpoint directly
-      const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf?download=true&format=pdf&t=${Date.now()}`
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}` }
-      })
-
-      if (!res.ok) {
-        throw new Error(`Failed to generate PDF: ${res.status}`)
-      }
-
-      // Get the response as blob
-      const blob = await res.blob()
-
-      // Check if it's actually a PDF
-      if (blob.type !== 'application/pdf') {
-        console.warn('Expected PDF but got:', blob.type)
-        // Fallback to HTML download if PDF is not available
-        await downloadResumeHTMLFallback()
-        return
-      }
-
-      // Create download link
-      const urlBlob = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = urlBlob
-      const safeName = (personalInfo?.full_name ?? 'Resume').replace(/\s+/g, '_')
-      a.download = `Resume_${safeName}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(urlBlob)
+      // For now, we'll use the print dialog as "Save as PDF" is the most reliable client-side method
+      // without heavy libraries. The user can choose "Save as PDF" in the print dialog.
+      await printResumeAsPDF()
     } catch (err) {
-      console.error('PDF download error', err)
-      // Fallback to HTML download
-      await downloadResumeHTMLFallback()
+      console.error('Download error', err)
+      alert('Failed to initiate download. Please try printing.')
     } finally {
       setIsDownloading(false)
     }
   }
 
-  // Fallback function for HTML download if PDF fails
   const downloadResumeHTMLFallback = async () => {
-    try {
-      let html = resumeHTML
-      if (!html) {
-        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/generate-resume-pdf`
-        const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}` }
-        })
-        if (!res.ok) throw new Error('Failed to fetch resume HTML for download')
-        html = await res.text()
-      }
-
-      const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      const safeName = (personalInfo?.full_name ?? 'Resume').replace(/\s+/g, '_')
-      a.download = `Resume_${safeName}.html`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (fallbackErr) {
-      console.error('HTML fallback also failed', fallbackErr)
-      alert('Failed to download resume. Please try again.')
-    }
+    // Deprecated in favor of direct generation
   }
 
   // -----------------------------

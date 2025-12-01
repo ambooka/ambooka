@@ -1,178 +1,244 @@
 @import "tailwindcss";
 
 :root {
-  /* ===== BALANCED PROFESSIONAL COLOR SYSTEM ===== */
+  /* ===== LUXURY BURGUNDY & GOLD THEME ===== */
 
-  /* Core Solid Colors - Clean & Professional */
-  --color-gold: #D4AF37;
-  --color-rose: #B76E79;
-  --color-burgundy: #8B0000;
-  --color-navy: #1a1a2e;
-  --color-slate: #2d3748;
+  /* Sophisticated Backgrounds - Balanced Neutrals */
+  --bg-primary: #FAF8F5;
+  --bg-secondary: #F5F1EB;
+  --bg-tertiary: #EBE4D8;
 
-  /* Limited Gradients - Only for accents */
-  --gradient-luxury: linear-gradient(135deg, #D4AF37 0%, #B76E79 100%);
-  --gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #2d3748 100%);
+  /* Rich Text Colors */
+  --text-primary: #2A1810;
+  --text-secondary: #4D3428;
+  --text-tertiary: #6B5847;
 
-  /* Light Theme - Clean Backgrounds */
-  --bg-primary: hsl(0, 0%, 98%);
-  --bg-secondary: hsl(0, 0%, 100%);
-  --bg-tertiary: hsl(0, 0%, 96%);
-  --text-primary: hsl(0, 0%, 10%);
-  --text-secondary: hsl(0, 0%, 35%);
-  --text-tertiary: hsl(0, 0%, 55%);
+  /* CO-PRIMARY LUXURY COLORS - Burgundy & Gold */
+  --accent-primary: #8E0E28;
+  --accent-secondary: #C9A961;
+  --accent-tertiary: #B8860B;
+  --accent-success: #2D5F3F;
+  --accent-warning: #C9A961;
+  --accent-error: #8E0E28;
 
-  /* Glassmorphism - Minimal Tint */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-bg-strong: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(212, 175, 55, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
-  --glass-shadow-lg: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+  /* Luxury Gradients - Burgundy & Gold Focused */
+  --gradient-primary: linear-gradient(135deg, #8E0E28 0%, #6B0A1F 100%);
+  --gradient-secondary: linear-gradient(135deg, #C9A961 0%, #B8860B 100%);
+  --gradient-burgundy-gold: linear-gradient(135deg, #8E0E28 0%, #C9A961 100%);
+  --gradient-warm: linear-gradient(135deg, #C9A961 0%, #E8C89A 100%);
+  --gradient-cool: linear-gradient(135deg, #8E0E28 0%, #5A0917 100%);
 
-  /* Accent Colors - Solid, No Gradients */
-  --accent-primary: #D4AF37;
-  --accent-secondary: #B76E79;
-  --accent-dark: #8B0000;
-  --accent-success: #10B981;
-  --accent-warning: #D4AF37;
-  --accent-error: #DC2626;
+  /* Elegant Glassmorphism with Wine Tint */
+  --glass-bg: rgba(245, 241, 235, 0.85);
+  --glass-bg-strong: rgba(245, 241, 235, 0.95);
+  --glass-border: rgba(142, 14, 40, 0.25);
+  --glass-shadow: 0 8px 32px 0 rgba(142, 14, 40, 0.15);
+  --glass-shadow-lg: 0 16px 48px 0 rgba(142, 14, 40, 0.22);
 
-  /* Typography */
-  --ff-display: 'Inter', sans-serif;
-  --ff-heading: 'Inter', sans-serif;
-  --ff-body: 'Inter', sans-serif;
+  /* Burgundy-Tinted Shadows */
+  --shadow-1: 0 1px 3px rgba(142, 14, 40, 0.12), 0 1px 2px rgba(201, 169, 97, 0.08);
+  --shadow-2: 0 4px 6px rgba(142, 14, 40, 0.15), 0 2px 4px rgba(201, 169, 97, 0.1);
+  --shadow-3: 0 10px 15px rgba(142, 14, 40, 0.18), 0 4px 6px rgba(201, 169, 97, 0.12);
+  --shadow-4: 0 20px 25px rgba(142, 14, 40, 0.22), 0 10px 10px rgba(201, 169, 97, 0.15);
+  --shadow-5: 0 25px 50px rgba(142, 14, 40, 0.28), 0 12px 24px rgba(201, 169, 97, 0.18);
 
-  --fs-display: clamp(2.5rem, 5vw, 4rem);
-  --fs-1: clamp(2rem, 4vw, 3rem);
-  --fs-2: clamp(1.5rem, 3vw, 2rem);
-  --fs-3: clamp(1.25rem, 2.5vw, 1.5rem);
-  --fs-4: clamp(1.125rem, 2vw, 1.25rem);
+  /* Balanced Glow Effects - Burgundy & Gold */
+  --glow-primary: 0 0 32px rgba(142, 14, 40, 0.5);
+  --glow-secondary: 0 0 32px rgba(201, 169, 97, 0.5);
+  --glow-intense: 0 0 48px rgba(142, 14, 40, 0.7);
+
+  /* Burgundy & Gold Borders */
+  --border-primary: rgba(142, 14, 40, 0.2);
+  --border-secondary: rgba(201, 169, 97, 0.25);
+  --border-accent: rgba(142, 14, 40, 0.35);
+
+  /* Elegant Typography */
+  --ff-display: 'Playfair Display', 'Georgia', serif;
+  --ff-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ff-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --fs-display: clamp(2.75rem, 5.5vw, 4.5rem);
+  --fs-1: clamp(2.25rem, 4.5vw, 3.5rem);
+  --fs-2: clamp(1.75rem, 3.5vw, 2.5rem);
+  --fs-3: clamp(1.375rem, 2.75vw, 1.75rem);
+  --fs-4: clamp(1.125rem, 2.25vw, 1.375rem);
   --fs-5: 1rem;
   --fs-6: 0.875rem;
   --fs-7: 0.75rem;
+  --fs-8: 0.6875rem;
 
   --fw-400: 400;
   --fw-500: 500;
   --fw-600: 600;
   --fw-700: 700;
+  --fw-800: 800;
 
-  /* Spacing */
+  /* Refined Spacing System */
   --space-xs: 0.5rem;
   --space-sm: 1rem;
   --space-md: 1.5rem;
   --space-lg: 2rem;
   --space-xl: 3rem;
   --space-2xl: 4rem;
+  --space-3xl: 6rem;
 
-  /* Clean Shadows - No Color Tints */
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-2: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-3: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --shadow-4: 0 20px 25px rgba(0, 0, 0, 0.15);
-  --shadow-5: 0 25px 50px rgba(0, 0, 0, 0.2);
-  --glow-gold: 0 0 20px rgba(212, 175, 55, 0.3);
+  /* Smooth Luxury Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-1: 0.3s ease;
+  --transition-2: 0.6s ease;
 
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.25s ease;
-  --transition-slow: 0.4s ease;
-
-  /* Glass Effects */
+  /* Elegant Blur Effects */
   --blur-sm: blur(10px);
   --blur-md: blur(20px);
+  --blur-lg: blur(30px);
 
-  /* Border Radius */
+  /* Refined Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  --radius-2xl: 24px;
 
-  /* Utility Bar */
-  --utility-bg: rgba(255, 255, 255, 0.9);
-  --utility-border: rgba(0, 0, 0, 0.1);
-  --utility-btn-hover-bg: rgba(212, 175, 55, 0.1);
-  --tooltip-bg: rgba(255, 255, 255, 0.98);
+  /* Luxury Utility Bar */
+  --utility-bg: rgba(245, 241, 235, 0.95);
+  --utility-border: rgba(142, 14, 40, 0.25);
+  --utility-btn-hover-bg: rgba(142, 14, 40, 0.1);
+  --tooltip-bg: rgba(42, 24, 16, 0.95);
+  --tooltip-text: #FAF8F5;
+
+  /* Legacy Variable Mappings for Compatibility */
+  --accent-color: var(--accent-primary);
+  --border-color: var(--border-primary);
+  --color-gold: #C9A961;
+  --color-navy: #2A1810;
+  --color-slate: #4D3428;
+
+  /* Legacy Font Variables */
+  --ff-poppins: var(--ff-body);
+  --ff-inter: var(--ff-body);
+
+  /* Legacy Gradient Variables */
+  --bg-gradient-primary: var(--gradient-primary);
+  --bg-gradient-secondary: var(--gradient-secondary);
+  --bg-gradient-jet: var(--bg-secondary);
+  --bg-gradient-onyx: var(--bg-tertiary);
+  --border-gradient-onyx: var(--border-accent);
+  --text-gradient-primary: var(--gradient-burgundy-gold);
+  --glow-gradient: var(--gradient-warm);
+  --glow-shadow: var(--glow-primary);
+  --glow-shadow-intense: var(--glow-intense);
 }
 
-/* ===== PREMIUM DARK THEME (DEFAULT) ===== */
+/* ===== OPTIONAL DARK MODE (Burgundy & Gold) ===== */
 [data-theme="premium-dark"] {
-  /* Deep Navy Professional */
-  --bg-primary: hsl(220, 30%, 8%);
-  --bg-secondary: hsl(220, 25%, 12%);
-  --bg-tertiary: hsl(220, 20%, 16%);
-  --text-primary: hsl(45, 70%, 92%);
-  --text-secondary: hsl(40, 50%, 75%);
-  --text-tertiary: hsl(35, 40%, 60%);
+  /* Deep Wine & Charcoal Backgrounds */
+  --bg-primary: #1A0E13;
+  --bg-secondary: #2A1620;
+  --bg-tertiary: #3A1F2E;
 
-  /* Solid Accents - Minimal Gradients */
-  --accent-primary: #D4AF37;
-  --accent-secondary: #B76E79;
-  --accent-dark: #8B0000;
-  --accent-success: #10B981;
-  --accent-warning: #D4AF37;
-  --accent-error: #DC2626;
+  /* Gold & Cream Text */
+  --text-primary: #E8DCC4;
+  --text-secondary: #C9A961;
+  --text-tertiary: #B8860B;
 
-  /* Glassmorphism - Dark */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-bg-strong: rgba(255, 255, 255, 0.08);
-  --glass-border: rgba(212, 175, 55, 0.2);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  --glass-shadow-lg: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+  /* Balanced Burgundy & Gold Accents */
+  --accent-primary: #8E0E28;
+  --accent-secondary: #C9A961;
+  --accent-tertiary: #B8860B;
+  --accent-success: #3D7A52;
+  --accent-warning: #C9A961;
+  --accent-error: #B81D3A;
 
-  /* Clean Dark Shadows */
-  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5);
-  --shadow-2: 0 4px 6px rgba(0, 0, 0, 0.5);
-  --shadow-3: 0 10px 15px rgba(0, 0, 0, 0.5);
-  --shadow-4: 0 20px 25px rgba(0, 0, 0, 0.6);
-  --shadow-5: 0 25px 50px rgba(0, 0, 0, 0.7);
-  --glow-gold: 0 0 30px rgba(212, 175, 55, 0.4);
+  /* Dark Luxury Gradients */
+  --gradient-primary: linear-gradient(135deg, #8E0E28 0%, #6B0A1F 100%);
+  --gradient-secondary: linear-gradient(135deg, #C9A961 0%, #B8860B 100%);
+  --gradient-burgundy-gold: linear-gradient(135deg, #8E0E28 0%, #C9A961 100%);
+  --gradient-warm: linear-gradient(135deg, #C9A961 0%, #E8C89A 100%);
+  --gradient-cool: linear-gradient(135deg, #8E0E28 0%, #5A0917 100%);
+
+  /* Dark Glassmorphism */
+  --glass-bg: rgba(42, 22, 32, 0.8);
+  --glass-bg-strong: rgba(42, 22, 32, 0.95);
+  --glass-border: rgba(142, 14, 40, 0.4);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  --glass-shadow-lg: 0 16px 48px 0 rgba(0, 0, 0, 0.8);
+
+  /* Deep Burgundy Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(142, 14, 40, 0.15);
+  --shadow-2: 0 4px 6px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(142, 14, 40, 0.2);
+  --shadow-3: 0 10px 15px rgba(0, 0, 0, 0.7), 0 4px 6px rgba(142, 14, 40, 0.25);
+  --shadow-4: 0 20px 25px rgba(0, 0, 0, 0.8), 0 10px 10px rgba(142, 14, 40, 0.3);
+  --shadow-5: 0 25px 50px rgba(0, 0, 0, 0.9), 0 12px 24px rgba(142, 14, 40, 0.35);
+
+  /* Intense Burgundy & Gold Glows */
+  --glow-primary: 0 0 40px rgba(142, 14, 40, 0.7);
+  --glow-secondary: 0 0 40px rgba(201, 169, 97, 0.6);
+  --glow-intense: 0 0 60px rgba(142, 14, 40, 0.9);
+
+  /* Dark Burgundy Borders */
+  --border-primary: rgba(142, 14, 40, 0.4);
+  --border-secondary: rgba(201, 169, 97, 0.3);
+  --border-accent: rgba(142, 14, 40, 0.6);
 
   /* Dark Utility Bar */
-  --utility-bg: rgba(26, 26, 46, 0.95);
-  --utility-border: rgba(212, 175, 55, 0.2);
-  --utility-btn-hover-bg: rgba(212, 175, 55, 0.15);
-  --tooltip-bg: rgba(26, 26, 46, 0.98);
+  --utility-bg: rgba(42, 22, 32, 0.95);
+  --utility-border: rgba(142, 14, 40, 0.4);
+  --utility-btn-hover-bg: rgba(142, 14, 40, 0.25);
+  --tooltip-bg: rgba(232, 220, 196, 0.95);
+  --tooltip-text: #1A0E13;
+
+  /* Legacy Variable Mappings */
+  --accent-color: var(--accent-primary);
+  --border-color: var(--border-primary);
+
+  /* Legacy Gradient Variables for Dark Theme */
+  --bg-gradient-primary: var(--gradient-primary);
+  --bg-gradient-secondary: var(--gradient-secondary);
+  --bg-gradient-jet: var(--bg-secondary);
+  --bg-gradient-onyx: var(--bg-tertiary);
+  --border-gradient-onyx: var(--border-accent);
+  --text-gradient-primary: var(--gradient-burgundy-gold);
+  --glow-gradient: var(--gradient-warm);
+  --glow-shadow: var(--glow-primary);
+  --glow-shadow-intense: var(--glow-intense);
 }
 
-/* ===== PREMIUM LIGHT THEME ===== */
+/* ===== LEGACY THEME COMPATIBILITY ===== */
+/* Redirect old theme names to luxury burgundy & gold theme */
+
 [data-theme="premium-light"] {
-  /* Inherits most from root - clean and simple */
+  /* Explicitly inherits :root values - Burgundy & Gold luxury theme */
 }
 
-/* Keep old palestine theme for backward compatibility */
-[data-theme="palestine"] {
-  /* Redirect to premium-dark */
-  --gradient-primary: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  --gradient-secondary: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --gradient-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-
-  --bg-primary: hsl(0, 0%, 8%);
-  --bg-secondary: hsl(0, 5%, 12%);
-  --bg-tertiary: hsl(0, 5%, 16%);
-  --text-primary: hsl(40, 95%, 95%);
-  --text-secondary: hsl(40, 60%, 85%);
-  --text-tertiary: hsl(40, 40%, 70%);
-}
-
-/* Old dark/light themes for backward compatibility */
+[data-theme="palestine"],
 [data-theme="dark"] {
-  /* Redirect to premium-dark */
-  --bg-primary: hsl(0, 0%, 8%);
-  --bg-secondary: hsl(0, 5%, 12%);
-  --bg-tertiary: hsl(0, 5%, 16%);
-  --text-primary: hsl(40, 95%, 95%);
-  --text-secondary: hsl(40, 60%, 85%);
-  --text-tertiary: hsl(40, 40%, 70%);
+  /* Redirect to burgundy & gold dark mode */
+  --bg-primary: #1A0E13;
+  --bg-secondary: #2A1620;
+  --bg-tertiary: #3A1F2E;
+  --text-primary: #E8DCC4;
+  --text-secondary: #C9A961;
+  --text-tertiary: #B8860B;
+  --accent-primary: #8E0E28;
+  --accent-secondary: #C9A961;
+  --accent-color: #8E0E28;
+  --border-color: rgba(142, 14, 40, 0.4);
 }
 
 [data-theme="light"] {
-  /* Redirect to premium-light */
-  --bg-primary: hsl(40, 60%, 98%);
-  --bg-secondary: hsl(40, 50%, 100%);
-  --bg-tertiary: hsl(40, 40%, 96%);
-  --text-primary: hsl(0, 20%, 15%);
-  --text-secondary: hsl(0, 15%, 30%);
-  --text-tertiary: hsl(0, 10%, 50%);
+  /* Redirect to burgundy & gold luxury light theme (same as :root) */
+  --bg-primary: #FAF8F5;
+  --bg-secondary: #F5F1EB;
+  --bg-tertiary: #EBE4D8;
+  --text-primary: #2A1810;
+  --text-secondary: #4D3428;
+  --text-tertiary: #6B5847;
+  --accent-primary: #8E0E28;
+  --accent-secondary: #C9A961;
+  --accent-color: #8E0E28;
+  --border-color: rgba(142, 14, 40, 0.2);
 }
 
 /* Enhanced Professional Gradient Animations */
@@ -391,9 +457,8 @@ textarea {
   text-shadow: none;
 }
 
-:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+:focus-visible {
+  outline: none;
 }
 
 html {
@@ -1018,8 +1083,10 @@ main {
 }
 
 .navbar-link:hover,
-.navbar-link:focus {
+.navbar-link:focus,
+.navbar-link:focus-visible {
   color: var(--text-primary);
+  outline: none;
 }
 
 .navbar-link:hover::after,

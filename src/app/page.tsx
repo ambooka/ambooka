@@ -11,7 +11,6 @@ import Blog from '@/components/Blog'
 import Navbar from '@/components/Navbar'
 import UtilityBar from '@/components/UtilityBar'
 import ScrollToTop from '@/components/ScrollToTop'
-import PerformanceMonitor from '@/components/PerformanceMonitor'
 import CodeRevealOverlay from '@/components/CodeRevealOverlay'
 
 const PAGES = {
@@ -95,7 +94,6 @@ export default function Home() {
                 </div>
             </main>
             <ScrollToTop />
-            <PerformanceMonitor />
             <CodeRevealOverlay />
         </>
     )
