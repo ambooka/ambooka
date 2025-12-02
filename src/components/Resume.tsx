@@ -8,50 +8,60 @@ interface ResumeProps {
 
 interface PersonalInfo {
   id: string
-  category: string
-  content: string
+  full_name: string
   title: string
+  email: string
+  phone: string | null
+  location: string | null
+  summary: string | null
+  linkedin_url: string | null
+  github_url: string | null
+  website_url: string | null
   created_at: string
   updated_at: string
-  tags?: string[] | null
-  full_name?: string
-  email?: string
-  phone?: string
-  summary?: string
 }
 
 interface Education {
   id: string
   institution: string
-  degree?: string
-  field_of_study?: string
+  degree: string | null
+  field_of_study: string | null
   start_date: string
-  end_date?: string
+  end_date: string | null
   is_current: boolean
-  description?: string
-  grade?: string
+  description: string | null
+  grade: string | null
+  display_order: number | null
+  created_at: string
+  updated_at: string
 }
 
 interface Experience {
   id: string
   company: string
   position: string
-  location?: string
+  location: string | null
   start_date: string
-  end_date?: string
+  end_date: string | null
   is_current: boolean
-  description?: string
-  responsibilities?: string[]
-  achievements?: string[]
-  technologies?: string[]
+  description: string | null
+  responsibilities: string[] | null
+  achievements: string[] | null
+  technologies: string[] | null
+  display_order: number | null
+  created_at: string
+  updated_at: string
 }
 
 interface Skill {
   id: string
   name: string
   category: string
-  proficiency_level?: number
+  proficiency_level: number | null
   is_featured: boolean
+  display_order: number | null
+  created_at: string
+  updated_at: string
 }
 
 interface ResumeData {
@@ -77,10 +87,10 @@ export default function Resume({ isActive = false }: ResumeProps) {
 
       // Fetch all resume data in parallel
       const [personalInfoResult, educationResult, experienceResult, skillsResult] = await Promise.all([
-        supabase.from('portfolio_content').select('*').single(),
-        supabase.from('portfolio_content').select('*').eq('category', 'education').order('created_at', { ascending: false }),
-        supabase.from('portfolio_content').select('*').eq('category', 'experience').order('created_at', { ascending: false }),
-        supabase.from('portfolio_content').select('*').eq('category', 'skills').order('created_at', { ascending: false })
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('education').select('*').order('start_date', { ascending: false }),
+        supabase.from('experience').select('*').order('start_date', { ascending: false }),
+        supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
       ])
 
       if (personalInfoResult.error) throw personalInfoResult.error
@@ -89,10 +99,10 @@ export default function Resume({ isActive = false }: ResumeProps) {
       if (skillsResult.error) throw skillsResult.error
 
       setResumeData({
-        personal_info: personalInfoResult.data as PersonalInfo,
-        education: (educationResult.data || []) as unknown as Education[],
-        experience: (experienceResult.data || []) as unknown as Experience[],
-        skills: (skillsResult.data || []) as unknown as Skill[]
+        personal_info: personalInfoResult.data,
+        education: educationResult.data || [],
+        experience: experienceResult.data || [],
+        skills: skillsResult.data || []
       })
     } catch (err: any) {
       console.error('Error fetching resume data:', err)
