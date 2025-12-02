@@ -1,107 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as Dialog from '@radix-ui/react-dialog'
-import { styled } from '@stitches/react'
-import { ExternalLink, Github, ChevronDown, EyeIcon, Star } from 'lucide-react'
+import { ExternalLink, Github, ChevronDown, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Sparkles, Lock, Globe, Code } from 'lucide-react'
 
 
-// --- Styled Components ---
 
-const DialogOverlay = styled(Dialog.Overlay, {
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  position: 'fixed',
-  inset: 0,
-  animation: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-  zIndex: 9999,
-})
-
-const DialogContent = styled(Dialog.Content, {
-  borderRadius: '6px',
-  boxShadow: '0px 10px 38px -10px rgba(22, 23, 24, 0.35)',
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '90vw',
-  maxWidth: '600px',
-  maxHeight: '85vh',
-  animation: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  zIndex: 10000,
-})
-
-const ModalHeader = styled('div', {
-  backgroundColor: '#161B22',
-  color: 'white',
-  padding: '30px 25px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: '200px',
-  borderTopLeftRadius: '6px',
-  borderTopRightRadius: '6px',
-  position: 'relative',
-})
-
-const ModalBody = styled('div', {
-  backgroundColor: 'white',
-  padding: '25px',
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  overflowY: 'auto',
-  gap: '1.5rem',
-  borderBottomLeftRadius: '6px',
-  borderBottomRightRadius: '6px',
-})
-
-const Button = styled('button', {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '0.75rem 1rem',
-  borderRadius: '6px',
-  fontSize: '16px',
-  fontWeight: 600,
-  cursor: 'pointer',
-  transition: 'background-color 0.2s, opacity 0.2s, border-color 0.2s',
-  flexGrow: 1,
-
-  variants: {
-    variant: {
-      primary: {
-        backgroundColor: 'var(--accent-color)',
-        color: 'white',
-        '&:hover': { opacity: 0.9 },
-      },
-      secondary: {
-        backgroundColor: 'transparent',
-        border: '1px solid var(--accent-color)',
-        color: 'var(--accent-color)',
-        '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.05)' },
-      },
-      viewLive: {
-        backgroundColor: 'transparent',
-        border: '1px solid white',
-        color: 'white',
-        padding: '0.75rem 2rem',
-        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-      },
-      sourceCode: {
-        backgroundColor: 'white',
-        border: '1px solid #D0D0D0',
-        color: 'black',
-        padding: '0.75rem 2rem',
-        '&:hover': { backgroundColor: '#F5F5F5' },
-      }
-    },
-  },
-})
 
 // --- Interfaces and Default Config ---
 
@@ -132,12 +37,26 @@ const getProjectImage = (repo: GitHubRepo): string => {
 
 // --- Portfolio Component ---
 
+// Helper to generate consistent gradients based on string input
+const getProjectGradient = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash % 360);
+  return `linear-gradient(135deg, hsl(${h}, 70%, 60%), hsl(${(h + 40) % 360}, 70%, 40%))`;
+};
+
 export default function Portfolio({ isActive = false, github = defaultGithubConfig }: PortfolioProps) {
   const [filter, setFilter] = useState('all')
   const [selectValue, setSelectValue] = useState('Select category')
   const [showSelectList, setShowSelectList] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const PROJECTS_PER_PAGE = 12
+
   const [projects, setProjects] = useState<Array<{
     id: number
     category: string
@@ -150,6 +69,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     isPrivate?: boolean
     ownerLogin?: string
     homepage?: string | null
+    isFeatured?: boolean
   }>>([])
 
   // Popup / README state
@@ -165,6 +85,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     url: string
     isPrivate?: boolean
     ownerLogin?: string
+    image?: string
   } | null>(null)
 
   // Ensure popup is closed when component unmounts
@@ -204,8 +125,16 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
           language: repo.language || 'Other',
           isPrivate: !!repo.private,
           ownerLogin: repo.owner?.login,
-          homepage: repo.homepage
+          homepage: repo.homepage,
+          isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage
         }))
+
+        // Sort: featured first, then by stars
+        mappedProjects.sort((a, b) => {
+          if (a.isFeatured && !b.isFeatured) return -1
+          if (!a.isFeatured && b.isFeatured) return 1
+          return b.stars - a.stars
+        })
 
         setProjects(mappedProjects)
       } catch (error) {
@@ -227,7 +156,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
       homepage: project.homepage,
       url: project.url,
       isPrivate: project.isPrivate,
-      ownerLogin: project.ownerLogin
+      ownerLogin: project.ownerLogin,
+      image: project.image
     })
     setPopupError(null)
     setPopupContent(null)
@@ -252,9 +182,39 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     }
   }
 
-  const filteredProjects = filter === 'all'
-    ? projects
-    : projects.filter(project => project.category === filter)
+  // Advanced filtering with search
+  const filteredProjects = useMemo(() => {
+    let result = projects
+
+    // Filter by category
+    if (filter !== 'all') {
+      result = result.filter(project => project.category === filter)
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(project =>
+        project.title.toLowerCase().includes(query) ||
+        project.description.toLowerCase().includes(query) ||
+        project.language.toLowerCase().includes(query)
+      )
+    }
+
+    return result
+  }, [projects, filter, searchQuery])
+
+  // Pagination
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE)
+  const paginatedProjects = useMemo(() => {
+    const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE
+    return filteredProjects.slice(startIndex, startIndex + PROJECTS_PER_PAGE)
+  }, [filteredProjects, currentPage])
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [filter, searchQuery])
 
   const handleFilter = (newFilter: string, displayName: string) => {
     setFilter(newFilter)
@@ -279,21 +239,92 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
 
       <section className="projects">
         {loading && (
-          <div className="loading">Loading projects...</div>
+          <div className="loading" style={{ textAlign: 'center', padding: '40px' }}>
+            <div style={{ fontSize: '18px', color: 'var(--text-secondary)' }}>Loading projects...</div>
+          </div>
         )}
 
         {error && (
-          <div className="error">{error}</div>
+          <div className="error" style={{
+            padding: '20px',
+            background: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.3)',
+            borderRadius: '12px',
+            color: '#ef4444',
+            textAlign: 'center'
+          }}>{error}</div>
         )}
 
         {!loading && !error && projects.length === 0 && (
-          <div className="no-projects">
+          <div className="no-projects" style={{
+            textAlign: 'center',
+            padding: '40px',
+            color: 'var(--text-secondary)'
+          }}>
             No projects found for username: {github.username}
           </div>
         )}
 
         {!loading && !error && projects.length > 0 && (
           <>
+            {/* Search Bar */}
+            <div style={{
+              marginBottom: '30px',
+              display: 'flex',
+              gap: '12px',
+              flexWrap: 'wrap',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                flex: '1 1 300px',
+                position: 'relative'
+              }}>
+                <Search style={{
+                  position: 'absolute',
+                  left: '16px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '20px',
+                  height: '20px',
+                  color: 'var(--text-secondary)',
+                  pointerEvents: 'none'
+                }} />
+                <input
+                  type="text"
+                  placeholder="Search projects by name, description, or technology..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px 14px 48px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '12px',
+                    color: 'var(--text-primary)',
+                    fontSize: ' 14px',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = 'var(--accent-color)'
+                    e.target.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.1)'
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = 'var(--border-color)'
+                    e.target.style.boxShadow = 'none'
+                  }}
+                />
+              </div>
+              <div style={{
+                color: 'var(--text-secondary)',
+                fontSize: '14px',
+                whiteSpace: 'nowrap'
+              }}>
+                {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+
+            {/* Category Filters */}
             <ul className="filter-list">
               {filterOptions.map(option => (
                 <li key={option.value} className="filter-item">
@@ -331,36 +362,504 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               )}
             </div>
 
-            <ul className="project-list">
-              {filteredProjects.map(project => (
-                <li
-                  key={project.id}
-                  className="project-item active"
-                  data-category={project.category}
-                >
-                  <button
-                    className="project-link-button"
-                    onClick={() => openProject(project)}
-                    aria-haspopup="dialog"
-                    aria-label={`Open ${project.title} README`}
-                  >
-                    <figure className="project-img">
-                      <div className="project-item-icon-box">
-                        <EyeIcon />
+            {/* Project Cards & Skeletons */}
+            {loading ? (
+              <ul className="project-list" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '24px',
+                padding: '10px'
+              }}>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <li key={index} style={{
+                    background: 'var(--bg-secondary)',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    border: '1px solid var(--border-color)',
+                    height: '380px',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}>
+                    <div className="skeleton" style={{ width: '100%', height: '160px', background: 'rgba(0,0,0,0.05)' }} />
+                    <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div className="skeleton" style={{ width: '60%', height: '20px', borderRadius: '4px', background: 'rgba(0,0,0,0.05)' }} />
+                      <div className="skeleton" style={{ width: '40%', height: '14px', borderRadius: '4px', background: 'rgba(0,0,0,0.05)' }} />
+                      <div className="skeleton" style={{ width: '100%', height: '40px', borderRadius: '4px', background: 'rgba(0,0,0,0.05)' }} />
+                      <div style={{ marginTop: 'auto', display: 'flex', gap: '10px' }}>
+                        <div className="skeleton" style={{ flex: 1, height: '36px', borderRadius: '8px', background: 'rgba(0,0,0,0.05)' }} />
+                        <div className="skeleton" style={{ flex: 1, height: '36px', borderRadius: '8px', background: 'rgba(0,0,0,0.05)' }} />
                       </div>
-                      <img src={project.image} alt={project.title} loading="lazy" />
-                    </figure>
-                    <h3 className="project-title">{project.title}</h3>
-                    <p className="project-category">{project.language}</p>
-                    {project.stars >= github.featuredThreshold && (
-                      <span className="featured-badge">
-                        <Star /> Featured
-                      </span>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : paginatedProjects.length > 0 ? (
+              <ul className="project-list" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '24px',
+                padding: '10px'
+              }}>
+                {paginatedProjects.map((project, index) => (
+                  <li
+                    key={project.id}
+                    className="project-item active"
+                    data-category={project.category}
+                    style={{
+                      animation: `fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+                      animationDelay: `${index * 0.05}s`,
+                      opacity: 0,
+                      transform: 'translateY(20px)'
+                    }}
+                  >
+                    <div
+                      className="project-card-inner"
+                      style={{
+                        position: 'relative',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '16px',
+                        border: '1px solid var(--border-color)',
+                        overflow: 'hidden',
+                        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-6px)'
+                        e.currentTarget.style.boxShadow = '0 15px 20px -5px rgba(0, 0, 0, 0.1), 0 8px 8px -5px rgba(0, 0, 0, 0.04)'
+                        e.currentTarget.style.borderColor = 'var(--accent-color)'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)'
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)'
+                        e.currentTarget.style.borderColor = 'var(--border-color)'
+                      }}
+                    >
+                      {/* Featured Badge */}
+                      {project.isFeatured && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '12px',
+                          right: '12px',
+                          zIndex: 2,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '4px 10px',
+                          background: 'rgba(255, 255, 255, 0.95)',
+                          backdropFilter: 'blur(8px)',
+                          borderRadius: '16px',
+                          fontSize: '10px',
+                          fontWeight: '700',
+                          color: '#B8860B',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          border: '1px solid rgba(184, 134, 11, 0.2)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.5px'
+                        }}>
+                          <Sparkles style={{ width: '10px', height: '10px' }} />
+                          Featured
+                        </div>
+                      )}
+
+                      <div
+                        className="project-link-button"
+                        style={{
+                          flex: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          cursor: 'default'
+                        }}
+                      >
+                        <figure className="project-img" style={{
+                          width: '100%',
+                          height: '160px',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          margin: 0,
+                          borderBottom: '1px solid var(--border-color)'
+                        }}>
+                          <div className="project-item-icon-box" style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%) scale(0.8)',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            borderRadius: '10px',
+                            padding: '10px',
+                            opacity: 0,
+                            transition: 'all 0.3s ease',
+                            zIndex: 1
+                          }}>
+                            <EyeIcon style={{ color: '#fff', width: '20px', height: '20px' }} />
+                          </div>
+                          {project.image ? (
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              loading="lazy"
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)'
+                                const iconBox = e.currentTarget.parentElement?.querySelector('.project-item-icon-box') as HTMLElement
+                                if (iconBox) {
+                                  iconBox.style.opacity = '1'
+                                  iconBox.style.transform = 'translate(-50%, -50%) scale(1)'
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)'
+                                const iconBox = e.currentTarget.parentElement?.querySelector('.project-item-icon-box') as HTMLElement
+                                if (iconBox) {
+                                  iconBox.style.opacity = '0'
+                                  iconBox.style.transform = 'translate(-50%, -50%) scale(0.8)'
+                                }
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                background: getProjectGradient(project.title),
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'transform 0.5s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.05)'
+                                const iconBox = e.currentTarget.parentElement?.querySelector('.project-item-icon-box') as HTMLElement
+                                if (iconBox) {
+                                  iconBox.style.opacity = '1'
+                                  iconBox.style.transform = 'translate(-50%, -50%) scale(1)'
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)'
+                                const iconBox = e.currentTarget.parentElement?.querySelector('.project-item-icon-box') as HTMLElement
+                                if (iconBox) {
+                                  iconBox.style.opacity = '0'
+                                  iconBox.style.transform = 'translate(-50%, -50%) scale(0.8)'
+                                }
+                              }}
+                            >
+                              <Code style={{ width: '48px', height: '48px', color: 'rgba(255,255,255,0.4)' }} />
+                            </div>
+                          )}
+                        </figure>
+
+                        <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                          <div style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            marginBottom: '8px'
+                          }}>
+                            <h3 className="project-title" style={{
+                              fontSize: '18px',
+                              fontWeight: '700',
+                              color: 'var(--text-primary)',
+                              margin: 0,
+                              lineHeight: '1.3',
+                              fontFamily: 'var(--ff-display)'
+                            }}>{project.title}</h3>
+                          </div>
+
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            marginBottom: '12px',
+                            fontSize: '12px',
+                            color: 'var(--text-secondary)',
+                            flexWrap: 'wrap'
+                          }}>
+                            <span style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '3px 8px',
+                              background: 'rgba(0, 0, 0, 0.03)',
+                              borderRadius: '6px',
+                              fontWeight: '500'
+                            }}>
+                              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--accent-color)' }}></span>
+                              {project.language}
+                            </span>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', opacity: 0.7 }}>
+                              {project.isPrivate ? (
+                                <>
+                                  <Lock style={{ width: '11px', height: '11px' }} />
+                                  <span>Private</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Globe style={{ width: '11px', height: '11px' }} />
+                                  <span>Public</span>
+                                </>
+                              )}
+                            </div>
+
+                            <div style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              marginLeft: 'auto'
+                            }}>
+                              <Star style={{ width: '12px', height: '12px', fill: 'var(--accent-color)', color: 'var(--accent-color)' }} />
+                              <span style={{ fontWeight: '600' }}>{project.stars}</span>
+                            </div>
+                          </div>
+
+                          {project.description && (
+                            <p style={{
+                              fontSize: '14px',
+                              color: 'var(--text-secondary)',
+                              lineHeight: '1.5',
+                              marginBottom: '16px',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              flex: 1
+                            }}>
+                              {project.description}
+                            </p>
+                          )}
+
+                          {/* Action Buttons */}
+                          <div style={{
+                            display: 'flex',
+                            gap: '10px',
+                            marginTop: 'auto'
+                          }}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openProject(project);
+                              }}
+                              style={{
+                                flex: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '6px',
+                                padding: '10px',
+                                background: 'transparent',
+                                border: '1px solid var(--border-color)',
+                                color: 'var(--text-primary)',
+                                borderRadius: '8px',
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--text-primary)'
+                                e.currentTarget.style.background = 'var(--bg-primary)'
+                                e.currentTarget.style.transform = 'translateY(-2px)'
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = 'var(--border-color)'
+                                e.currentTarget.style.background = 'transparent'
+                                e.currentTarget.style.transform = 'translateY(0)'
+                              }}
+                            >
+                              <EyeIcon style={{ width: '14px', height: '14px' }} />
+                              Details
+                            </button>
+
+                            {project.homepage && (
+                              <a
+                                href={project.homepage}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                  flex: 1,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  gap: '6px',
+                                  padding: '10px',
+                                  background: 'var(--accent-color)',
+                                  color: '#fff',
+                                  borderRadius: '8px',
+                                  fontSize: '13px',
+                                  fontWeight: '600',
+                                  textDecoration: 'none',
+                                  transition: 'all 0.3s ease',
+                                  boxShadow: '0 4px 6px rgba(184, 134, 11, 0.2)'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(-2px)'
+                                  e.currentTarget.style.boxShadow = '0 8px 12px rgba(184, 134, 11, 0.3)'
+                                  e.currentTarget.style.filter = 'brightness(1.1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = 'translateY(0)'
+                                  e.currentTarget.style.boxShadow = '0 4px 6px rgba(184, 134, 11, 0.2)'
+                                  e.currentTarget.style.filter = 'brightness(1)'
+                                }}
+                              >
+                                <ExternalLink style={{ width: '14px', height: '14px' }} />
+                                Demo
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div style={{
+                textAlign: 'center',
+                padding: '80px 20px',
+                color: 'var(--text-secondary)',
+                background: 'var(--bg-secondary)',
+                borderRadius: '20px',
+                border: '1px dashed var(--border-color)'
+              }}>
+                <Search style={{ width: '64px', height: '64px', margin: '0 auto 24px', opacity: 0.2 }} />
+                <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>No projects found</h3>
+                <p style={{ fontSize: '15px', opacity: 0.7, maxWidth: '400px', margin: '0 auto' }}>
+                  We couldn't find any projects matching your search criteria. Try adjusting your filters or search terms.
+                </p>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginTop: '40px',
+                flexWrap: 'wrap'
+              }}>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '10px 16px',
+                    background: currentPage === 1 ? 'transparent' : 'var(--bg-secondary)',
+                    border: `1px solid ${currentPage === 1 ? 'var(--border-color)' : 'var(--accent-color)'}`,
+                    borderRadius: '8px',
+                    color: currentPage === 1 ? 'var(--text-secondary)' : 'var(--text-primary)',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    opacity: currentPage === 1 ? 0.5 : 1,
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentPage !== 1) {
+                      e.currentTarget.style.background = 'var(--accent-color)'
+                      e.currentTarget.style.color = '#000'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentPage !== 1) {
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
+                      e.currentTarget.style.color = 'var(--text-primary)'
+                    }
+                  }}
+                >
+                  <ChevronLeft style={{ width: '16px', height: '16px' }} />
+                  Previous
+                </button>
+
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      style={{
+                        minWidth: '40px',
+                        height: '40px',
+                        padding: '0 8px',
+                        background: currentPage === page ? 'var(--accent-color)' : 'var(--bg-secondary)',
+                        border: '1px solid var(--border-color)',
+                        borderRadius: '8px',
+                        color: currentPage === page ? '#000' : 'var(--text-primary)',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: currentPage === page ? '600' : '500',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (currentPage !== page) {
+                          e.currentTarget.style.borderColor = 'var(--accent-color)'
+                          e.currentTarget.style.transform = 'translateY(-2px)'
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (currentPage !== page) {
+                          e.currentTarget.style.borderColor = 'var(--border-color)'
+                          e.currentTarget.style.transform = 'translateY(0)'
+                        }
+                      }}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '10px 16px',
+                    background: currentPage === totalPages ? 'transparent' : 'var(--bg-secondary)',
+                    border: `1px solid ${currentPage === totalPages ? 'var(--border-color)' : 'var(--accent-color)'}`,
+                    borderRadius: '8px',
+                    color: currentPage === totalPages ? 'var(--text-secondary)' : 'var(--text-primary)',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    opacity: currentPage === totalPages ? 0.5 : 1,
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentPage !== totalPages) {
+                      e.currentTarget.style.background = 'var(--accent-color)'
+                      e.currentTarget.style.color = '#000'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentPage !== totalPages) {
+                      e.currentTarget.style.background = 'var(--bg-secondary)'
+                      e.currentTarget.style.color = 'var(--text-primary)'
+                    }
+                  }}
+                >
+                  Next
+                  <ChevronRight style={{ width: '16px', height: '16px' }} />
+                </button>
+              </div>
+            )}
           </>
         )}
       </section>
@@ -370,16 +869,17 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         <Dialog.Root open={!!popupRepo} onOpenChange={() => setPopupRepo(null)}>
           <Dialog.Portal>
             <Dialog.Overlay style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
               position: 'fixed',
               inset: 0,
               zIndex: 1000,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              backdropFilter: 'blur(4px)'
             }} />
             <Dialog.Content style={{
-              backgroundColor: 'var(--eerie-black-1)',
+              backgroundColor: 'var(--bg-primary)',
               borderRadius: '20px',
               boxShadow: '0px 20px 60px rgba(0, 0, 0, 0.5)',
               position: 'fixed',
@@ -392,7 +892,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               overflow: 'hidden',
               zIndex: 1001,
               display: 'flex',
-              flexDirection: 'column'
+              flexDirection: 'column',
+              border: '1px solid var(--border-color)'
             }}>
               {/* Project Image Banner */}
               <div style={{
@@ -402,7 +903,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                 flexShrink: 0
               }}>
                 <img
-                  src={projects.find(p => p.title === popupRepo.title)?.image}
+                  src={popupRepo.image || `https://opengraph.githubassets.com/1/${popupRepo.ownerLogin}/${popupRepo.title}`}
                   alt={popupRepo.title}
                   style={{
                     width: '100%',

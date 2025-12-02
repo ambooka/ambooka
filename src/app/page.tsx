@@ -39,15 +39,40 @@ if (process.env.NODE_ENV === 'development' && !githubConfig.token) {
 
 export default function Home() {
     const [activePage, setActivePage] = useState<keyof typeof PAGES>('about')
-    const [theme, setTheme] = useState<Theme>('premium-dark')
+    const [theme, setTheme] = useState<Theme>('premium-light')
+    const [isLoaded, setIsLoaded] = useState(false)
 
     // Get the current component based on active page
     const CurrentComponent = PAGES[activePage]
 
+    // Load saved state on mount
+    useEffect(() => {
+        const savedPage = localStorage.getItem('activePage')
+        if (savedPage && savedPage in PAGES) {
+            setActivePage(savedPage as keyof typeof PAGES)
+        }
+
+        const savedTheme = localStorage.getItem('theme') as Theme
+        if (savedTheme === 'premium-dark' || savedTheme === 'premium-light') {
+            setTheme(savedTheme)
+        }
+
+        setIsLoaded(true)
+    }, [])
+
+    // Save active page to localStorage whenever it changes
+    useEffect(() => {
+        if (isLoaded) {
+            localStorage.setItem('activePage', activePage)
+        }
+    }, [activePage, isLoaded])
+
     useEffect(() => {
         document.body.setAttribute('data-theme', theme)
-        localStorage.setItem('theme', theme)
-    }, [theme])
+        if (isLoaded) {
+            localStorage.setItem('theme', theme)
+        }
+    }, [theme, isLoaded])
 
     return (
         <>
@@ -82,7 +107,11 @@ export default function Home() {
                 }}
             />
             <UtilityBar currentTheme={theme} onThemeChange={setTheme} />
-            <main>
+            <main style={{
+                opacity: isLoaded ? 1 : 0,
+                transition: 'opacity 0.2s ease-in-out',
+                visibility: isLoaded ? 'visible' : 'hidden'
+            }}>
                 <Sidebar />
                 <div className="main-content">
                     <Navbar activePage={activePage} setActivePage={setActivePage} />

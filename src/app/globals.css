@@ -765,19 +765,34 @@ main {
   transition: all var(--transition-2);
   flex-shrink: 0;
   position: relative;
-  padding: 4px;
+  padding: 0;
+  overflow: hidden;
   animation: morph 8s ease-in-out infinite;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.avatar-glow {
+.avatar-box::before {
+  content: '';
   position: absolute;
-  inset: -2px;
-  background: var(--border-gradient-onyx);
-  border-radius: inherit;
-  filter: blur(12px);
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 45%, var(--bg-primary) 100%);
+  z-index: 2;
+  pointer-events: none;
   opacity: 0.7;
+  transition: opacity var(--transition-2);
+}
+
+.avatar-box::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: var(--text-gradient-primary);
+  border-radius: inherit;
+  filter: blur(16px);
+  opacity: 0;
   z-index: -1;
   animation: glowPulse 3s ease-in-out infinite;
+  transition: opacity var(--transition-2);
 }
 
 .avatar-img {
@@ -788,6 +803,7 @@ main {
   width: 80px;
   height: 80px;
   object-fit: cover;
+  display: block;
 }
 
 .avatar-box:hover {
@@ -795,8 +811,16 @@ main {
   box-shadow: var(--glow-shadow-intense);
 }
 
+.avatar-box:hover::before {
+  opacity: 0.5;
+}
+
+.avatar-box:hover::after {
+  opacity: 0.6;
+}
+
 .avatar-box:hover .avatar-img {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .info-content {
@@ -3349,5 +3373,38 @@ a:focus-visible,
   .utility-bar {
     bottom: 20px;
     right: 20px;
+  }
+}
+
+/* --- Animations for Portfolio --- */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      var(--bg-secondary) 25%,
+      var(--bg-tertiary) 50%,
+      var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
   }
 }

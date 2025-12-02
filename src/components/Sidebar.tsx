@@ -17,6 +17,8 @@ export default function Sidebar() {
             alt="Msah Ambooka"
             width={80}
             height={80}
+            className="avatar-img"
+            priority
           />
         </figure>
 

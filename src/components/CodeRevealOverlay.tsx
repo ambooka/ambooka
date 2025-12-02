@@ -806,50 +806,17 @@ export default function CodeRevealOverlay() {
   }
 
   return (
-    <>
-      <canvas
-        ref={codeCanvasRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 9998,
-          pointerEvents: 'none',
-        }}
-      />
-      <div style={{
+    <canvas
+      ref={codeCanvasRef}
+      style={{
         position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        background: 'rgba(10, 10, 10, 0.85)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        padding: '10px 20px',
-        borderRadius: '30px',
-        color: 'rgba(255, 255, 255, 0.9)',
-        fontFamily: '"Inter", sans-serif',
-        fontSize: '13px',
-        fontWeight: 500,
-        zIndex: 9999,
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 9998,
         pointerEvents: 'none',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        transition: 'opacity 0.3s ease'
-      }}>
-        <span style={{
-          display: 'inline-block',
-          width: '8px',
-          height: '8px',
-          borderRadius: '50%',
-          background: '#00ff88',
-          boxShadow: '0 0 10px #00ff88'
-        }}></span>
-        X-Ray Active <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ color: '#fff', fontWeight: 600 }}>Alt + X</span> to toggle <span style={{ opacity: 0.5, margin: '0 4px' }}>|</span> <span style={{ fontSize: '11px', opacity: 0.7 }}>Touch supported</span>
-      </div>
-    </>
+      }}
+    />
   )
 }
