@@ -151,7 +151,7 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
   // -----------------------------
   const fetchPersonalInfo = async () => {
     try {
-      const { data, error } = await supabase.from('personal_info' as any).select('*').single()
+      const { data, error } = await supabase.from('personal_info' as any).select('*').single<PersonalInfo>()
       if (error) throw error
       if (data) {
         setPersonalInfo(data)
@@ -432,7 +432,7 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
       if (personal.error) throw personal.error
 
       const resumeData: ResumeData = {
-        personal_info: personal.data,
+        personal_info: personal.data ? (personal.data as unknown as ResumeData['personal_info']) : { full_name: '', title: '', email: '', phone: '', summary: '' },
         education: edu.data || [],
         experience: exp.data || [],
         skills: skills.data || []
