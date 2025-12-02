@@ -7,9 +7,15 @@ interface ResumeProps {
 }
 
 interface PersonalInfo {
-  full_name: string
+  id: string
+  category: string
+  content: string
   title: string
-  email: string
+  created_at: string
+  updated_at: string
+  tags?: string[] | null
+  full_name?: string
+  email?: string
   phone?: string
   summary?: string
 }
@@ -71,10 +77,10 @@ export default function Resume({ isActive = false }: ResumeProps) {
 
       // Fetch all resume data in parallel
       const [personalInfoResult, educationResult, experienceResult, skillsResult] = await Promise.all([
-        supabase.from('personal_info').select('*').single(),
-        supabase.from('education').select('*').order('start_date', { ascending: false }),
-        supabase.from('experience').select('*').order('start_date', { ascending: false }),
-        supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
+        supabase.from('portfolio_content').select('*').single(),
+        supabase.from('portfolio_content').select('*').eq('category', 'education').order('created_at', { ascending: false }),
+        supabase.from('portfolio_content').select('*').eq('category', 'experience').order('created_at', { ascending: false }),
+        supabase.from('portfolio_content').select('*').eq('category', 'skills').order('created_at', { ascending: false })
       ])
 
       if (personalInfoResult.error) throw personalInfoResult.error
@@ -83,10 +89,10 @@ export default function Resume({ isActive = false }: ResumeProps) {
       if (skillsResult.error) throw skillsResult.error
 
       setResumeData({
-        personal_info: personalInfoResult.data,
-        education: educationResult.data || [],
-        experience: experienceResult.data || [],
-        skills: skillsResult.data || []
+        personal_info: personalInfoResult.data as PersonalInfo,
+        education: (educationResult.data || []) as unknown as Education[],
+        experience: (experienceResult.data || []) as unknown as Experience[],
+        skills: (skillsResult.data || []) as unknown as Skill[]
       })
     } catch (err: any) {
       console.error('Error fetching resume data:', err)
