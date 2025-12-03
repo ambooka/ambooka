@@ -2,16 +2,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Sidebar from '../components/Sidebar'
-import About from '../components/About'
-import Portfolio from '../components/Portfolio'
-import Contact from '../components/Contact'
 import Resume from '@/components/Resume'
 import Blog from '@/components/Blog'
 import Navbar from '@/components/Navbar'
 import UtilityBar from '@/components/UtilityBar'
 import ScrollToTop from '@/components/ScrollToTop'
 import CodeRevealOverlay from '@/components/CodeRevealOverlay'
+import About from '@/components/About'
+import Portfolio from '@/components/Portfolio'
+import Contact from '@/components/Contact'
+import Sidebar from '@/components/Sidebar'
 
 const PAGES = {
     about: About,

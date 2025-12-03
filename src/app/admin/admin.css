@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+    --color-ad-primary: #10B981;
+    /* Emerald 500 */
+    --color-ad-primary-hover: #059669;
+    /* Emerald 600 */
+    --color-ad-bg: #F3F4F6;
+    /* Gray 100 */
+    --color-ad-surface: #FFFFFF;
+    --color-ad-text: #111827;
+    /* Gray 900 */
+    --color-ad-text-secondary: #6B7280;
+    /* Gray 500 */
+    --color-ad-border: #E5E7EB;
+    /* Gray 200 */
+}
+
+/* Custom Admin Utilities if needed, but prefer Tailwind classes */
+.ad-layout {
+    @apply flex h-screen bg-gray-100 text-gray-900 font-sans;
+}
