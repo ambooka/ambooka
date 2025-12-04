@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Independent Test Page Styles - No conflicts with main site */
 .test-dashboard {
     all: initial;
