@@ -756,13 +756,13 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    padding: '10px 16px',
+                    padding: '8px 12px',
                     background: currentPage === 1 ? 'transparent' : 'var(--bg-secondary)',
                     border: `1px solid ${currentPage === 1 ? 'var(--border-color)' : 'var(--accent-color)'}`,
                     borderRadius: '8px',
                     color: currentPage === 1 ? 'var(--text-secondary)' : 'var(--text-primary)',
                     cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: '500',
                     opacity: currentPage === 1 ? 0.5 : 1,
                     transition: 'all 0.3s ease'
@@ -780,8 +780,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     }
                   }}
                 >
-                  <ChevronLeft style={{ width: '16px', height: '16px' }} />
-                  Previous
+                  <ChevronLeft style={{ width: '14px', height: '14px' }} />
+                  <span className="pagination-text">Previous</span>
                 </button>
 
                 <div style={{
@@ -794,28 +794,28 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                       key={page}
                       onClick={() => setCurrentPage(page)}
                       style={{
-                        minWidth: '40px',
-                        height: '40px',
-                        padding: '0 8px',
+                        minWidth: '32px',
+                        height: '32px',
+                        padding: '0 6px',
                         background: currentPage === page ? 'var(--accent-color)' : 'var(--bg-secondary)',
-                        border: '1px solid var(--border-color)',
+                        border: `1px solid ${currentPage === page ? 'var(--accent-color)' : 'var(--border-color)'}`,
                         borderRadius: '8px',
                         color: currentPage === page ? '#000' : 'var(--text-primary)',
                         cursor: 'pointer',
-                        fontSize: '14px',
+                        fontSize: '12px',
                         fontWeight: currentPage === page ? '600' : '500',
                         transition: 'all 0.3s ease'
                       }}
                       onMouseEnter={(e) => {
                         if (currentPage !== page) {
-                          e.currentTarget.style.borderColor = 'var(--accent-color)'
-                          e.currentTarget.style.transform = 'translateY(-2px)'
+                          e.currentTarget.style.background = 'var(--accent-color)'
+                          e.currentTarget.style.color = '#000'
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (currentPage !== page) {
-                          e.currentTarget.style.borderColor = 'var(--border-color)'
-                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.background = 'var(--bg-secondary)'
+                          e.currentTarget.style.color = 'var(--text-primary)'
                         }
                       }}
                     >
@@ -831,13 +831,13 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
-                    padding: '10px 16px',
+                    padding: '8px 12px',
                     background: currentPage === totalPages ? 'transparent' : 'var(--bg-secondary)',
                     border: `1px solid ${currentPage === totalPages ? 'var(--border-color)' : 'var(--accent-color)'}`,
                     borderRadius: '8px',
                     color: currentPage === totalPages ? 'var(--text-secondary)' : 'var(--text-primary)',
                     cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     fontWeight: '500',
                     opacity: currentPage === totalPages ? 0.5 : 1,
                     transition: 'all 0.3s ease'
@@ -855,8 +855,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     }
                   }}
                 >
-                  Next
-                  <ChevronRight style={{ width: '16px', height: '16px' }} />
+                  <span className="pagination-text">Next</span>
+                  <ChevronRight style={{ width: '14px', height: '14px' }} />
                 </button>
               </div>
             )}

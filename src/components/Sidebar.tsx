@@ -33,7 +33,7 @@ export default function Sidebar() {
           onClick={() => setIsSidebarVisible(!isSidebarVisible)}
         >
           <span>{isSidebarVisible ? 'Hide Contacts' : 'Show Contacts'}</span>
-          <ChevronDown className="w-5 h-5" />
+          <ChevronDown className="btn-icon" size={18} />
         </button>
       </div>
 

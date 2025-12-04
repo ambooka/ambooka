@@ -345,6 +345,43 @@ export default function About({ isActive = false }: AboutProps) {
         .testimonials-list.has-scrollbar::-webkit-scrollbar {
           display: none;
         }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 580px) {
+          .tech-item {
+            width: 80px;
+            margin: 0 10px;
+          }
+          
+          .tech-item img {
+            width: 50px;
+            height: 50px;
+          }
+          
+          .tech-name {
+            font-size: 11px;
+          }
+          
+          .infinite-scroll-track {
+            animation: scroll 25s linear infinite;
+          }
+        }
+        
+        @media (max-width: 449px) {
+          .tech-item {
+            width: 70px;
+            margin: 0 8px;
+          }
+          
+          .tech-item img {
+            width: 45px;
+            height: 45px;
+          }
+          
+          .tech-name {
+            font-size: 10px;
+          }
+        }
       `}</style>
     </article >
   )

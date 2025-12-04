@@ -122,7 +122,6 @@ export default function Home() {
                     )}
                 </div>
             </main>
-            <ScrollToTop />
             <CodeRevealOverlay />
         </>
     )

@@ -509,6 +509,31 @@ export default function Contact({ isActive = false }: ContactProps) {
             transform: rotate(360deg);
           }
         }
+        
+        @media (max-width: 580px) {
+          .contact-form .input-wrapper {
+            grid-template-columns: 1fr !important;
+          }
+          
+          .mapbox {
+            height: 250px;
+            margin-bottom: 30px;
+          }
+          
+          .form-title {
+            font-size: var(--fs-4);
+          }
+          
+          .contact .article-title {
+            font-size: var(--fs-2);
+          }
+        }
+        
+        @media (max-width: 450px) {
+          .mapbox {
+            height: 220px;
+          }
+        }
       `}</style>
     </article>
   )
