@@ -44,7 +44,7 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
         if (data) {
             setFormData({
                 title: data.title,
-                description: data.description || '',
+                description: data?.description || '',
                 content: data.content || '',
                 image_url: data.image_url || '',
                 tags: data.tags || [],
