@@ -14,6 +14,7 @@ import ProjectProgressChart from '@/components/admin/ProjectProgressChart'
 import RecentActivityWidget from '@/components/admin/RecentActivityWidget'
 import RecentMessagesWidget from '@/components/admin/RecentMessagesWidget'
 import VisitorAnalyticsWidget from '@/components/admin/VisitorAnalyticsWidget'
+import ProfileWidget from '@/components/admin/ProfileWidget'
 
 interface DashboardStats {
     totalProjects: number
@@ -176,6 +177,11 @@ export default function AdminDashboard() {
                     variant="outlined"
                     link="/admin/blog"
                 />
+            </div>
+
+            {/* Profile Quick Edit */}
+            <div className="grid grid-cols-1">
+                <ProfileWidget />
             </div>
 
             {/* Main Grid Layout */}

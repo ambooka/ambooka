@@ -134,6 +134,46 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
     return () => document.removeEventListener('keydown', onKey)
   }, [isChatOpen, isResumeModalOpen])
 
+  // Handle mobile keyboard visibility with Visual Viewport API
+  useEffect(() => {
+    if (!isChatOpen || typeof window === 'undefined' || !window.visualViewport) return
+
+    const handleViewportResize = () => {
+      if (!chatModalRef.current) return
+
+      // Mobile keyboard detection: when keyboard appears, visualViewport height decreases
+      const viewport = window.visualViewport
+      if (!viewport) return
+
+      // Calculate the visible portion of the viewport
+      const viewportHeight = viewport.height
+      const windowHeight = window.innerHeight
+
+      // If viewport is significantly smaller, keyboard is likely visible
+      const keyboardVisible = windowHeight - viewportHeight > 150
+
+      if (keyboardVisible) {
+        // Adjust modal to fit above keyboard
+        chatModalRef.current.style.maxHeight = `${viewportHeight * 0.95}px`
+        // Scroll to bottom to keep input visible
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        }, 100)
+      } else {
+        // Reset when keyboard is hidden
+        chatModalRef.current.style.maxHeight = ''
+      }
+    }
+
+    window.visualViewport.addEventListener('resize', handleViewportResize)
+    window.visualViewport.addEventListener('scroll', handleViewportResize)
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleViewportResize)
+      window.visualViewport?.removeEventListener('scroll', handleViewportResize)
+    }
+  }, [isChatOpen])
+
   // -----------------------------
   // Utility helpers
   // -----------------------------
@@ -429,15 +469,31 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
         supabase.from('skills' as any).select('*').order('proficiency_level', { ascending: false })
       ])
 
-      if (personal.error) throw personal.error
+      // Debug logging
+      console.log('=== Resume Data Fetch Debug ===')
+      console.log('Personal Info:', { data: personal.data, error: personal.error })
+      console.log('Education:', { count: edu.data?.length, error: edu.error })
+      console.log('Experience:', { count: exp.data?.length, error: exp.error })
+      console.log('Skills:', { count: skills.data?.length, error: skills.error })
+
+      if (personal.error) {
+        console.error('Personal info error:', personal.error)
+        throw personal.error
+      }
+
+      if (!personal.data) {
+        console.error('No personal info data found in database')
+        throw new Error('No personal information found. Please add your information in the admin panel.')
+      }
 
       const resumeData: ResumeData = {
-        personal_info: personal.data ? (personal.data as unknown as ResumeData['personal_info']) : { full_name: '', title: '', email: '', phone: '', summary: '' },
+        personal_info: personal.data as unknown as ResumeData['personal_info'],
         education: edu.data || [],
         experience: exp.data || [],
         skills: skills.data || []
       }
 
+      console.log('Resume data compiled:', resumeData)
       return generateResumeHTML(resumeData)
     } catch (err) {
       console.error('Error generating resume:', err)
@@ -1282,17 +1338,58 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
         @media (max-width: 768px) {
           .chat-modal-overlay {
             padding: 0;
-            align-items: flex-end;
+            align-items: stretch;
             background: rgba(0, 0, 0, 0.6);
           }
           
           .chat-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             width: 100%;
-            height: 90vh; /* Bottom sheet style */
-            max-height: 90vh;
+            /* Use dvh (dynamic viewport height) if supported, otherwise fallback to 85vh */
+            /* This ensures the modal adjusts when keyboard appears */
+            height: 85dvh;
+            max-height: 85dvh;
+            /* Fallback for older browsers */
+            @supports not (height: 1dvh) {
+              height: 85vh;
+              max-height: 85vh;
+            }
             border-radius: 24px 24px 0 0;
             border-bottom: none;
             animation: slideUpMobile 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Add safe area padding for devices with notches */
+            padding-bottom: env(safe-area-inset-bottom, 0);
+          }
+          
+          .chat-messages {
+            /* Ensure messages container is scrollable and flexible */
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          .chat-input {
+            /* Make input sticky at bottom */
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            /* Add bottom padding for safe area on devices with notches/gestures */
+            padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+            z-index: 10;
+          }
+          
+          .dark .chat-input {
+            background: rgba(0, 0, 0, 0.95);
+          }
+          
+          .input-container {
+            /* Ensure input is fully visible above keyboard */
+            position: relative;
           }
           
           @keyframes slideUpMobile {

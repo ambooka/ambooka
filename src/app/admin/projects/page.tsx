@@ -19,7 +19,7 @@ export default function ProjectsManager() {
         const { data, error } = await supabase
             .from('portfolio_content')
             .select('*')
-            .order('display_order', { ascending: true })
+            .order('updated_at', { ascending: false })
 
         if (data) setProjects(data)
         setLoading(false)

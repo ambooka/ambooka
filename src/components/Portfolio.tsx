@@ -70,6 +70,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     ownerLogin?: string
     homepage?: string | null
     isFeatured?: boolean
+    updatedAt?: string
   }>>([])
 
   // Popup / README state
@@ -126,14 +127,18 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
           isPrivate: !!repo.private,
           ownerLogin: repo.owner?.login,
           homepage: repo.homepage,
-          isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage
+          isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage,
+          updatedAt: repo.pushed_at || repo.updated_at
         }))
 
-        // Sort: featured first, then by stars
+        // Sort: featured first, then by updated date
         mappedProjects.sort((a, b) => {
           if (a.isFeatured && !b.isFeatured) return -1
           if (!a.isFeatured && b.isFeatured) return 1
-          return b.stars - a.stars
+
+          const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+          const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+          return dateB - dateA
         })
 
         setProjects(mappedProjects)

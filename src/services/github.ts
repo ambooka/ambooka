@@ -10,6 +10,8 @@ export interface GitHubRepo {
     stargazers_count: number
     owner?: { login: string }
     homepage?: string | null
+    updated_at?: string
+    pushed_at?: string
     [key: string]: any
 }
 

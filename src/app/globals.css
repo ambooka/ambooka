@@ -1112,6 +1112,8 @@ main {
   border-radius: 12px 12px 0 0;
   box-shadow: var(--shadow-2);
   margin: 1.5px;
+  z-index: 100;
+  /* Ensure navbar stays above content but below modals */
 }
 
 .navbar-list {
