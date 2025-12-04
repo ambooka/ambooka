@@ -549,7 +549,6 @@ article:hover::before {
 article:hover {
   box-shadow: var(--shadow-3);
   transform: translateY(-2px);
-  border-color: var(--accent-color);
 }
 
 /* Enhanced Professional Button Styles */
@@ -1110,10 +1109,9 @@ main {
   width: 100%;
   background: var(--bg-primary);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
   border-radius: 12px 12px 0 0;
   box-shadow: var(--shadow-2);
-  z-index: 5;
+  margin: 1.5px;
 }
 
 .navbar-list {
@@ -3636,6 +3634,7 @@ a:focus-visible,
   .navbar:hover {
     border-left-color: var(--accent-color);
     border-bottom-color: var(--accent-color);
+    border-right-color: var(--accent-primary);
   }
 
   .navbar-list {
