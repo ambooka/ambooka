@@ -131,11 +131,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
           updatedAt: repo.pushed_at || repo.updated_at
         }))
 
-        // Sort: featured first, then by updated date
+        // Sort: by most recently updated (most recent first)
         mappedProjects.sort((a, b) => {
-          if (a.isFeatured && !b.isFeatured) return -1
-          if (!a.isFeatured && b.isFeatured) return 1
-
           const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
           const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
           return dateB - dateA
