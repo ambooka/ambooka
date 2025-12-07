@@ -1,0 +1,33 @@
+# Abdulrahman Ambooka - Portfolio Context
+
+## Summary
+Abdulrahman Ambooka is an innovative Full-Stack Developer and Cloud Solutions Architect based in Nairobi, Kenya. He specializes in building scalable web applications, cloud infrastructure (AWS/Azure), and AI/ML solutions.
+
+## Contact
+- Email: abdulrahmanambooka@gmail.com
+- GitHub: https://github.com/ambooka
+- LinkedIn: https://www.linkedin.com/in/abdulrahman-ambooka/
+- Portfolio: https://ambooka.dev
+
+## Technical Skills
+- **Languages**: JavaScript, TypeScript, Python, Java, SQL, C#, Dart.
+- **Frontend**: React, Next.js, Tailwind CSS, Flutter, Redux.
+- **Backend**: Node.js, Express, Spring Boot, GraphQL, RESTful APIs, .NET Core.
+- **Cloud & DevOps**: AWS, Azure, Docker, Kubernetes, CI/CD, Terraform.
+- **AI/ML**: Python, PyTorch, TensorFlow, Computer Vision.
+
+## Experience
+- **IT Assistant at Hebatullah Brothers Limited** (Jan 2025 - Present): Managing IT operations, digital transformation, and cybersecurity.
+- **Freelance Full-Stack Developer** (Jan 2022 - Present): Delivered 15+ projects covering FinTech and E-commerce.
+- **Industrial Attachment at Masinde Muliro University**: Network infrastructure and support.
+
+## Key Projects
+1. **CloudCommerce**: Scalable E-commerce platform (Next.js, Node.js, AWS).
+2. **AfriPay**: Fintech API integrating mobile money providers.
+3. **SmartCity Traffic Prediction**: ML system for traffic congestion prediction.
+4. **SecureChat**: End-to-end encrypted messaging app.
+
+## Site Structure
+- `/`: Home page (About, Portfolio, Contact)
+- `/sitemap.xml`: XML Sitemap
+- `/robots.txt`: Robots configuration

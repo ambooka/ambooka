@@ -1,11 +1,26 @@
-// app/components/Contact.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Send, Mail, Phone, MapPin, Linkedin, Github, MessageSquare, CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
+import { supabase } from '@/integrations/supabase/client'
 
 interface ContactProps {
   isActive?: boolean
+}
+
+interface PersonalInfo {
+  email: string
+  phone: string | null
+  location: string | null
+}
+
+interface SocialLink {
+  id: string
+  platform: string
+  url: string
+  icon_url: string | null
+  display_order: number
+  show_in_contact: boolean
 }
 
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error'
@@ -27,8 +42,37 @@ export default function Contact({ isActive = false }: ContactProps) {
     message: false
   })
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
+  const [loading, setLoading] = useState(true)
 
   const MAX_MESSAGE_LENGTH = 500
+
+  useEffect(() => {
+    fetchContactData()
+  }, [])
+
+  const fetchContactData = async () => {
+    try {
+      setLoading(true)
+      const [personalResult, socialResult] = await Promise.all([
+        supabase.from('personal_info').select('email, phone, location').single(),
+        supabase.from('social_links').select('*').eq('is_active', true).eq('show_in_contact', true).order('display_order')
+      ])
+
+      if (personalResult.data) {
+        setPersonalInfo(personalResult.data)
+      }
+
+      if (socialResult.data) {
+        setSocialLinks(socialResult.data)
+      }
+    } catch (error) {
+      console.error('Error fetching contact data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -51,14 +95,12 @@ export default function Contact({ isActive = false }: ContactProps) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
 
-    // For message field, enforce max length
     if (name === 'message' && value.length > MAX_MESSAGE_LENGTH) {
       return
     }
 
     setFormData(prev => ({ ...prev, [name]: value }))
 
-    // Validate on change if field was touched
     if (touched[name as keyof typeof touched]) {
       setErrors(prev => ({ ...prev, [name]: validateField(name, value) }))
     }
@@ -78,7 +120,6 @@ export default function Contact({ isActive = false }: ContactProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validate all fields
     const newErrors = {
       fullname: validateField('fullname', formData.fullname),
       email: validateField('email', formData.email),
@@ -94,61 +135,84 @@ export default function Contact({ isActive = false }: ContactProps) {
 
     setSubmitStatus('loading')
 
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // Save to database
+      const { error } = await supabase.from('messages').insert({
+        name: formData.fullname,
+        email: formData.email,
+        message: formData.message
+      })
 
-      // Success
+      if (error) throw error
+
       setSubmitStatus('success')
       setFormData({ fullname: '', email: '', message: '' })
       setTouched({ fullname: false, email: false, message: false })
 
-      // Reset success state after 3 seconds
       setTimeout(() => setSubmitStatus('idle'), 3000)
     } catch (error) {
+      console.error('Error submitting form:', error)
       setSubmitStatus('error')
       setTimeout(() => setSubmitStatus('idle'), 3000)
     }
   }
 
-  const contactMethods = [
+  const getIconForPlatform = (platform: string) => {
+    switch (platform.toLowerCase()) {
+      case 'linkedin':
+        return <Linkedin size={20} />
+      case 'github':
+        return <Github size={20} />
+      default:
+        return null
+    }
+  }
+
+  const contactMethods = personalInfo ? [
     {
       icon: Mail,
       label: 'Email',
-      value: 'abdulrahmanambooka@gmail.com',
-      link: 'mailto:abdulrahmanambooka@gmail.com',
+      value: personalInfo.email,
+      link: `mailto:${personalInfo.email}`,
       color: '#EA4335'
     },
-    {
+    ...(personalInfo.phone ? [{
       icon: Phone,
       label: 'Phone',
-      value: '+254 111 384 390',
-      link: 'tel:+254111384390',
+      value: personalInfo.phone,
+      link: `tel:${personalInfo.phone.replace(/\s/g, '')}`,
       color: '#34A853'
-    },
-    {
+    }] : []),
+    ...(personalInfo.location ? [{
       icon: MapPin,
       label: 'Location',
-      value: 'Nairobi, Kenya',
-      link: 'https://maps.google.com/?q=Nairobi,Kenya',
+      value: personalInfo.location,
+      link: `https://maps.google.com/?q=${encodeURIComponent(personalInfo.location)}`,
       color: '#4285F4'
-    }
-  ]
+    }] : [])
+  ] : []
 
-  const socialLinks = [
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-      link: 'https://www.linkedin.com/in/abdulrahman-ambooka/',
-      color: '#0A66C2'
-    },
-    {
-      icon: Github,
-      label: 'GitHub',
-      link: 'https://github.com/ambooka',
-      color: '#181717'
-    }
-  ]
+  if (loading) {
+    return (
+      <article className={`contact ${isActive ? 'active' : ''}`} data-page="contact">
+        <header>
+          <h2 className="h2 article-title">Get In Touch</h2>
+        </header>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '300px'
+        }}>
+          <Loader2 size={40} className="animate-spin" style={{ color: 'var(--orange-yellow-crayola)' }} />
+        </div>
+        <style jsx>{`
+          .animate-spin { animation: spin 1s linear infinite; }
+          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        `}</style>
+      </article>
+    )
+  }
 
   return (
     <article className={`contact ${isActive ? 'active' : ''}`} data-page="contact">
@@ -242,23 +306,25 @@ export default function Contact({ isActive = false }: ContactProps) {
       </section>
 
       {/* Map Section */}
-      <section className="mapbox" data-mapbox style={{
-        marginBottom: '40px',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        border: '1px solid var(--border-color)',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-      }}>
-        <figure style={{ margin: 0 }}>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255281.3021629732!2d36.707307399999996!3d-1.3028617999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2sNairobi!5e0!3m2!1sen!2ske!4v1647608789441!5m2!1sen!2ske"
-            width="100%"
-            height="320"
-            loading="lazy"
-            style={{ border: 0, display: 'block' }}
-          />
-        </figure>
-      </section>
+      {personalInfo?.location && (
+        <section className="mapbox" data-mapbox style={{
+          marginBottom: '40px',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          border: '1px solid var(--border-color)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+        }}>
+          <figure style={{ margin: 0 }}>
+            <iframe
+              src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d255281.3021629732!2d36.707307399999996!3d-1.3028617999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1172d84d49a7%3A0xf7cf0254b297924c!2s${encodeURIComponent(personalInfo.location)}!5e0!3m2!1sen!2ske!4v1647608789441!5m2!1sen!2ske`}
+              width="100%"
+              height="320"
+              loading="lazy"
+              style={{ border: 0, display: 'block' }}
+            />
+          </figure>
+        </section>
+      )}
 
       {/* Contact Form */}
       <section className="contact-form">
@@ -282,46 +348,33 @@ export default function Contact({ isActive = false }: ContactProps) {
 
           {/* Social Links */}
           <div style={{ display: 'flex', gap: '12px' }}>
-            {socialLinks.map((social, index) => {
-              const Icon = social.icon
-              return (
-                <a
-                  key={index}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '10px',
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all var(--transition-2)',
-                    textDecoration: 'none'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = social.color
-                    e.currentTarget.style.borderColor = social.color
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                    const icon = e.currentTarget.querySelector('svg')
-                    if (icon) icon.style.color = '#fff'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'var(--bg-secondary)'
-                    e.currentTarget.style.borderColor = 'var(--border-color)'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    const icon = e.currentTarget.querySelector('svg')
-                    if (icon) icon.style.color = 'var(--text-secondary)'
-                  }}
-                  title={social.label}
-                >
-                  <Icon style={{ width: '20px', height: '20px', color: 'var(--text-secondary)', transition: 'color 0.3s' }} />
-                </a>
-              )
-            })}
+            {socialLinks.map((social) => (
+              <a
+                key={social.id}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-color)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all var(--transition-2)',
+                  textDecoration: 'none'
+                }}
+                title={social.platform}
+              >
+                {social.icon_url ? (
+                  <img src={social.icon_url} alt={social.platform} width="20" height="20" />
+                ) : (
+                  getIconForPlatform(social.platform)
+                )}
+              </a>
+            ))}
           </div>
         </div>
 
@@ -502,12 +555,8 @@ export default function Contact({ isActive = false }: ContactProps) {
 
       <style jsx>{`
         @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         
         @media (max-width: 580px) {

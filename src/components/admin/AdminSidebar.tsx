@@ -65,8 +65,8 @@ export default function AdminSidebar() {
                 <span className="flex-1">{item.name}</span>
                 {item.badge && (
                     <span className={`px-1.5 py-0.5 text-[10px] font-semibold rounded-md transition-colors ${isActive
-                            ? 'bg-violet-100 text-violet-700'
-                            : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
+                        ? 'bg-violet-100 text-violet-700'
+                        : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
                         }`}>
                         {item.badge}
                     </span>
@@ -84,6 +84,10 @@ export default function AdminSidebar() {
     ]
 
     const contentItems = [
+        { name: 'About', icon: FileText, path: '/admin/about', enabled: true },
+        { name: 'Testimonials', icon: Users, path: '/admin/testimonials', enabled: true },
+        { name: 'Technologies', icon: Code, path: '/admin/technologies', enabled: true },
+        { name: 'Social Links', icon: User, path: '/admin/social', enabled: true },
         { name: 'Resume', icon: FileText, path: '/admin/resume', enabled: true },
         { name: 'Skills', icon: Code, path: '/admin/skills', enabled: true },
         { name: 'Projects', icon: Briefcase, path: '/admin/projects', enabled: true },

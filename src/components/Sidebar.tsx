@@ -1,12 +1,89 @@
-// app/components/Sidebar.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { ChevronDown, Calendar, Mail, Phone, PhoneIcon, MapPin, Linkedin } from "lucide-react";
+import { ChevronDown, Calendar, Mail, Phone, MapPin, Linkedin, Loader2 } from "lucide-react"
+import { supabase } from '@/integrations/supabase/client'
+
+interface PersonalInfo {
+  full_name: string
+  title: string
+  email: string
+  phone: string | null
+  location: string | null
+  birthday?: string | null
+}
+
+interface SocialLink {
+  id: string
+  platform: string
+  url: string
+  icon_url: string | null
+  display_order: number
+}
 
 export default function Sidebar() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
+
+  useEffect(() => {
+    fetchSidebarData()
+  }, [])
+
+  const fetchSidebarData = async () => {
+    try {
+      const [personalResult, socialResult] = await Promise.all([
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('social_links').select('*').eq('is_active', true).eq('show_in_sidebar', true).order('display_order')
+      ])
+
+      if (personalResult.data) {
+        setPersonalInfo(personalResult.data)
+      }
+
+      if (socialResult.data) {
+        setSocialLinks(socialResult.data)
+      }
+    } catch (error) {
+      console.error('Error fetching sidebar data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formatBirthday = (dateString: string | null | undefined) => {
+    if (!dateString) return null
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  if (loading) {
+    return (
+      <aside className="sidebar" data-sidebar>
+        <div className="sidebar-info" style={{ justifyContent: 'center', minHeight: '200px' }}>
+          <Loader2 size={32} className="animate-spin" style={{ color: 'var(--orange-yellow-crayola)' }} />
+        </div>
+        <style jsx>{`
+          .animate-spin { animation: spin 1s linear infinite; }
+          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        `}</style>
+      </aside>
+    )
+  }
+
+  if (!personalInfo) {
+    return (
+      <aside className="sidebar" data-sidebar>
+        <div className="sidebar-info">
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center' }}>
+            No profile data found
+          </p>
+        </div>
+      </aside>
+    )
+  }
 
   return (
     <aside className={`sidebar ${isSidebarVisible ? 'active' : ''}`} data-sidebar>
@@ -14,7 +91,7 @@ export default function Sidebar() {
         <figure className="avatar-box">
           <Image
             src="/assets/images/my-avatar.png"
-            alt="Msah Ambooka"
+            alt={personalInfo.full_name}
             width={80}
             height={80}
             className="avatar-img"
@@ -23,8 +100,8 @@ export default function Sidebar() {
         </figure>
 
         <div className="info-content">
-          <h1 className="name" title="Msah Ambooka">Msah Ambooka</h1>
-          <p className="title">Software | AI Engineer</p>
+          <h1 className="name" title={personalInfo.full_name}>{personalInfo.full_name}</h1>
+          <p className="title">{personalInfo.title}</p>
         </div>
 
         <button
@@ -47,163 +124,77 @@ export default function Sidebar() {
             </div>
             <div className="contact-info">
               <p className="contact-title">Email</p>
-              <a href="mailto:abdulrahmanambooka@gmail.com" className="contact-link">abdulrahmanambooka@gmail.com</a>
+              <a href={`mailto:${personalInfo.email}`} className="contact-link">{personalInfo.email}</a>
             </div>
           </li>
 
-          <li className="contact-item">
-            <div className="icon-box">
-              <PhoneIcon />
-            </div>
-            <div className="contact-info">
-              <p className="contact-title">Phone</p>
-              <a href="tel:+254111384390" className="contact-link">+254 111 384 390</a>
-            </div>
-          </li>
+          {personalInfo.phone && (
+            <li className="contact-item">
+              <div className="icon-box">
+                <Phone />
+              </div>
+              <div className="contact-info">
+                <p className="contact-title">Phone</p>
+                <a href={`tel:${personalInfo.phone.replace(/\s/g, '')}`} className="contact-link">{personalInfo.phone}</a>
+              </div>
+            </li>
+          )}
 
-          <li className="contact-item">
-            <div className="icon-box">
-              <Calendar />
-            </div>
-            <div className="contact-info">
-              <p className="contact-title">Birthday</p>
-              <time dateTime="2000-10-30">Oct 30th, 2000</time>
-            </div>
-          </li>
+          {personalInfo.birthday && (
+            <li className="contact-item">
+              <div className="icon-box">
+                <Calendar />
+              </div>
+              <div className="contact-info">
+                <p className="contact-title">Birthday</p>
+                <time dateTime={personalInfo.birthday}>{formatBirthday(personalInfo.birthday)}</time>
+              </div>
+            </li>
+          )}
 
-          <li className="contact-item">
-            <div className="icon-box">
-              <MapPin />
-            </div>
-            <div className="contact-info">
-              <p className="contact-title">Location</p>
-              <address>Nairobi, Kenya</address>
-            </div>
-          </li>
+          {personalInfo.location && (
+            <li className="contact-item">
+              <div className="icon-box">
+                <MapPin />
+              </div>
+              <div className="contact-info">
+                <p className="contact-title">Location</p>
+                <address>{personalInfo.location}</address>
+              </div>
+            </li>
+          )}
         </ul>
 
         <div className="separator"></div>
 
-        <ul className="social-list">
-          <li className="social-item">
-            <a
-              href="https://github.com/ambooka"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              title="GitHub"
-            >
-              <img
-                src="https://cdn.simpleicons.org/github/white"
-                alt="GitHub"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="https://www.linkedin.com/in/abdulrahman-ambooka/"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              title="LinkedIn"
-            >
-              <Linkedin className="w-[18px] h-[18px]" />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="https://twitter.com/ambooka"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              title="Twitter/X"
-            >
-              <img
-                src="https://cdn.simpleicons.org/x/white"
-                alt="Twitter/X"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="https://stackoverflow.com/users/your-id"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Stack Overflow"
-              title="Stack Overflow"
-            >
-              <img
-                src="https://cdn.simpleicons.org/stackoverflow/white"
-                alt="Stack Overflow"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="https://medium.com/@ambooka"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Medium"
-              title="Medium Blog"
-            >
-              <img
-                src="https://cdn.simpleicons.org/medium/white"
-                alt="Medium"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="https://wa.me/254111384390"
-              className="social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp"
-              title="WhatsApp"
-            >
-              <img
-                src="https://cdn.simpleicons.org/whatsapp/25D366"
-                alt="WhatsApp"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-          <li className="social-item">
-            <a
-              href="mailto:abdulrahmanambooka@gmail.com"
-              className="social-link"
-              aria-label="Email"
-              title="Email"
-            >
-              <img
-                src="https://cdn.simpleicons.org/gmail/EA4335"
-                alt="Email"
-                width="18"
-                height="18"
-                loading="lazy"
-              />
-            </a>
-          </li>
-        </ul>
+        {socialLinks.length > 0 && (
+          <ul className="social-list">
+            {socialLinks.map((social) => (
+              <li key={social.id} className="social-item">
+                <a
+                  href={social.url}
+                  className="social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.platform}
+                  title={social.platform}
+                >
+                  {social.icon_url ? (
+                    <img
+                      src={social.icon_url}
+                      alt={social.platform}
+                      width="18"
+                      height="18"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <Linkedin className="w-[18px] h-[18px]" />
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <style jsx>{`
