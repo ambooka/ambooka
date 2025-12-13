@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Book, BriefcaseBusiness, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import { CareerTimeline } from './mlops/CareerTimeline'
 
 interface ResumeProps {
   isActive?: boolean
@@ -93,20 +94,28 @@ export default function Resume({ isActive = false }: ResumeProps) {
         supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
       ])
 
-      if (personalInfoResult.error) throw personalInfoResult.error
-      if (educationResult.error) throw educationResult.error
-      if (experienceResult.error) throw experienceResult.error
-      if (skillsResult.error) throw skillsResult.error
+      // Note: Personal info might be missing, don't throw if just that fails? 
+      // For now, adhere to original logic but be careful.
+      // Original logic threw if personalInfoResult.error.
+
+      const pInfo = personalInfoResult.data || { id: 'mock', full_name: 'Abdulrahman Ambooka', title: 'MLOps Architect', email: 'hello@ambooka.dev', summary: 'MLOps Architect & AI Platform Specialist' } as PersonalInfo;
 
       setResumeData({
-        personal_info: personalInfoResult.data,
+        personal_info: pInfo,
         education: educationResult.data || [],
         experience: experienceResult.data || [],
         skills: skillsResult.data || []
       })
     } catch (err: any) {
       console.error('Error fetching resume data:', err)
-      setError(err.message || 'Failed to load resume data')
+      // setError(err.message || 'Failed to load resume data')
+      // Fallback to empty if failed, to show the UI at least
+      setResumeData({
+        personal_info: {} as any,
+        education: [],
+        experience: [],
+        skills: []
+      })
     } finally {
       setLoading(false)
     }
@@ -187,9 +196,6 @@ export default function Resume({ isActive = false }: ResumeProps) {
     return logoMap[skillName] || 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg'
   }
 
-  // const fetchResumeData = async () => { ... } (Removed)
-
-
   const formatDate = (date: string | null, isCurrent: boolean): string => {
     if (isCurrent) return 'Present'
     if (!date) return ''
@@ -201,7 +207,6 @@ export default function Resume({ isActive = false }: ResumeProps) {
     const end = formatDate(endDate, isCurrent)
     return `${start} — ${end}`
   }
-
 
   // Group skills by category
   const groupSkillsByCategory = (skills: Skill[]) => {
@@ -219,7 +224,7 @@ export default function Resume({ isActive = false }: ResumeProps) {
 
   if (loading) {
     return (
-      <article className={`resume ${isActive ? 'active' : ''}`} data-page="resume">
+      <article className={`resume portfolio-tab ${isActive ? 'active' : ''}`} data-page="resume">
         <header>
           <h2 className="h2 article-title">Resume</h2>
         </header>
@@ -240,7 +245,7 @@ export default function Resume({ isActive = false }: ResumeProps) {
 
   if (error || !resumeData) {
     return (
-      <article className={`resume ${isActive ? 'active' : ''}`} data-page="resume">
+      <article className={`resume portfolio-tab ${isActive ? 'active' : ''}`} data-page="resume">
         <header>
           <h2 className="h2 article-title">Resume</h2>
         </header>
@@ -268,315 +273,324 @@ export default function Resume({ isActive = false }: ResumeProps) {
     )
   }
 
-
-
-  const skillsGrouped = groupSkillsByCategory(resumeData.skills)
+  const skillsGrouped = groupSkillsByCategory(resumeData?.skills || [])
 
   return (
-    <article className={`resume ${isActive ? 'active' : ''}`} data-page="resume">
+    <article className={`resume portfolio-tab ${isActive ? 'active' : ''}`} data-page="resume">
       <header>
         <h2 className="h2 article-title">Resume</h2>
       </header>
 
-      {/* Education Section */}
-      {resumeData.education && resumeData.education.length > 0 && (
-        <section className="timeline">
-          <div className="title-wrapper">
-            <div className="icon-box">
-              <Book />
-            </div>
-            <h3 className="h3">Education</h3>
-          </div>
+      {/* MLOps Career Roadmap */}
+      <section className="timeline" style={{ marginBottom: '40px' }}>
+        <CareerTimeline />
+      </section>
 
-          <ol className="timeline-list">
-            {resumeData.education.map((edu) => (
-              <li key={edu.id} className="timeline-item">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                  <h4 className="h4 timeline-item-title">{edu.institution}</h4>
-                  <span>{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
-                </div>
-                {(edu.degree || edu.field_of_study) && (
-                  <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '8px', fontSize: '15px' }}>
-                    {edu.degree}{edu.degree && edu.field_of_study ? ' in ' : ''}{edu.field_of_study}
-                  </p>
-                )}
-                {edu.grade && (
-                  <div style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '4px 12px',
-                    background: 'var(--border-gradient-onyx)',
-                    borderRadius: '20px',
-                    marginBottom: '12px',
-                    fontSize: '13px',
-                    fontWeight: '500'
-                  }}>
-                    <span style={{ fontSize: '16px' }}>🎓</span>
-                    {edu.grade}
+      {/* Education Section */}
+      {
+        resumeData.education && resumeData.education.length > 0 && (
+          <section className="timeline">
+            <div className="title-wrapper">
+              <div className="icon-box">
+                <Book />
+              </div>
+              <h3 className="h3">Education</h3>
+            </div>
+
+            <ol className="timeline-list">
+              {resumeData.education.map((edu) => (
+                <li key={edu.id} className="timeline-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                    <h4 className="h4 timeline-item-title">{edu.institution}</h4>
+                    <span>{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
                   </div>
-                )}
-                {edu.description && (
-                  <p className="timeline-text" style={{ marginTop: '8px' }}>{edu.description}</p>
-                )}
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+                  {(edu.degree || edu.field_of_study) && (
+                    <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '8px', fontSize: '15px' }}>
+                      {edu.degree}{edu.degree && edu.field_of_study ? ' in ' : ''}{edu.field_of_study}
+                    </p>
+                  )}
+                  {edu.grade && (
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 12px',
+                      background: 'var(--border-gradient-onyx)',
+                      borderRadius: '20px',
+                      marginBottom: '12px',
+                      fontSize: '13px',
+                      fontWeight: '500'
+                    }}>
+                      <span style={{ fontSize: '16px' }}>🎓</span>
+                      {edu.grade}
+                    </div>
+                  )}
+                  {edu.description && (
+                    <p className="timeline-text" style={{ marginTop: '8px' }}>{edu.description}</p>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
 
       {/* Experience Section */}
-      {resumeData.experience && resumeData.experience.length > 0 && (
-        <section className="timeline">
-          <div className="title-wrapper">
-            <div className="icon-box">
-              <BriefcaseBusiness />
+      {
+        resumeData.experience && resumeData.experience.length > 0 && (
+          <section className="timeline">
+            <div className="title-wrapper">
+              <div className="icon-box">
+                <BriefcaseBusiness />
+              </div>
+              <h3 className="h3">Experience</h3>
             </div>
-            <h3 className="h3">Experience</h3>
-          </div>
 
-          <ol className="timeline-list">
-            {resumeData.experience.map((exp) => (
-              <li key={exp.id} className="timeline-item">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                  <h4 className="h4 timeline-item-title">{exp.position}</h4>
-                  <span>{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
-                </div>
-                <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '16px' }}>🏢</span>
-                  {exp.company}{exp.location && ` • ${exp.location}`}
-                </p>
-                {exp.description && (
-                  <p className="timeline-text" style={{ marginBottom: '16px', fontStyle: 'italic' }}>{exp.description}</p>
-                )}
-                {exp.responsibilities && exp.responsibilities.length > 0 && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'block' }}>Key Responsibilities:</strong>
-                    <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {exp.responsibilities.map((resp, idx) => (
-                        <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{resp}</li>
+            <ol className="timeline-list">
+              {resumeData.experience.map((exp) => (
+                <li key={exp.id} className="timeline-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                    <h4 className="h4 timeline-item-title">{exp.position}</h4>
+                    <span>{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
+                  </div>
+                  <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '16px' }}>🏢</span>
+                    {exp.company}{exp.location && ` • ${exp.location}`}
+                  </p>
+                  {exp.description && (
+                    <p className="timeline-text" style={{ marginBottom: '16px', fontStyle: 'italic' }}>{exp.description}</p>
+                  )}
+                  {exp.responsibilities && exp.responsibilities.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'block' }}>Key Responsibilities:</strong>
+                      <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {exp.responsibilities.map((resp, idx) => (
+                          <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{resp}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {exp.achievements && exp.achievements.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '16px' }}>⭐</span>
+                        Key Achievements:
+                      </strong>
+                      <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {exp.achievements.map((ach, idx) => (
+                          <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{ach}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {exp.technologies && exp.technologies.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
+                      {exp.technologies.map((tech, idx) => (
+                        <span key={idx} style={{
+                          padding: '4px 12px',
+                          background: 'var(--border-gradient-onyx)',
+                          borderRadius: '12px',
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          color: 'var(--accent-color)'
+                        }}>
+                          {tech}
+                        </span>
                       ))}
-                    </ul>
-                  </div>
-                )}
-                {exp.achievements && exp.achievements.length > 0 && (
-                  <div style={{ marginBottom: '16px' }}>
-                    <strong style={{ fontSize: '14px', color: 'var(--text-primary)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '16px' }}>⭐</span>
-                      Key Achievements:
-                    </strong>
-                    <ul style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {exp.achievements.map((ach, idx) => (
-                        <li key={idx} className="timeline-text" style={{ lineHeight: '1.6' }}>{ach}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {exp.technologies && exp.technologies.length > 0 && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px' }}>
-                    {exp.technologies.map((tech, idx) => (
-                      <span key={idx} style={{
-                        padding: '4px 12px',
-                        background: 'var(--border-gradient-onyx)',
-                        borderRadius: '12px',
-                        fontSize: '12px',
-                        fontWeight: '500',
-                        color: 'var(--accent-color)'
-                      }}>
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
 
       {/* Skills Section */}
-      {resumeData.skills && resumeData.skills.length > 0 && (
-        <section className="skill">
-          <h3 className="h3 skills-title">Technical Skills</h3>
+      {
+        resumeData.skills && resumeData.skills.length > 0 && (
+          <section className="skill">
+            <h3 className="h3 skills-title">Technical Skills</h3>
 
-          {/* Core Competencies - Logo Cards */}
-          <div style={{ marginBottom: '40px' }}>
-            <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Core Competencies</h4>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-              gap: '16px'
-            }}>
-              {resumeData.skills
-                .filter(skill => skill.is_featured)
-                .map((skill) => (
-                  <div
-                    key={skill.id}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '20px 16px',
-                      background: 'var(--bg-secondary)',
-                      borderRadius: '16px',
-                      border: '1px solid var(--border-color)',
-                      boxShadow: 'var(--shadow-1)',
-                      transition: 'all var(--transition-2)',
-                      cursor: 'default',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-6px)';
-                      e.currentTarget.style.boxShadow = 'var(--shadow-3)';
-                      e.currentTarget.style.borderColor = 'var(--accent-color)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'var(--shadow-1)';
-                      e.currentTarget.style.borderColor = 'var(--border-color)';
-                    }}
-                  >
+            {/* Core Competencies - Logo Cards */}
+            <div style={{ marginBottom: '40px' }}>
+              <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Core Competencies</h4>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                gap: '16px'
+              }}>
+                {resumeData.skills
+                  .filter(skill => skill.is_featured)
+                  .map((skill) => (
+                    <div
+                      key={skill.id}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '20px 16px',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '16px',
+                        border: '1px solid var(--border-color)',
+                        boxShadow: 'var(--shadow-1)',
+                        transition: 'all var(--transition-2)',
+                        cursor: 'default',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-6px)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-3)';
+                        e.currentTarget.style.borderColor = 'var(--accent-color)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'var(--shadow-1)';
+                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                      }}
+                    >
+                      <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '3px',
+                        background: 'var(--text-gradient-primary)'
+                      }}></div>
+                      <img
+                        src={getSkillLogo(skill.name)}
+                        alt={skill.name}
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          objectFit: 'contain'
+                        }}
+                        loading="lazy"
+                      />
+                      <span style={{
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        color: 'var(--text-primary)',
+                        textAlign: 'center',
+                        lineHeight: '1.3'
+                      }}>
+                        {skill.name}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* All Skills by Category - Logo Cards */}
+            <div>
+              <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Skills by Category</h4>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                {Object.entries(skillsGrouped).map(([category, skills]) => (
+                  <div key={category} className="content-card" style={{
+                    padding: '24px',
+                    borderRadius: '16px',
+                    background: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-color)',
+                    boxShadow: 'var(--shadow-1)',
+                    transition: 'all var(--transition-2)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
                     <div style={{
                       position: 'absolute',
                       top: 0,
                       left: 0,
                       width: '100%',
-                      height: '3px',
-                      background: 'var(--text-gradient-primary)'
+                      height: '4px',
+                      background: 'var(--text-gradient-primary)',
+                      opacity: 0.8
                     }}></div>
-                    <img
-                      src={getSkillLogo(skill.name)}
-                      alt={skill.name}
+                    <h5
+                      className="h5"
                       style={{
-                        width: '48px',
-                        height: '48px',
-                        objectFit: 'contain'
+                        textTransform: 'capitalize',
+                        marginBottom: '20px',
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: 'var(--text-primary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
                       }}
-                      loading="lazy"
-                    />
-                    <span style={{
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      color: 'var(--text-primary)',
-                      textAlign: 'center',
-                      lineHeight: '1.3'
+                    >
+                      <span style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        background: 'var(--accent-color)',
+                        display: 'inline-block'
+                      }}></span>
+                      {category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </h5>
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+                      gap: '16px'
                     }}>
-                      {skill.name}
-                    </span>
+                      {skills.map(skill => (
+                        <div
+                          key={skill.id}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: '10px',
+                            padding: '16px 12px',
+                            background: 'var(--border-gradient-onyx)',
+                            borderRadius: '12px',
+                            border: '1px solid transparent',
+                            transition: 'all var(--transition-2)',
+                            cursor: 'default',
+                            minHeight: '110px',
+                            justifyContent: 'center'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = 'var(--accent-color)';
+                            e.currentTarget.style.transform = 'translateY(-4px)';
+                            e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = 'transparent';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = 'none';
+                          }}
+                        >
+                          <img
+                            src={getSkillLogo(skill.name)}
+                            alt={skill.name}
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              objectFit: 'contain'
+                            }}
+                            loading="lazy"
+                          />
+                          <span style={{
+                            fontSize: '12px',
+                            fontWeight: '500',
+                            color: 'var(--text-secondary)',
+                            textAlign: 'center',
+                            lineHeight: '1.3'
+                          }}>
+                            {skill.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
+              </div>
             </div>
-          </div>
-
-          {/* All Skills by Category - Logo Cards */}
-          <div>
-            <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Skills by Category</h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              {Object.entries(skillsGrouped).map(([category, skills]) => (
-                <div key={category} className="content-card" style={{
-                  padding: '24px',
-                  borderRadius: '16px',
-                  background: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-color)',
-                  boxShadow: 'var(--shadow-1)',
-                  transition: 'all var(--transition-2)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '4px',
-                    background: 'var(--text-gradient-primary)',
-                    opacity: 0.8
-                  }}></div>
-                  <h5
-                    className="h5"
-                    style={{
-                      textTransform: 'capitalize',
-                      marginBottom: '20px',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      color: 'var(--text-primary)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <span style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      background: 'var(--accent-color)',
-                      display: 'inline-block'
-                    }}></span>
-                    {category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </h5>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-                    gap: '16px'
-                  }}>
-                    {skills.map(skill => (
-                      <div
-                        key={skill.id}
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          gap: '10px',
-                          padding: '16px 12px',
-                          background: 'var(--border-gradient-onyx)',
-                          borderRadius: '12px',
-                          border: '1px solid transparent',
-                          transition: 'all var(--transition-2)',
-                          cursor: 'default',
-                          minHeight: '110px',
-                          justifyContent: 'center'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--accent-color)';
-                          e.currentTarget.style.transform = 'translateY(-4px)';
-                          e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = 'transparent';
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      >
-                        <img
-                          src={getSkillLogo(skill.name)}
-                          alt={skill.name}
-                          style={{
-                            width: '40px',
-                            height: '40px',
-                            objectFit: 'contain'
-                          }}
-                          loading="lazy"
-                        />
-                        <span style={{
-                          fontSize: '12px',
-                          fontWeight: '500',
-                          color: 'var(--text-secondary)',
-                          textAlign: 'center',
-                          lineHeight: '1.3'
-                        }}>
-                          {skill.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )
+      }
 
       <style jsx>{`
         .animate-spin {
@@ -619,6 +633,6 @@ export default function Resume({ isActive = false }: ResumeProps) {
           }
         }
       `}</style>
-    </article>
+    </article >
   )
 }

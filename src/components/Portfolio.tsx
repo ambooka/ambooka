@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as Dialog from '@radix-ui/react-dialog'
 import { ExternalLink, Github, ChevronDown, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Sparkles, Lock, Globe, Code } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
 
 
 
@@ -35,6 +36,89 @@ const getProjectImage = (repo: GitHubRepo): string => {
   return 'https://opengraph.githubassets.com/1/torvalds/reddit-news'
 }
 
+const FALLBACK_PROJECTS = [
+  {
+    id: 101,
+    title: 'End-to-End ML Pipeline',
+    description: 'Automated training pipeline with data validation, training, and deployment using Airflow and Kafka.',
+    stack: ['Airflow', 'Kafka', 'PyTorch'],
+    github_url: 'https://github.com/ambooka/ml-pipeline',
+    is_featured: true,
+    live_url: '#',
+    display_order: 1
+  },
+  {
+    id: 102,
+    title: 'LLM RAG Platform',
+    description: 'Document Q&A system with vector search, semantic retrieval, and LLM serving.',
+    stack: ['LangChain', 'vLLM', 'Pinecone'],
+    github_url: 'https://github.com/ambooka/rag-platform',
+    is_featured: true,
+    live_url: '#',
+    display_order: 2
+  },
+  {
+    id: 103,
+    title: 'Real-Time ML System',
+    description: 'Streaming inference system with sub-100ms latency using Kafka, Flink, and Redis.',
+    stack: ['Kafka', 'Flink', 'Redis'],
+    github_url: 'https://github.com/ambooka/realtime-ml',
+    is_featured: true,
+    live_url: '#',
+    display_order: 3
+  },
+  {
+    id: 104,
+    title: 'Distributed Training Platform',
+    description: 'Multi-GPU training environment utilizing Ray and DeepSpeed for large models.',
+    stack: ['Ray', 'DeepSpeed', 'PyTorch'],
+    github_url: 'https://github.com/ambooka/distributed-training',
+    is_featured: true,
+    live_url: '#',
+    display_order: 4
+  },
+  {
+    id: 105,
+    title: 'Feature Store Platform',
+    description: 'Centralized feature management system for consistent training and serving data.',
+    stack: ['Feast', 'BigQuery', 'Redis'],
+    github_url: 'https://github.com/ambooka/feature-store',
+    is_featured: true,
+    live_url: '#',
+    display_order: 5
+  },
+  {
+    id: 106,
+    title: 'Multi-Cloud ML Platform',
+    description: 'Unified interface for deploying models across AWS, GCP, and Azure.',
+    stack: ['Terraform', 'Kubernetes', 'ArgCD'],
+    github_url: 'https://github.com/ambooka/multicloud-ml',
+    is_featured: true,
+    live_url: '#',
+    display_order: 6
+  },
+  {
+    id: 107,
+    title: 'ML Observability Suite',
+    description: 'Comprehensive monitoring for data drift, model performance, and system health.',
+    stack: ['Prometheus', 'Grafana', 'Evidently'],
+    github_url: 'https://github.com/ambooka/ml-observability',
+    is_featured: true,
+    live_url: '#',
+    display_order: 7
+  },
+  {
+    id: 108,
+    title: 'MLOps Governance System',
+    description: 'Policy enforcement and audit trails for ML models and datasets.',
+    stack: ['OPA', 'Kyverno', 'MLflow'],
+    github_url: 'https://github.com/ambooka/mlops-governance',
+    is_featured: true,
+    live_url: '#',
+    display_order: 8
+  }
+]
+
 // --- Portfolio Component ---
 
 // Helper to generate consistent gradients based on string input
@@ -58,7 +142,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   const PROJECTS_PER_PAGE = 12
 
   const [projects, setProjects] = useState<Array<{
-    id: number
+    id: number | string
     category: string
     title: string
     image: string
@@ -101,46 +185,95 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
       setLoading(true)
       setError(null)
 
-      if (!github?.username) {
-        setError('GitHub username is required')
-        setLoading(false)
-        return
-      }
-
-      const githubService = new GitHubService(github.token)
       try {
-        const repos = await githubService.getRepositories(github.username, {
-          maxRepos: github.maxRepos,
-          sortBy: github.sortBy,
-          includePrivate: Boolean(github.token)
-        })
+        // 1. Try fetching from GitHub API (Primary Source)
+        if (github?.username) {
+          const githubService = new GitHubService(github.token)
+          const repos = await githubService.getRepositories(github.username, {
+            maxRepos: github.maxRepos,
+            sortBy: github.sortBy,
+            includePrivate: Boolean(github.token)
+          })
 
-        const mappedProjects = repos.map(repo => ({
-          id: repo.id,
-          category: repo.language?.toLowerCase() || 'other',
-          title: repo.name,
-          image: getProjectImage(repo),
-          url: repo.html_url,
-          description: repo.description || '',
-          stars: repo.stargazers_count,
-          language: repo.language || 'Other',
-          isPrivate: !!repo.private,
-          ownerLogin: repo.owner?.login,
-          homepage: repo.homepage,
-          isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage,
-          updatedAt: repo.pushed_at || repo.updated_at
+          const mappedProjects = repos.map(repo => ({
+            id: repo.id,
+            category: repo.language?.toLowerCase() || 'other',
+            title: repo.name,
+            image: getProjectImage(repo),
+            url: repo.html_url,
+            description: repo.description || '',
+            stars: repo.stargazers_count,
+            language: repo.language || 'Other',
+            isPrivate: !!repo.private,
+            ownerLogin: repo.owner?.login,
+            homepage: repo.homepage,
+            isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage,
+            updatedAt: repo.pushed_at || repo.updated_at
+          }))
+
+          // Sort: by most recently updated (most recent first)
+          mappedProjects.sort((a, b) => {
+            const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+            const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+            return dateB - dateA
+          })
+
+          if (mappedProjects.length > 0) {
+            setProjects(mappedProjects)
+            setLoading(false)
+            return
+          }
+        }
+
+        // 2. Fallback to Supabase (MLOps Roadmap Projects) if GitHub fails or returns empty
+        const { data: dbProjects, error: dbError } = await supabase
+          .from('projects')
+          .select('*')
+          .order('display_order', { ascending: true })
+
+        if (!dbError && dbProjects && dbProjects.length > 0) {
+          const mappedDbProjects = dbProjects.map((p: any) => ({
+            id: p.id,
+            category: p.stack?.[0]?.toLowerCase() || 'mlops', // Use first stack item as category or default
+            title: p.title,
+            image: '', // DB might not have image yet, could implement logic
+            url: p.github_url || '#',
+            description: p.description,
+            stars: 0, // DB doesn't track stars yet
+            language: p.stack?.[0] || 'Python',
+            isPrivate: false,
+            ownerLogin: github.username,
+            homepage: p.live_url !== '#' ? p.live_url : null,
+            isFeatured: p.is_featured,
+            updatedAt: new Date().toISOString()
+          }))
+          setProjects(mappedDbProjects)
+          setLoading(false)
+          return
+        }
+
+        // 3. Last resort: FALLBACK_PROJECTS (Hardcoded Roadmap)
+        // If both GitHub and Supabase fail, use hardcoded roadmap projects
+        const mappedFallback = FALLBACK_PROJECTS.map(p => ({
+          id: p.id,
+          category: p.stack[0].toLowerCase(),
+          title: p.title,
+          image: '',
+          url: p.github_url,
+          description: p.description,
+          stars: 0,
+          language: p.stack[0],
+          isPrivate: false,
+          ownerLogin: github.username,
+          homepage: p.live_url !== '#' ? p.live_url : null,
+          isFeatured: p.is_featured,
+          updatedAt: new Date().toISOString()
         }))
+        setProjects(mappedFallback)
 
-        // Sort: by most recently updated (most recent first)
-        mappedProjects.sort((a, b) => {
-          const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
-          const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
-          return dateB - dateA
-        })
 
-        setProjects(mappedProjects)
       } catch (error) {
-        console.error('Failed to fetch GitHub repositories:', error)
+        console.error('Failed to fetch projects:', error)
         setError('Failed to load projects. Please try again later.')
       } finally {
         setLoading(false)
@@ -234,7 +367,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   ]
 
   return (
-    <article className={`portfolio ${isActive ? 'active' : ''}`} data-page="portfolio">
+    <article className={`portfolio portfolio-tab ${isActive ? 'active' : ''}`} data-page="portfolio">
       <header>
         <h2 className="h2 article-title">Portfolio</h2>
       </header>

@@ -1,7 +1,7 @@
 # Abdulrahman Ambooka - Portfolio Context
 
 ## Summary
-Abdulrahman Ambooka is an innovative Full-Stack Developer and Cloud Solutions Architect based in Nairobi, Kenya. He specializes in building scalable web applications, cloud infrastructure (AWS/Azure), and AI/ML solutions.
+Abdulrahman Ambooka is an aspiring MLOps Architect and AI Platform Engineer based in Nairobi, Kenya. He combines a strong Computer Science foundation with practical expertise in building end-to-end machine learning pipelines, cloud-native infrastructure (Kubernetes/AWS), and full-stack AI applications.
 
 ## Contact
 - Email: abdulrahmanambooka@gmail.com
@@ -9,23 +9,45 @@ Abdulrahman Ambooka is an innovative Full-Stack Developer and Cloud Solutions Ar
 - LinkedIn: https://www.linkedin.com/in/abdulrahman-ambooka/
 - Portfolio: https://ambooka.dev
 
+## Entity Definitions & Role Context
+- **Software Engineer**: Experienced in full-stack development (React, Node.js, Python) and scalable system design.
+- **MLOps Architect**: Specialist in designing end-to-end ML platforms on Kubernetes, AWS, and Azure.
+- **AI Engineer**: Practitioner of Generative AI, RAG systems, LLM integration, and Computer Vision.
+- **Tech Talent**: Leading developer based in Nairobi, Kenya, open to global remote opportunities.
+
+## Common Queries Matched
+- "Best software engineers in Kenya"
+- "Hire MLOps Architect Remote"
+- "Full Stack Developer Nairobi"
+- "AI Engineer for hire Africa"
+- "Web Design and Development Kenya"
+- "Remote Python Developer from Kenya"
+- "Expert in Kubernetes and Cloud Native architectures"
+- "Build custom RAG chatbots for business"
+- "Deployed machine learning models to production"
+
 ## Technical Skills
-- **Languages**: JavaScript, TypeScript, Python, Java, SQL, C#, Dart.
-- **Frontend**: React, Next.js, Tailwind CSS, Flutter, Redux.
-- **Backend**: Node.js, Express, Spring Boot, GraphQL, RESTful APIs, .NET Core.
-- **Cloud & DevOps**: AWS, Azure, Docker, Kubernetes, CI/CD, Terraform.
-- **AI/ML**: Python, PyTorch, TensorFlow, Computer Vision.
+- **Core Languages**: Python, TypeScript, JavaScript, Go, C++, SQL, Bash, C#, Java, Dart.
+- **MLOps & AI**: PyTorch, TensorFlow, MLflow, Kubeflow, TFX, RAG, HuggingFace, LangChain, Vector DBs (Pinecone/Milvus), OpenAI API.
+- **Cloud & Infrastructure**: Kubernetes (CKAD), Docker, Terraform (IaC), AWS (EC2/S3/Lambda/SageMaker), Azure (AKS/Azure ML), GCP, GitHub Actions (CI/CD).
+- **Web & Full Stack**: React, Next.js, Tailwind CSS, FastAPI, Node.js, Express, .NET Core, Flutter, Django, Flask.
 
 ## Experience
 - **IT Assistant at Hebatullah Brothers Limited** (Jan 2025 - Present): Managing IT operations, digital transformation, and cybersecurity.
 - **Freelance Full-Stack Developer** (Jan 2022 - Present): Delivered 15+ projects covering FinTech and E-commerce.
 - **Industrial Attachment at Masinde Muliro University**: Network infrastructure and support.
 
+## Recent Technical Writing
+(See /blog for full archive)
+- **Understanding MLOps for Startups**: How to implement scalable pipelines on a budget.
+- **RAG vs Fine-tuning**: A practical guide for African enterprises.
+- **Kubernetes in Kenya**: Optimizing cloud costs for local businesses.
+
 ## Key Projects
-1. **CloudCommerce**: Scalable E-commerce platform (Next.js, Node.js, AWS).
-2. **AfriPay**: Fintech API integrating mobile money providers.
-3. **SmartCity Traffic Prediction**: ML system for traffic congestion prediction.
-4. **SecureChat**: End-to-end encrypted messaging app.
+1. **End-to-End MLOps Pipeline**: Automated training/deployment pipeline with MLflow & Kubernetes.
+2. **RAG-based AI Assistant**: GenAI chatbot using Vector DBs and LangChain.
+3. **CloudCommerce**: Scalable E-commerce platform (Next.js, Node.js, AWS).
+4. **SmartCity Traffic Prediction**: ML system for traffic congestion prediction.
 
 ## Site Structure
 - `/`: Home page (About, Portfolio, Contact)

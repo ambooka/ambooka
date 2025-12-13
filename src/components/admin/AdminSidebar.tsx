@@ -16,7 +16,8 @@ import {
     Settings,
     HelpCircle,
     LogOut,
-    FileEdit
+    FileEdit,
+    Github
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -85,12 +86,13 @@ export default function AdminSidebar() {
 
     const contentItems = [
         { name: 'About', icon: FileText, path: '/admin/about', enabled: true },
+        { name: 'Projects', icon: Briefcase, path: '/admin/projects', enabled: true },
+        { name: 'KPI Stats', icon: BarChart3, path: '/admin/kpis', enabled: true },
         { name: 'Testimonials', icon: Users, path: '/admin/testimonials', enabled: true },
         { name: 'Technologies', icon: Code, path: '/admin/technologies', enabled: true },
         { name: 'Social Links', icon: User, path: '/admin/social', enabled: true },
         { name: 'Resume', icon: FileText, path: '/admin/resume', enabled: true },
         { name: 'Skills', icon: Code, path: '/admin/skills', enabled: true },
-        { name: 'Projects', icon: Briefcase, path: '/admin/projects', enabled: true },
         { name: 'Blog', icon: PenTool, path: '/admin/blog', enabled: true },
         { name: 'Profile', icon: User, path: '/admin/profile', enabled: true },
         { name: 'Update CV', icon: FileEdit, path: '/admin/update-cv', enabled: true },

@@ -137,7 +137,7 @@ export default function Contact({ isActive = false }: ContactProps) {
 
     try {
       // Save to database
-      const { error } = await supabase.from('messages').insert({
+      const { error } = await supabase.from('contact_messages').insert({
         name: formData.fullname,
         email: formData.email,
         message: formData.message
@@ -194,7 +194,7 @@ export default function Contact({ isActive = false }: ContactProps) {
 
   if (loading) {
     return (
-      <article className={`contact ${isActive ? 'active' : ''}`} data-page="contact">
+      <article className={`contact portfolio-tab ${isActive ? 'active' : ''}`} data-page="contact">
         <header>
           <h2 className="h2 article-title">Get In Touch</h2>
         </header>
@@ -215,7 +215,7 @@ export default function Contact({ isActive = false }: ContactProps) {
   }
 
   return (
-    <article className={`contact ${isActive ? 'active' : ''}`} data-page="contact">
+    <article className={`contact portfolio-tab ${isActive ? 'active' : ''}`} data-page="contact">
       <header>
         <h2 className="h2 article-title">Get In Touch</h2>
         <p style={{

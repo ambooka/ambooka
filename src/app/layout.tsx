@@ -11,29 +11,84 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Abdulrahman Ambooka",
+  "url": "https://ambooka.dev",
+  "image": "https://ambooka.dev/og-image.png",
+  "sameAs": [
+    "https://github.com/ambooka",
+    "https://www.linkedin.com/in/abdulrahman-ambooka/",
+    "https://twitter.com/ambooka"
+  ],
+  "jobTitle": "MLOps Architect & Software Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Freelance / Open to Work"
+  },
+  "description": "Full-stack software engineer and MLOps Architect building scalable AI platforms and cloud-native solutions.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Nairobi",
+    "addressCountry": "Kenya"
+  },
+  "knowsAbout": ["Machine Learning", "MLOps", "Software Engineering", "Cloud Computing", "Kubernetes", "React", "Python"]
+}
 export const metadata: Metadata = {
   title: {
-    default: "Abdulrahman Ambooka | AI & Software Engineer",
+    default: "Abdulrahman Ambooka | MLOps Architect & AI Engineer",
     template: "%s | Abdulrahman Ambooka"
   },
-  description: "Full-stack software engineer specializing in AI/MLOps, cloud-native development, and scalable applications. Expertise in Python, .NET Core, TypeScript, Flutter, and Azure cloud services.",
+  description: "Computer Science Graduate specializing in MLOps, AI Platform Engineering, and Cloud Architecture. Building end-to-end machine learning systems with Kubernetes, Python, and AWS.",
   keywords: [
-    "Abdulrahman Ambooka",
-    "Software Engineer",
-    "AI Engineer",
-    "MLOps",
-    "Full Stack Developer",
-    "Cloud Native",
-    "Azure",
-    "Python",
-    ".NET Core",
-    "TypeScript",
-    "React",
-    "Flutter",
-    "Machine Learning",
-    "Nairobi Developer",
-    "Kenya Tech"
+    // --- IDENTITY ---
+    "Abdulrahman Ambooka", "Ambooka", "Abdulrahman",
+    "Software Engineer", "Full Stack Developer", "Backend Engineer", "Frontend Developer",
+    "MLOps Architect", "AI Engineer", "Cloud Solutions Architect", "Platform Engineer",
+    "DevOps Engineer", "Site Reliability Engineer", "SRE", "Data Engineer",
+    "Tech Lead", "Senior Developer", "Freelance Developer", "Remote Engineer",
+
+    // --- AI & MLOPS STACK ---
+    "Machine Learning", "Artificial Intelligence", "Deep Learning", "Generative AI",
+    "LLMs", "Large Language Models", "RAG", "Retrieval Augmented Generation",
+    "Computer Vision", "NLP", "Natural Language Processing", "Transformers",
+    "PyTorch", "TensorFlow", "Keras", "Scikit-learn", "Pandas", "NumPy",
+    "MLflow", "Kubeflow", "TFX", "Weights & Biases", "DVC", "Feature Store",
+    "Model Serving", "Model Monitoring", "Model Registry", "Prompt Engineering",
+    "LangChain", "LlamaIndex", "HuggingFace", "OpenAI API", "Anthropic", "Mistral",
+    "Vector Databases", "Pinecone", "Milvus", "ChromaDB", "Weaviate", "Qdrant",
+
+    // --- CLOUD & INFRASTRUCTURE ---
+    "Cloud Native", "Kubernetes", "K8s", "Docker", "Containerization", "Microservices",
+    "AWS", "Amazon Web Services", "EC2", "S3", "Lambda", "EKS", "SageMaker",
+    "Azure", "Microsoft Azure", "AKS", "Azure ML", "GCP", "Google Cloud Platform", "GKE",
+    "Terraform", "Infrastructure as Code", "IaC", "Ansible", "Pulumi",
+    "CI/CD", "GitHub Actions", "GitLab CI", "Jenkins", "ArgoCD", "Flux",
+    "Linux", "Bash", "Shell Scripting", "Git", "Version Control", "Networking",
+
+    // --- WEB & APP DEVELOPMENT ---
+    "React", "React.js", "Next.js", "Vue.js", "Angular", "Svelte",
+    "TypeScript", "JavaScript", "ES6+", "HTML5", "CSS3", "Tailwind CSS",
+    "Node.js", "Express.js", "NestJS", "FastAPI", "Flask", "Django",
+    "Python", "Golang", "Go", "C#", ".NET", ".NET Core", "Java", "Spring Boot",
+    "Flutter", "Dart", "Mobile App Development", "Cross-platform Development",
+    "GraphQL", "REST API", "gRPC", "WebSockets", "Serverless",
+    "PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch", "Supabase", "Firebase",
+
+    // --- KENYA & AFRICA CONTEXT ---
+    "Nairobi Tech", "Silicon Savannah", "Kenya Tech Ecosystem",
+    "Software Jobs Kenya", "Tech Jobs Nairobi", "Developer Jobs Kenya",
+    "Best Software Engineers Kenya", "Top Developers Nairobi",
+    "Web Design Kenya", "Mobile App Developers Kenya",
+    "Remote Jobs Africa", "African Tech Talent", "Andela",
+    "Nairobi", "Mombasa", "Kisumu", "Eldoret", "Kenya", "East Africa",
+
+    // --- INTENT & HIRING ---
+    "Hire AI Engineer", "Hire MLOps Engineer", "Hire Full Stack Developer",
+    "Remote MLOps Jobs", "Remote AI Jobs", "Freelance Software Engineer",
+    "Contract Developer", "Consultant", "Technical Co-founder",
+    "Build AI App", "Deploy ML Models", "Scale Web Apps", "MVP Development"
   ],
   authors: [{ name: "Abdulrahman Ambooka", url: "https://github.com/ambooka" }],
   creator: "Abdulrahman Ambooka",
@@ -45,22 +100,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://ambooka.dev',
-    title: 'Abdulrahman Ambooka | AI & Software Engineer',
-    description: 'Full-stack software engineer specializing in AI/MLOps, cloud-native development, and scalable applications. Expertise in Python, .NET Core, TypeScript, Flutter, and Azure.',
+    title: 'Abdulrahman Ambooka | MLOps Architect & AI Engineer',
+    description: 'Computer Science Graduate building end-to-end MLOps platforms and cloud-native AI systems.',
     siteName: 'Abdulrahman Ambooka Portfolio',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Abdulrahman Ambooka - AI & Software Engineer',
+        alt: 'Abdulrahman Ambooka - MLOps Architect',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Abdulrahman Ambooka | AI & Software Engineer',
-    description: 'Full-stack software engineer specializing in AI/MLOps, cloud-native development, and scalable applications.',
+    title: 'Abdulrahman Ambooka | MLOps Architect & AI Engineer',
+    description: 'Building scalable MLOps platforms and cloud-native AI infrastructures.',
     creator: '@ambooka',
     images: ['/og-image.png'],
   },
@@ -92,8 +147,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#4299e1" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#2d3748" media="(prefers-color-scheme: dark)" />
+        <meta name="theme-color" content="#1e1e1f" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1e1e1f" media="(prefers-color-scheme: dark)" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.github.com" />
@@ -103,6 +158,10 @@ export default function RootLayout({
       >
         {children}
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </body>
     </html>
   );

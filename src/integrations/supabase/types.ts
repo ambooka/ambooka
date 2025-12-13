@@ -419,6 +419,150 @@ export type Database = {
         }
         Relationships: []
       }
+      projects: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          stack: string[] | null
+          status: string
+          github_url: string | null
+          live_url: string | null
+          image_url: string | null
+          is_featured: boolean
+          display_order: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          stack?: string[] | null
+          status: string
+          github_url?: string | null
+          live_url?: string | null
+          image_url?: string | null
+          is_featured?: boolean
+          display_order?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          stack?: string[] | null
+          status?: string
+          github_url?: string | null
+          live_url?: string | null
+          image_url?: string | null
+          is_featured?: boolean
+          display_order?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kpi_stats: {
+        Row: {
+          id: string
+          label: string
+          value: string
+          icon: string | null
+          color: string | null
+          type: string | null
+          section: string | null
+          display_order: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          label: string
+          value: string
+          icon?: string | null
+          color?: string | null
+          type?: string | null
+          section?: string | null
+          display_order?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          label?: string
+          value?: string
+          icon?: string | null
+          color?: string | null
+          type?: string | null
+          section?: string | null
+          display_order?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          message: string
+          status: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          message: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          message?: string
+          status?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      page_views: {
+        Row: {
+          id: string
+          path: string
+          referer: string | null
+          user_agent: string | null
+          ip_address: string | null
+          session_id: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          path: string
+          referer?: string | null
+          user_agent?: string | null
+          ip_address?: string | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          path?: string
+          referer?: string | null
+          user_agent?: string | null
+          ip_address?: string | null
+          session_id?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

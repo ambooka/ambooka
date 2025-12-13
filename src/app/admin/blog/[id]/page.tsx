@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save, Plus, X } from 'lucide-react'
@@ -14,11 +14,12 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
 
     const [formData, setFormData] = useState({
         title: '',
-        description: '', // Used as excerpt
-        content: '', // Main content
+        excerpt: '',
+        content: '',
         image_url: '',
+        slug: '',
         tags: [] as string[],
-        is_featured: false,
+        is_published: false,
         category: 'blog'
     })
 
@@ -30,7 +31,7 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
 
     const fetchData = async () => {
         const { data, error } = await supabase
-            .from('portfolio_content')
+            .from('blog_posts')
             .select('*')
             .eq('id', params.id)
             .single()
@@ -44,36 +45,45 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
         if (data) {
             setFormData({
                 title: data.title,
-                description: data?.description || '',
-                content: data.content || '',
+                excerpt: data.excerpt || '',
+                content: data.content,
                 image_url: data.image_url || '',
+                slug: data.slug,
                 tags: data.tags || [],
-                is_featured: data.is_featured || false,
-                category: 'blog'
+                is_published: data.is_published,
+                category: data.category
             })
         }
         setLoading(false)
+    }
+
+    const generateSlug = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setSaving(true)
 
+        const finalSlug = formData.slug || generateSlug(formData.title)
+
         const payload = {
             ...formData,
-            tags: formData.tags.length > 0 ? formData.tags : null,
-            image_url: formData.image_url || null,
-            content: formData.content || null,
-            description: formData.description || null
+            slug: finalSlug,
+            tags: formData.tags.length > 0 ? formData.tags : [],
+            updated_at: new Date().toISOString()
         }
 
         let error
         if (isNew) {
-            const { error: insertError } = await supabase.from('portfolio_content').insert(payload)
+            const { error: insertError } = await supabase.from('blog_posts').insert(payload)
             error = insertError
         } else {
             const { error: updateError } = await supabase
-                .from('portfolio_content')
+                .from('blog_posts')
                 .update(payload)
                 .eq('id', params.id)
             error = updateError
@@ -135,6 +145,17 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                     </div>
 
                     <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Slug</label>
+                        <input
+                            type="text"
+                            value={formData.slug}
+                            onChange={e => setFormData({ ...formData, slug: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono text-gray-600"
+                            placeholder={formData.title ? generateSlug(formData.title) : 'auto-generated-slug'}
+                        />
+                    </div>
+
+                    <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Cover Image URL</label>
                         <input
                             type="text"
@@ -148,11 +169,11 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
 
                 {/* Content */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt / Short Description</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
                     <textarea
                         rows={3}
-                        value={formData.description}
-                        onChange={e => setFormData({ ...formData, description: e.target.value })}
+                        value={formData.excerpt}
+                        onChange={e => setFormData({ ...formData, excerpt: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
                         placeholder="Brief summary of the post..."
                     />
@@ -162,6 +183,7 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Content (Markdown supported)</label>
                     <textarea
                         rows={15}
+                        required
                         value={formData.content}
                         onChange={e => setFormData({ ...formData, content: e.target.value })}
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none font-mono text-sm"
@@ -173,11 +195,11 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
                             type="checkbox"
-                            checked={formData.is_featured}
-                            onChange={e => setFormData({ ...formData, is_featured: e.target.checked })}
+                            checked={formData.is_published}
+                            onChange={e => setFormData({ ...formData, is_published: e.target.checked })}
                             className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
                         />
-                        <span className="text-sm font-medium text-gray-700">Featured Post</span>
+                        <span className="text-sm font-medium text-gray-700">Publish Post</span>
                     </label>
                 </div>
 

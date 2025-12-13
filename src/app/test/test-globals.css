@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@theme {
+  /* Theme configuration overrides if needed */
+}
+
+/* 
+  CREXTIO DASHBOARD DESIGN SYSTEM 
+  Reference: uploaded_image_1765642245264.png
+*/
+
+:root {
+  /* ===== COLOR PALETTE ===== */
+
+  /* Backgrounds */
+  --bg-main: #EFECE6;
+  /* Outer background (greyish-beige) */
+  --bg-card-light: #FFFCF6;
+  /* Main light cards (almost white/cream) */
+  --bg-card-dark: #1A1A1A;
+  /* Dark cards (black/charcoal) */
+  --bg-accent-light: #FFFAEB;
+  /* Yellow-tinted background (Time tracker, Onboarding) */
+  --bg-purple-tint: #A8A4CE;
+  /* Visual Profile Background */
+
+  /* Accents */
+  --accent-yellow: #FACC15;
+  /* Primary Action/Highlight Color */
+
+  /* Text */
+  --text-primary: #1F1F1F;
+  /* Main Headings */
+  --text-secondary: #6B7280;
+  /* Subtitles, labels */
+  --text-light: #FFFFFF;
+  /* Text on dark backgrounds */
+  --text-muted: #9CA3AF;
+  /* Muted/Disabled text */
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-light: #F3F4F6;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.03);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.04);
+
+  /* Dimensions */
+  --radius-card: 40px;
+  /* Consistent large border radius */
+  --radius-pill: 9999px;
+  /* Fully rounded buttons/badges */
+}
+
+/* GLOBAL RESETS & UTILITIES */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Fallback to Inter */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utility for card consistency */
+.dashboard-card {
+  background-color: var(--bg-card-light);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--shadow-card);
+}
+
+/* Custom Scrollbar for specific sections */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.dark-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ===== DARK THEME ===== */
+[data-theme="dark"] {
+  --bg-main: #0F0F0F;
+  --bg-card-light: #1A1A1A;
+  --bg-card-dark: #2A2A2A;
+  --bg-accent-light: #2A2517;
+  --bg-purple-tint: #3D3B5C;
+
+  --text-primary: #F5F5F5;
+  --text-secondary: #A0A0A0;
+  --text-light: #FFFFFF;
+  --text-muted: #6B6B6B;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-light: #2A2A2A;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .dashboard-card {
+  background-color: var(--bg-card-light);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes ping {
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping {
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ===== CHAT MODAL ===== */
+.chat-modal-crextio {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  width: 380px;
+  max-height: 500px;
+  background: var(--bg-card-light);
+  border-radius: var(--radius-card);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  border: 1px solid var(--border-light);
+}
+
+.chat-messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.chat-input-container {
+  padding: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+/* Chat button float */
+.chat-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-yellow);
+  color: var(--bg-card-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 99;
+}
+
+.chat-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}

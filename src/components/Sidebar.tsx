@@ -22,11 +22,35 @@ interface SocialLink {
   display_order: number
 }
 
+const FALLBACK_SOCIAL_LINKS: SocialLink[] = [
+  {
+    id: 'github',
+    platform: 'GitHub',
+    url: 'https://github.com/ambooka',
+    icon_url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
+    display_order: 1
+  },
+  {
+    id: 'linkedin',
+    platform: 'LinkedIn',
+    url: 'https://www.linkedin.com/in/abdulrahman-ambooka/',
+    icon_url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg',
+    display_order: 2
+  },
+  {
+    id: 'twitter',
+    platform: 'Twitter',
+    url: 'https://twitter.com/ambooka',
+    icon_url: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg',
+    display_order: 3
+  }
+]
+
 export default function Sidebar() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false)
   const [loading, setLoading] = useState(true)
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(FALLBACK_SOCIAL_LINKS)
 
   useEffect(() => {
     fetchSidebarData()
@@ -40,10 +64,11 @@ export default function Sidebar() {
       ])
 
       if (personalResult.data) {
-        setPersonalInfo(personalResult.data)
+        // Force the new title to ensure it updates immediately, even if DB is stale
+        setPersonalInfo({ ...personalResult.data, title: 'MLOps Engineer & Full Stack Developer' })
       }
 
-      if (socialResult.data) {
+      if (socialResult.data && socialResult.data.length > 0) {
         setSocialLinks(socialResult.data)
       }
     } catch (error) {

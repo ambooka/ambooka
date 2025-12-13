@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Loader2, Calendar, Tag } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
@@ -65,7 +66,7 @@ export default function Blog({ isActive = false }: BlogProps) {
 
   if (loading) {
     return (
-      <article className={`blog ${isActive ? 'active' : ''}`} data-page="blog">
+      <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
         <header>
           <h2 className="h2 article-title">Blog</h2>
         </header>
@@ -95,7 +96,7 @@ export default function Blog({ isActive = false }: BlogProps) {
 
   if (blogPosts.length === 0) {
     return (
-      <article className={`blog ${isActive ? 'active' : ''}`} data-page="blog">
+      <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
         <header>
           <h2 className="h2 article-title">Blog</h2>
         </header>
@@ -112,7 +113,7 @@ export default function Blog({ isActive = false }: BlogProps) {
   }
 
   return (
-    <article className={`blog ${isActive ? 'active' : ''}`} data-page="blog">
+    <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
       <header>
         <h2 className="h2 article-title">Blog</h2>
       </header>
@@ -121,7 +122,7 @@ export default function Blog({ isActive = false }: BlogProps) {
         <ul className="blog-posts-list">
           {blogPosts.map(post => (
             <li key={post.id} className="blog-post-item">
-              <a href={`#${post.slug}`}>
+              <Link href={`/blog/${post.slug}`} className="block h-full">
                 <figure className="blog-banner-box">
                   <img
                     src={post.image_url || 'https://via.placeholder.com/800x600?text=Blog+Post'}
@@ -164,7 +165,7 @@ export default function Blog({ isActive = false }: BlogProps) {
                     </div>
                   )}
                 </div>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

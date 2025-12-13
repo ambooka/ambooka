@@ -1,11 +1,11 @@
 {
-    "name": "Abdulrahman Ambooka - Portfolio",
+    "name": "Abdulrahman Ambooka - MLOps Architect",
     "short_name": "Ambooka",
-    "description": "Full-stack software engineer specializing in AI/MLOps, cloud-native development, and scalable applications",
+    "description": "MLOps Architect & AI Platform Engineer Portfolio",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#4299e1",
+    "background_color": "#1e1e1f",
+    "theme_color": "#1e1e1f",
     "orientation": "portrait-primary",
     "icons": [
         {
