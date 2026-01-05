@@ -21,6 +21,7 @@ type Theme = 'premium-dark' | 'premium-light'
 interface UtilityBarProps {
   currentTheme: Theme
   onThemeChange: (theme: Theme) => void
+  resumeTrigger?: number
 }
 
 interface Message {
@@ -60,7 +61,7 @@ interface ResumeData {
   skills: any[]
 }
 
-export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarProps) {
+export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger = 0 }: UtilityBarProps) {
   // UI states
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
@@ -96,6 +97,13 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
   // -----------------------------
   // Effects
   // -----------------------------
+  useEffect(() => {
+    if (resumeTrigger > 0) {
+      openResumeModal()
+    }
+  }, [resumeTrigger])
+
+
   useEffect(() => {
     fetchPersonalInfo()
     const savedTheme = localStorage.getItem('theme')
@@ -466,7 +474,7 @@ export default function UtilityBar({ currentTheme, onThemeChange }: UtilityBarPr
         supabase.from('personal_info' as any).select('*').single(),
         supabase.from('education' as any).select('*').order('start_date', { ascending: false }),
         supabase.from('experience' as any).select('*').order('start_date', { ascending: false }),
-        supabase.from('skills' as any).select('*').order('proficiency_level', { ascending: false })
+        supabase.from('skills' as any).select('*').order('proficiency', { ascending: false })
       ])
 
       // Debug logging

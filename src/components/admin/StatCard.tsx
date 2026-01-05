@@ -28,71 +28,118 @@ export default function StatCard({
 }: StatCardProps) {
     const isSolid = variant === 'solid'
 
+    const cardStyle: React.CSSProperties = isSolid ? {
+        background: 'linear-gradient(135deg, var(--ad-primary-500), var(--ad-primary-700))',
+        borderRadius: 'var(--ad-radius-2xl)',
+        padding: '20px',
+        boxShadow: 'var(--ad-shadow-neu-md), 0 8px 24px rgba(13, 148, 136, 0.3)',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'all 0.2s'
+    } : {
+        background: 'var(--ad-bg-card)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid var(--ad-border-subtle)',
+        borderRadius: 'var(--ad-radius-2xl)',
+        padding: '20px',
+        boxShadow: 'var(--ad-shadow-neu-md)',
+        transition: 'all 0.2s'
+    }
+
     return (
-        <div
-            className={`
-                relative overflow-hidden group rounded-2xl p-6 transition-all duration-300 border
-                ${isSolid
-                    ? 'bg-gradient-to-br from-violet-600 to-violet-500 text-white border-transparent shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/30'
-                    : 'bg-white border-slate-100 text-slate-900 hover:shadow-sm hover:border-slate-200'
-                }
-            `}
-        >
+        <div style={cardStyle}>
             {/* Background decoration for solid card */}
             {isSolid && (
-                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none" />
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '-40px',
+                        right: '-40px',
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '50%',
+                        background: 'rgba(255,255,255,0.15)',
+                        filter: 'blur(20px)'
+                    }}
+                />
             )}
 
-            <div className="flex items-start justify-between mb-4 relative z-10">
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px', position: 'relative', zIndex: 1 }}>
                 <div>
-                    <h3 className={`text-sm font-medium mb-1 ${isSolid ? 'text-white/80' : 'text-slate-600'}`}>
+                    <h3
+                        style={{
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            marginBottom: '4px',
+                            color: isSolid ? 'rgba(255,255,255,0.8)' : 'var(--ad-text-secondary)'
+                        }}
+                    >
                         {title}
                     </h3>
-                    <div className={`text-3xl font-bold tracking-tight ${isSolid ? 'text-white' : 'text-slate-900'}`}>
+                    <div
+                        style={{
+                            fontSize: '28px',
+                            fontWeight: 700,
+                            letterSpacing: '-0.02em',
+                            color: isSolid ? 'white' : 'var(--ad-text-primary)'
+                        }}
+                    >
                         {value}
                     </div>
                 </div>
                 {link && (
                     <Link
                         href={link}
-                        className={`
-                            w-9 h-9 rounded-lg flex items-center justify-center transition-all
-                            ${isSolid
-                                ? 'bg-white/20 text-white hover:bg-white/30 hover:scale-110'
-                                : 'bg-slate-50 text-slate-600 hover:bg-violet-50 hover:text-violet-600 hover:scale-110'
-                            }
-                        `}
+                        style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: 'var(--ad-radius-lg)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: isSolid ? 'rgba(255,255,255,0.2)' : 'var(--ad-bg-card)',
+                            color: isSolid ? 'white' : 'var(--ad-primary)',
+                            boxShadow: isSolid ? 'none' : 'var(--ad-shadow-neu-sm)',
+                            transition: 'all 0.2s'
+                        }}
                     >
                         <ArrowUpRight size={18} strokeWidth={2} />
                     </Link>
                 )}
             </div>
 
-            <div className="relative z-10 flex items-center gap-3">
+            <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '12px' }}>
                 {trend && (
-                    <div className="flex items-center gap-1.5">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span
-                            className={`
-                                flex items-center gap-1 px-2 py-1 rounded-md text-xs font-semibold
-                                ${isSolid
-                                    ? 'bg-white/20 text-white'
-                                    : (trend.isPositive
-                                        ? 'bg-emerald-50 text-emerald-700'
-                                        : 'bg-red-50 text-red-700')
-                                }
-                            `}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                padding: '4px 8px',
+                                borderRadius: 'var(--ad-radius-md)',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                background: isSolid
+                                    ? 'rgba(255,255,255,0.2)'
+                                    : (trend.isPositive ? 'var(--ad-success-50)' : 'var(--ad-danger-50)'),
+                                color: isSolid
+                                    ? 'white'
+                                    : (trend.isPositive ? 'var(--ad-success-600)' : 'var(--ad-danger-600)')
+                            }}
                         >
                             {trend.isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                             {Math.abs(trend.value)}%
                         </span>
-                        <span className={`text-xs ${isSolid ? 'text-white/70' : 'text-slate-500'}`}>
+                        <span style={{ fontSize: '12px', color: isSolid ? 'rgba(255,255,255,0.7)' : 'var(--ad-text-tertiary)' }}>
                             {trend.label || 'vs last month'}
                         </span>
                     </div>
                 )}
 
                 {subtitle && !trend && (
-                    <div className={`text-sm ${isSolid ? 'text-white/70' : 'text-slate-500'}`}>
+                    <div style={{ fontSize: '14px', color: isSolid ? 'rgba(255,255,255,0.7)' : 'var(--ad-text-tertiary)' }}>
                         {subtitle}
                     </div>
                 )}

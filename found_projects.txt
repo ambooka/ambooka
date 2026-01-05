@@ -1,0 +1,4 @@
+src/components/About.tsx:8:import FeaturedProjectsCarousel from '@/components/widgets/FeaturedProjectsCarousel'
+src/components/About.tsx:719:          <FeaturedProjectsCarousel />
+src/components/About.tsx.backup:7:import FeaturedProjectsCarousel from '@/components/widgets/FeaturedProjectsCarousel'
+src/components/About.tsx.backup:509:            <FeaturedProjectsCarousel />

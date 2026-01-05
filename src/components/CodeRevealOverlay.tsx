@@ -182,7 +182,7 @@ export default function CodeRevealOverlay() {
         if (offset >= text.length) return null
 
         const char = text[offset] || ''
-        let element = textNode.parentElement
+        const element = textNode.parentElement
         if (!element) return null
 
         const elementText = element.textContent || ''

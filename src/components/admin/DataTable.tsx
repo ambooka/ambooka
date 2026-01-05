@@ -28,21 +28,20 @@ export default function DataTable<T extends { id: string }>({
     loading = false
 }: DataTableProps<T>) {
     return (
-        <div className="rounded-xl shadow-sm border overflow-hidden transition-colors duration-300"
-            style={{
-                backgroundColor: 'var(--bg-secondary)',
-                borderColor: 'var(--border-primary)'
-            }}>
-            <div className="p-6 border-b flex justify-between items-center" style={{ borderColor: 'var(--border-primary)' }}>
-                <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
+        <div 
+            className="ad-card"
+            style={{ padding: 0, overflow: 'hidden' }}
+        >
+            {/* Header */}
+            <div 
+                className="p-6 flex justify-between items-center"
+                style={{ borderBottom: '1px solid var(--ad-border-default)' }}
+            >
+                <h2 className="text-lg font-bold" style={{ color: 'var(--ad-text-primary)' }}>{title}</h2>
                 {onAdd && (
                     <button
                         onClick={onAdd}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium hover:-translate-y-0.5 shadow-sm hover:shadow-md"
-                        style={{
-                            backgroundColor: 'var(--accent-primary)',
-                            color: '#ffffff'
-                        }}
+                        className="ad-btn ad-btn-primary"
                     >
                         <Plus size={16} />
                         Add New
@@ -50,21 +49,25 @@ export default function DataTable<T extends { id: string }>({
                 )}
             </div>
 
+            {/* Table */}
             <div className="overflow-x-auto">
                 <table className="w-full text-left">
-                    <thead className="border-b" style={{ backgroundColor: 'var(--bg-tertiary)', borderColor: 'var(--border-primary)' }}>
+                    <thead style={{ background: 'var(--ad-bg-muted)' }}>
                         <tr>
                             {columns.map((col, idx) => (
                                 <th
                                     key={idx}
                                     className={`px-6 py-3 text-xs font-semibold uppercase tracking-wider ${col.className || ''}`}
-                                    style={{ color: 'var(--text-secondary)' }}
+                                    style={{ color: 'var(--ad-text-tertiary)' }}
                                 >
                                     {col.header}
                                 </th>
                             ))}
                             {(onEdit || onDelete) && (
-                                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-right" style={{ color: 'var(--text-secondary)' }}>
+                                <th 
+                                    className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-right" 
+                                    style={{ color: 'var(--ad-text-tertiary)' }}
+                                >
                                     Actions
                                 </th>
                             )}
@@ -73,37 +76,51 @@ export default function DataTable<T extends { id: string }>({
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={columns.length + (onEdit || onDelete ? 1 : 0)} className="px-6 py-8 text-center" style={{ color: 'var(--text-secondary)' }}>
-                                    Loading data...
+                                <td 
+                                    colSpan={columns.length + (onEdit || onDelete ? 1 : 0)} 
+                                    className="px-6 py-12 text-center"
+                                >
+                                    <div 
+                                        className="w-8 h-8 border-4 rounded-full ad-spinner mx-auto"
+                                        style={{ borderColor: 'var(--ad-primary)', borderTopColor: 'transparent' }} 
+                                    />
                                 </td>
                             </tr>
                         ) : data.length === 0 ? (
                             <tr>
-                                <td colSpan={columns.length + (onEdit || onDelete ? 1 : 0)} className="px-6 py-8 text-center" style={{ color: 'var(--text-secondary)' }}>
+                                <td 
+                                    colSpan={columns.length + (onEdit || onDelete ? 1 : 0)} 
+                                    className="px-6 py-12 text-center" 
+                                    style={{ color: 'var(--ad-text-tertiary)' }}
+                                >
                                     No items found.
                                 </td>
                             </tr>
                         ) : (
                             data.map((item) => (
-                                <tr key={item.id} className="transition-colors hover:bg-opacity-50"
-                                    style={{ borderBottom: '1px solid var(--border-primary)' }}
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--utility-btn-hover-bg)'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                <tr 
+                                    key={item.id} 
+                                    className="transition-colors"
+                                    style={{ borderBottom: '1px solid var(--ad-border-subtle)' }}
                                 >
                                     {columns.map((col, idx) => (
-                                        <td key={idx} className="px-6 py-4 text-sm whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
+                                        <td 
+                                            key={idx} 
+                                            className="px-6 py-4 text-sm whitespace-nowrap" 
+                                            style={{ color: 'var(--ad-text-primary)' }}
+                                        >
                                             {typeof col.accessor === 'function'
                                                 ? col.accessor(item)
                                                 : (item[col.accessor] as React.ReactNode)}
                                         </td>
                                     ))}
                                     {(onEdit || onDelete) && (
-                                        <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                                        <td className="px-6 py-4 text-right text-sm font-medium space-x-1">
                                             {onEdit && (
                                                 <button
                                                     onClick={() => onEdit(item)}
-                                                    className="p-1 rounded transition-colors"
-                                                    style={{ color: 'var(--accent-primary)' }}
+                                                    className="p-2 rounded-lg transition-colors"
+                                                    style={{ color: 'var(--ad-text-tertiary)' }}
                                                     title="Edit"
                                                 >
                                                     <Edit size={16} />
@@ -112,8 +129,8 @@ export default function DataTable<T extends { id: string }>({
                                             {onDelete && (
                                                 <button
                                                     onClick={() => onDelete(item)}
-                                                    className="p-1 rounded transition-colors"
-                                                    style={{ color: 'var(--accent-error)' }}
+                                                    className="p-2 rounded-lg transition-colors"
+                                                    style={{ color: 'var(--ad-danger)' }}
                                                     title="Delete"
                                                 >
                                                     <Trash2 size={16} />

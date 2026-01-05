@@ -2,14 +2,19 @@
 
 import React, { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
-import { Database } from '@/integrations/supabase/types'
 
-type KPIStat = Database['public']['Tables']['kpi_stats']['Row']
+interface KPIStat {
+    id?: string
+    label: string
+    value: string
+    icon?: string | null
+    color?: string | null
+    type?: string | null
+    section?: string | null
+    display_order?: number | null
+}
 
 // Single Pill Component
-// This component is now obsolete given the new display style,
-// but keeping it for structural integrity if other parts of the app use it.
-// The StatPills component below will now render the new hardcoded stats.
 const StatPill = ({ stat }: { stat: KPIStat }) => {
     const { label, value, type, color } = stat
 
@@ -23,7 +28,6 @@ const StatPill = ({ stat }: { stat: KPIStat }) => {
     } else if (type === 'striped') {
         return (
             <div className="flex flex-col justify-center px-4 py-2 rounded-2xl bg-gray-100 h-full relative overflow-hidden min-w-[160px]">
-                {/* Subtle striping background effect */}
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(45deg, #000 25%, transparent 25%, transparent 50%, #000 50%, #000 75%, transparent 75%, transparent)', backgroundSize: '10px 10px' }}></div>
                 <span className="text-xs font-medium mb-0.5 text-gray-500 z-10">{label}</span>
                 <span className="text-lg font-bold z-10">{value}</span>
@@ -46,16 +50,23 @@ export const StatPills = () => {
 
     useEffect(() => {
         const fetchStats = async () => {
+            // Fetch from personal_info.kpi_stats JSONB field (consolidated schema)
             const { data, error } = await supabase
-                .from('kpi_stats')
-                .select('*')
-                .eq('section', 'hero')
-                .order('display_order', { ascending: true })
+                .from('personal_info')
+                .select('kpi_stats')
+                .single()
 
             if (error) {
                 console.error('Error fetching hero stats:', error)
             }
-            if (data) setStats(data)
+
+            if (data?.kpi_stats && Array.isArray(data.kpi_stats)) {
+                // Filter for hero section stats
+                const heroStats = (data.kpi_stats as unknown as KPIStat[])
+                    .filter(stat => stat.section === 'hero')
+                    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+                setStats(heroStats)
+            }
             setLoading(false)
         }
         fetchStats()
@@ -65,8 +76,8 @@ export const StatPills = () => {
 
     return (
         <div className="flex flex-wrap gap-4">
-            {stats.map(stat => (
-                <StatPill key={stat.id} stat={stat} />
+            {stats.map((stat, index) => (
+                <StatPill key={stat.id || index} stat={stat} />
             ))}
         </div>
     )

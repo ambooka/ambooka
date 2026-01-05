@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Bell, Mail, ChevronDown } from 'lucide-react'
+import { Search, Bell, ChevronDown } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 interface SearchResult {
     id: string
     title: string
-    category: string
+    type: string
 }
 
 export default function AdminHeader() {
@@ -16,7 +16,7 @@ export default function AdminHeader() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState<SearchResult[]>([])
     const [showResults, setShowResults] = useState(false)
-    const [userInfo, setUserInfo] = useState({ name: 'Admin User', email: 'admin@ambooka.com' })
+    const [userInfo, setUserInfo] = useState({ name: 'Admin', email: '' })
 
     useEffect(() => {
         fetchUserInfo()
@@ -38,22 +38,24 @@ export default function AdminHeader() {
     const fetchUserInfo = async () => {
         const { data } = await supabase.from('personal_info').select('full_name, email').single()
         if (data) {
-            setUserInfo({
-                name: data.full_name,
-                email: data.email
-            })
+            setUserInfo({ name: data.full_name, email: data.email })
         }
     }
 
     const performSearch = async () => {
-        const { data } = await supabase
-            .from('portfolio_content')
-            .select('id, title, category')
+        const { data: projectsData } = await supabase
+            .from('projects')
+            .select('id, title')
             .ilike('title', `%${searchQuery}%`)
             .limit(5)
 
-        if (data && data.length > 0) {
-            setSearchResults(data)
+        const results: SearchResult[] = []
+        if (projectsData) {
+            projectsData.forEach(p => results.push({ id: p.id, title: p.title, type: 'project' }))
+        }
+
+        if (results.length > 0) {
+            setSearchResults(results)
             setShowResults(true)
         } else {
             setSearchResults([])
@@ -64,88 +66,146 @@ export default function AdminHeader() {
     const handleResultClick = (result: SearchResult) => {
         setShowResults(false)
         setSearchQuery('')
-        if (result.category === 'project') {
-            router.push(`/admin/projects/${result.id}`)
-        } else if (result.category === 'blog') {
-            router.push(`/admin/blog/${result.id}`)
-        }
+        router.push(`/admin/projects`)
     }
 
     return (
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-10">
-            {/* Search Bar */}
-            <div className="relative w-96">
-                <div className="relative">
-                    <Search
-                        size={16}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                    />
+        <header style={{
+            height: 64,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '0 16px',
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(226, 232, 240, 0.8)'
+        }}>
+            {/* Search */}
+            <div style={{ position: 'relative', width: 280 }}>
+                <div style={{ position: 'relative' }}>
+                    <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
                     <input
                         type="text"
-                        placeholder="Search projects, blog posts..."
+                        placeholder="Search projects..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onFocus={() => searchQuery.length > 2 && setShowResults(true)}
                         onBlur={() => setTimeout(() => setShowResults(false), 200)}
-                        className="w-full pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 focus:bg-white transition-all"
+                        style={{
+                            width: '100%',
+                            padding: '10px 12px 10px 38px',
+                            background: 'rgba(241, 245, 249, 0.8)',
+                            border: '1px solid rgba(203, 213, 225, 0.6)',
+                            borderRadius: 12,
+                            fontSize: 13,
+                            color: '#1e293b',
+                            outline: 'none',
+                            boxShadow: 'inset 2px 2px 5px rgba(166, 180, 200, 0.15), inset -2px -2px 5px rgba(255, 255, 255, 0.7)'
+                        }}
                     />
-                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-semibold text-slate-400">
-                        ⌘K
-                    </div>
                 </div>
 
-                {/* Search Results Dropdown */}
                 {showResults && searchResults.length > 0 && (
-                    <div className="absolute top-full left-0 w-full mt-1.5 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-20">
+                    <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        marginTop: 8,
+                        padding: 8,
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        borderRadius: 12,
+                        boxShadow: '6px 6px 14px rgba(166, 180, 200, 0.25), -6px -6px 14px rgba(255, 255, 255, 0.95)',
+                        border: '1px solid rgba(226, 232, 240, 0.8)',
+                        zIndex: 50
+                    }}>
                         {searchResults.map((result) => (
                             <button
                                 key={result.id}
                                 onClick={() => handleResultClick(result)}
-                                className="w-full text-left px-3 py-2.5 hover:bg-slate-50 flex items-center justify-between group border-b border-slate-50 last:border-0 transition-colors"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    width: '100%',
+                                    padding: '8px 10px',
+                                    borderRadius: 8,
+                                    border: 'none',
+                                    background: 'transparent',
+                                    textAlign: 'left',
+                                    cursor: 'pointer',
+                                    fontSize: 13
+                                }}
                             >
-                                <span className="text-sm font-medium text-slate-900 group-hover:text-violet-600 transition-colors">{result.title}</span>
-                                <span className="text-xs text-slate-500 capitalize bg-slate-100 px-2 py-0.5 rounded-md">{result.category}</span>
+                                <span style={{ fontWeight: 500, color: '#1e293b' }}>{result.title}</span>
+                                <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 20, background: '#f0fdf4', color: '#16a34a' }}>
+                                    {result.type}
+                                </span>
                             </button>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Right Section */}
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                    {/* Mail Icon */}
-                    <button className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors">
-                        <Mail size={18} />
-                    </button>
+            {/* Right */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                {/* Bell */}
+                <button style={{
+                    position: 'relative',
+                    width: 36,
+                    height: 36,
+                    borderRadius: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '4px 4px 10px rgba(166, 180, 200, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.9)',
+                    color: '#475569'
+                }}>
+                    <Bell size={18} />
+                    <span style={{
+                        position: 'absolute',
+                        top: 6,
+                        right: 6,
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: '#ef4444',
+                        border: '2px solid white'
+                    }} />
+                </button>
 
-                    {/* Notification Bell */}
-                    <button className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors relative">
-                        <Bell size={18} />
-                        <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border border-white"></span>
-                    </button>
-                </div>
-
-                {/* Divider */}
-                <div className="h-8 w-px bg-slate-200"></div>
-
-                {/* User Profile */}
-                <button className="flex items-center gap-2.5 hover:bg-slate-50 rounded-lg px-2 py-1.5 transition-colors group">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+                {/* User */}
+                <button style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '6px 10px',
+                    borderRadius: 12,
+                    border: 'none',
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    cursor: 'pointer',
+                    boxShadow: '4px 4px 10px rgba(166, 180, 200, 0.2), -4px -4px 10px rgba(255, 255, 255, 0.9)'
+                }}>
+                    <div style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'linear-gradient(135deg, #14b8a6, #0f766e)',
+                        color: 'white',
+                        fontWeight: 600,
+                        fontSize: 13
+                    }}>
                         {userInfo.name.charAt(0)}
                     </div>
-                    <div className="hidden md:block text-left">
-                        <div className="text-sm font-semibold text-slate-900 leading-tight">
-                            {userInfo.name}
-                        </div>
-                        <div className="text-xs text-slate-500 leading-tight">
-                            Admin
-                        </div>
-                    </div>
-                    <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
+                    <ChevronDown size={14} style={{ color: '#94a3b8' }} />
                 </button>
             </div>
         </header>
     )
 }
-

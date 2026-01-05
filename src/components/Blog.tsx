@@ -78,8 +78,8 @@ export default function Blog({ isActive = false }: BlogProps) {
           flexDirection: 'column',
           gap: '12px'
         }}>
-          <Loader2 size={40} className="animate-spin" style={{ color: 'var(--orange-yellow-crayola)' }} />
-          <p>Loading posts...</p>
+          <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
+          <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px]">Loading Intelligence...</p>
         </div>
         <style jsx>{`
           .animate-spin {
@@ -132,17 +132,17 @@ export default function Blog({ isActive = false }: BlogProps) {
                   />
                 </figure>
 
-                <div className="blog-content">
-                  <div className="blog-meta">
-                    <p className="blog-category">{post.category}</p>
-                    <span className="dot"></span>
-                    <time dateTime={post.published_at || ''}>
+                <div className="blog-content !p-8">
+                  <div className="blog-meta !mb-4">
+                    <p className="blog-category !text-[var(--accent-primary)] !font-black !uppercase !tracking-widest !text-[10px]">{post.category}</p>
+                    <span className="dot !bg-[var(--border-color)]"></span>
+                    <time dateTime={post.published_at || ''} className="!text-[var(--text-tertiary)] !font-bold !uppercase !tracking-tighter !text-[11px]">
                       {formatDate(post.published_at)}
                     </time>
                   </div>
 
-                  <h3 className="h3 blog-item-title">{post.title}</h3>
-                  <p className="blog-text">{post.excerpt || post.content.slice(0, 150)}...</p>
+                  <h3 className="h3 blog-item-title !text-[var(--text-primary)] !font-black !uppercase !tracking-tight !mb-4 group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">{post.title}</h3>
+                  <p className="blog-text !text-[var(--text-secondary)] !text-sm leading-relaxed line-clamp-3 mb-6 opacity-80">{post.excerpt || post.content.slice(0, 150)}...</p>
 
                   {post.tags && post.tags.length > 0 && (
                     <div style={{
@@ -153,11 +153,15 @@ export default function Blog({ isActive = false }: BlogProps) {
                     }}>
                       {post.tags.slice(0, 3).map((tag, idx) => (
                         <span key={idx} style={{
-                          padding: '2px 8px',
-                          background: 'var(--border-gradient-onyx)',
-                          borderRadius: '4px',
-                          fontSize: '11px',
-                          color: 'var(--text-secondary)'
+                          padding: '4px 12px',
+                          background: 'var(--bg-tertiary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          color: 'var(--text-secondary)',
+                          border: '1px solid var(--border-color)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px'
                         }}>
                           {tag}
                         </span>

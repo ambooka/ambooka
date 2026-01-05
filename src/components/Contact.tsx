@@ -55,17 +55,30 @@ export default function Contact({ isActive = false }: ContactProps) {
   const fetchContactData = async () => {
     try {
       setLoading(true)
-      const [personalResult, socialResult] = await Promise.all([
-        supabase.from('personal_info').select('email, phone, location').single(),
-        supabase.from('social_links').select('*').eq('is_active', true).eq('show_in_contact', true).order('display_order')
-      ])
+      // Fetch from consolidated personal_info table (social_links is now a JSONB column)
+      const { data, error } = await supabase
+        .from('personal_info')
+        .select('email, phone, location, social_links')
+        .single()
 
-      if (personalResult.data) {
-        setPersonalInfo(personalResult.data)
+      if (error) {
+        console.error('Error fetching contact data:', error)
       }
 
-      if (socialResult.data) {
-        setSocialLinks(socialResult.data)
+      if (data) {
+        setPersonalInfo({
+          email: data.email,
+          phone: data.phone,
+          location: data.location
+        })
+
+        // Parse social links from JSONB, filter for show_in_contact
+        if (data.social_links && Array.isArray(data.social_links)) {
+          const links = (data.social_links as unknown as SocialLink[])
+            .filter(link => link.show_in_contact)
+            .sort((a, b) => a.display_order - b.display_order)
+          setSocialLinks(links)
+        }
       }
     } catch (error) {
       console.error('Error fetching contact data:', error)
@@ -202,15 +215,18 @@ export default function Contact({ isActive = false }: ContactProps) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: '300px'
+          minHeight: '300px',
+          flexDirection: 'column',
+          gap: '12px'
         }}>
-          <Loader2 size={40} className="animate-spin" style={{ color: 'var(--orange-yellow-crayola)' }} />
+          <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
+          <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px]">Establishing Secure Connection...</p>
         </div>
         <style jsx>{`
           .animate-spin { animation: spin 1s linear infinite; }
           @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         `}</style>
-      </article>
+      </article >
     )
   }
 
@@ -232,7 +248,7 @@ export default function Contact({ isActive = false }: ContactProps) {
       <section style={{ marginTop: '40px' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '20px',
           marginBottom: '40px'
         }}>
@@ -244,28 +260,7 @@ export default function Contact({ isActive = false }: ContactProps) {
                 href={method.link}
                 target={method.label === 'Location' ? '_blank' : undefined}
                 rel={method.label === 'Location' ? 'noopener noreferrer' : undefined}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  padding: '20px',
-                  background: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '16px',
-                  textDecoration: 'none',
-                  transition: 'all var(--transition-2)',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)'
-                  e.currentTarget.style.borderColor = 'var(--accent-color)'
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.15)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.borderColor = 'var(--border-color)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
+                className="flex items-center gap-4 p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius-xl)] no-underline transition-all duration-300 hover:-translate-y-1 hover:border-[var(--accent-primary)] hover:shadow-card group"
               >
                 <div style={{
                   width: '48px',
@@ -309,10 +304,10 @@ export default function Contact({ isActive = false }: ContactProps) {
       {personalInfo?.location && (
         <section className="mapbox" data-mapbox style={{
           marginBottom: '40px',
-          borderRadius: '20px',
+          borderRadius: 'var(--radius-xl)',
           overflow: 'hidden',
           border: '1px solid var(--border-color)',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+          boxShadow: 'var(--shadow-card)'
         }}>
           <figure style={{ margin: 0 }}>
             <iframe
@@ -385,14 +380,14 @@ export default function Contact({ isActive = false }: ContactProps) {
               <input
                 type="text"
                 name="fullname"
-                className="form-input"
+                className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
                 placeholder="Full name"
                 required
                 value={formData.fullname}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 style={{
-                  borderColor: touched.fullname ? (errors.fullname ? '#ef4444' : '#10b981') : 'var(--border-color)',
+                  borderColor: touched.fullname ? (errors.fullname ? 'var(--accent-error)' : 'var(--accent-success)') : 'var(--border-color)',
                   paddingRight: touched.fullname ? '40px' : '16px'
                 }}
               />
@@ -431,14 +426,14 @@ export default function Contact({ isActive = false }: ContactProps) {
               <input
                 type="email"
                 name="email"
-                className="form-input"
+                className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
                 placeholder="Email address"
                 required
                 value={formData.email}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
                 style={{
-                  borderColor: touched.email ? (errors.email ? '#ef4444' : '#10b981') : 'var(--border-color)',
+                  borderColor: touched.email ? (errors.email ? 'var(--accent-error)' : 'var(--accent-success)') : 'var(--border-color)',
                   paddingRight: touched.email ? '40px' : '16px'
                 }}
               />
@@ -477,7 +472,7 @@ export default function Contact({ isActive = false }: ContactProps) {
           <div style={{ position: 'relative', marginTop: '16px' }}>
             <textarea
               name="message"
-              className="form-input"
+              className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
               placeholder="Your Message"
               required
               rows={6}
@@ -485,7 +480,7 @@ export default function Contact({ isActive = false }: ContactProps) {
               onChange={handleInputChange}
               onBlur={handleBlur}
               style={{
-                borderColor: touched.message ? (errors.message ? '#ef4444' : '#10b981') : 'var(--border-color)',
+                borderColor: touched.message ? (errors.message ? 'var(--accent-error)' : 'var(--accent-success)') : 'var(--border-color)',
                 resize: 'vertical'
               }}
             />
@@ -520,15 +515,13 @@ export default function Contact({ isActive = false }: ContactProps) {
 
           {/* Submit Button */}
           <button
-            className="form-btn"
+            className="form-btn !bg-[var(--accent-primary)] !text-[var(--bg-primary)] !font-black !uppercase !tracking-widest !text-[11px] !py-4 !rounded-[var(--radius-md)] !shadow-lg hover:!bg-[var(--text-primary)] transition-all flex items-center justify-center gap-3 w-full"
             type="submit"
             disabled={!isFormValid() || submitStatus === 'loading'}
             style={{
               marginTop: '24px',
               opacity: (!isFormValid() || submitStatus === 'loading') ? 0.6 : 1,
               cursor: (!isFormValid() || submitStatus === 'loading') ? 'not-allowed' : 'pointer',
-              position: 'relative',
-              overflow: 'hidden'
             }}
           >
             {submitStatus === 'loading' && (

@@ -23,6 +23,12 @@ export type Database = {
           phone: string | null
           location: string | null
           summary: string | null
+          about_text: string | null
+          expertise: Json | null
+          social_links: Json | null
+          kpi_stats: Json | null
+          avatar_url: string | null
+          resume_url: string | null
           linkedin_url: string | null
           github_url: string | null
           website_url: string | null
@@ -37,6 +43,12 @@ export type Database = {
           phone?: string | null
           location?: string | null
           summary?: string | null
+          about_text?: string | null
+          expertise?: Json | null
+          social_links?: Json | null
+          kpi_stats?: Json | null
+          avatar_url?: string | null
+          resume_url?: string | null
           linkedin_url?: string | null
           github_url?: string | null
           website_url?: string | null
@@ -51,6 +63,12 @@ export type Database = {
           phone?: string | null
           location?: string | null
           summary?: string | null
+          about_text?: string | null
+          expertise?: Json | null
+          social_links?: Json | null
+          kpi_stats?: Json | null
+          avatar_url?: string | null
+          resume_url?: string | null
           linkedin_url?: string | null
           github_url?: string | null
           website_url?: string | null
@@ -160,9 +178,11 @@ export type Database = {
           id: string
           name: string
           category: string
-          proficiency_level: number | null
+          proficiency: number | null
+          icon_url: string | null
           is_featured: boolean
           display_order: number | null
+          roadmap_phase: number | null
           created_at: string
           updated_at: string
         }
@@ -170,9 +190,11 @@ export type Database = {
           id?: string
           name: string
           category: string
-          proficiency_level?: number | null
+          proficiency?: number | null
+          icon_url?: string | null
           is_featured?: boolean
           display_order?: number | null
+          roadmap_phase?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -180,78 +202,71 @@ export type Database = {
           id?: string
           name?: string
           category?: string
-          proficiency_level?: number | null
+          proficiency?: number | null
+          icon_url?: string | null
+          is_featured?: boolean
+          display_order?: number | null
+          roadmap_phase?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          long_description: string | null
+          stack: string[] | null
+          status: string
+          github_url: string | null
+          live_url: string | null
+          image_url: string | null
+          images: Json | null
+          documents: Json | null
+          embeds: Json | null
+          roadmap_project: number | null
+          is_featured: boolean
+          display_order: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          long_description?: string | null
+          stack?: string[] | null
+          status: string
+          github_url?: string | null
+          live_url?: string | null
+          image_url?: string | null
+          images?: Json | null
+          documents?: Json | null
+          embeds?: Json | null
+          roadmap_project?: number | null
           is_featured?: boolean
           display_order?: number | null
           created_at?: string
           updated_at?: string
         }
-        Relationships: []
-      }
-      portfolio_content: {
-        Row: {
-          category: string
-          content: string
-          created_at: string
-          id: string
-          tags: string[] | null
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          category: string
-          content: string
-          created_at?: string
-          id?: string
-          tags?: string[] | null
-          title: string
-          updated_at?: string
-        }
         Update: {
-          category?: string
-          content?: string
-          created_at?: string
           id?: string
-          tags?: string[] | null
           title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      about_content: {
-        Row: {
-          id: string
-          section_key: string
-          title: string | null
-          content: string
-          icon: string | null
-          badge: string | null
-          display_order: number
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          section_key: string
-          title?: string | null
-          content: string
-          icon?: string | null
-          badge?: string | null
-          display_order?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          section_key?: string
-          title?: string | null
-          content?: string
-          icon?: string | null
-          badge?: string | null
-          display_order?: number
-          is_active?: boolean
+          description?: string | null
+          long_description?: string | null
+          stack?: string[] | null
+          status?: string
+          github_url?: string | null
+          live_url?: string | null
+          image_url?: string | null
+          images?: Json | null
+          documents?: Json | null
+          embeds?: Json | null
+          roadmap_project?: number | null
+          is_featured?: boolean
+          display_order?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -289,39 +304,6 @@ export type Database = {
           text?: string
           date?: string
           is_featured?: boolean
-          display_order?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      technologies: {
-        Row: {
-          id: string
-          name: string
-          logo_url: string
-          category: string
-          display_order: number
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          logo_url: string
-          category?: string
-          display_order?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          logo_url?: string
-          category?: string
           display_order?: number
           is_active?: boolean
           created_at?: string
@@ -375,129 +357,6 @@ export type Database = {
           published_at?: string | null
           author_id?: string | null
           view_count?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      social_links: {
-        Row: {
-          id: string
-          platform: string
-          url: string
-          icon_url: string | null
-          display_order: number
-          is_active: boolean
-          show_in_sidebar: boolean
-          show_in_contact: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          platform: string
-          url: string
-          icon_url?: string | null
-          display_order?: number
-          is_active?: boolean
-          show_in_sidebar?: boolean
-          show_in_contact?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          platform?: string
-          url?: string
-          icon_url?: string | null
-          display_order?: number
-          is_active?: boolean
-          show_in_sidebar?: boolean
-          show_in_contact?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      projects: {
-        Row: {
-          id: string
-          title: string
-          description: string | null
-          stack: string[] | null
-          status: string
-          github_url: string | null
-          live_url: string | null
-          image_url: string | null
-          is_featured: boolean
-          display_order: number | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          description?: string | null
-          stack?: string[] | null
-          status: string
-          github_url?: string | null
-          live_url?: string | null
-          image_url?: string | null
-          is_featured?: boolean
-          display_order?: number | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          description?: string | null
-          stack?: string[] | null
-          status?: string
-          github_url?: string | null
-          live_url?: string | null
-          image_url?: string | null
-          is_featured?: boolean
-          display_order?: number | null
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      kpi_stats: {
-        Row: {
-          id: string
-          label: string
-          value: string
-          icon: string | null
-          color: string | null
-          type: string | null
-          section: string | null
-          display_order: number | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          label: string
-          value: string
-          icon?: string | null
-          color?: string | null
-          type?: string | null
-          section?: string | null
-          display_order?: number | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          label?: string
-          value?: string
-          icon?: string | null
-          color?: string | null
-          type?: string | null
-          section?: string | null
-          display_order?: number | null
           created_at?: string
           updated_at?: string
         }

@@ -1,225 +1,177 @@
-# Abdulrahman Ambooka - Portfolio Website
+# <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Waving%20Hand.png" alt="Wave" width="35" height="35" /> Hey, I'm Abdulrahman Ambooka
 
-> A modern, professional portfolio website showcasing my work as an AI & Software Engineer
+<div align="center">
+  
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=3000&pause=1000&color=14B8A6&center=true&vCenter=true&multiline=true&repeat=true&width=800&height=100&lines=MLOps+Architect+%7C+AI+Engineer;Building+Scalable+AI+Platforms+%26+Cloud-Native+Solutions;Full-Stack+Developer+%7C+Open+Source+Contributor)](https://ambooka.dev)
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=flat&logo=next.js)](https://nextjs.org/) [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://ambooka.dev" target="_blank"><img src="https://img.shields.io/badge/🌐_Portfolio-ambooka.dev-14B8A6?style=for-the-badge" alt="Portfolio" /></a>
+  <a href="https://linkedin.com/in/abdulrahman-ambooka" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="mailto:abdulrahmanambooka@gmail.com"><img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
+</p>
 
-## 🌟 Features
+<img src="https://komarev.com/ghpvc/?username=ambooka&label=Profile%20Views&color=14B8A6&style=flat" alt="Profile Views" />
 
-- ✨ **Modern UI/UX** - Clean, professional design with smooth animations and transitions
-- 🎨 **Multi-Theme Support** - Dark mode, light mode, and custom themes
-- 📱 **Fully Responsive** - Optimized for all devices and screen sizes
-- 🚀 **Performance Optimized** - Fast loading times with Next.js optimizations
-- ♿ **Accessible** - WCAG AA compliant with proper ARIA labels and keyboard navigation
-- 🔍 **SEO Optimized** - Comprehensive meta tags, Open Graph, and structured data
-- 🤖 **AI Assistant** - Interactive AI chatbot for visitor engagement
-- 📊 **GitHub Integration** - Automatically displays projects from GitHub
-- 📄 **Resume Management** - Dynamic resume with PDF download functionality
-- 💾 **Supabase Backend** - Scalable backend for data management
+</div>
 
-## 🛠️ Tech Stack
+---
 
-### Frontend
-- **Framework:** Next.js 15.5 with React 19
-- **Language:** TypeScript 5.0
-- **Styling:** Tailwind CSS 4.0 + Custom CSS
-- **UI Components:** Radix UI, Framer Motion, Lucide Icons
-- **State Management:** React Hooks
+## 🧠 About Me
 
-### Backend & Services
-- **Database:** Supabase (PostgreSQL)
-- **API Integration:** GitHub REST API, Octokit
-- **Authentication:** Supabase Auth
+```yaml
+name: Abdulrahman Ambooka
+location: Nairobi, Kenya  🇰🇪
+current_focus: MLOps & AI Platform Engineering
+education: BSc Computer Science - Maseno University
+status: Open to Work 🟢
 
-### Development Tools
-- **Package Manager:** pnpm
-- **Linting:** ESLint
-- **Build Tool:** Turbopack
+passions:
+  - Building production-ready ML systems that solve real problems
+  - Cloud-native architecture & Kubernetes orchestration
+  - Performance optimization at scale
+  - Open source contributions
 
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18.0 or higher
-- pnpm (recommended) or npm
-
-### Setup Instructions
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/ambooka/ambooka.git
-   cd ambooka
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pnpm install
-   ```
-
-3. **Configure environment variables**
-
-   Create a `.env.local` file in the root directory:
-
-   ```env
-   # Supabase Configuration
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-   # GitHub Integration (Optional)
-   NEXT_PUBLIC_GITHUB_TOKEN=your_github_personal_access_token
-
-   # Site Configuration
-   NEXT_PUBLIC_SITE_URL=https://ambooka.dev
-   ```
-
-4. **Run the development server**
-   ```bash
-   pnpm dev
-   ```
-
-5. **Open your browser**
-
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🚀 Build & Deployment
-
-### Local Production Build
-```bash
-pnpm build
-pnpm start
+currently_learning:
+  - Advanced MLOps patterns with Kubeflow
+  - LLM fine-tuning & RAG architectures
+  - Distributed systems design
 ```
 
-### Deploy to Vercel (Recommended)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ambooka/ambooka)
+---
 
-1. Push your code to GitHub
-2. Import your repository in Vercel
-3. Configure environment variables in Vercel dashboard
-4. Deploy!
+## ⚡ Tech Arsenal
 
-### Other Deployment Options
-- **Netlify:** Compatible with static export
-- **AWS:** Deploy to S3 + CloudFront or Amplify
-- **Azure:** App Service or Static Web Apps
-- **Docker:** Dockerfile included for containerized deployment
+<div align="center">
 
-## 📁 Project Structure
+### 🤖 AI & Machine Learning
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=for-the-badge&logo=mlflow&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
 
+### ☁️ Cloud & Infrastructure
+![AWS](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)
+![GCP](https://img.shields.io/badge/GCP-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
+
+### 💻 Full-Stack Development
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
+
+### 🗄️ Data & Databases
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+
+</div>
+
+---
+
+## 📊 GitHub Analytics
+
+<div align="center">
+  
+<a href="https://github.com/ambooka">
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=react&hide_border=true&bg_color=0D1117&title_color=14B8A6&icon_color=14B8A6&text_color=C9D1D9" alt="GitHub Stats"/>
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=react&hide_border=true&bg_color=0D1117&title_color=14B8A6&text_color=C9D1D9&langs_count=8" alt="Top Languages"/>
+</a>
+
+<br/>
+
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=ambooka&theme=react&hide_border=true&background=0D1117&stroke=14B8A6&ring=14B8A6&fire=F59E0B&currStreakLabel=14B8A6" alt="GitHub Streak" />
+
+<br/>
+
+<img src="https://ghchart.rshah.org/14B8A6/ambooka" alt="GitHub Contribution Graph" width="100%"/>
+
+</div>
+
+---
+
+## 🏆 Certifications & Credentials
+
+<div align="center">
+
+| Certification | Status |
+|:--------------|:------:|
+| 🏅 AWS Solutions Architect - Associate | ✅ Obtained |
+| 🏅 Certified Kubernetes Administrator | ✅ Obtained |
+| 📚 AWS Machine Learning - Specialty | 🎯 In Pursuit |
+| 📚 HashiCorp Terraform Associate | 🎯 In Pursuit |
+| 📚 Google Cloud Professional ML Engineer | 🎯 In Pursuit |
+
+</div>
+
+---
+
+## 🚀 Featured Projects
+
+<div align="center">
+
+[![Portfolio Card](https://github-readme-stats.vercel.app/api/pin/?username=ambooka&repo=ambooka&theme=react&hide_border=true&bg_color=0D1117&title_color=14B8A6&icon_color=F59E0B&text_color=C9D1D9)](https://github.com/ambooka/ambooka)
+
+</div>
+
+<details>
+<summary><b>👀 View More Projects</b></summary>
+<br/>
+
+| Project | Description | Tech Stack |
+|---------|-------------|------------|
+| 🌐 **Portfolio Website** | Modern, responsive portfolio with dashboard-style layout | Next.js, TypeScript, Tailwind, Supabase |
+| 🤖 **ML Pipeline Platform** | End-to-end MLOps platform for model training & deployment | Python, Kubeflow, Kubernetes, AWS |
+| 📱 **Cross-Platform Apps** | Mobile applications with beautiful UIs | Flutter, Dart, Firebase |
+
+</details>
+
+---
+
+## 📈 Weekly Development Breakdown
+
+<!--START_SECTION:waka-->
+```text
+Python       12 hrs 30 mins  ████████████░░░░░░  45%
+TypeScript   8 hrs 15 mins   ████████░░░░░░░░░░  30%
+YAML         3 hrs 20 mins   ███░░░░░░░░░░░░░░░  12%
+Terraform    2 hrs 10 mins   ██░░░░░░░░░░░░░░░░   8%
+Other        1 hr 25 mins    █░░░░░░░░░░░░░░░░░   5%
 ```
-ambooka/
-├── public/              # Static assets
-│   ├── favicon.ico
-│   ├── robots.txt
-│   ├── sitemap.xml
-│   └── manifest.json
-├── src/
-│   ├── app/            # Next.js app directory
-│   │   ├── layout.tsx  # Root layout with metadata
-│   │   ├── page.tsx    # Home page
-│   │   └── globals.css # Global styles
-│   ├── components/     # React components
-│   │   ├── About.tsx
-│   │   ├── Portfolio.tsx
-│   │   ├── Resume.tsx
-│   │   ├── Blog.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Navbar.tsx
-│   │   ├── Sidebar.tsx
-│   │   ├── UtilityBar.tsx
-│   │   ├── ErrorBoundary.tsx
-│   │   ├── SkeletonLoader.tsx
-│   │   └── ScrollToTop.tsx
-│   ├── services/       # API services
-│   │   └── github.ts
-│   ├── lib/           # Utilities
-│   │   └── seo.ts
-│   └── integrations/  # Third-party integrations
-│       └── supabase/
-├── .env.local         # Environment variables (create this)
-├── next.config.ts     # Next.js configuration
-├── tsconfig.json      # TypeScript configuration
-├── tailwind.config.js # Tailwind CSS configuration
-└── package.json       # Dependencies and scripts
-```
+<!--END_SECTION:waka-->
 
-## 🎯 Key Components
+---
 
-### About
-Professional introduction with skills, experience, and testimonials
+## 💬 Let's Connect!
 
-### Portfolio
-Dynamically fetched GitHub projects with filtering and search
+<div align="center">
 
-### Resume
-Interactive resume with timeline view and PDF download
+I'm always excited to collaborate on innovative projects, discuss MLOps best practices, or chat about the future of AI! Feel free to reach out:
 
-### Blog
-Blog posts section (configurable with CMS integration)
+<br/>
 
-### Contact
-Contact form with validation and email integration
+<a href="https://ambooka.dev"><img src="https://img.shields.io/badge/🌐_Visit_My_Portfolio-14B8A6?style=for-the-badge" alt="Portfolio"/></a>
+<a href="https://linkedin.com/in/abdulrahman-ambooka"><img src="https://img.shields.io/badge/Let's_Connect_on_LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+<a href="mailto:abdulrahmanambooka@gmail.com"><img src="https://img.shields.io/badge/Send_Me_an_Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
 
-### Utility Bar
-Fixed utility bar with theme toggle, AI assistant, and quick actions
+<br/><br/>
 
-## 🔧 Configuration
+<img src="https://capsule-render.vercel.app/api?type=waving&color=14B8A6&height=100&section=footer" width="100%"/>
 
-### Customization
-
-1. **Personal Information**
-   - Update metadata in `src/app/layout.tsx`
-   - Modify content in component files
-
-2. **Themes**
-   - Edit CSS variables in `src/app/globals.css`
-   - Add new themes in the theme configuration
-
-3. **GitHub Integration**
-   - Set `NEXT_PUBLIC_GITHUB_TOKEN` for private repos
-   - Configure in `src/app/page.tsx`
-
-4. **SEO**
-   - Update Open Graph images in `/public`
-   - Modify sitemap.xml for additional pages
-
-## 📊 Performance
-
-- ✅ Lighthouse Performance Score: 95+
-- ✅ Lighthouse Accessibility Score: 95+
-- ✅ Lighthouse Best Practices: 95+
-- ✅ Lighthouse SEO Score: 100
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👤 Author
-
-**Abdulrahman Ambooka**
-
-- Website: [ambooka.dev](https://ambooka.dev)
-- GitHub: [@ambooka](https://github.com/ambooka)
-- LinkedIn: [@abdulrahman-ambooka](https://www.linkedin.com/in/abdulrahman-ambooka/)
-- Email: abdulrahmanambooka@gmail.com
-
-## 🙏 Acknowledgments
-
-- Icons by [Lucide Icons](https://lucide.dev/)
-- UI Components by [Radix UI](https://www.radix-ui.com/)
-- Animations by [Framer Motion](https://www.framer.com/motion/)
-- Backend by [Supabase](https://supabase.com/)
+</div>
 
 ---
 
 <div align="center">
-Made with ❤️ by Abdulrahman Ambooka
+  <sub>⭐ If you like my work, consider giving a star to my repositories! ⭐</sub>
+  <br/>
+  <sub>💡 "Building the future, one commit at a time" 💡</sub>
 </div>

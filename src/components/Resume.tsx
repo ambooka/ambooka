@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Book, BriefcaseBusiness, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
-import { CareerTimeline } from './mlops/CareerTimeline'
 
 interface ResumeProps {
   isActive?: boolean
@@ -58,7 +57,8 @@ interface Skill {
   id: string
   name: string
   category: string
-  proficiency_level: number | null
+  proficiency_level?: number | null
+  proficiency?: number | null
   is_featured: boolean
   display_order: number | null
   created_at: string
@@ -236,8 +236,8 @@ export default function Resume({ isActive = false }: ResumeProps) {
           flexDirection: 'column',
           gap: '12px'
         }}>
-          <Loader2 size={40} className="animate-spin" style={{ color: 'var(--orange-yellow-crayola)' }} />
-          <p>Loading resume...</p>
+          <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
+          <p className="text-[var(--text-secondary)] font-medium uppercase tracking-widest text-[10px]">Loading resume...</p>
         </div>
       </article>
     )
@@ -260,10 +260,15 @@ export default function Resume({ isActive = false }: ResumeProps) {
             style={{
               marginTop: '12px',
               padding: '8px 16px',
-              background: 'var(--orange-yellow-crayola)',
+              background: 'var(--accent-primary)',
+              color: 'var(--bg-primary)',
               border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer'
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '1px'
             }}
           >
             Retry
@@ -281,28 +286,24 @@ export default function Resume({ isActive = false }: ResumeProps) {
         <h2 className="h2 article-title">Resume</h2>
       </header>
 
-      {/* MLOps Career Roadmap */}
-      <section className="timeline" style={{ marginBottom: '40px' }}>
-        <CareerTimeline />
-      </section>
 
       {/* Education Section */}
       {
         resumeData.education && resumeData.education.length > 0 && (
           <section className="timeline">
-            <div className="title-wrapper">
-              <div className="icon-box">
-                <Book />
+            <div className="title-wrapper mb-8">
+              <div className="bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] p-3 rounded-[var(--radius-md)] border border-[var(--accent-primary)]/20 shadow-sm">
+                <Book size={20} />
               </div>
-              <h3 className="h3">Education</h3>
+              <h3 className="h3 !text-[var(--text-primary)] !font-black !uppercase !tracking-tight">Education</h3>
             </div>
 
             <ol className="timeline-list">
               {resumeData.education.map((edu) => (
                 <li key={edu.id} className="timeline-item">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                    <h4 className="h4 timeline-item-title">{edu.institution}</h4>
-                    <span>{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
+                  <div className="flex justify-between items-start flex-wrap gap-4 mb-3">
+                    <h4 className="h4 timeline-item-title !text-[var(--text-primary)] !font-bold">{edu.institution}</h4>
+                    <span className="text-[var(--accent-primary)] font-black text-[11px] uppercase tracking-widest bg-[var(--accent-primary)]/10 px-3 py-1 rounded-full border border-[var(--accent-primary)]/20 shadow-sm">{formatDateRange(edu.start_date, edu.end_date || null, edu.is_current)}</span>
                   </div>
                   {(edu.degree || edu.field_of_study) && (
                     <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '8px', fontSize: '15px' }}>
@@ -339,19 +340,19 @@ export default function Resume({ isActive = false }: ResumeProps) {
       {
         resumeData.experience && resumeData.experience.length > 0 && (
           <section className="timeline">
-            <div className="title-wrapper">
-              <div className="icon-box">
-                <BriefcaseBusiness />
+            <div className="title-wrapper mb-8">
+              <div className="bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] p-3 rounded-[var(--radius-md)] border border-[var(--accent-primary)]/20 shadow-sm">
+                <BriefcaseBusiness size={20} />
               </div>
-              <h3 className="h3">Experience</h3>
+              <h3 className="h3 !text-[var(--text-primary)] !font-black !uppercase !tracking-tight">Experience</h3>
             </div>
 
             <ol className="timeline-list">
               {resumeData.experience.map((exp) => (
                 <li key={exp.id} className="timeline-item">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                    <h4 className="h4 timeline-item-title">{exp.position}</h4>
-                    <span>{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
+                  <div className="flex justify-between items-start flex-wrap gap-4 mb-3">
+                    <h4 className="h4 timeline-item-title !text-[var(--text-primary)] !font-bold">{exp.position}</h4>
+                    <span className="text-[var(--accent-primary)] font-black text-[11px] uppercase tracking-widest bg-[var(--accent-primary)]/10 px-3 py-1 rounded-full border border-[var(--accent-primary)]/20 shadow-sm">{formatDateRange(exp.start_date, exp.end_date || null, exp.is_current)}</span>
                   </div>
                   <p className="timeline-text" style={{ fontWeight: '600', marginBottom: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span style={{ fontSize: '16px' }}>🏢</span>
@@ -430,12 +431,12 @@ export default function Resume({ isActive = false }: ResumeProps) {
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '12px',
-                        padding: '20px 16px',
+                        padding: '24px 16px',
                         background: 'var(--bg-secondary)',
-                        borderRadius: '16px',
+                        borderRadius: 'var(--radius-xl)',
                         border: '1px solid var(--border-color)',
-                        boxShadow: 'var(--shadow-1)',
-                        transition: 'all var(--transition-2)',
+                        boxShadow: 'var(--shadow-card)',
+                        transition: 'all 0.3s ease',
                         cursor: 'default',
                         position: 'relative',
                         overflow: 'hidden'
@@ -483,111 +484,7 @@ export default function Resume({ isActive = false }: ResumeProps) {
               </div>
             </div>
 
-            {/* All Skills by Category - Logo Cards */}
-            <div>
-              <h4 className="h4" style={{ marginBottom: '24px', fontSize: '18px', color: 'var(--text-primary)' }}>Skills by Category</h4>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-                {Object.entries(skillsGrouped).map(([category, skills]) => (
-                  <div key={category} className="content-card" style={{
-                    padding: '24px',
-                    borderRadius: '16px',
-                    background: 'var(--bg-secondary)',
-                    border: '1px solid var(--border-color)',
-                    boxShadow: 'var(--shadow-1)',
-                    transition: 'all var(--transition-2)',
-                    position: 'relative',
-                    overflow: 'hidden'
-                  }}>
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '4px',
-                      background: 'var(--text-gradient-primary)',
-                      opacity: 0.8
-                    }}></div>
-                    <h5
-                      className="h5"
-                      style={{
-                        textTransform: 'capitalize',
-                        marginBottom: '20px',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: 'var(--text-primary)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                    >
-                      <span style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        background: 'var(--accent-color)',
-                        display: 'inline-block'
-                      }}></span>
-                      {category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </h5>
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-                      gap: '16px'
-                    }}>
-                      {skills.map(skill => (
-                        <div
-                          key={skill.id}
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: '10px',
-                            padding: '16px 12px',
-                            background: 'var(--border-gradient-onyx)',
-                            borderRadius: '12px',
-                            border: '1px solid transparent',
-                            transition: 'all var(--transition-2)',
-                            cursor: 'default',
-                            minHeight: '110px',
-                            justifyContent: 'center'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = 'var(--accent-color)';
-                            e.currentTarget.style.transform = 'translateY(-4px)';
-                            e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = 'transparent';
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'none';
-                          }}
-                        >
-                          <img
-                            src={getSkillLogo(skill.name)}
-                            alt={skill.name}
-                            style={{
-                              width: '40px',
-                              height: '40px',
-                              objectFit: 'contain'
-                            }}
-                            loading="lazy"
-                          />
-                          <span style={{
-                            fontSize: '12px',
-                            fontWeight: '500',
-                            color: 'var(--text-secondary)',
-                            textAlign: 'center',
-                            lineHeight: '1.3'
-                          }}>
-                            {skill.name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+
           </section>
         )
       }

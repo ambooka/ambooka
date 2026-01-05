@@ -4,13 +4,14 @@
 import { useState, useEffect } from 'react'
 import Resume from '@/components/Resume'
 import Blog from '@/components/Blog'
-import Navbar from '@/components/Navbar'
 import UtilityBar from '@/components/UtilityBar'
 import ScrollToTop from '@/components/ScrollToTop'
 import CodeRevealOverlay from '@/components/CodeRevealOverlay'
 import About from '@/components/About'
 import Portfolio from '@/components/Portfolio'
 import Contact from '@/components/Contact'
+import TopHeader from '@/components/TopHeader'
+import MobileBottomNav from '@/components/MobileBottomNav'
 import Sidebar from '@/components/Sidebar'
 
 const PAGES = {
@@ -41,6 +42,12 @@ export default function Home() {
     const [activePage, setActivePage] = useState<keyof typeof PAGES>('about')
     const [theme, setTheme] = useState<Theme>('premium-light')
     const [isLoaded, setIsLoaded] = useState(false)
+    const [isProfileOpen, setIsProfileOpen] = useState(false)
+    const [resumeTrigger, setResumeTrigger] = useState(0)
+
+    const handleOpenResume = () => {
+        setResumeTrigger(prev => prev + 1)
+    }
 
     // Get the current component based on active page
     const CurrentComponent = PAGES[activePage]
@@ -106,23 +113,61 @@ export default function Home() {
                     })
                 }}
             />
-            <UtilityBar currentTheme={theme} onThemeChange={setTheme} />
-            <main style={{
-                opacity: isLoaded ? 1 : 0,
-                transition: 'opacity 0.2s ease-in-out',
-                visibility: isLoaded ? 'visible' : 'hidden'
-            }}>
-                <Sidebar />
-                <div className="main-content">
-                    <Navbar activePage={activePage} setActivePage={setActivePage} />
+            <UtilityBar
+                currentTheme={theme}
+                onThemeChange={setTheme}
+                resumeTrigger={resumeTrigger}
+            />
+
+            {/* Unified App Container - Crextio Style */}
+            <div className="app-container">
+                <TopHeader
+                    activePage={activePage}
+                    setActivePage={setActivePage}
+                    onProfileClick={() => setIsProfileOpen(true)}
+                />
+                <main className="main-content-full pb-24 md:pb-10" style={{
+                    opacity: isLoaded ? 1 : 0,
+                    transition: 'opacity 0.2s ease-in-out',
+                    visibility: isLoaded ? 'visible' : 'hidden'
+                }}>
                     {activePage === 'portfolio' ? (
                         <Portfolio isActive={true} github={githubConfig} />
+                    ) : activePage === 'about' ? (
+                        <About isActive={true} onOpenResume={handleOpenResume} />
                     ) : (
                         <CurrentComponent isActive={true} />
                     )}
+                </main>
+
+                <MobileBottomNav activePage={activePage} setActivePage={setActivePage} />
+
+                {/* Mobile Profile Modal Overlay */}
+                <div className={`md:hidden`}>
+                    <Sidebar
+                        isModal={true}
+                        isOpen={isProfileOpen}
+                        onClose={() => setIsProfileOpen(false)}
+                        onOpenResume={handleOpenResume}
+                    />
                 </div>
-            </main>
+            </div>
+
             <CodeRevealOverlay />
+
+            <style jsx>{`
+                .app-container {
+                    width: 100%;
+                    min-height: 100vh;
+                    background: #FFFFFF;
+                    overflow-x: hidden;
+                    position: relative;
+                }
+                
+                :global([data-theme="premium-dark"]) .app-container {
+                    background: #1A2F36;
+                }
+            `}</style>
         </>
     )
 }

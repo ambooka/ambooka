@@ -1,11 +1,47 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { X, Brain, Code, Bot, Cloud, Loader2, Database, Shield, Terminal, Server, Activity, Lock, BrainCircuit, Layers, Box, Cpu, Workflow } from "lucide-react"
+import { X, Brain, Code, Bot, Cloud, Loader2, Database, Shield, Terminal, Server, Activity, Lock, BrainCircuit, Layers, Box, Cpu, Workflow, Calendar, Briefcase, ChevronRight } from "lucide-react"
 import { supabase } from '@/integrations/supabase/client'
+import { GitHubService } from '@/services/github'
+import GitHubStatsWidget from '@/components/widgets/GitHubStatsWidget'
+import FeaturedProjectsCarousel from '@/components/widgets/FeaturedProjectsCarousel'
+import LatestBlogWidget from '@/components/widgets/LatestBlogWidget'
+import CareerTimelineWidget from '@/components/widgets/CareerTimelineWidget'
+import ExpertiseProgressBar from '@/components/widgets/ExpertiseProgressBar'
+import CertificationShowcase from '@/components/widgets/CertificationShowcase'
+import Sidebar from '@/components/Sidebar'
+import ExperienceGanttChart from '@/components/widgets/ExperienceGanttChart'
+import CoreValuesWidget from '@/components/widgets/CoreValuesWidget'
+import EducationMentorshipWidget from '@/components/widgets/EducationMentorshipWidget'
+import CtaFooterWidget from '@/components/widgets/CtaFooterWidget'
+
+const GITHUB_USERNAME = 'ambooka'
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
+
+// Map certifications to expertise areas
+const CERT_TO_EXPERTISE: Record<string, string[]> = {
+  'expertise_devops': ['Terraform'],
+  'expertise_cloud': ['AWS SAA'],
+  'expertise_ml': ['AWS MLS', 'GCP ML'],
+  'expertise_data': ['Databricks'],
+  'expertise_k8s': ['CKA', 'CKAD']
+}
+
+// Certification badge images (local assets)
+const CERT_BADGES: Record<string, { icon: string, name: string }> = {
+  'Terraform': { icon: '/assets/badges/terraform-associate.png', name: 'Terraform Associate' },
+  'AWS SAA': { icon: '/assets/badges/aws-saa.png', name: 'AWS Solutions Architect' },
+  'AWS MLS': { icon: '/assets/badges/aws-mls.png', name: 'AWS ML Specialty' },
+  'GCP ML': { icon: '/assets/badges/gcp-ml.png', name: 'GCP ML Engineer' },
+  'Databricks': { icon: '/assets/badges/databricks.png', name: 'Databricks Data Engineer' },
+  'CKA': { icon: '/assets/badges/cka.png', name: 'Certified Kubernetes Admin' },
+  'CKAD': { icon: '/assets/badges/ckad.png', name: 'Certified Kubernetes App Dev' }
+}
 
 interface AboutProps {
   isActive?: boolean
+  onOpenResume?: () => void
 }
 
 interface AboutContent {
@@ -16,7 +52,8 @@ interface AboutContent {
   icon: string | null
   badge: string | null
   tags?: string[]
-  competencies?: string[] // Added for "More Details"
+  competencies?: string[]
+  proof_of_work?: { label: string, url: string } // Added for "Proof of Work"
   display_order: number
   is_active: boolean
 }
@@ -73,6 +110,15 @@ interface Technology {
   display_order: number
 }
 
+interface PersonalInfo {
+  full_name: string
+  title: string
+  avatar_url: string | null
+  about_text: string | null
+  expertise: any | null
+  kpi_stats: any | null
+}
+
 const iconMap: Record<string, React.ComponentType<{ className?: string, size?: number | string }>> = {
   BrainCircuit,
   Layers,
@@ -107,7 +153,8 @@ const FALLBACK_EXPERTISE: AboutContent[] = [
       'Automated testing integration'
     ],
     display_order: 1,
-    is_active: true
+    is_active: true,
+    proof_of_work: { label: 'View Project', url: '#projects' }
   },
   {
     id: 'exp2',
@@ -124,7 +171,8 @@ const FALLBACK_EXPERTISE: AboutContent[] = [
       'Identity & Access Management (IAM)'
     ],
     display_order: 2,
-    is_active: true
+    is_active: true,
+    proof_of_work: { label: 'Related Post', url: '#blog' }
   },
   {
     id: 'exp3',
@@ -294,7 +342,42 @@ const FALLBACK_TECHNOLOGIES: Technology[] = [
 ]
 
 
-export default function About({ isActive = false }: AboutProps) {
+// KPI Stats interface for welcome banner
+interface KpiStats {
+  years_experience?: string
+  current_phase?: string
+  expertise_breakdown?: {
+    software?: number
+    cloud_infra?: number
+    data?: number
+    ml_ai?: number
+  }
+}
+
+const StatCounter = ({ value, duration = 2000 }: { value: number, duration?: number }) => {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    let start = 0
+    const end = value
+    if (start === end) return
+
+    let totalMiliseconds = duration
+    let incrementTime = (totalMiliseconds / end)
+
+    let timer = setInterval(() => {
+      start += 1
+      setCount(start)
+      if (start === end) clearInterval(timer)
+    }, incrementTime)
+
+    return () => clearInterval(timer)
+  }, [value, duration])
+
+  return <span>{count}</span>
+}
+
+export default function About({ isActive = false, onOpenResume }: AboutProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
   const scrollTrackRef = useRef<HTMLDivElement>(null)
@@ -306,6 +389,17 @@ export default function About({ isActive = false }: AboutProps) {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [technologies, setTechnologies] = useState<Technology[]>(FALLBACK_TECHNOLOGIES)
 
+  // Dynamic stats for welcome banner (aligned with MLOps roadmap)
+  const [skillCount, setSkillCount] = useState(40)
+  const [projectCount, setProjectCount] = useState(25)
+  const [kpiStats, setKpiStats] = useState<KpiStats>({
+    years_experience: '3+',
+    current_phase: '0/8',
+    expertise_breakdown: { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }
+  })
+  const [currentFocus, setCurrentFocus] = useState('DevOps')
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+
   useEffect(() => {
     fetchAboutData()
   }, [])
@@ -314,58 +408,89 @@ export default function About({ isActive = false }: AboutProps) {
     try {
       setLoading(true)
 
-      // Fetch all data in parallel
-      const [aboutResult, testimonialsResult, technologiesResult] = await Promise.all([
-        supabase.from('about_content').select('*').eq('is_active', true).order('display_order'),
-        supabase.from('testimonials').select('*').eq('is_active', true).order('display_order'),
-        supabase.from('technologies').select('*').eq('is_active', true).order('display_order')
+      // Fetch all data in parallel from consolidated schema
+      const [personalInfoResult, skillsResult, testimonialsResult] = await Promise.all([
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('skills').select('*').order('display_order'),
+        supabase.from('testimonials').select('*').order('display_order')
       ])
 
-      // Only override if DB returns meaningful data, but prioritizing the "new career" intent
-      // logic: If DB has data, we check if it looks "MLOps-y" or if we should merge.
-      // For now, given the specific request "reflect my new career", we might want to stick to the fallback
-      // OR only overwrite if the fetched data seems explicitly updated.
-      // However, typical behavior is DB > Hardcode.
-      // I will handle minimal conflict by checking if fetched data exists.
+      // Set about text from personal_info
+      if (personalInfoResult.data) {
+        const info = personalInfoResult.data as unknown as PersonalInfo
+        setPersonalInfo(info)
 
-      if (aboutResult.data && aboutResult.data.length > 0) {
-        const aboutTextItem = aboutResult.data.find(item => item.section_key === 'about_text')
-        if (aboutTextItem && aboutTextItem.content.length > 50) {
-          // Maybe only update if it's not the default placeholder?
-          // setAboutText(aboutTextItem.content)
-          // For now, let's keep the hardcoded MLOps bio as the primary unless user manually changed it recently.
-          // Or simpler: Trust the DB if it has content, but currently we know DB might be slate.
-          // I'll leave the initial state (MLOps bio) and only overwrite if the DB content is DIFFERENT and substantial.
-          // Actually, standard practice: fetch > set.
-          // To strictly follow "reflect my new career choice", I will stick with the hardcoded MLOps defaults for this session's success
-          // UNLESS the user actively inputs data.
-          // If I overwrite with generic DB data, I fail the user request.
-          // So I will conditionally set ONLY if the fetched data includes 'MLOps' or 'AI' keywords,
-          // OR if the user manually requested a DB sync.
-          // Let's assume emptiness means use fallback.
+        if (info.about_text) {
+          setAboutText(info.about_text)
+        }
 
-          // If aboutResult has expertise items, use them.
-          // const expertise = aboutResult.data.filter(item => item.section_key.startsWith('expertise_'))
-          // if (expertise.length > 0) {
-          //   setExpertiseAreas(expertise)
-          // }
+        // Set expertise from JSONB field
+        if (info.expertise && Array.isArray(info.expertise)) {
+          const expertiseData = info.expertise as unknown as AboutContent[]
+          if (expertiseData.length > 0) {
+            setExpertiseAreas(expertiseData)
+          }
+        }
 
-          // If bio exists
-          // if (aboutTextItem) {
-          //   setAboutText(aboutTextItem.content)
-          // }
+        // Set KPI stats from JSONB field for the welcome banner
+        if (info.kpi_stats) {
+          setKpiStats(info.kpi_stats as unknown as KpiStats)
         }
       }
 
+      // Set technologies from skills table
+      if (skillsResult.data && skillsResult.data.length > 0) {
+        const techData = skillsResult.data.map(skill => ({
+          id: skill.id,
+          name: skill.name,
+          logo_url: skill.icon_url || `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${skill.name.toLowerCase()}/${skill.name.toLowerCase()}-original.svg`,
+          category: skill.category,
+          display_order: skill.display_order || 0
+        }))
+        setTechnologies(techData)
+      }
+
+      // Set testimonials
       if (testimonialsResult.data && testimonialsResult.data.length > 0) {
         setTestimonials(testimonialsResult.data)
       }
 
-      if (technologiesResult.data && technologiesResult.data.length > 0) {
-        setTechnologies(technologiesResult.data)
+      // Update project count from GitHub (more accurate than DB)
+      try {
+        const githubService = new GitHubService(GITHUB_TOKEN)
+        const repos = await githubService.getRepositories(GITHUB_USERNAME, {
+          maxRepos: 100,
+          sortBy: 'updated',
+          includePrivate: Boolean(GITHUB_TOKEN)
+        })
+        if (repos.length > 0) {
+          setProjectCount(repos.length)
+        }
+      } catch (e) {
+        console.error('Error fetching GitHub repos:', e)
       }
 
-      // If DB returned nothing or error, we rely on the initial state (FALLBACKS).
+      // Update skills count
+      if (skillsResult.data) {
+        setSkillCount(skillsResult.data.length)
+      }
+
+      // Fetch roadmap info for banner
+      const { data: phasesData } = await (supabase as any).from('roadmap_phases').select('*').order('phase_number')
+      if (phasesData && phasesData.length > 0) {
+        const completedCount = phasesData.filter((p: any) => p.status === 'completed').length
+        const totalCount = phasesData.length
+        const currentPhaseObj = phasesData.find((p: any) => p.status === 'in_progress') || phasesData.find((p: any) => p.status === 'upcoming')
+
+        setKpiStats(prev => ({
+          ...prev,
+          current_phase: `${completedCount}/${totalCount}`
+        }))
+
+        if (currentPhaseObj) {
+          setCurrentFocus(currentPhaseObj.target_role || currentPhaseObj.title)
+        }
+      }
 
     } catch (error) {
       console.error('Error fetching about data:', error)
@@ -390,9 +515,6 @@ export default function About({ isActive = false }: AboutProps) {
   if (loading) {
     return (
       <article className={`about ${isActive ? 'active' : ''}`} data-page="about">
-        <header>
-          <h2 className="h2 article-title">About me</h2>
-        </header>
         <div style={{
           display: 'flex',
           justifyContent: 'center',
@@ -410,6 +532,8 @@ export default function About({ isActive = false }: AboutProps) {
 
   const renderExpertiseCard = (area: AboutContent) => {
     const IconComponent = area.icon && iconMap[area.icon] ? iconMap[area.icon] : Code
+    // Get relevant certifications for this expertise area
+    const relevantCerts = CERT_TO_EXPERTISE[area.section_key] || []
 
     return (
       <div key={area.id} className="expertise-item-wrapper w-full relative group">
@@ -419,11 +543,37 @@ export default function About({ isActive = false }: AboutProps) {
         {/* Main Card Content */}
         <div className="relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/90 to-[var(--bg-secondary)]/50 backdrop-blur-md rounded-2xl p-5 flex flex-col border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(201,169,97,0.15)]">
 
-          {/* Header: Icon + Badge */}
+          {/* Header: Icon + Cert Badges + Skill Badge */}
           <div className="flex justify-between items-start mb-4">
-            {/* Icon - Compact */}
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-primary)] text-[var(--accent-primary)] border border-[var(--border-primary)] shadow-sm group-hover:text-[var(--accent-secondary)] group-hover:border-[var(--accent-secondary)]/30 transition-all duration-300">
-              <IconComponent size={20} className="w-5 h-5" />
+            {/* Left side: Icon + Cert Badges */}
+            <div className="flex items-center gap-2">
+              {/* Icon - Compact */}
+              <div className="p-2.5 rounded-lg bg-gradient-to-br from-[var(--bg-tertiary)] to-[var(--bg-primary)] text-[var(--accent-primary)] border border-[var(--border-primary)] shadow-sm group-hover:text-[var(--accent-secondary)] group-hover:border-[var(--accent-secondary)]/30 transition-all duration-300">
+                <IconComponent size={20} className="w-5 h-5" />
+              </div>
+
+              {/* Certification Badges */}
+              {relevantCerts.length > 0 && (
+                <div className="flex items-center gap-1">
+                  {relevantCerts.map(certKey => {
+                    const cert = CERT_BADGES[certKey]
+                    if (!cert) return null
+                    return (
+                      <div
+                        key={certKey}
+                        className="relative w-7 h-7 rounded-lg bg-white/80 border border-[var(--border-primary)] shadow-sm overflow-hidden hover:scale-110 hover:shadow-md transition-all duration-200 cursor-help"
+                        title={cert.name}
+                      >
+                        <img
+                          src={cert.icon}
+                          alt={cert.name}
+                          className="w-full h-full object-contain p-0.5"
+                        />
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Badge - Compact Pill */}
@@ -484,6 +634,20 @@ export default function About({ isActive = false }: AboutProps) {
               </div>
             </div>
           )}
+
+          {/* Proof of Work - New deep link */}
+          {area.proof_of_work && (
+            <div className="mt-3">
+              <a
+                href={area.proof_of_work.url}
+                className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] transition-colors group/pow"
+              >
+                <Workflow size={12} className="group-hover/pow:rotate-12 transition-transform" />
+                <span>{area.proof_of_work.label}</span>
+                <ChevronRight size={10} className="group-hover/pow:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     )
@@ -491,128 +655,178 @@ export default function About({ isActive = false }: AboutProps) {
 
   return (
     <article className={`about portfolio-tab ${isActive ? 'active' : ''}`} data-page="about">
-      <header>
-        <h2 className="h2 article-title">About me</h2>
-      </header>
+      {/* Welcome Banner - Compact */}
+      <section className="welcome-banner compact">
+        <div className="welcome-left">
+          <h2 className="welcome-title">Build Fast. <span>Deploy Faster. Scale Smart.</span></h2>
+          <div className="flex items-center gap-3 mt-2">
+            <p className="welcome-subtitle">MLOps Engineer in Training • Focusing on: <span className="text-[var(--accent-secondary)] font-semibold">{currentFocus}</span></p>
+            <div className="px-2 py-0.5 rounded-md bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider">
+              Phase {kpiStats.current_phase}
+            </div>
+          </div>
 
-      <section className="about-text">
-        <p>{aboutText || "No about text configured. Please add content via the admin dashboard."}</p>
+          {/* Expertise Breakdown Pills */}
+          <ExpertiseProgressBar breakdown={kpiStats.expertise_breakdown || { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }} />
+        </div>
+
+        <div className="welcome-stats">
+          <div className="welcome-stat">
+            <div className="stat-row">
+              <svg className="stat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="8" r="5" />
+                <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
+              </svg>
+              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '3')} />+</span>
+            </div>
+            <span className="welcome-stat-label">Years</span>
+          </div>
+          <div className="welcome-stat">
+            <div className="stat-row">
+              <svg className="stat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <span className="welcome-stat-value"><StatCounter value={skillCount} />+</span>
+            </div>
+            <span className="welcome-stat-label">Skills</span>
+          </div>
+          <div className="welcome-stat">
+            <div className="stat-row">
+              <svg className="stat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+              <span className="welcome-stat-value"><StatCounter value={projectCount} />+</span>
+            </div>
+            <span className="welcome-stat-label">Projects</span>
+          </div>
+        </div>
       </section>
 
-      {expertiseAreas.length > 0 && (
-        <section className="expertise-section w-full">
-          <h3 className="h3 mb-8">Areas of Expertise</h3>
+      {/* Main Dashboard Grid - Crextio Style */}
+      <div className="dashboard-grid">
+        {/* Left Column - Profile Card */}
+        <div className="dashboard-left hidden md:block">
+          {/* Profile Card */}
+          <Sidebar onOpenResume={onOpenResume} />
+        </div>
 
-          <div className="expertise-masonry">
-            {expertiseAreas.map(renderExpertiseCard)}
-          </div>
-        </section>
-      )}
-
-      {
-        testimonials.length > 0 && (
-          <section className="testimonials">
-            <h3 className="h3 testimonials-title">Recommendations</h3>
-
-            <ul className="testimonials-list has-scrollbar">
-              {testimonials.map(testimonial => (
-                <li key={testimonial.id} className="testimonials-item min-w-[280px] md:min-w-[340px] lg:min-w-[380px] snap-center">
-                  <div
-                    className="group relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/80 to-[var(--bg-secondary)]/40 backdrop-blur-md rounded-2xl p-6 pt-12 border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/40 transition-all duration-300 hover:shadow-[0_10px_30px_-10px_rgba(142,14,40,0.1)] cursor-pointer"
-                    onClick={() => openTestimonialModal(testimonial)}
-                  >
-                    <figure className="absolute top-0 left-6 -translate-y-1/2 w-16 h-16 rounded-xl overflow-hidden border-2 border-[var(--bg-primary)] shadow-lg group-hover:scale-105 group-hover:border-[var(--accent-secondary)] transition-all duration-300">
-                      <img
-                        src={testimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
-                        alt={testimonial.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </figure>
-
-                    <h4 className="text-lg font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors">{testimonial.name}</h4>
-
-                    <div className="relative">
-                      <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-light italic">"{testimonial.text}"</p>
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t border-[var(--border-primary)]/20 flex justify-between items-center">
-                      <time className="text-xs text-[var(--text-tertiary)] font-medium">
-                        {new Date(testimonial.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                      </time>
-                      <span className="text-xs text-[var(--accent-secondary)] font-medium opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">Read more →</span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+        {/* Center Column - Main Content */}
+        <div className="dashboard-center">
+          {/* GitHub Activity */}
+          <section className="github-activity-full">
+            <GitHubStatsWidget compact />
           </section>
-        )
-      }
 
-      {
-        isModalOpen && selectedTestimonial && (
-          <div className="modal-container active">
-            <div className="overlay active" onClick={closeTestimonialModal}></div>
-            <section className="testimonials-modal">
-              <button className="modal-close-btn" onClick={closeTestimonialModal}>
-                <X className="w-5 h-5" />
-              </button>
-              <div className="modal-img-wrapper">
-                <figure className="modal-avatar-box">
-                  <img
-                    src={selectedTestimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
-                    alt={selectedTestimonial.name}
-                    width="80"
-                  />
-                </figure>
-                <img src="/assets/images/icon-quote.svg" alt="quote icon" />
-              </div>
-              <div className="modal-content">
-                <h4 className="h3 modal-title">{selectedTestimonial.name}</h4>
-                <time dateTime={selectedTestimonial.date}>
-                  {new Date(selectedTestimonial.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
-                <div>
-                  <p>{selectedTestimonial.text}</p>
-                </div>
-              </div>
-            </section>
-          </div>
-        )
-      }
+          {/* Certifications Showcase */}
+          <CertificationShowcase />
 
-      {
-        technologies.length > 0 && (
-          <section>
-            <h3 className="h3 clients-title">Technologies I Work With</h3>
-            <div className="infinite-scroll-wrapper">
-              <div className="infinite-scroll-container">
-                <div className="infinite-scroll-track" ref={scrollTrackRef}>
-                  {duplicatedTechnologies.map((tech, index) => (
-                    <div key={`${tech.id}-${index}`} className="tech-item">
-                      <a href="#" onClick={(e) => e.preventDefault()}>
+          {/* Latest Blog - Center Side-by-Side (aligned with Projects) */}
+
+
+          {/* Testimonials */}
+          {testimonials.length > 0 && (
+            <section className="testimonials-section">
+              <h3 className="section-title">Recommendations</h3>
+              <ul className="testimonials-list has-scrollbar">
+                {testimonials.map(testimonial => (
+                  <li key={testimonial.id} className="testimonials-item min-w-[280px] md:min-w-[340px] lg:min-w-[380px] snap-center">
+                    <div
+                      className="group relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/80 to-[var(--bg-secondary)]/40 backdrop-blur-md rounded-2xl p-6 pt-12 border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/40 transition-all duration-300 hover:shadow-[0_10px_30px_-10px_rgba(142,14,40,0.1)] cursor-pointer"
+                      onClick={() => openTestimonialModal(testimonial)}
+                    >
+                      <figure className="absolute top-0 left-6 -translate-y-1/2 w-16 h-16 rounded-xl overflow-hidden border-2 border-[var(--bg-primary)] shadow-lg group-hover:scale-105 group-hover:border-[var(--accent-secondary)] transition-all duration-300">
                         <img
-                          src={tech.logo_url}
-                          alt={`${tech.name} logo`}
-                          loading="lazy"
-                          decoding="async"
-                          width="60"
-                          height="60"
+                          src={testimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
+                          alt={testimonial.name}
+                          className="w-full h-full object-cover"
                         />
-                        <span className="tech-name">{tech.name}</span>
-                      </a>
+                      </figure>
+                      <h4 className="text-lg font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors">{testimonial.name}</h4>
+                      <div className="relative">
+                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-light italic">"{testimonial.text}"</p>
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-[var(--border-primary)]/20 flex justify-between items-center">
+                        <time className="text-xs text-[var(--text-tertiary)] font-medium">
+                          {new Date(testimonial.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </time>
+                        <span className="text-xs text-[var(--accent-secondary)] font-medium opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">Read more →</span>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+
+        <div className="dashboard-right">
+          <CareerTimelineWidget />
+        </div>
+      </div>
+
+      {/* Project & Blog Row - Wide Section */}
+      <section className="github-activity-full mb-8 md:mb-20">
+        <div className="flex flex-col md:flex-row gap-5 items-stretch">
+          <div className="flex-[2] min-w-0 h-full">
+            <FeaturedProjectsCarousel />
+          </div>
+          <div className="flex-[1] min-w-0 h-full">
+            <LatestBlogWidget />
+          </div>
+        </div>
+      </section>
+
+      {/* Experience Roadmap - Full Width */}
+      <section className="github-activity-full mb-8 md:mb-20">
+        <ExperienceGanttChart />
+      </section>
+
+      {/* Closing the Loop - Site Summary Sections */}
+      <section className="flex flex-col gap-6 md:gap-20">
+        <CoreValuesWidget />
+        <EducationMentorshipWidget />
+        <CtaFooterWidget onOpenResume={onOpenResume} />
+      </section>
+
+      {/* Testimonial Modal */}
+      {isModalOpen && selectedTestimonial && (
+        <div className="modal-container active">
+          <div className="overlay active" onClick={closeTestimonialModal}></div>
+          <section className="testimonials-modal">
+            <button className="modal-close-btn" onClick={closeTestimonialModal}>
+              <X className="w-5 h-5" />
+            </button>
+            <div className="modal-img-wrapper">
+              <figure className="modal-avatar-box">
+                <img
+                  src={selectedTestimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
+                  alt={selectedTestimonial.name}
+                  width="80"
+                />
+              </figure>
+              <img src="/assets/images/icon-quote.svg" alt="quote icon" />
+            </div>
+            <div className="modal-content">
+              <h4 className="h3 modal-title">{selectedTestimonial.name}</h4>
+              <time dateTime={selectedTestimonial.date}>
+                {new Date(selectedTestimonial.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+              <div>
+                <p>{selectedTestimonial.text}</p>
               </div>
             </div>
           </section>
-        )
-      }
+        </div>
+      )}
 
       <style jsx>{`
         .animate-spin {
@@ -630,6 +844,38 @@ export default function About({ isActive = false }: AboutProps) {
           overflow: hidden;
           margin: 20px 0;
           padding: 15px 0;
+        }
+        
+        .identity-card {
+          padding: 32px;
+          margin-bottom: 24px;
+          position: relative;
+        }
+
+        @media (max-width: 768px) {
+          .identity-card {
+            padding: 20px 15px;
+            margin-bottom: 15px;
+          }
+        }
+
+        .avatar-box {
+          box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
+        }
+
+        .card-middle h1 {
+          letter-spacing: -0.05em;
+          text-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        @keyframes progress-shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+
+        .card-bottom .h-2 > div {
+          background-size: 200% 100%;
+          animation: progress-shimmer 3s infinite linear;
         }
         
         .infinite-scroll-container {
