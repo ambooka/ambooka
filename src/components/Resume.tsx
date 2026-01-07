@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from 'react'
 import { Book, BriefcaseBusiness, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'

@@ -141,7 +141,7 @@ export default function CareerTimelineWidget() {
                     </div>
                 </div>
                 <div className="roadmap-progress">
-                    <span className="progress-num !text-[var(--accent-primary)] !font-black !text-sm">{progress}%</span>
+                    <span className="progress-num">{progress}%</span>
                 </div>
             </div>
 

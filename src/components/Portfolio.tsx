@@ -206,17 +206,17 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               placeholder="Search by name, tech or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius-md)] py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--accent-primary)] transition-all shadow-sm text-[var(--text-primary)]"
+              className="w-full bg-white border border-[rgba(30,58,66,0.08)] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--accent-primary)] focus:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          <div className="flex gap-1 overflow-x-auto overflow-y-visible py-1 px-1 scrollbar-hide bg-[rgba(30,58,66,0.06)] rounded-full border border-[rgba(30,58,66,0.04)]">
             {filterOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { setFilter(opt.value); setCurrentPage(1); }}
-                className={`px-4 py-2 rounded-[var(--radius-md)] text-sm font-medium whitespace-nowrap transition-all border ${filter === opt.value
-                  ? 'bg-[var(--accent-primary)] text-[var(--bg-primary)] border-[var(--accent-primary)] shadow-md'
-                  : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)]'
+                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center ${filter === opt.value
+                  ? 'bg-white text-[var(--text-primary)] shadow-[0_2px_8px_rgba(30,58,66,0.1)] font-semibold'
+                  : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-white/50'
                   }`}
               >
                 {opt.label}
@@ -338,22 +338,22 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
 
             {/* Pagination UI */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-16 pb-10">
+              <div className="flex justify-center items-center gap-3 mt-16 pb-10">
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] disabled:opacity-30 disabled:hover:border-[var(--border-color)] transition-all"
+                  className="w-10 h-10 rounded-full bg-white border border-[rgba(30,58,66,0.08)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:shadow-[0_4px_12px_rgba(30,58,66,0.1)] disabled:opacity-30 disabled:hover:shadow-none transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] flex items-center justify-center"
                 >
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={18} />
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 bg-[rgba(30,58,66,0.06)] p-1 rounded-full border border-[rgba(30,58,66,0.04)]">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                     <button
                       key={p}
                       onClick={() => setCurrentPage(p)}
-                      className={`w-10 h-10 rounded-[var(--radius-md)] text-sm font-bold transition-all border ${currentPage === p
-                        ? 'bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] shadow-inner'
-                        : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)]'
+                      className={`w-10 h-10 rounded-full text-sm font-medium transition-all flex items-center justify-center ${currentPage === p
+                        ? 'bg-white text-[var(--text-primary)] shadow-[0_2px_8px_rgba(30,58,66,0.1)] font-semibold'
+                        : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-white/50'
                         }`}
                     >
                       {p}
@@ -363,9 +363,9 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-3 rounded-[var(--radius-md)] bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] disabled:opacity-30 disabled:hover:border-[var(--border-color)] transition-all"
+                  className="w-10 h-10 rounded-full bg-white border border-[rgba(30,58,66,0.08)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:shadow-[0_4px_12px_rgba(30,58,66,0.1)] disabled:opacity-30 disabled:hover:shadow-none transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] flex items-center justify-center"
                 >
-                  <ChevronRight size={20} />
+                  <ChevronRight size={18} />
                 </button>
               </div>
             )}

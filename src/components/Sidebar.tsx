@@ -482,30 +482,32 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
         }
 
         .social-btn {
-          width: 36px;
-          height: 36px;
-          border-radius: 10px;
-          background: var(--bg-primary, #E8F0EE);
-          border: 1px solid var(--border-light, rgba(30, 58, 66, 0.06));
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          background: rgba(30, 58, 66, 0.06);
+          border: 1px solid rgba(30, 58, 66, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.2s ease;
           text-decoration: none;
-          color: var(--text-secondary, #546E7A);
+          color: var(--text-primary, #1E3A42);
         }
 
         .social-btn:hover {
           background: var(--accent-primary, #14B8A6);
           border-color: var(--accent-primary, #14B8A6);
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(20, 184, 166, 0.25);
         }
 
         .social-icon {
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           object-fit: contain;
-          opacity: 0.7;
+          opacity: 0.8;
+          filter: brightness(0) saturate(100%);
           transition: all 0.2s ease;
         }
 

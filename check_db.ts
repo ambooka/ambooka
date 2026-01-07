@@ -40,6 +40,11 @@ async function check() {
     const { error: error2 } = await supabase.from('skills').select('id').limit(1)
     if (error2) console.log('skills error:', error2.message)
     else console.log('skills exists')
+
+    console.log('Checking personal_info...')
+    const { data: data3, error: error3 } = await supabase.from('personal_info').select('avatar_url').single()
+    if (error3) console.log('personal_info error:', error3.message)
+    else console.log('personal_info avatar_url:', data3.avatar_url)
 }
 
 check()

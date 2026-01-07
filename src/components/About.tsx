@@ -717,7 +717,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
       </section>
 
       {/* Main Dashboard Grid - Crextio Style */}
-      <div className="dashboard-grid">
+      <div className="dashboard-grid mb-8 md:mb-20">
         {/* Left Column - Profile Card */}
         <div className="dashboard-left hidden md:block">
           {/* Profile Card */}
@@ -780,11 +780,11 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
 
       {/* Project & Blog Row - Wide Section */}
       <section className="github-activity-full mb-8 md:mb-20">
-        <div className="flex flex-col md:flex-row gap-5 items-stretch">
-          <div className="flex-[2] min-w-0 h-full">
+        <div className="flex flex-col md:flex-row gap-5 md:h-[420px]">
+          <div className="flex-[2] min-w-0">
             <FeaturedProjectsCarousel />
           </div>
-          <div className="flex-[1] min-w-0 h-full">
+          <div className="flex-1 min-w-0">
             <LatestBlogWidget />
           </div>
         </div>

@@ -109,13 +109,14 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     box-shadow: 0 4px 12px rgba(30, 58, 66, 0.1);
                 }
 
-                /* Navigation Pills - Clean background */
+                /* Navigation Pills - Clean background container */
                 .nav-pills {
                     display: flex;
                     gap: 4px;
-                    background: rgba(30, 58, 66, 0.04);
+                    background: rgba(30, 58, 66, 0.06);
                     padding: 6px;
                     border-radius: 50px;
+                    border: 1px solid rgba(30, 58, 66, 0.04);
                 }
 
                 .nav-pill {
@@ -125,20 +126,21 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     border-radius: 50px;
                     font-size: 0.875rem;
                     font-weight: 500;
-                    color: var(--text-secondary);
+                    color: var(--text-tertiary);
                     cursor: pointer;
                     transition: all 0.2s ease;
                 }
 
                 .nav-pill:hover {
                     color: var(--text-primary);
+                    background: rgba(255, 255, 255, 0.5);
                 }
 
                 .nav-pill.active {
                     background: #FFFFFF;
                     color: var(--text-primary);
                     font-weight: 600;
-                    box-shadow: 0 2px 8px rgba(30, 58, 66, 0.08);
+                    box-shadow: 0 2px 8px rgba(30, 58, 66, 0.1);
                 }
 
                 /* Action Buttons & Quick Links */
