@@ -42,6 +42,13 @@ const CERT_BADGES: Record<string, { icon: string, name: string }> = {
 interface AboutProps {
   isActive?: boolean
   onOpenResume?: () => void
+  initialData?: {
+    personalInfo?: PersonalInfo
+    skills?: any[]
+    testimonials?: Testimonial[]
+    technologies?: Technology[]
+    githubStats?: any
+  }
 }
 
 interface AboutContent {
@@ -377,32 +384,34 @@ const StatCounter = ({ value, duration = 2000 }: { value: number, duration?: num
   return <span>{count}</span>
 }
 
-export default function About({ isActive = false, onOpenResume }: AboutProps) {
+export default function About({ isActive = false, onOpenResume, initialData }: AboutProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
   const scrollTrackRef = useRef<HTMLDivElement>(null)
 
-  const [loading, setLoading] = useState(true)
-  const [aboutText, setAboutText] = useState('Recent Computer Science graduate building toward MLOps Architect. Focused on gaining production experience through hands-on projects in ML deployment, Kubernetes, and cloud infrastructure. Learning in public and documenting my journey from theory to production systems.')
+  const [loading, setLoading] = useState(!initialData)
+  const [aboutText, setAboutText] = useState(initialData?.personalInfo?.about_text || 'Recent Computer Science graduate building toward MLOps Architect. Focused on gaining production experience through hands-on projects in ML deployment, Kubernetes, and cloud infrastructure. Learning in public and documenting my journey from theory to production systems.')
   // Initialize with fallback to ensure MLOps content is present by default
-  const [expertiseAreas, setExpertiseAreas] = useState<AboutContent[]>(FALLBACK_EXPERTISE)
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
-  const [technologies, setTechnologies] = useState<Technology[]>(FALLBACK_TECHNOLOGIES)
+  const [expertiseAreas, setExpertiseAreas] = useState<AboutContent[]>(initialData?.personalInfo?.expertise || FALLBACK_EXPERTISE)
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(initialData?.testimonials || [])
+  const [technologies, setTechnologies] = useState<Technology[]>(initialData?.technologies || FALLBACK_TECHNOLOGIES)
 
   // Dynamic stats for welcome banner (aligned with MLOps roadmap)
   const [skillCount, setSkillCount] = useState(40)
   const [projectCount, setProjectCount] = useState(25)
   const [kpiStats, setKpiStats] = useState<KpiStats>({
-    years_experience: '3+',
-    current_phase: '0/8',
-    expertise_breakdown: { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }
+    years_experience: initialData?.personalInfo?.kpi_stats?.years_experience || '5+',
+    current_phase: initialData?.personalInfo?.kpi_stats?.current_phase || '0/8',
+    expertise_breakdown: initialData?.personalInfo?.kpi_stats?.expertise_breakdown || { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }
   })
   const [currentFocus, setCurrentFocus] = useState('DevOps')
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(initialData?.personalInfo || null)
 
   useEffect(() => {
-    fetchAboutData()
-  }, [])
+    if (!initialData) {
+      fetchAboutData()
+    }
+  }, [initialData])
 
   const fetchAboutData = async () => {
     try {
@@ -433,8 +442,8 @@ export default function About({ isActive = false, onOpenResume }: AboutProps) {
         }
 
         // Set KPI stats from JSONB field for the welcome banner
-        if (info.kpi_stats) {
-          setKpiStats(info.kpi_stats as unknown as KpiStats)
+        if (info.kpi_stats && !Array.isArray(info.kpi_stats)) {
+          setKpiStats(prev => ({ ...prev, ...(info.kpi_stats as unknown as KpiStats) }))
         }
       }
 
@@ -541,7 +550,7 @@ export default function About({ isActive = false, onOpenResume }: AboutProps) {
         <div className="absolute -inset-0.5 bg-gradient-to-br from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
 
         {/* Main Card Content */}
-        <div className="relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/90 to-[var(--bg-secondary)]/50 backdrop-blur-md rounded-2xl p-5 flex flex-col border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(201,169,97,0.15)]">
+        <div className="glass-card relative h-full p-5 flex flex-col border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]">
 
           {/* Header: Icon + Cert Badges + Skill Badge */}
           <div className="flex justify-between items-start mb-4">
@@ -599,7 +608,7 @@ export default function About({ isActive = false, onOpenResume }: AboutProps) {
             <div className="mb-4 space-y-1.5">
               {area.competencies.slice(0, 3).map((comp, i) => (
                 <div key={i} className="flex items-start gap-2 text-[11px] text-[var(--text-secondary)]/90 group-hover:text-[var(--text-secondary)] transition-colors">
-                  <div className="mt-1 w-0.5 h-0.5 rounded-full bg-[var(--accent-secondary)]/70 shadow-[0_0_5px_rgba(201,169,97,0.5)]"></div>
+                  <div className="mt-1 w-0.5 h-0.5 rounded-full bg-[var(--accent-secondary)]/70 shadow-[0_0_5px_rgba(20,184,166,0.3)]"></div>
                   <span className="leading-tight">{comp}</span>
                 </div>
               ))}
@@ -677,7 +686,7 @@ export default function About({ isActive = false, onOpenResume }: AboutProps) {
                 <circle cx="12" cy="8" r="5" />
                 <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
               </svg>
-              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '3')} />+</span>
+              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '5')} />+</span>
             </div>
             <span className="welcome-stat-label">Years</span>
           </div>
@@ -719,7 +728,7 @@ export default function About({ isActive = false, onOpenResume }: AboutProps) {
         <div className="dashboard-center">
           {/* GitHub Activity */}
           <section className="github-activity-full">
-            <GitHubStatsWidget compact />
+            <GitHubStatsWidget compact initialStats={initialData?.githubStats} />
           </section>
 
           {/* Certifications Showcase */}

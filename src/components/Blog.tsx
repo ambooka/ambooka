@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 interface BlogProps {
   isActive?: boolean
+  initialPosts?: BlogPost[]
 }
 
 interface BlogPost {
@@ -22,13 +23,15 @@ interface BlogPost {
   view_count: number
 }
 
-export default function Blog({ isActive = false }: BlogProps) {
-  const [loading, setLoading] = useState(true)
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+export default function Blog({ isActive = false, initialPosts }: BlogProps) {
+  const [loading, setLoading] = useState(!initialPosts)
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialPosts || [])
 
   useEffect(() => {
-    fetchBlogPosts()
-  }, [])
+    if (!initialPosts) {
+      fetchBlogPosts()
+    }
+  }, [initialPosts])
 
   const fetchBlogPosts = async () => {
     try {

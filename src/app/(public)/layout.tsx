@@ -1,4 +1,5 @@
 import "../globals.css";
+import PublicThemeContainer from "@/components/PublicThemeContainer";
 
 export default function PublicLayout({
     children,
@@ -6,8 +7,8 @@ export default function PublicLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <>
+        <PublicThemeContainer>
             {children}
-        </>
+        </PublicThemeContainer>
     );
 }

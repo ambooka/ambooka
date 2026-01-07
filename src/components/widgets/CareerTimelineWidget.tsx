@@ -23,7 +23,7 @@ interface Certification {
     is_obtained: boolean
 }
 
-const CAREER_START_DATE = new Date('2023-01-01')
+const CAREER_START_DATE = new Date('2021-01-01')
 
 export default function CareerTimelineWidget() {
     const [phases, setPhases] = useState<RoadmapPhase[]>([])

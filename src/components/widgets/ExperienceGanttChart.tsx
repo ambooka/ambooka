@@ -18,8 +18,8 @@ interface Experience {
 export default function ExperienceGanttChart() {
     const [experiences, setExperiences] = useState<Experience[]>([])
     const [loading, setLoading] = useState(true)
-    const [viewportStart, setViewportStart] = useState(subMonths(new Date(), 36))
-    const [totalMonths, setTotalMonths] = useState(36)
+    const [viewportStart, setViewportStart] = useState(subMonths(new Date(), 60))
+    const [totalMonths, setTotalMonths] = useState(60)
     const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
@@ -264,7 +264,7 @@ export default function ExperienceGanttChart() {
                                         >
                                             <div className="flex items-center gap-3 w-full overflow-hidden">
                                                 <div className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-black
-                                                    ${isCurrent ? 'bg-white text-[var(--accent-primary)]' : 'bg-[var(--bg-primary)] text-[var(--text-secondary)]'}`}>
+                                                    ${isCurrent ? 'bg-[var(--bg-primary)] text-[var(--accent-primary)]' : 'bg-[var(--bg-primary)] text-[var(--text-secondary)]'}`}>
                                                     {initials}
                                                 </div>
                                                 <div className="flex-1 min-w-0 flex items-center justify-between">

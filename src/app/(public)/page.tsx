@@ -1,173 +1,113 @@
-// app/page.tsx
-'use client'
-
-import { useState, useEffect } from 'react'
-import Resume from '@/components/Resume'
-import Blog from '@/components/Blog'
-import UtilityBar from '@/components/UtilityBar'
-import ScrollToTop from '@/components/ScrollToTop'
-import CodeRevealOverlay from '@/components/CodeRevealOverlay'
 import About from '@/components/About'
-import Portfolio from '@/components/Portfolio'
-import Contact from '@/components/Contact'
-import TopHeader from '@/components/TopHeader'
-import MobileBottomNav from '@/components/MobileBottomNav'
-import Sidebar from '@/components/Sidebar'
+import { supabase } from '@/integrations/supabase/client'
+import { GitHubService } from '@/services/github'
+import { Metadata } from 'next'
 
-const PAGES = {
-    about: About,
-    resume: Resume,
-    portfolio: Portfolio,
-    blog: Blog,
-    contact: Contact
-} as const
-
-type Theme = 'premium-dark' | 'premium-light'
-
-const githubConfig = {
-    username: 'ambooka',
-    // Use string literal for token to make it more visible in console
-    token: process.env.NEXT_PUBLIC_GITHUB_TOKEN || '',
-    featuredThreshold: 5,
-    maxRepos: 100,
-    sortBy: 'updated' as const
+export const metadata: Metadata = {
+    title: 'Abdulrahman Ambooka | MLOps Architect & Software Engineer',
+    description: 'Portfolio of Abdulrahman Ambooka, an MLOps Architect and Software Engineer specializing in AI deployment, Kubernetes, and cloud infrastructure.',
 }
 
-// GitHub configuration validated
-if (process.env.NODE_ENV === 'development' && !githubConfig.token) {
-    console.warn('⚠️ GitHub token not found. Some features may be limited.')
-}
+const GITHUB_USERNAME = 'ambooka'
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
 
-export default function Home() {
-    const [activePage, setActivePage] = useState<keyof typeof PAGES>('about')
-    const [theme, setTheme] = useState<Theme>('premium-light')
-    const [isLoaded, setIsLoaded] = useState(false)
-    const [isProfileOpen, setIsProfileOpen] = useState(false)
-    const [resumeTrigger, setResumeTrigger] = useState(0)
+export default async function DashboardPage() {
+    // Fetch initial data for About component
+    const [personalInfoResult, skillsResult, testimonialsResult] = await Promise.all([
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('skills').select('*').order('display_order'),
+        supabase.from('testimonials').select('*').order('display_order')
+    ])
 
-    const handleOpenResume = () => {
-        setResumeTrigger(prev => prev + 1)
+    const personalInfo = personalInfoResult.data
+    const testimonials = testimonialsResult.data || []
+
+    // Map technologies from skills
+    const technologies = (skillsResult.data || []).map(skill => ({
+        id: skill.id,
+        name: skill.name,
+        logo_url: skill.icon_url || `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${skill.name.toLowerCase()}/${skill.name.toLowerCase()}-original.svg`,
+        category: skill.category,
+        display_order: skill.display_order || 0
+    }))
+
+    // Fetch GitHub stats
+    let githubStats = null
+    try {
+        const githubService = new GitHubService(GITHUB_TOKEN)
+        const repos = await githubService.getRepositories(GITHUB_USERNAME, {
+            maxRepos: 100,
+            sortBy: 'updated',
+            includePrivate: Boolean(GITHUB_TOKEN)
+        })
+
+        const totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0)
+        const publicRepos = repos.filter(r => !r.private).length
+
+        const langCounts: Record<string, number> = {}
+        repos.forEach(repo => {
+            const lang = repo.language || 'Other'
+            langCounts[lang] = (langCounts[lang] || 0) + 1
+        })
+
+        const LANGUAGE_CONFIG: Record<string, { color: string; logo?: string }> = {
+            TypeScript: { color: '#3178c6', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+            JavaScript: { color: '#f7df1e', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+            Python: { color: '#3776ab', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+            Go: { color: '#00add8', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg' },
+            Java: { color: '#ed8b00', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+            'C++': { color: '#00599c', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
+            'C#': { color: '#239120', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg' },
+            Shell: { color: '#89e051', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg' },
+            Dockerfile: { color: '#2496ed', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+            HCL: { color: '#7b42bc', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg' },
+            HTML: { color: '#e34c26', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
+            CSS: { color: '#663399', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
+            Vue: { color: '#42b883', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg' },
+            Rust: { color: '#dea584' },
+            Ruby: { color: '#cc342d', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg' },
+            PHP: { color: '#777bb4', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg' },
+            Kotlin: { color: '#7f52ff', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg' },
+            Swift: { color: '#f05138', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg' },
+            Dart: { color: '#00b4ab', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg' },
+            Other: { color: '#6b7280' }
+        }
+
+        const topLanguages = Object.entries(langCounts)
+            .filter(([name]) => name !== 'Other')
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 6)
+            .map(([name, count]) => ({
+                name,
+                count,
+                color: LANGUAGE_CONFIG[name]?.color || '#6b7280',
+                logo: LANGUAGE_CONFIG[name]?.logo
+            }))
+
+        let followers = 0
+        try {
+            const userRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, {
+                headers: GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}
+            })
+            if (userRes.ok) {
+                const userData = await userRes.json()
+                followers = userData.followers || 0
+            }
+        } catch (e) {
+            console.error('Failed to fetch user profile:', e)
+        }
+
+        githubStats = { totalRepos: repos.length, totalStars, followers, publicRepos, topLanguages }
+    } catch (error) {
+        console.error('Failed to fetch GitHub stats server-side:', error)
     }
 
-    // Get the current component based on active page
-    const CurrentComponent = PAGES[activePage]
+    const initialData = {
+        personalInfo: personalInfo as any,
+        testimonials: testimonials as any[],
+        technologies,
+        githubStats
+    }
 
-    // Load saved state on mount
-    useEffect(() => {
-        const savedPage = localStorage.getItem('activePage')
-        if (savedPage && savedPage in PAGES) {
-            setActivePage(savedPage as keyof typeof PAGES)
-        }
-
-        const savedTheme = localStorage.getItem('theme') as Theme
-        if (savedTheme === 'premium-dark' || savedTheme === 'premium-light') {
-            setTheme(savedTheme)
-        }
-
-        setIsLoaded(true)
-    }, [])
-
-    // Save active page to localStorage whenever it changes
-    useEffect(() => {
-        if (isLoaded) {
-            localStorage.setItem('activePage', activePage)
-        }
-    }, [activePage, isLoaded])
-
-    useEffect(() => {
-        document.body.setAttribute('data-theme', theme)
-        if (isLoaded) {
-            localStorage.setItem('theme', theme)
-        }
-    }, [theme, isLoaded])
-
-    return (
-        <>
-            {/* Structured Data for SEO */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        '@context': 'https://schema.org',
-                        '@type': 'Person',
-                        name: 'Abdulrahman Ambooka',
-                        jobTitle: 'AI & Software Engineer',
-                        url: 'https://ambooka.dev',
-                        sameAs: [
-                            'https://github.com/ambooka',
-                            'https://www.linkedin.com/in/abdulrahman-ambooka/',
-                            'https://twitter.com/ambooka'
-                        ],
-                        description: 'Full-stack software engineer specializing in AI/MLOps, cloud-native development, and scalable applications',
-                        knowsAbout: [
-                            'Artificial Intelligence',
-                            'Machine Learning Operations',
-                            'Cloud Computing',
-                            'Software Engineering',
-                            'Python',
-                            '.NET Core',
-                            'TypeScript',
-                            'Flutter',
-                            'Azure'
-                        ]
-                    })
-                }}
-            />
-            <UtilityBar
-                currentTheme={theme}
-                onThemeChange={setTheme}
-                resumeTrigger={resumeTrigger}
-            />
-
-            {/* Unified App Container - Crextio Style */}
-            <div className="app-container">
-                <TopHeader
-                    activePage={activePage}
-                    setActivePage={setActivePage}
-                    onProfileClick={() => setIsProfileOpen(true)}
-                />
-                <main className="main-content-full pb-24 md:pb-10" style={{
-                    opacity: isLoaded ? 1 : 0,
-                    transition: 'opacity 0.2s ease-in-out',
-                    visibility: isLoaded ? 'visible' : 'hidden'
-                }}>
-                    {activePage === 'portfolio' ? (
-                        <Portfolio isActive={true} github={githubConfig} />
-                    ) : activePage === 'about' ? (
-                        <About isActive={true} onOpenResume={handleOpenResume} />
-                    ) : (
-                        <CurrentComponent isActive={true} />
-                    )}
-                </main>
-
-                <MobileBottomNav activePage={activePage} setActivePage={setActivePage} />
-
-                {/* Mobile Profile Modal Overlay */}
-                <div className={`md:hidden`}>
-                    <Sidebar
-                        isModal={true}
-                        isOpen={isProfileOpen}
-                        onClose={() => setIsProfileOpen(false)}
-                        onOpenResume={handleOpenResume}
-                    />
-                </div>
-            </div>
-
-            <CodeRevealOverlay />
-
-            <style jsx>{`
-                .app-container {
-                    width: 100%;
-                    min-height: 100vh;
-                    background: #FFFFFF;
-                    overflow-x: hidden;
-                    position: relative;
-                }
-                
-                :global([data-theme="premium-dark"]) .app-container {
-                    background: #1A2F36;
-                }
-            `}</style>
-        </>
-    )
+    return <About isActive={true} initialData={initialData} />
 }

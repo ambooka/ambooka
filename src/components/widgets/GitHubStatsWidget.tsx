@@ -49,19 +49,21 @@ const LANGUAGE_CONFIG: Record<string, { color: string; logo?: string }> = {
 interface GitHubStatsWidgetProps {
     fullWidth?: boolean
     compact?: boolean
+    initialStats?: GitHubStats
 }
 
-export default function GitHubStatsWidget({ fullWidth = false, compact = false }: GitHubStatsWidgetProps) {
-    const [stats, setStats] = useState<GitHubStats>({
+export default function GitHubStatsWidget({ fullWidth = false, compact = false, initialStats }: GitHubStatsWidgetProps) {
+    const [stats, setStats] = useState<GitHubStats>(initialStats || {
         totalRepos: 0,
         totalStars: 0,
         followers: 0,
         publicRepos: 0,
         topLanguages: []
     })
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(!initialStats)
 
     useEffect(() => {
+        if (initialStats) return
         (async () => {
             try {
                 const githubService = new GitHubService(GITHUB_TOKEN)

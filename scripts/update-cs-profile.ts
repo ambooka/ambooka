@@ -44,7 +44,7 @@ async function updateProfile() {
                 linkedin_url: 'https://www.linkedin.com/in/abdulrahman-ambooka/',
                 github_url: 'https://github.com/ambooka',
                 portfolio_url: 'https://ambooka.dev',
-                avatar_url: '/assets/images/my-avatar.png'
+                avatar_url: '/assets/images/my-avatar.jpg'
             })
             .eq('id', existing.id)
 

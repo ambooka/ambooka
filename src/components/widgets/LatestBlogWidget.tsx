@@ -93,7 +93,7 @@ export default function LatestBlogWidget() {
                                 <Calendar size={9} className="text-[var(--accent-primary)]" />
                                 {formatDate(posts[0].published_at)}
                             </div>
-                            <div className="h-7 w-7 rounded-full bg-black text-white flex items-center justify-center -rotate-45 group-hover:rotate-0 transition-transform duration-500 shadow-lg shrink-0">
+                            <div className="h-7 w-7 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] flex items-center justify-center -rotate-45 group-hover:rotate-0 transition-transform duration-500 shadow-lg shrink-0">
                                 <ArrowRight size={12} />
                             </div>
                         </div>

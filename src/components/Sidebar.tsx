@@ -127,7 +127,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
         {/* 1. Hero Section - Profile Image */}
         <div className="profile-hero">
           <Image
-            src="/assets/images/my-avatar.png"
+            src={personalInfo.avatar_url || "/assets/images/my-avatar.jpg"}
             alt={personalInfo.full_name}
             fill
             className="profile-avatar-img"

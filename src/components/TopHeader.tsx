@@ -1,49 +1,43 @@
 'use client'
 
-import { useCallback } from 'react'
-import { Github, Linkedin, MessageCircle, Send } from 'lucide-react'
-import Image from 'next/image'
-
-type PageId = 'about' | 'resume' | 'portfolio' | 'blog' | 'contact'
-
-interface TopHeaderProps {
-    activePage: PageId
-    setActivePage: (page: PageId) => void
-    onProfileClick?: () => void
-}
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Github, Linkedin, Send } from 'lucide-react'
 
 const NAV_ITEMS = [
-    { id: 'about', label: 'Dashboard' },
-    { id: 'resume', label: 'Resume' },
-    { id: 'portfolio', label: 'Portfolio' },
-    { id: 'blog', label: 'Blog' },
-    { id: 'contact', label: 'Contact' }
+    { id: 'about', label: 'Dashboard', href: '/' },
+    { id: 'resume', label: 'Resume', href: '/resume' },
+    { id: 'portfolio', label: 'Portfolio', href: '/portfolio' },
+    { id: 'blog', label: 'Blog', href: '/blog' },
+    { id: 'contact', label: 'Contact', href: '/contact' }
 ] as const
 
-export default function TopHeader({ activePage, setActivePage, onProfileClick }: TopHeaderProps) {
-    const handleClick = useCallback((pageId: PageId) => {
-        setActivePage(pageId)
-    }, [setActivePage])
+export default function TopHeader({ onProfileClick }: { onProfileClick?: () => void }) {
+    const pathname = usePathname()
+
+    const isNavItemActive = (item: typeof NAV_ITEMS[number]) => {
+        if (item.href === '/') return pathname === '/'
+        return pathname.startsWith(item.href)
+    }
 
     return (
         <header className="app-header">
             <div className="header-inner">
                 {/* Logo - Text with rounded border */}
                 <div className="header-logo">
-                    <span className="logo-text">ambooka</span>
+                    <Link href="/" className="logo-text">ambooka</Link>
                 </div>
 
                 {/* Navigation Pills */}
                 <nav className="nav-pills">
                     {NAV_ITEMS.map(item => (
-                        <button
+                        <Link
                             key={item.id}
-                            className={`nav-pill ${activePage === item.id ? 'active' : ''}`}
-                            onClick={() => handleClick(item.id)}
-                            type="button"
+                            href={item.href}
+                            className={`nav-pill ${isNavItemActive(item) ? 'active' : ''}`}
                         >
                             {item.label}
-                        </button>
+                        </Link>
                     ))}
                 </nav>
 
@@ -70,10 +64,10 @@ export default function TopHeader({ activePage, setActivePage, onProfileClick }:
                     <div className="divider-v"></div>
 
                     {/* Contact CTA */}
-                    <button className="contact-cta" onClick={() => setActivePage('contact')}>
+                    <Link href="/contact" className="contact-cta">
                         <Send size={14} />
                         <span className="hidden xs:block">Let's Talk</span>
-                    </button>
+                    </Link>
                 </div>
             </div>
 

@@ -64,11 +64,12 @@ interface PortfolioProps {
     maxRepos: number
     sortBy: 'updated' | 'stars' | 'created'
   }
+  initialProjects?: any[]
 }
 
-export default function Portfolio({ isActive = false, github = defaultGithubConfig }: PortfolioProps) {
+export default function Portfolio({ isActive = false, github = defaultGithubConfig, initialProjects }: PortfolioProps) {
   const [filter, setFilter] = useState('all')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!initialProjects)
   const [error, setError] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -88,7 +89,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     homepage?: string | null
     isFeatured?: boolean
     updatedAt?: string
-  }>>([])
+  }>>(initialProjects || [])
 
   // README state
   const [popupLoading, setPopupLoading] = useState(false)
@@ -97,6 +98,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   const [popupRepo, setPopupRepo] = useState<any>(null)
 
   useEffect(() => {
+    if (initialProjects) return
+
     const fetchProjects = async () => {
       setLoading(true)
       try {

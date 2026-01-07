@@ -15,7 +15,7 @@ export default function WelcomeBar() {
         development: 15
     })
 
-    const [yearsExp] = useState('3+')
+    const [yearsExp] = useState('5+')
     const [skillCount, setSkillCount] = useState(40)
     const [projectCount, setProjectCount] = useState(25)
 

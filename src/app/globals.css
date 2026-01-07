@@ -131,6 +131,11 @@
   --tooltip-bg: rgba(26, 47, 56, 0.95);
   --tooltip-text: #FFFFFF;
 
+  /* Semantic UI Vars */
+  --surface-card: #FFFFFF;
+  --surface-overlay: rgba(255, 255, 255, 0.7);
+  --border-card: var(--border-light);
+
   /* Legacy Mappings */
   --accent-color: var(--accent-primary);
   --color-gold: var(--accent-primary);
@@ -147,6 +152,23 @@
   --glow-gradient: var(--gradient-warm);
   --glow-shadow: var(--glow-primary);
   --glow-shadow-intense: var(--glow-intense);
+}
+
+[data-theme="premium-light"] {
+  /* Copy from :root to ensure it matches precisely when toggled */
+  --bg-primary: #E8F0EE;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F5F9F8;
+  --text-primary: #1E3A42;
+  --text-secondary: #546E7A;
+  --text-tertiary: #90A4AE;
+  --accent-primary: #14B8A6;
+  --accent-secondary: #0891B2;
+  --accent-tertiary: #7C3AED;
+  --surface-card: #FFFFFF;
+  --surface-overlay: rgba(255, 255, 255, 0.7);
+  --border-card: var(--border-light);
+  --border-color: var(--border-light);
 }
 
 /* ===== SOFT UI DARK MODE ===== */
@@ -198,6 +220,11 @@
   --tooltip-bg: rgba(232, 244, 242, 0.95);
   --tooltip-text: #0F1F24;
 
+  /* Semantic UI Vars Dark */
+  --surface-card: #1A2F36;
+  --surface-overlay: rgba(26, 47, 54, 0.7);
+  --border-card: var(--border-medium);
+
   /* Legacy */
   --accent-color: var(--accent-primary);
   --bg-gradient-primary: var(--gradient-primary);
@@ -229,6 +256,9 @@
   --accent-secondary: #06B6D4;
   --accent-color: #2DD4BF;
   --border-color: rgba(45, 212, 191, 0.25);
+  --surface-card: #1A2F36;
+  --surface-overlay: rgba(26, 47, 54, 0.7);
+  --border-card: var(--border-medium);
 }
 
 [data-theme="light"] {
@@ -501,35 +531,20 @@ body::after {
 /* Use these classes for consistent frosted glass card styling */
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: var(--surface-overlay);
+  backdrop-filter: var(--blur-glass);
+  -webkit-backdrop-filter: var(--blur-glass);
+  border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
-  box-shadow:
-    0 4px 16px rgba(30, 58, 66, 0.06),
-    0 1px 3px rgba(30, 58, 66, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow-card);
   transition: all var(--transition-base);
 }
 
 .glass-card:hover {
-  box-shadow:
-    0 8px 24px rgba(30, 58, 66, 0.1),
-    0 2px 6px rgba(30, 58, 66, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  border-color: rgba(20, 184, 166, 0.3);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--accent-secondary);
 }
 
-[data-theme="dark"] .glass-card,
-[data-theme="premium-dark"] .glass-card {
-  background: rgba(26, 47, 54, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.2),
-    0 1px 3px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
 
 .glass-section {
   background: rgba(255, 255, 255, 0.5);
@@ -787,17 +802,14 @@ h5,
   line-height: 1.5;
 }
 
-/* ===== NEUMORPHIC GLASS COMPONENTS ===== */
-
-/* Soft UI Card - Clean and professional */
-.glass-card {
-  background: #FFFFFF;
-  border: 1px solid var(--border-light);
+/* Soft UI Card - Clean and professional - Deprecated in favor of .glass-card but kept for mapping */
+.soft-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-card);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
 }
 
-/* Soft Card variant */
 .neu-card {
   background: #FFFFFF;
   border-radius: var(--radius-xl);

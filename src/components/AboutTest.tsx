@@ -389,7 +389,7 @@ export default function About({ isActive = false }: AboutProps) {
   const [skillCount, setSkillCount] = useState(40)
   const [projectCount, setProjectCount] = useState(25)
   const [kpiStats, setKpiStats] = useState<KpiStats>({
-    years_experience: '3+',
+    years_experience: '5+',
     current_phase: '0/8',
     expertise_breakdown: { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }
   })
@@ -429,8 +429,8 @@ export default function About({ isActive = false }: AboutProps) {
         }
 
         // Set KPI stats from JSONB field for the welcome banner
-        if (info.kpi_stats) {
-          setKpiStats(info.kpi_stats as unknown as KpiStats)
+        if (info.kpi_stats && !Array.isArray(info.kpi_stats)) {
+          setKpiStats(prev => ({ ...prev, ...(info.kpi_stats as unknown as KpiStats) }))
         }
       }
 
@@ -673,7 +673,7 @@ export default function About({ isActive = false }: AboutProps) {
                 <circle cx="12" cy="8" r="5" />
                 <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
               </svg>
-              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '3')} />+</span>
+              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '5')} />+</span>
             </div>
             <span className="welcome-stat-label">Years</span>
           </div>

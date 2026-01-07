@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client'
 
 interface ResumeProps {
   isActive?: boolean
+  initialData?: ResumeData
 }
 
 interface PersonalInfo {
@@ -72,14 +73,16 @@ interface ResumeData {
   skills: Skill[]
 }
 
-export default function Resume({ isActive = false }: ResumeProps) {
-  const [loading, setLoading] = useState(true)
-  const [resumeData, setResumeData] = useState<ResumeData | null>(null)
+export default function Resume({ isActive = false, initialData }: ResumeProps) {
+  const [loading, setLoading] = useState(!initialData)
+  const [resumeData, setResumeData] = useState<ResumeData | null>(initialData || null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchResumeData()
-  }, [])
+    if (!initialData) {
+      fetchResumeData()
+    }
+  }, [initialData])
 
   const fetchResumeData = async () => {
     try {

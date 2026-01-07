@@ -130,7 +130,7 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
 
                                     <div className="flex gap-2">
                                         <a href={project.url} target="_blank" rel="noopener noreferrer"
-                                            className="px-3 py-1.5 rounded-full bg-black text-white text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5 hover:bg-[var(--accent-primary)] transition-colors shadow-lg">
+                                            className="px-3 py-1.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5 hover:bg-[var(--accent-primary)] transition-colors shadow-lg">
                                             <Github size={11} /> Repository
                                         </a>
                                         {project.homepage && (
