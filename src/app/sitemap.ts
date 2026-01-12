@@ -23,11 +23,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         '/portfolio',
         '/blog',
         '/contact',
+        '/llm.txt',
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: route === '' ? 1 : 0.8,
+        changeFrequency: route === '/llm.txt' ? 'daily' : 'weekly' as const,
+        priority: route === '' ? 1 : route === '/llm.txt' ? 0.9 : 0.8,
     }))
 
     return [...routes, ...blogUrls]

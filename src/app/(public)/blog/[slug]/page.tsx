@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
 import { ArrowLeft, Calendar, Tag, Clock } from 'lucide-react'
 import Sidebar from '@/components/Sidebar'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { BlogPosting, WithContext } from 'schema-dts'
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -80,7 +82,7 @@ export default async function BlogPostPage({ params }: Props) {
         notFound()
     }
 
-    const jsonLd = {
+    const jsonLd: WithContext<BlogPosting> = {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: post.title,
@@ -100,10 +102,7 @@ export default async function BlogPostPage({ params }: Props) {
         <>
             <Sidebar />
             <main className="main-content relative min-h-screen pb-12">
-                <script
-                    type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-                />
+                <JsonLd schema={jsonLd} />
 
                 {/* Navigation Bar Replacement */}
                 <nav

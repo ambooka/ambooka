@@ -1,10 +1,19 @@
 import Portfolio from '@/components/Portfolio'
 import { GitHubService, GitHubRepo } from '@/services/github'
 import { Metadata } from 'next'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { ItemList, WithContext } from 'schema-dts'
 
-export const metadata: Metadata = {
-    title: 'Portfolio | Abdulrahman Ambooka',
-    description: 'Explore the featured projects, open-source contributions, and technical case studies by Abdulrahman Ambooka in AI, MLOps, and Cloud Engineering.',
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title: 'Portfolio | Abdulrahman Ambooka',
+        description: 'Explore featured projects in MLOps, AI, and Cloud Engineering. From Kubernetes clusters to LLM agents, view the code behind the systems.',
+        openGraph: {
+            title: 'Portfolio | Abdulrahman Ambooka',
+            description: 'Explore featured projects in MLOps, AI, and Cloud Engineering.',
+            images: ['/og-image.png'], // Ensure fallback consistency
+        }
+    }
 }
 
 const githubConfig = {
@@ -58,5 +67,26 @@ export default async function PortfolioPage() {
         console.error('Failed to fetch projects server-side:', error)
     }
 
-    return <Portfolio isActive={true} github={githubConfig} initialProjects={initialProjects} />
+    const itemListSchema: WithContext<ItemList> = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: initialProjects.map((project, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            item: {
+                '@type': 'SoftwareSourceCode',
+                name: project.title,
+                description: project.description,
+                url: project.url,
+                programmingLanguage: project.language
+            }
+        }))
+    }
+
+    return (
+        <>
+            <JsonLd schema={itemListSchema} />
+            <Portfolio isActive={true} github={githubConfig} initialProjects={initialProjects} />
+        </>
+    )
 }

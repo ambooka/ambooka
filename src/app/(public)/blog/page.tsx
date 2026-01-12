@@ -2,9 +2,29 @@ import Blog from '@/components/Blog'
 import { supabase } from '@/integrations/supabase/client'
 import { Metadata } from 'next'
 
-export const metadata: Metadata = {
-    title: 'Blog | Abdulrahman Ambooka',
-    description: 'Insights on MLOps, AI Engineering, Cloud Architecture, and Software Development by Abdulrahman Ambooka.',
+export async function generateMetadata(): Promise<Metadata> {
+    const { data: latestPost } = await supabase
+        .from('blog_posts')
+        .select('title, summary')
+        .eq('is_published', true)
+        .order('published_at', { ascending: false })
+        .limit(1)
+        .single()
+
+    const title = 'Blog | Abdulrahman Ambooka'
+    const description = latestPost
+        ? `Latest Insight: ${latestPost.title}. ${latestPost.summary || 'Read insights on MLOps and AI Engineering.'}`
+        : 'Insights on MLOps, AI Engineering, Cloud Architecture, and Software Development by Abdulrahman Ambooka.'
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            type: 'website',
+        },
+    }
 }
 
 export default async function BlogListPage() {
