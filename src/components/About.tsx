@@ -390,7 +390,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
   const scrollTrackRef = useRef<HTMLDivElement>(null)
 
   const [loading, setLoading] = useState(!initialData)
-  const [aboutText, setAboutText] = useState(initialData?.personalInfo?.about_text || 'Recent Computer Science graduate building toward MLOps Architect. Focused on gaining production experience through hands-on projects in ML deployment, Kubernetes, and cloud infrastructure. Learning in public and documenting my journey from theory to production systems.')
+  const [aboutText, setAboutText] = useState(initialData?.personalInfo?.about_text || 'Abdulrahman Ambooka is an MLOps Architect and Full-Stack Software Engineer based in Nairobi, Kenya. He specializes in building scalable AI platforms, designing cloud-native infrastructure, and deploying machine learning models to production.')
   // Initialize with fallback to ensure MLOps content is present by default
   const [expertiseAreas, setExpertiseAreas] = useState<AboutContent[]>(initialData?.personalInfo?.expertise || FALLBACK_EXPERTISE)
   const [testimonials, setTestimonials] = useState<Testimonial[]>(initialData?.testimonials || [])
@@ -667,9 +667,9 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
       {/* Welcome Banner - Compact */}
       <section className="welcome-banner compact">
         <div className="welcome-left">
-          <h2 className="welcome-title">Build Fast. <span>Deploy Faster. Scale Smart.</span></h2>
+          <h1 className="welcome-title text-3xl md:text-5xl font-bold mb-4">Build Fast. <span>Deploy Faster. Scale Smart.</span></h1>
           <div className="flex items-center gap-3 mt-2">
-            <p className="welcome-subtitle">MLOps Engineer in Training • Focusing on: <span className="text-[var(--accent-secondary)] font-semibold">{currentFocus}</span></p>
+            <p className="welcome-subtitle text-lg text-[var(--text-secondary)]">MLOps Architect & AI Platform Engineer • Focusing on: <span className="text-[var(--accent-secondary)] font-semibold">{currentFocus}</span></p>
             <div className="px-2 py-0.5 rounded-md bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider">
               Phase {kpiStats.current_phase}
             </div>
