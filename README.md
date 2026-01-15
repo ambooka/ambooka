@@ -87,16 +87,15 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 
 ---
 
-## 📊 GitHub Activity
+## 📊 GitHub Stats
 
 <div align="center">
 
-![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=ambooka&theme=react-dark&hide_border=true&area=true)
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=ambooka&theme=github_dark" height="180"/>
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=ambooka&theme=github_dark&utcOffset=3" height="180"/>
 
-<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=ambooka&theme=github_dark" width="100%"/>
-
-<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=ambooka&theme=github_dark" height="160"/>
-<img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=ambooka&theme=github_dark" height="160"/>
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=ambooka&theme=github_dark" height="180"/>
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=ambooka&theme=github_dark" height="180"/>
 
 </div>
 
