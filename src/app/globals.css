@@ -1094,12 +1094,12 @@ h5,
 /* Enhanced Container Components */
 .sidebar,
 .blog-active {
-  background: #FFFFFF;
+  background: transparent;
   /* border: 1px solid var(--border-light); REMOVED */
   /* box-shadow: var(--shadow-card); REMOVED */
   border: none;
   box-shadow: none;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   padding: 0;
   transition: all 0.2s ease;
   position: relative;
@@ -4061,7 +4061,7 @@ a:focus-visible,
   .portfolio-tab,
   .blog-active {
     width: 100% !important;
-    box-shadow: var(--shadow-5);
+    box-shadow: none;
   }
 
   main {
