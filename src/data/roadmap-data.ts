@@ -2,17 +2,7 @@ import {
     Clock,
     Award,
     Briefcase,
-    BookOpen,
     Target,
-    TrendingUp,
-    Zap,
-    Cpu,
-    Database,
-    Cloud,
-    Server,
-    Layout,
-    GitBranch,
-    Shield,
     LucideIcon
 } from 'lucide-react';
 

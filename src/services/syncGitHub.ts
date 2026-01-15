@@ -1,4 +1,4 @@
-import { GitHubService, GitHubRepo } from './github'
+import { GitHubService } from './github'
 import { supabase } from '@/integrations/supabase/client'
 
 export interface SyncResult {

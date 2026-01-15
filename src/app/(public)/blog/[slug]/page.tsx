@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@supabase/supabase-js'
-import { ArrowLeft, Calendar, Tag, Clock } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 import Sidebar from '@/components/Sidebar'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { BlogPosting, WithContext } from 'schema-dts'
@@ -14,6 +14,19 @@ const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
+
+// ISR: Revalidate every hour
+export const revalidate = 3600
+
+// Pre-render all published blog posts at build time
+export async function generateStaticParams() {
+    const { data: posts } = await supabase
+        .from('blog_posts')
+        .select('slug')
+        .eq('is_published', true)
+
+    return (posts || []).map((post) => ({ slug: post.slug }))
+}
 
 interface Props {
     params: {

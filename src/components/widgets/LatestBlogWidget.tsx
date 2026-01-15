@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import Link from 'next/link'
 import { BookOpen, Calendar, ArrowRight } from 'lucide-react'
 
 interface BlogPost {
@@ -78,9 +79,9 @@ export default function LatestBlogWidget() {
                     </div>
                     <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-tight">Latest Article</h3>
                 </div>
-                <a href="/blog" className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
+                <Link href="/blog" className="text-[10px] font-black text-[var(--accent-primary)] uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
                     All Posts <ArrowRight size={12} />
-                </a>
+                </Link>
             </div>
 
             <div className="flex-1">
@@ -108,12 +109,12 @@ export default function LatestBlogWidget() {
                             </p>
                         )}
 
-                        <a
+                        <Link
                             href={`/blog/${posts[0].slug}`}
                             className="inline-flex items-center text-[9px] font-black text-[var(--accent-primary)] uppercase tracking-widest gap-2 mt-auto"
                         >
                             Read More <div className="h-1 w-4 bg-[var(--accent-primary)]/30 rounded-full transition-all group-hover:w-8" />
-                        </a>
+                        </Link>
                     </div>
                 ) : (
                     <div className="h-[280px] flex items-center justify-center bg-[var(--bg-primary)]/40 rounded-xl border border-dashed border-[var(--border-light)]">

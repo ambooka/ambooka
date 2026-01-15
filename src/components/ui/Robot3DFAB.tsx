@@ -2,7 +2,7 @@
 
 import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, OrbitControls, Environment, Float, ContactShadows } from '@react-three/drei'
+import { useGLTF, Environment, Float, ContactShadows } from '@react-three/drei'
 import * as THREE from 'three'
 
 interface Robot3DFABProps {

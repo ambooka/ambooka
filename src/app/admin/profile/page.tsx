@@ -134,7 +134,7 @@ export default function ProfileManager() {
             setAboutText(data.about_text || '')
             // Parse expertise with proper typing
             if (data.expertise && Array.isArray(data.expertise)) {
-                setExpertise(data.expertise.map((item: any, i: number) => ({
+                setExpertise((data.expertise as unknown as ExpertiseItem[]).map((item, i) => ({
                     id: item.id || `exp-${i}`,
                     section_key: item.section_key || '',
                     title: item.title || '',
@@ -146,8 +146,8 @@ export default function ProfileManager() {
                     display_order: item.display_order ?? i
                 })))
             }
-            setSocialLinks(data.social_links || [])
-            setKpiStats(data.kpi_stats || [])
+            setSocialLinks((data.social_links as unknown as SocialLink[]) || [])
+            setKpiStats((data.kpi_stats as unknown as KpiStat[]) || [])
         }
         setLoading(false)
     }
@@ -158,9 +158,9 @@ export default function ProfileManager() {
         await supabase.from('personal_info').update({
             ...basicInfo,
             about_text: aboutText,
-            expertise: expertise,
-            social_links: socialLinks,
-            kpi_stats: kpiStats
+            expertise: expertise as unknown as undefined,
+            social_links: socialLinks as unknown as undefined,
+            kpi_stats: kpiStats as unknown as undefined
         }).eq('id', profileId)
         setSaving(false)
         setShowSuccess(true)
@@ -429,7 +429,7 @@ export default function ProfileManager() {
                         {expertise.length === 0 ? (
                             <div style={{ padding: 40, textAlign: 'center', color: '#94a3b8' }}>
                                 <Sparkles size={40} style={{ marginBottom: 12, opacity: 0.3 }} />
-                                <p>No expertise items yet. Click "Add Expertise" to create one.</p>
+                                <p>No expertise items yet. Click &quot;Add Expertise&quot; to create one.</p>
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -533,7 +533,7 @@ export default function ProfileManager() {
                 {activeTab === 'social' && (
                     <div>
                         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
-                            Add your social media profiles. Changes are saved when you click "Save All Changes".
+                            Add your social media profiles. Changes are saved when you click &quot;Save All Changes&quot;.
                         </p>
                         {socialLinks.length > 0 && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
@@ -571,7 +571,7 @@ export default function ProfileManager() {
                 {activeTab === 'kpis' && (
                     <div>
                         <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
-                            Add KPI stats to display on your portfolio. Changes are saved when you click "Save All Changes".
+                            Add KPI stats to display on your portfolio. Changes are saved when you click &quot;Save All Changes&quot;.
                         </p>
                         {kpiStats.length > 0 && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>

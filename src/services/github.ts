@@ -1,4 +1,4 @@
-import { Octokit } from '@octokit/rest'
+// GitHub service using native fetch instead of Octokit
 
 export interface GitHubRepo {
     id: number
@@ -12,7 +12,7 @@ export interface GitHubRepo {
     homepage?: string | null
     updated_at?: string
     pushed_at?: string
-    [key: string]: any
+    [key: string]: unknown
 }
 
 export class GitHubService {
@@ -56,7 +56,7 @@ export class GitHubService {
     async getReadme(owner: string, repo: string): Promise<string> {
         const url = `${this.base}/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/readme`
         // Request raw markdown text
-        const headers = { ...this.headers(), Accept: 'application/vnd.github.v3.raw' }
+        const headers = { ...this.headers(), Accept: 'application/vnd.github.html' }
         const res = await fetch(url, { headers })
         if (!res.ok) {
             const text = await res.text()

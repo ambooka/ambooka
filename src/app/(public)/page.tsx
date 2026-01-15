@@ -3,6 +3,9 @@ import { supabase } from '@/integrations/supabase/client'
 import { GitHubService } from '@/services/github'
 import { Metadata } from 'next'
 
+// ISR: Revalidate every hour
+export const revalidate = 3600
+
 export const metadata: Metadata = {
     title: 'Abdulrahman Ambooka | MLOps Architect & Software Engineer',
     description: 'Portfolio of Abdulrahman Ambooka, an MLOps Architect and Software Engineer specializing in AI deployment, Kubernetes, and cloud infrastructure.',
@@ -102,11 +105,13 @@ export default async function DashboardPage() {
         console.error('Failed to fetch GitHub stats server-side:', error)
     }
 
+    // Type assertion needed because Supabase returns Json type for JSONB fields
+    // The About component expects strongly typed PersonalInfo
     const initialData = {
-        personalInfo: personalInfo as any,
-        testimonials: testimonials as any[],
+        personalInfo: personalInfo as Parameters<typeof About>[0]['initialData'] extends { personalInfo?: infer P } ? P : never,
+        testimonials: testimonials ?? [],
         technologies,
-        githubStats
+        githubStats: githubStats ?? undefined
     }
 
     return <About isActive={true} initialData={initialData} />

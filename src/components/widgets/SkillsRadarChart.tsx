@@ -114,7 +114,7 @@ export default function SkillsRadarChart() {
                             strokeWidth={2}
                         />
                         <Tooltip
-                            formatter={(value: number) => [`${value} skills`, 'Count']}
+                            formatter={(value) => [`${value ?? 0} skills`, 'Count']}
                             contentStyle={{
                                 background: 'var(--bg-primary)',
                                 border: '1px solid var(--border-color)',

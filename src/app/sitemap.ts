@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ].map((route) => ({
         url: `${baseUrl}${route}`,
         lastModified: new Date(),
-        changeFrequency: route === '/llm.txt' ? 'daily' : 'weekly' as const,
+        changeFrequency: (route === '/llm.txt' ? 'daily' : 'weekly') as 'daily' | 'weekly',
         priority: route === '' ? 1 : route === '/llm.txt' ? 0.9 : 0.8,
     }))
 

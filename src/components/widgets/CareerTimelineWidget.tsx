@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Target, Award, Check } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import Image from 'next/image'
 
 interface RoadmapPhase {
     id: string
@@ -37,10 +38,14 @@ export default function CareerTimelineWidget() {
     }, [])
 
     useEffect(() => {
+        interface DBPhase { phase_number: number; title: string; duration_months: number; experience_label: string | null; start_date_label: string | null; target_role: string | null; status: 'completed' | 'in_progress' | 'upcoming' }
+        interface DBCert { id: string; name: string; phase_number: number; is_obtained: boolean }
+        interface DBSkill { icon_url: string | null; roadmap_phase: number | null }
+
         const fetchData = async () => {
             try {
                 // 1. Fetch Roadmap Phases
-                const { data: phasesData, error: phasesError } = await (supabase as any)
+                const { data: phasesData, error: phasesError } = await (supabase as unknown as { from: (t: string) => { select: (c: string) => { order: (o: string) => Promise<{ data: DBPhase[] | null; error: Error | null }> } } })
                     .from('roadmap_phases')
                     .select('*')
                     .order('phase_number')
@@ -48,7 +53,7 @@ export default function CareerTimelineWidget() {
                 if (phasesError) throw phasesError
 
                 // 2. Fetch Certifications
-                const { data: certsData, error: certsError } = await (supabase as any)
+                const { data: certsData, error: certsError } = await (supabase as unknown as { from: (t: string) => { select: (c: string) => Promise<{ data: DBCert[] | null; error: Error | null }> } })
                     .from('certifications')
                     .select('*')
 
@@ -65,36 +70,36 @@ export default function CareerTimelineWidget() {
 
                 // Group icons by phase (Deduplicated)
                 const iconMap: Record<number, string[]> = {}
-                skillsData?.forEach(skill => {
-                    const phaseNum = skill.roadmap_phase
-                    if (phaseNum && (skill as any).icon_url) {
-                        if (!iconMap[phaseNum]) iconMap[phaseNum] = []
-                        if (!iconMap[phaseNum].includes((skill as any).icon_url)) {
-                            iconMap[phaseNum].push((skill as any).icon_url)
+                    ; (skillsData as unknown as DBSkill[])?.forEach(skill => {
+                        const phaseNum = skill.roadmap_phase
+                        if (phaseNum && skill.icon_url) {
+                            if (!iconMap[phaseNum]) iconMap[phaseNum] = []
+                            if (!iconMap[phaseNum].includes(skill.icon_url)) {
+                                iconMap[phaseNum].push(skill.icon_url)
+                            }
                         }
-                    }
-                })
+                    })
 
                 // Use DB icons exclusively
-                const finalPhases = (phasesData as any[]).map(phase => ({
+                const finalPhases = (phasesData ?? []).map(phase => ({
                     ...phase,
                     id: String(phase.phase_number),
                     icons: iconMap[phase.phase_number] || []
                 }))
 
                 setPhases(finalPhases as RoadmapPhase[])
-                setCerts(certsData as Certification[])
+                setCerts((certsData ?? []) as Certification[])
 
-                // Optional: Fetch actual roadmap metadata if API exists
                 const res = await fetch('/api/roadmap')
                 if (res.ok) {
                     const apiData = await res.json()
+                    interface APIPhase { phase_number: number }
                     if (apiData.phases?.length) {
-                        const mergedPhases = apiData.phases.map((p: any) => ({
+                        const mergedPhases = (apiData.phases as APIPhase[]).map((p) => ({
                             ...p,
                             icons: iconMap[p.phase_number] || []
                         }))
-                        setPhases(mergedPhases)
+                        setPhases(mergedPhases as RoadmapPhase[])
                     }
                     if (apiData.certifications?.length) setCerts(apiData.certifications)
                 }
@@ -176,7 +181,7 @@ export default function CareerTimelineWidget() {
                                 {/* Tech Icons */}
                                 <div className="item-icons">
                                     {phase.icons.map((icon, i) => (
-                                        <img key={i} src={icon} alt="" className="tech-icon" title={icon.split('/').pop()?.split('?')[0]} />
+                                        <Image key={i} src={icon} alt="" className="tech-icon" title={icon.split('/').pop()?.split('?')[0]} width={20} height={20} unoptimized />
                                     ))}
                                 </div>
 

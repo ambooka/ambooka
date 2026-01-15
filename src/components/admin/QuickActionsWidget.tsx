@@ -1,6 +1,6 @@
 'use client'
 
-import { Video, FileText, Plus, Briefcase, Award } from 'lucide-react'
+import { FileText, Plus, Briefcase, Award } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function QuickActionsWidget() {

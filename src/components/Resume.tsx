@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Book, BriefcaseBusiness, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import Image from 'next/image'
 
 interface ResumeProps {
   isActive?: boolean
@@ -110,12 +111,12 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         experience: experienceResult.data || [],
         skills: skillsResult.data || []
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching resume data:', err)
-      // setError(err.message || 'Failed to load resume data')
+      // setError((err as Error).message || 'Failed to load resume data')
       // Fallback to empty if failed, to show the UI at least
       setResumeData({
-        personal_info: {} as any,
+        personal_info: {} as PersonalInfo,
         education: [],
         experience: [],
         skills: []
@@ -282,7 +283,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
     )
   }
 
-  const skillsGrouped = groupSkillsByCategory(resumeData?.skills || [])
+  const _skillsGrouped = groupSkillsByCategory(resumeData?.skills || [])
 
   return (
     <article className={`resume portfolio-tab ${isActive ? 'active' : ''}`} data-page="resume">
@@ -464,15 +465,16 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
                         height: '3px',
                         background: 'var(--text-gradient-primary)'
                       }}></div>
-                      <img
+                      <Image
                         src={getSkillLogo(skill.name)}
                         alt={skill.name}
+                        width={48}
+                        height={48}
                         style={{
-                          width: '48px',
-                          height: '48px',
                           objectFit: 'contain'
                         }}
                         loading="lazy"
+                        unoptimized
                       />
                       <span style={{
                         fontSize: '13px',

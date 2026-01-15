@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
-import { useRouter } from 'next/navigation'
-import { Briefcase, GraduationCap, Plus, Trash2, Edit2, ExternalLink } from 'lucide-react'
+import { Briefcase, GraduationCap, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 // CoachPro Design Tokens
@@ -19,11 +18,27 @@ const cardStyle = {
     boxShadow: '8px 8px 16px rgba(166, 180, 200, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.9)'
 }
 
+interface Experience {
+    id: string
+    position: string
+    company: string
+    start_date: string
+    end_date: string | null
+    is_current: boolean
+}
+
+interface Education {
+    id: string
+    degree: string | null
+    institution: string
+    field_of_study: string | null
+    start_date: string
+}
+
 export default function ResumeManager() {
-    const [experience, setExperience] = useState<any[]>([])
-    const [education, setEducation] = useState<any[]>([])
+    const [experience, setExperience] = useState<Experience[]>([])
+    const [education, setEducation] = useState<Education[]>([])
     const [loading, setLoading] = useState(true)
-    const router = useRouter()
 
     useEffect(() => {
         fetchData()
@@ -35,14 +50,20 @@ export default function ResumeManager() {
             supabase.from('experience').select('*').order('display_order'),
             supabase.from('education').select('*').order('display_order')
         ])
-        if (expResult.data) setExperience(expResult.data)
-        if (eduResult.data) setEducation(eduResult.data)
+        if (expResult.data) setExperience(expResult.data as unknown as Experience[])
+        if (eduResult.data) setEducation(eduResult.data as unknown as Education[])
         setLoading(false)
     }
 
-    const deleteItem = async (table: string, id: string) => {
+    const deleteExperience = async (id: string) => {
         if (!confirm('Delete this entry?')) return
-        await supabase.from(table).delete().eq('id', id)
+        await supabase.from('experience').delete().eq('id', id)
+        fetchData()
+    }
+
+    const deleteEducation = async (id: string) => {
+        if (!confirm('Delete this entry?')) return
+        await supabase.from('education').delete().eq('id', id)
         fetchData()
     }
 
@@ -89,11 +110,11 @@ export default function ResumeManager() {
                                             <h3 style={{ fontWeight: 600, color: '#1e293b', fontSize: 15 }}>{exp.position}</h3>
                                             <p style={{ fontSize: 13, color: '#64748b' }}>{exp.company}</p>
                                             <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>
-                                                {new Date(exp.start_date).getFullYear()} - {exp.is_current ? 'Present' : new Date(exp.end_date).getFullYear()}
+                                                {new Date(exp.start_date).getFullYear()} - {exp.is_current ? 'Present' : (exp.end_date ? new Date(exp.end_date).getFullYear() : 'N/A')}
                                             </p>
                                         </div>
                                         <button
-                                            onClick={() => deleteItem('experience', exp.id)}
+                                            onClick={() => deleteExperience(exp.id)}
                                             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}
                                         >
                                             <Trash2 size={16} />
@@ -134,7 +155,7 @@ export default function ResumeManager() {
                                             </p>
                                         </div>
                                         <button
-                                            onClick={() => deleteItem('education', edu.id)}
+                                            onClick={() => deleteEducation(edu.id)}
                                             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}
                                         >
                                             <Trash2 size={16} />

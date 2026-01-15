@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import fs from 'fs'
 
 const envConfig = fs.readFileSync('.env.local', 'utf8')
-const env: any = {}
+const env: Record<string, string> = {}
 envConfig.split('\n').forEach(line => {
     const match = line.match(/^([^=]+)=(.*)$/)
     if (match) {

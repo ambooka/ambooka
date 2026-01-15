@@ -1,13 +1,14 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { supabase } from '@/integrations/supabase/client'
 import { Database } from '@/integrations/supabase/types'
 
 type PersonalInfo = Database['public']['Tables']['personal_info']['Row']
 
 export const ProfileCard = () => {
-    const [profile, setProfile] = useState<PersonalInfo | null>(null)
+    const [_profile, setProfile] = useState<PersonalInfo | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -28,9 +29,10 @@ export const ProfileCard = () => {
 
     return (
         <div className="relative h-full w-full rounded-[24px] overflow-hidden group">
-            <img
+            <Image
                 src="/assets/images/profile-warm.png"
                 alt="Profile"
+                fill
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>

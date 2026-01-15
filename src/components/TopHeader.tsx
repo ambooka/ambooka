@@ -12,7 +12,7 @@ const NAV_ITEMS = [
     { id: 'contact', label: 'Contact', href: '/contact' }
 ] as const
 
-export default function TopHeader({ onProfileClick }: { onProfileClick?: () => void }) {
+export default function TopHeader({ onProfileClick: _onProfileClick }: { onProfileClick?: () => void }) {
     const pathname = usePathname()
 
     const isNavItemActive = (item: typeof NAV_ITEMS[number]) => {
@@ -66,7 +66,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     {/* Contact CTA */}
                     <Link href="/contact" className="contact-cta">
                         <Send size={14} />
-                        <span className="hidden xs:block">Let's Talk</span>
+                        <span className="hidden xs:block">Let&apos;s Talk</span>
                     </Link>
                 </div>
             </div>
@@ -76,8 +76,9 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     position: sticky;
                     top: 0;
                     z-index: 100;
-                    padding: 20px 40px;
+                    padding: 8px 20px; /* Minimal padding */
                     background: transparent;
+                    backdrop-filter: blur(8px);
                 }
 
                 .header-inner {

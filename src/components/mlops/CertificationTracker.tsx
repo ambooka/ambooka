@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Award, CheckCircle2, Clock, DollarSign, BookOpen } from 'lucide-react'
+import { Award, Clock, DollarSign, BookOpen } from 'lucide-react'
 
 const certifications = [
     {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Loader2, Mail, Download, CheckCircle, Phone, MapPin, X } from 'lucide-react'
+import { Loader2, Mail, Download, MapPin, X } from 'lucide-react'
 import Image from 'next/image'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -163,9 +163,11 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
                   className="social-btn"
                   title={social.platform}
                 >
-                  <img
+                  <Image
                     src={social.icon_url || getIconUrl(social.platform)}
                     alt={social.platform}
+                    width={20}
+                    height={20}
                     className="social-icon"
                   />
                 </a>
@@ -499,7 +501,6 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
           background: var(--accent-primary, #14B8A6);
           border-color: var(--accent-primary, #14B8A6);
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(20, 184, 166, 0.25);
         }
 
         .social-icon {
@@ -545,7 +546,6 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
 
         .btn-primary:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(20, 184, 166, 0.3);
         }
 
         .btn-secondary {

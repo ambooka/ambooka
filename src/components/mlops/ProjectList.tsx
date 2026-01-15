@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Check, Circle, Monitor, Zap, MessageCircle, BarChart2, Link as LinkIcon, Server, Database, Brain, Layers, CheckCircle2, Clock } from 'lucide-react'
+import { Zap, Server, Database, Brain, Layers, CheckCircle2, Clock } from 'lucide-react'
 
 export const ProjectList = () => {
     // Roadmap Portfolio Projects
@@ -49,7 +49,7 @@ export const ProjectList = () => {
 
     return (
         <div className="flex flex-col gap-3">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
                 <div key={project.id} className="group flex items-center justify-between p-2 rounded-[24px] hover:bg-white/5 transition-colors cursor-pointer">
                     <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${project.completed ? 'bg-[#f4c542] text-black' : 'bg-white/10 text-gray-400'}`}>

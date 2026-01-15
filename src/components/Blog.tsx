@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Loader2, Calendar, Tag } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 
 interface BlogProps {
@@ -127,11 +128,14 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
             <li key={post.id} className="blog-post-item">
               <Link href={`/blog/${post.slug}`} className="block h-full">
                 <figure className="blog-banner-box">
-                  <img
+                  <Image
                     src={post.image_url || 'https://via.placeholder.com/800x600?text=Blog+Post'}
                     alt={post.title}
+                    width={800}
+                    height={600}
                     loading="lazy"
                     onError={handleImageError}
+                    className="w-full h-auto"
                   />
                 </figure>
 

@@ -14,6 +14,16 @@ interface PerformanceMetrics {
     renderTime: number
 }
 
+declare global {
+    interface Performance {
+        memory?: {
+            usedJSHeapSize: number
+            totalJSHeapSize: number
+            jsHeapSizeLimit: number
+        }
+    }
+}
+
 export default function PerformanceMonitor() {
     const [metrics, setMetrics] = useState<PerformanceMetrics>({
         fps: 0,
@@ -38,8 +48,8 @@ export default function PerformanceMonitor() {
                 const renderTime = currentTime - lastTime
 
                 // Get memory if available (Chrome only)
-                const memory = (performance as any).memory
-                    ? Math.round((performance as any).memory.usedJSHeapSize / 1048576)
+                const memory = performance.memory
+                    ? Math.round(performance.memory.usedJSHeapSize / 1048576)
                     : 0
 
                 // Get page load time

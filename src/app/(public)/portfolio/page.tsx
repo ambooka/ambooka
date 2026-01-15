@@ -4,6 +4,9 @@ import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ItemList, WithContext } from 'schema-dts'
 
+// ISR: Revalidate every hour
+export const revalidate = 3600
+
 export async function generateMetadata(): Promise<Metadata> {
     return {
         title: 'Portfolio | Abdulrahman Ambooka',
@@ -31,8 +34,25 @@ const getProjectImage = (repo: GitHubRepo): string => {
     return 'https://opengraph.githubassets.com/1/torvalds/reddit-news'
 }
 
+
+interface Project {
+    id: number
+    category: string
+    title: string
+    image: string
+    url: string
+    description: string
+    stars: number
+    language: string
+    isPrivate: boolean
+    ownerLogin?: string
+    homepage?: string | null
+    isFeatured: boolean
+    updatedAt?: string
+}
+
 export default async function PortfolioPage() {
-    let initialProjects: any[] = []
+    let initialProjects: Project[] = []
 
     try {
         const githubService = new GitHubService(githubConfig.token)

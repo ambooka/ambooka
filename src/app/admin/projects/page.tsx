@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { syncGitHubProjects } from '@/services/syncGitHub'
-import { Plus, Trash2, Edit2, X, CheckCircle2, Github, ExternalLink, RefreshCw, Briefcase, Star } from 'lucide-react'
+import { Plus, Trash2, CheckCircle2, Github, ExternalLink, RefreshCw, Star } from 'lucide-react'
 import Link from 'next/link'
 
 // CoachPro Design Tokens
@@ -30,7 +30,7 @@ interface Project {
     is_featured: boolean
 }
 
-const STATUS_OPTIONS = ['Deployed', 'WIP', 'Research', 'Stable', 'Completed', 'Archived']
+const _STATUS_OPTIONS = ['Deployed', 'WIP', 'Research', 'Stable', 'Completed', 'Archived']
 
 export default function AdminProjectsPage() {
     const [loading, setLoading] = useState(true)

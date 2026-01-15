@@ -4,11 +4,36 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
+import fs from 'fs'
+import path from 'path'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Read .env.local manually since we're running as a script
+const envPath = path.resolve(process.cwd(), '.env.local')
+const envConfig = fs.readFileSync(envPath, 'utf8')
+const env: Record<string, string> = {}
+envConfig.split('\n').forEach(line => {
+    const match = line.match(/^([^=]+)=(.*)$/)
+    if (match) {
+        const key = match[1].trim()
+        let value = match[2].trim()
+        if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1)
+        }
+        env[key] = value
+    }
+})
+
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL
+// Try to find service role key, fallback to anon key (which might fail RLS)
+const supabaseKey = env.SUPABASE_SERVICE_ROLE_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseKey) {
+    console.error('Missing Supabase credentials in .env.local')
+    process.exit(1)
+}
 
 const supabase = createClient(supabaseUrl, supabaseKey)
+console.log(`🔑 Using key type: ${env.SUPABASE_SERVICE_ROLE_KEY ? 'SERVICE_ROLE (RLS Bypassed)' : 'ANON (RLS Enforced)'}`)
 
 const skills = [
     // Languages - 13 skills
@@ -121,33 +146,70 @@ const skills = [
     { name: 'React Native', category: 'mobile', proficiency_level: 80, is_featured: false },
     { name: 'Mobile Development', category: 'mobile', proficiency_level: 85, is_featured: false },
 
-    // Tools - 6 skills
+    // Tools - 6 skills + IT Support additions
     { name: 'Linux', category: 'tools', proficiency_level: 90, is_featured: false },
     { name: 'Figma', category: 'tools', proficiency_level: 80, is_featured: false },
     { name: 'Jira', category: 'tools', proficiency_level: 85, is_featured: false },
     { name: 'VS Code', category: 'tools', proficiency_level: 95, is_featured: false },
     { name: 'Postman', category: 'tools', proficiency_level: 90, is_featured: false },
     { name: 'System Administration', category: 'tools', proficiency_level: 90, is_featured: false },
+
+    // IT Support / Help Desk - 15 skills
+    { name: 'Windows Server', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Active Directory', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Microsoft 365', category: 'it_support', proficiency_level: 90, is_featured: false },
+    { name: 'Office 365 Administration', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Help Desk Support', category: 'it_support', proficiency_level: 90, is_featured: false },
+    { name: 'Technical Troubleshooting', category: 'it_support', proficiency_level: 90, is_featured: false },
+    { name: 'Hardware Support', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Remote Desktop Support', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Printer Management', category: 'it_support', proficiency_level: 80, is_featured: false },
+    { name: 'User Training', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'ServiceNow', category: 'it_support', proficiency_level: 75, is_featured: false },
+    { name: 'IT Documentation', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Backup Solutions', category: 'it_support', proficiency_level: 80, is_featured: false },
+    { name: 'Antivirus Management', category: 'it_support', proficiency_level: 85, is_featured: false },
+    { name: 'Microsoft Teams', category: 'it_support', proficiency_level: 90, is_featured: false },
 ]
 
 async function populateSkills() {
     console.log('🚀 Starting skills population...')
     console.log(`📊 Total skills to add: ${skills.length}`)
 
-    // Upsert all skills
+    // Upsert all skills manually (since ON CONFLICT might fail if constraint is missing)
     for (const skill of skills) {
         try {
-            const { data, error } = await supabase
+            // Check if skill exists
+            const { data: existing } = await supabase
                 .from('skills')
-                .upsert(skill, { onConflict: 'name' })
+                .select('id')
+                .eq('name', skill.name)
+                .single()
 
-            if (error) {
-                console.error(`❌ Error adding ${skill.name}:`, error.message)
+            if (existing) {
+                // Update
+                const { error } = await supabase
+                    .from('skills')
+                    .update({
+                        category: skill.category,
+                        proficiency_level: skill.proficiency_level,
+                        is_featured: skill.is_featured
+                    })
+                    .eq('id', existing.id)
+
+                if (error) throw error
+                console.log(`✅ Updated: ${skill.name}`)
             } else {
-                console.log(`✅ Added/Updated: ${skill.name} (${skill.category})`)
+                // Insert
+                const { error } = await supabase
+                    .from('skills')
+                    .insert(skill)
+
+                if (error) throw error
+                console.log(`✅ Added: ${skill.name}`)
             }
-        } catch (err) {
-            console.error(`❌ Exception for ${skill.name}:`, err)
+        } catch (err: any) {
+            console.error(`❌ Error processing ${skill.name}:`, err.message || err)
         }
     }
 
@@ -157,7 +219,7 @@ async function populateSkills() {
         .select('category', { count: 'exact', head: false })
 
     if (!countError && skillsData) {
-        const categories = skillsData.reduce((acc: any, skill: any) => {
+        const categories = skillsData.reduce((acc: Record<string, number>, skill: { category: string }) => {
             acc[skill.category] = (acc[skill.category] || 0) + 1
             return acc
         }, {})

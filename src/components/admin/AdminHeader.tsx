@@ -63,7 +63,7 @@ export default function AdminHeader() {
         }
     }
 
-    const handleResultClick = (result: SearchResult) => {
+    const handleResultClick = (_result: SearchResult) => {
         setShowResults(false)
         setSearchQuery('')
         router.push(`/admin/projects`)

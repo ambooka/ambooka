@@ -21,7 +21,7 @@ export default function StatCard({
     title,
     value,
     subtitle,
-    icon: Icon,
+    icon: _Icon,
     trend,
     link,
     variant = 'outlined'

@@ -38,7 +38,7 @@ export default function CtaFooterWidget({ onOpenResume }: CtaFooterWidgetProps) 
                     </div>
 
                     <h2 className="text-3xl md:text-5xl font-black text-[var(--text-primary)] uppercase tracking-tight mb-6 leading-[0.9]">
-                        Let's Build Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)]">Significant.</span>
+                        Let&apos;s Build Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)]">Significant.</span>
                     </h2>
 
                     <p className="text-sm md:text-base text-[var(--text-secondary)] font-medium opacity-80 mb-10 leading-relaxed uppercase tracking-wide">

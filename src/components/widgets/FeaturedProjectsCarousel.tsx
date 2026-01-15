@@ -26,7 +26,7 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
     const [loading, setLoading] = useState(true)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
-    const carouselRef = useRef<HTMLDivElement>(null)
+    const _carouselRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         (async () => {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Send, Mail, Phone, MapPin, Linkedin, Github, MessageSquare, CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
 import { supabase } from '@/integrations/supabase/client'
+import Image from 'next/image'
 
 interface ContactProps {
   isActive?: boolean
@@ -210,6 +211,7 @@ export default function Contact({ isActive = false }: ContactProps) {
       <article className={`contact portfolio-tab ${isActive ? 'active' : ''}`} data-page="contact">
         <header>
           <h2 className="h2 article-title">Get In Touch</h2>
+          <p className="article-text text-sm">Let&apos;s build something extraordinary together.</p>
         </header>
         <div style={{
           display: 'flex',
@@ -240,7 +242,7 @@ export default function Contact({ isActive = false }: ContactProps) {
           fontSize: '15px',
           lineHeight: '1.6'
         }}>
-          I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+          I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
         </p>
       </header>
 
@@ -337,7 +339,7 @@ export default function Contact({ isActive = false }: ContactProps) {
               Send a Message
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-              Fill out the form below and I'll get back to you as soon as possible
+              Fill out the form below and I&apos;ll get back to you as soon as possible
             </p>
           </div>
 
@@ -364,7 +366,7 @@ export default function Contact({ isActive = false }: ContactProps) {
                 title={social.platform}
               >
                 {social.icon_url ? (
-                  <img src={social.icon_url} alt={social.platform} width="20" height="20" />
+                  <Image src={social.icon_url} alt={social.platform} width={20} height={20} />
                 ) : (
                   getIconForPlatform(social.platform)
                 )}

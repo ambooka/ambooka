@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import { ChevronDown, ChevronUp, Laptop, DollarSign, Gift, Briefcase } from 'lucide-react'
 
 // Using static data to match the "Crextio" reference image exactly

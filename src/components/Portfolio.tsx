@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import Image from 'next/image'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as Dialog from '@radix-ui/react-dialog'
 import { ExternalLink, Github, ChevronDown, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Sparkles, Lock, Globe, Code, ArrowUpRight } from 'lucide-react'
+import { fetchProjectReadme } from '@/app/actions/github'
 import { supabase } from '@/integrations/supabase/client'
 
 // --- Constants & Config ---
@@ -55,6 +57,22 @@ const getProjectImage = (repo: GitHubRepo): string => {
 
 // --- Portfolio Component ---
 
+interface Project {
+  id: number | string
+  category: string
+  title: string
+  image: string
+  url: string
+  description: string
+  stars: number
+  language: string
+  isPrivate?: boolean
+  ownerLogin?: string
+  homepage?: string | null
+  isFeatured?: boolean
+  updatedAt?: string
+}
+
 interface PortfolioProps {
   isActive?: boolean
   github?: {
@@ -64,7 +82,7 @@ interface PortfolioProps {
     maxRepos: number
     sortBy: 'updated' | 'stars' | 'created'
   }
-  initialProjects?: any[]
+  initialProjects?: Project[]
 }
 
 export default function Portfolio({ isActive = false, github = defaultGithubConfig, initialProjects }: PortfolioProps) {
@@ -95,7 +113,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   const [popupLoading, setPopupLoading] = useState(false)
   const [popupError, setPopupError] = useState<string | null>(null)
   const [popupContent, setPopupContent] = useState<string | null>(null)
-  const [popupRepo, setPopupRepo] = useState<any>(null)
+  const [popupRepo, setPopupRepo] = useState<Project | null>(null)
 
   useEffect(() => {
     if (initialProjects) return
@@ -144,17 +162,21 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     fetchProjects()
   }, [github])
 
-  const openProject = async (repo: any) => {
+  const openProject = async (repo: Project) => {
     setPopupRepo(repo)
     setPopupError(null)
     setPopupContent(null)
     setPopupLoading(true)
 
     try {
-      const githubService = new GitHubService(github.token)
       const owner = repo.ownerLogin || github.username
-      const readme = await githubService.getReadme(owner, repo.title)
-      setPopupContent(readme)
+      const result = await fetchProjectReadme(owner, repo.title)
+
+      if (result.error) {
+        setPopupError(result.error)
+      } else {
+        setPopupContent(result.content || 'No README found.')
+      }
     } catch (err) {
       setPopupError('Could not load README.')
     } finally {
@@ -245,10 +267,13 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                   <div className="project-card-inner bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)]">
                     {/* Image Header with Overlay */}
                     <div className="project-img h-56">
-                      <img
+                      <Image
                         src={repo.image}
                         alt={repo.title}
+                        width={400}
+                        height={224}
                         className="w-full h-full object-cover"
+                        unoptimized
                       />
                       <div className="project-item-icon-box opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-md flex gap-4 flex-row p-4">
                         <button
@@ -279,7 +304,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-[var(--radius-sm)] bg-[var(--bg-tertiary)] border border-[var(--border-color)] flex items-center justify-center p-2">
                             {LOGO_MAP[repo.language] ? (
-                              <img src={LOGO_MAP[repo.language]} alt={repo.language} className="w-full h-full object-contain" />
+                              <Image src={LOGO_MAP[repo.language]} alt={repo.language} width={40} height={40} className="w-full h-full object-contain" unoptimized />
                             ) : (
                               <Code className="text-[var(--text-secondary)]" size={20} />
                             )}
@@ -380,7 +405,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
             <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000]" />
             <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[800px] max-h-[90vh] bg-[var(--bg-primary)] rounded-[var(--radius-xl)] overflow-hidden z-[1001] border border-[var(--border-color)] shadow-2xl flex flex-col">
               <div className="relative h-64 flex-shrink-0">
-                <img src={popupRepo.image} alt={popupRepo.title} className="w-full h-full object-cover" />
+                <Image src={popupRepo.image} alt={popupRepo.title} width={800} height={256} className="w-full h-full object-cover" unoptimized />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-8">
                   <span className="text-[var(--accent-primary)] text-xs font-bold uppercase tracking-widest">{popupRepo.language}</span>
@@ -404,8 +429,11 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     </div>
                   </div>
                 ) : (
-                  <div className="prose prose-slate max-w-none">
-                    <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed p-6 bg-[var(--bg-tertiary)] rounded-[var(--radius-lg)] border border-[var(--border-color)] text-[var(--text-primary)]">{popupContent}</pre>
+                  <div className="prose prose-slate max-w-none dark:prose-invert">
+                    <div
+                      className="p-6 bg-[var(--bg-tertiary)] rounded-[var(--radius-lg)] border border-[var(--border-color)] text-[var(--text-primary)] [&>*:first-child]:mt-0"
+                      dangerouslySetInnerHTML={{ __html: popupContent || '' }}
+                    />
                   </div>
                 )}
               </div>

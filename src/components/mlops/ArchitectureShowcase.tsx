@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Database, Server, Brain, Activity, ArrowRight, Zap, Shield, GitBranch } from 'lucide-react'
+import { Database, Brain, Zap } from 'lucide-react'
 
 export const ArchitectureShowcase = () => {
     return (

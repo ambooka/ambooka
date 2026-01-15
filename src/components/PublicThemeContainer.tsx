@@ -46,7 +46,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
                 onProfileClick={() => setIsProfileOpen(true)}
             />
 
-            <main className="main-content-full pb-24 md:pb-10">
+            <main id="main-content" className="main-content-full pb-24 md:pb-10">
                 {children}
             </main>
 
@@ -64,16 +64,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
 
             <CodeRevealOverlay />
 
-            <style jsx>{`
-                .app-container {
-                    width: 100%;
-                    min-height: 100vh;
-                    background: var(--bg-primary);
-                    overflow-x: hidden;
-                    position: relative;
-                    transition: background var(--transition-base);
-                }
-            `}</style>
+            {/* Inline styles moved to globals.css - .app-container */}
         </div>
     )
 }

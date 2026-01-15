@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Server, Database, Zap, Brain, Layers, Globe, Activity, ShieldCheck, Code2 } from 'lucide-react'
+import { Server, Database, Zap, Brain, Layers, Globe, Activity, ShieldCheck } from 'lucide-react'
 
 const blueprints = [
     {

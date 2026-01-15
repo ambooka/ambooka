@@ -7,13 +7,9 @@ import {
     Target,
     Award,
     CheckCircle2,
-    X,
     Plus,
     Trash2,
-    ChevronRight,
-    Loader2,
-    Calendar,
-    Briefcase
+    Loader2
 } from 'lucide-react'
 
 // Design Tokens (Matching CoachPro Admin Style)
@@ -76,12 +72,13 @@ export default function RoadmapManager() {
     const fetchData = async () => {
         setLoading(true)
         try {
-            const { data: pData } = await (supabase as any).from('roadmap_phases').select('*').order('phase_number')
-            const { data: cData } = await (supabase as any).from('certifications').select('*').order('phase_number')
+            // Type assertion for tables not in Supabase type definitions
+            const { data: pData } = await (supabase as unknown as { from: (t: string) => ReturnType<typeof supabase.from> }).from('roadmap_phases').select('*').order('phase_number')
+            const { data: cData } = await (supabase as unknown as { from: (t: string) => ReturnType<typeof supabase.from> }).from('certifications').select('*').order('phase_number')
 
-            if (pData) setPhases(pData)
-            if (cData) setCerts(cData)
-        } catch (err) {
+            if (pData) setPhases(pData as RoadmapPhase[])
+            if (cData) setCerts(cData as Certification[])
+        } catch (err: unknown) {
             console.error('Fetch error:', err)
         } finally {
             setLoading(false)
@@ -92,7 +89,7 @@ export default function RoadmapManager() {
         setSaving(true)
         try {
             for (const phase of phases) {
-                const { error } = await (supabase as any).from('roadmap_phases').update({
+                const { error } = await (supabase as unknown as { from: (t: string) => ReturnType<typeof supabase.from> }).from('roadmap_phases').update({
                     title: phase.title,
                     experience_label: phase.experience_label,
                     start_date_label: phase.start_date_label,
@@ -104,9 +101,9 @@ export default function RoadmapManager() {
             }
             setShowSuccess(true)
             setTimeout(() => setShowSuccess(false), 2000)
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Save error:', err)
-            alert('Failed to save phases: ' + (err.message || 'Unknown error'))
+            alert('Failed to save phases: ' + ((err as Error).message || 'Unknown error'))
         } finally {
             setSaving(false)
         }
@@ -116,16 +113,16 @@ export default function RoadmapManager() {
         if (!newCert.name.trim()) return
         setSaving(true)
         try {
-            const { error } = await (supabase as any).from('certifications').insert(newCert)
+            const { error } = await (supabase as unknown as { from: (t: string) => ReturnType<typeof supabase.from> }).from('certifications').insert(newCert)
             if (error) throw error
 
             setNewCert({ name: '', phase_number: 1, is_obtained: false })
             fetchData()
             setShowSuccess(true)
             setTimeout(() => setShowSuccess(false), 2000)
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Insert error:', err)
-            alert('Failed to add certification: ' + (err.message || 'Unknown error'))
+            alert('Failed to add certification: ' + ((err as Error).message || 'Unknown error'))
         } finally {
             setSaving(false)
         }
@@ -133,7 +130,7 @@ export default function RoadmapManager() {
 
     const deleteCertification = async (id: string) => {
         if (!confirm('Delete this certification?')) return
-        const { error } = await (supabase as any).from('certifications').delete().eq('id', id)
+        const { error } = await (supabase as unknown as { from: (t: string) => ReturnType<typeof supabase.from> }).from('certifications').delete().eq('id', id)
         if (error) {
             alert('Failed to delete: ' + error.message)
         } else {
@@ -141,7 +138,7 @@ export default function RoadmapManager() {
         }
     }
 
-    const updatePhase = (phaseNum: number, field: keyof RoadmapPhase, value: any) => {
+    const updatePhase = (phaseNum: number, field: keyof RoadmapPhase, value: string | number | null | 'completed' | 'in_progress' | 'upcoming') => {
         setPhases(current => current.map(p =>
             p.phase_number === phaseNum ? { ...p, [field]: value } : p
         ))

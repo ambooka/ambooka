@@ -85,8 +85,8 @@ export async function POST() {
             newPosition: data,
             allExperiences
         })
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error('Unexpected error:', err)
-        return NextResponse.json({ error: err.message }, { status: 500 })
+        return NextResponse.json({ error: (err as Error).message || 'An unexpected error occurred' }, { status: 500 })
     }
 }

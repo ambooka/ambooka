@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
-import { Plus, Trash2, Edit2, Star, MessageSquare, CheckCircle2 } from 'lucide-react'
+import { Trash2, Star, MessageSquare, CheckCircle2 } from 'lucide-react'
 
 // CoachPro Design Tokens
 const CARD_RADIUS = 20
@@ -116,7 +116,7 @@ export default function AdminTestimonialsPage() {
                                 </div>
                             </div>
                             <p style={{ fontSize: 14, color: '#64748b', lineHeight: 1.6, marginBottom: 16 }}>
-                                "{testimonial.text}"
+                                &quot;{testimonial.text}&quot;
                             </p>
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <button

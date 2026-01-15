@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import Link from 'next/link'
-import { Briefcase, Code, Users, FileText, Plus, ExternalLink, Edit2, Star, Target } from 'lucide-react'
+import { Briefcase, Code, FileText, Target } from 'lucide-react'
 
 // CoachPro Design Tokens
 const CARD_RADIUS = 20
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
         certifications: 0
     })
     const [projects, setProjects] = useState<Project[]>([])
-    const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+    const [, setPersonalInfo] = useState<PersonalInfo | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -76,8 +76,8 @@ export default function AdminDashboard() {
                 supabase.from('blog_posts').select('*', { count: 'exact', head: true }).eq('is_published', true),
                 supabase.from('projects').select('id, title, status, stack, is_featured').order('updated_at', { ascending: false }).limit(6),
                 supabase.from('personal_info').select('full_name, title').single(),
-                (supabase as any).from('roadmap_phases').select('*', { count: 'exact', head: true }),
-                (supabase as any).from('certifications').select('*', { count: 'exact', head: true })
+                (supabase as unknown as { from: (table: string) => { select: (cols: string, opts?: { count?: string; head?: boolean }) => Promise<{ count: number | null }> } }).from('roadmap_phases').select('*', { count: 'exact', head: true }),
+                (supabase as unknown as { from: (table: string) => { select: (cols: string, opts?: { count?: string; head?: boolean }) => Promise<{ count: number | null }> } }).from('certifications').select('*', { count: 'exact', head: true })
             ])
 
             setStats({
@@ -250,7 +250,7 @@ export default function AdminDashboard() {
                         <div style={{ position: 'absolute', top: 20, right: 20, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
                         <div style={{ position: 'absolute', bottom: -20, right: 60, width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
 
-                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', marginBottom: 8 }}>Don't Forget</p>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', marginBottom: 8 }}>Don&apos;t Forget</p>
                         <h3 style={{ fontSize: 22, fontWeight: 700, color: 'white', marginBottom: 16, lineHeight: 1.3 }}>
                             Setup training<br />for next week
                         </h3>

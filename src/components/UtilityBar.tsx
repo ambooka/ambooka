@@ -12,9 +12,44 @@ import {
   User,
   Loader2,
   Printer,
-  Download
+  ChevronDown
 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import { generateATSResumeHTML, generateVariantResumeHTML, filterGitHubProjects, type ResumeData as ATSResumeData, type GitHubProject } from '@/lib/resume-generator'
+import { ROLE_PROFILES, getRoleOptions, filterSkillsByRole, getProjectDescription, type RoleVariant } from '@/lib/resume-profiles'
+import { GitHubService } from '@/services/github'
+
+// Interfaces for Resume Data
+interface ExperienceItem {
+  id: string
+  company: string
+  position: string
+  start_date: string
+  end_date: string | null
+  is_current: boolean
+  description: string | null
+  responsibilities: string[] | null
+  [key: string]: unknown
+}
+
+interface EducationItem {
+  id: string
+  institution: string
+  degree: string | null
+  field_of_study: string | null
+  start_date: string
+  end_date: string | null
+  description: string | null
+  [key: string]: unknown
+}
+
+interface SkillItem {
+  id: string
+  name: string
+  category: string
+  proficiency_level?: string
+  [key: string]: unknown
+}
 
 type Theme = 'premium-dark' | 'premium-light'
 
@@ -36,29 +71,33 @@ interface PersonalInfo {
   full_name: string
   title: string
   email: string
-  phone: string
-  summary: string
-  location?: string
-  linkedin_url?: string
-  github_url?: string
-  portfolio_url?: string
+  phone: string | null
+  summary: string | null
+  location?: string | null
+  linkedin_url?: string | null
+  github_url?: string | null
+  website_url?: string | null
+  portfolio_url?: string | null
+  [key: string]: unknown
+}
+
+interface ProjectItem {
+  id: string
+  title: string
+  description?: string | null
+  stack?: string[] | null
+  github_url?: string | null
+  live_url?: string | null
+  is_featured?: boolean
+  [key: string]: unknown
 }
 
 interface ResumeData {
-  personal_info: {
-    full_name: string
-    title: string
-    email: string
-    phone: string
-    summary: string
-    location?: string
-    linkedin_url?: string
-    github_url?: string
-    portfolio_url?: string
-  }
-  education: any[]
-  experience: any[]
-  skills: any[]
+  personal_info: PersonalInfo
+  education: EducationItem[]
+  experience: ExperienceItem[]
+  skills: SkillItem[]
+  projects?: ProjectItem[]
 }
 
 export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger = 0 }: UtilityBarProps) {
@@ -67,7 +106,11 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null)
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+  const [_personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
+
+  // Role variant selector state
+  const [selectedRole, setSelectedRole] = useState<RoleVariant>('software-engineer')
+  const roleOptions = getRoleOptions()
 
   // Chat states
   const [messages, setMessages] = useState<Message[]>([
@@ -199,7 +242,7 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
   // -----------------------------
   const fetchPersonalInfo = async () => {
     try {
-      const { data, error } = await supabase.from('personal_info' as any).select('*').single<PersonalInfo>()
+      const { data, error } = await supabase.from('personal_info').select('*').single()
       if (error) throw error
       if (data) {
         setPersonalInfo(data)
@@ -365,12 +408,12 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
   // -----------------------------
   // -----------------------------
   // Resume: fetch from DB, generate HTML, print
-  // -----------------------------
-  const generateResumeHTML = (data: ResumeData) => {
+  // Legacy HTML generator (kept as fallback, using new ATS-optimized version instead)
+  const _generateResumeHTML = (data: ResumeData) => {
     const { personal_info, education, experience, skills } = data
 
     // Group skills
-    const skillsByCategory = skills.reduce((acc: any, skill: any) => {
+    const skillsByCategory = skills.reduce((acc: Record<string, string[]>, skill: SkillItem) => {
       const cat = skill.category || 'Other'
       if (!acc[cat]) acc[cat] = []
       acc[cat].push(skill.name)
@@ -414,24 +457,24 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
           <h2>${personal_info.title}</h2>
           <div class="contact-info">
             <span>${personal_info.email}</span>
-            <span>${personal_info.phone}</span>
+            <span>${personal_info.phone || ''}</span>
             <span>${personal_info.location || 'Nairobi, Kenya'}</span>
           </div>
-          <p>${personal_info.summary}</p>
+          <p>${personal_info.summary || ''}</p>
         </header>
 
         <section>
           <h3>Experience</h3>
-          ${experience.map((job: any) => `
+          ${experience.map((job) => `
             <div class="item">
               <div class="item-header">
                 <h4>${job.position}</h4>
-                <span class="date">${new Date(job.start_date).getFullYear()} - ${job.is_current ? 'Present' : new Date(job.end_date).getFullYear()}</span>
+                <span class="date">${new Date(job.start_date).getFullYear()} - ${job.is_current ? 'Present' : (job.end_date ? new Date(job.end_date).getFullYear() : '')}</span>
               </div>
               <div class="subtitle">${job.company}</div>
-              <p class="description">${job.description}</p>
+              <p class="description">${job.description || ''}</p>
               <ul>
-                ${(job.responsibilities || []).map((r: string) => `<li>${r}</li>`).join('')}
+                ${(job.responsibilities || []).map((r) => `<li>${r}</li>`).join('')}
               </ul>
             </div>
           `).join('')}
@@ -439,14 +482,14 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
 
         <section>
           <h3>Education</h3>
-          ${education.map((edu: any) => `
+          ${education.map((edu) => `
             <div class="item">
               <div class="item-header">
                 <h4>${edu.institution}</h4>
-                <span class="date">${new Date(edu.start_date).getFullYear()} - ${new Date(edu.end_date).getFullYear()}</span>
+                <span class="date">${new Date(edu.start_date).getFullYear()} - ${edu.end_date ? new Date(edu.end_date).getFullYear() : 'Present'}</span>
               </div>
-              <div class="subtitle">${edu.degree} in ${edu.field_of_study}</div>
-              <p class="description">${edu.description}</p>
+              <div class="subtitle">${edu.degree || 'Degree'} in ${edu.field_of_study || 'Field'}</div>
+              <p class="description">${edu.description || ''}</p>
             </div>
           `).join('')}
         </section>
@@ -454,7 +497,7 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
         <section>
           <h3>Skills</h3>
           <div class="skills-grid">
-            ${Object.entries(skillsByCategory).map(([cat, items]: [string, any]) => `
+            ${Object.entries(skillsByCategory).map(([cat, items]: [string, string[]]) => `
               <div class="skill-category">
                 <strong>${cat.replace('_', ' ')}</strong>
                 <div class="skill-tags">${items.join(', ')}</div>
@@ -467,22 +510,38 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
     `
   }
 
-  const fetchAndGenerateResume = async () => {
+  const fetchAndGenerateResume = async (role: RoleVariant = selectedRole) => {
     try {
-      // Fetch all data in parallel
-      const [personal, edu, exp, skills] = await Promise.all([
-        supabase.from('personal_info' as any).select('*').single(),
-        supabase.from('education' as any).select('*').order('start_date', { ascending: false }),
-        supabase.from('experience' as any).select('*').order('start_date', { ascending: false }),
-        supabase.from('skills' as any).select('*').order('proficiency', { ascending: false })
+      const profile = ROLE_PROFILES[role]
+      console.log('=== Generating Resume for Role:', profile.displayName, '===')
+
+      // Fetch Supabase data and GitHub repos in parallel
+      const [personal, edu, exp, skills, projects] = await Promise.all([
+        supabase.from('personal_info').select('*').single(),
+        supabase.from('education').select('*').order('start_date', { ascending: false }),
+        supabase.from('experience').select('*').order('start_date', { ascending: false }),
+        supabase.from('skills').select('*').order('proficiency_level', { ascending: false }),
+        supabase.from('projects').select('*').eq('is_featured', true).order('display_order', { ascending: true })
       ])
 
+      // Fetch GitHub repos for project filtering
+      let filteredGitHubProjects: ProjectItem[] = []
+      try {
+        const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN
+        const githubService = new GitHubService(GITHUB_TOKEN)
+        const repos = await githubService.getRepositories('ambooka', { maxRepos: 30 })
+        // Filter by role's preferred languages and convert to ProjectItem
+        const filtered = filterGitHubProjects(repos as GitHubProject[], profile.languages, 4)
+        filteredGitHubProjects = filtered as unknown as ProjectItem[]
+        console.log('GitHub projects filtered:', filteredGitHubProjects.length)
+      } catch (githubErr) {
+        console.warn('GitHub fetch failed, using Supabase projects:', githubErr)
+      }
+
       // Debug logging
-      console.log('=== Resume Data Fetch Debug ===')
       console.log('Personal Info:', { data: personal.data, error: personal.error })
-      console.log('Education:', { count: edu.data?.length, error: edu.error })
-      console.log('Experience:', { count: exp.data?.length, error: exp.error })
-      console.log('Skills:', { count: skills.data?.length, error: skills.error })
+      console.log('Experience:', { count: exp.data?.length })
+      console.log('Skills:', { count: skills.data?.length })
 
       if (personal.error) {
         console.error('Personal info error:', personal.error)
@@ -494,15 +553,55 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
         throw new Error('No personal information found. Please add your information in the admin panel.')
       }
 
+      // Combine Supabase projects with GitHub projects (prefer GitHub)
+      let combinedProjects: ProjectItem[] = filteredGitHubProjects.length > 0
+        ? filteredGitHubProjects
+        : (projects.data || []).map(p => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          stack: p.stack,
+          github_url: p.github_url,
+          live_url: p.live_url,
+          is_featured: true as const,
+        }))
+
+      // [RESUME FIX]: Force IT-specific projects for IT Assistant role
+      if (role === 'it-assistant') {
+        combinedProjects = [
+          {
+            id: 'erp-system',
+            title: 'ERP System Implementation & Support',
+            description: 'Assisted in the successful rollout and ongoing support of a company-wide Enterprise Resource Planning (ERP) system. Responsibilities included user role management, troubleshooting access issues, generating operational SQL reports, and conducting end-user training sessions.',
+            stack: ['SQL', 'Windows Server', 'Excel Reporting', 'System Administration', 'Access Control'],
+            is_featured: true,
+            github_url: undefined,
+            live_url: undefined
+          } as ProjectItem
+        ] as ProjectItem[]
+      }
+
+      // Filter skills by role - only include relevant categories for this role
+      const allSkills = (skills.data || []) as Array<{ id: string; name: string; category: string; proficiency_level?: string;[key: string]: unknown }>
+      const roleFilteredSkills = filterSkillsByRole(allSkills, role)
+      console.log(`Skills filtered for ${profile.displayName}:`, roleFilteredSkills.length, 'of', allSkills.length)
+
       const resumeData: ResumeData = {
         personal_info: personal.data as unknown as ResumeData['personal_info'],
         education: edu.data || [],
         experience: exp.data || [],
-        skills: skills.data || []
+        skills: roleFilteredSkills as SkillItem[],
+        projects: combinedProjects
       }
 
-      console.log('Resume data compiled:', resumeData)
-      return generateResumeHTML(resumeData)
+      console.log('Resume data compiled with', combinedProjects.length, 'projects')
+
+      // Use role-variant resume generator with role-specific summary
+      return generateVariantResumeHTML(resumeData as unknown as ATSResumeData, {
+        roleTitle: profile.title,
+        roleSummary: profile.professionalSummary,
+        portfolioUrl: 'ambooka.dev',
+      })
     } catch (err) {
       console.error('Error generating resume:', err)
       throw err
@@ -778,6 +877,54 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
               <button className="close-modal-btn" onClick={() => closeResumeModal()} aria-label="Close">
                 <X size={24} />
               </button>
+            </div>
+
+            {/* Role Variant Selector */}
+            <div className="resume-role-selector" style={{
+              padding: '12px 20px',
+              borderBottom: '1px solid var(--border-color, #333)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              background: 'var(--card-bg, #1a1a1a)'
+            }}>
+              <label htmlFor="role-select" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary, #888)' }}>
+                Resume Type:
+              </label>
+              <select
+                id="role-select"
+                value={selectedRole}
+                onChange={async (e) => {
+                  const newRole = e.target.value as RoleVariant
+                  setSelectedRole(newRole)
+                  // Regenerate resume with new role
+                  setResumeHTML(null)
+                  try {
+                    const html = await fetchAndGenerateResume(newRole)
+                    setResumeHTML(html)
+                    if (resumeBlobUrl) URL.revokeObjectURL(resumeBlobUrl)
+                    const blob = new Blob([html], { type: 'text/html' })
+                    setResumeBlobUrl(URL.createObjectURL(blob))
+                  } catch (err) {
+                    setResumeHTML('<div style="padding:20px;color:#b91c1c;">Failed to generate resume.</div>')
+                  }
+                }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border-color, #333)',
+                  background: 'var(--input-bg, #222)',
+                  color: 'var(--text-primary, #fff)',
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  minWidth: '200px',
+                }}
+              >
+                {roleOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              <ChevronDown size={16} style={{ marginLeft: '-28px', pointerEvents: 'none', color: 'var(--text-secondary, #888)' }} />
             </div>
 
             <div className="resume-modal-body">

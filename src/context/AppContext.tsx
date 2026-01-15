@@ -4,15 +4,25 @@
 import React, { createContext, useContext, useState } from 'react'
 import { Page, useNavigation } from '@/hooks/useNavigation'
 
+interface Testimonial {
+  id: string
+  name: string
+  avatar_url: string | null
+  text: string
+  date: string
+  is_featured: boolean
+  display_order: number | null
+}
+
 interface AppContextType {
   activePage: Page
   navigate: (page: Page) => void
   isSidebarOpen: boolean
   toggleSidebar: () => void
   isModalOpen: boolean
-  openModal: (testimonial: any) => void
+  openModal: (testimonial: Testimonial) => void
   closeModal: () => void
-  selectedTestimonial: any
+  selectedTestimonial: Testimonial | null
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -21,11 +31,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { activePage, navigate } = useNavigation()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedTestimonial, setSelectedTestimonial] = useState(null)
+  const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
 
   const toggleSidebar = () => setIsSidebarOpen(prev => !prev)
 
-  const openModal = (testimonial: any) => {
+  const openModal = (testimonial: Testimonial) => {
     setSelectedTestimonial(testimonial)
     setIsModalOpen(true)
   }

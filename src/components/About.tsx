@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { X, Brain, Code, Bot, Cloud, Loader2, Database, Shield, Terminal, Server, Activity, Lock, BrainCircuit, Layers, Box, Cpu, Workflow, Calendar, Briefcase, ChevronRight } from "lucide-react"
+import Image from 'next/image'
+import { X, Brain, Code, Bot, Cloud, Loader2, Database, Shield, Terminal, Server, Activity, Lock, BrainCircuit, Layers, Box, Cpu, Workflow, ChevronRight } from "lucide-react"
 import { supabase } from '@/integrations/supabase/client'
 import { GitHubService } from '@/services/github'
 import GitHubStatsWidget from '@/components/widgets/GitHubStatsWidget'
@@ -15,6 +16,7 @@ import ExperienceGanttChart from '@/components/widgets/ExperienceGanttChart'
 import CoreValuesWidget from '@/components/widgets/CoreValuesWidget'
 import EducationMentorshipWidget from '@/components/widgets/EducationMentorshipWidget'
 import CtaFooterWidget from '@/components/widgets/CtaFooterWidget'
+import { ROADMAP_DATA } from '@/data/roadmap-data'
 
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
@@ -44,11 +46,19 @@ interface AboutProps {
   onOpenResume?: () => void
   initialData?: {
     personalInfo?: PersonalInfo
-    skills?: any[]
+    skills?: Technology[]
     testimonials?: Testimonial[]
     technologies?: Technology[]
-    githubStats?: any
+    githubStats?: GitHubStatsData
   }
+}
+
+interface GitHubStatsData {
+  totalRepos: number
+  totalStars: number
+  followers: number
+  publicRepos: number
+  topLanguages: Array<{ name: string; count: number; color: string; logo?: string }>
 }
 
 interface AboutContent {
@@ -122,8 +132,8 @@ interface PersonalInfo {
   title: string
   avatar_url: string | null
   about_text: string | null
-  expertise: any | null
-  kpi_stats: any | null
+  expertise: AboutContent[] | null
+  kpi_stats: KpiStats | null
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string, size?: number | string }>> = {
@@ -369,10 +379,10 @@ const StatCounter = ({ value, duration = 2000 }: { value: number, duration?: num
     const end = value
     if (start === end) return
 
-    let totalMiliseconds = duration
-    let incrementTime = (totalMiliseconds / end)
+    const totalMiliseconds = duration
+    const incrementTime = (totalMiliseconds / end)
 
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
       start += 1
       setCount(start)
       if (start === end) clearInterval(timer)
@@ -387,25 +397,30 @@ const StatCounter = ({ value, duration = 2000 }: { value: number, duration?: num
 export default function About({ isActive = false, onOpenResume, initialData }: AboutProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
-  const scrollTrackRef = useRef<HTMLDivElement>(null)
+  const _scrollTrackRef = useRef<HTMLDivElement>(null)
 
   const [loading, setLoading] = useState(!initialData)
-  const [aboutText, setAboutText] = useState(initialData?.personalInfo?.about_text || 'Abdulrahman Ambooka is an MLOps Architect and Full-Stack Software Engineer based in Nairobi, Kenya. He specializes in building scalable AI platforms, designing cloud-native infrastructure, and deploying machine learning models to production.')
+  const [_aboutText, setAboutText] = useState(initialData?.personalInfo?.about_text || 'Abdulrahman Ambooka is an MLOps Architect and Full-Stack Software Engineer based in Nairobi, Kenya. He specializes in building scalable AI platforms, designing cloud-native infrastructure, and deploying machine learning models to production.')
   // Initialize with fallback to ensure MLOps content is present by default
-  const [expertiseAreas, setExpertiseAreas] = useState<AboutContent[]>(initialData?.personalInfo?.expertise || FALLBACK_EXPERTISE)
+  const [_expertiseAreas, setExpertiseAreas] = useState<AboutContent[]>(initialData?.personalInfo?.expertise || FALLBACK_EXPERTISE)
   const [testimonials, setTestimonials] = useState<Testimonial[]>(initialData?.testimonials || [])
   const [technologies, setTechnologies] = useState<Technology[]>(initialData?.technologies || FALLBACK_TECHNOLOGIES)
 
   // Dynamic stats for welcome banner (aligned with MLOps roadmap)
+  // Get current phase from roadmap data - Phase 1 is current
+  const currentPhaseIndex = 0 // Phase 1: Foundations is current
+  const totalPhases = ROADMAP_DATA.phases.length
+  const currentRoadmapPhase = ROADMAP_DATA.phases[currentPhaseIndex]
+
   const [skillCount, setSkillCount] = useState(40)
   const [projectCount, setProjectCount] = useState(25)
   const [kpiStats, setKpiStats] = useState<KpiStats>({
     years_experience: initialData?.personalInfo?.kpi_stats?.years_experience || '5+',
-    current_phase: initialData?.personalInfo?.kpi_stats?.current_phase || '0/8',
+    current_phase: initialData?.personalInfo?.kpi_stats?.current_phase || `${currentPhaseIndex + 1}/${totalPhases}`,
     expertise_breakdown: initialData?.personalInfo?.kpi_stats?.expertise_breakdown || { software: 40, cloud_infra: 25, data: 15, ml_ai: 20 }
   })
-  const [currentFocus, setCurrentFocus] = useState('DevOps')
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(initialData?.personalInfo || null)
+  const [currentFocus, setCurrentFocus] = useState(currentRoadmapPhase?.title || 'Phase 1: Foundations')
+  const [_personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(initialData?.personalInfo || null)
 
   useEffect(() => {
     if (!initialData) {
@@ -485,11 +500,12 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
       }
 
       // Fetch roadmap info for banner
-      const { data: phasesData } = await (supabase as any).from('roadmap_phases').select('*').order('phase_number')
+      interface RoadmapPhase { status: string; target_role?: string; title?: string }
+      const { data: phasesData } = await (supabase as unknown as { from: (table: string) => { select: (cols: string) => { order: (col: string) => Promise<{ data: RoadmapPhase[] | null }> } } }).from('roadmap_phases').select('*').order('phase_number')
       if (phasesData && phasesData.length > 0) {
-        const completedCount = phasesData.filter((p: any) => p.status === 'completed').length
+        const completedCount = phasesData.filter((p) => p.status === 'completed').length
         const totalCount = phasesData.length
-        const currentPhaseObj = phasesData.find((p: any) => p.status === 'in_progress') || phasesData.find((p: any) => p.status === 'upcoming')
+        const currentPhaseObj = phasesData.find((p) => p.status === 'in_progress') || phasesData.find((p) => p.status === 'upcoming')
 
         setKpiStats(prev => ({
           ...prev,
@@ -497,7 +513,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
         }))
 
         if (currentPhaseObj) {
-          setCurrentFocus(currentPhaseObj.target_role || currentPhaseObj.title)
+          setCurrentFocus(currentPhaseObj.target_role || currentPhaseObj.title || 'DevOps')
         }
       }
 
@@ -509,7 +525,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
   }
 
   // Duplicate technologies for seamless infinite scroll
-  const duplicatedTechnologies = [...technologies, ...technologies]
+  const _duplicatedTechnologies = [...technologies, ...technologies]
 
   const openTestimonialModal = (testimonial: Testimonial) => {
     setSelectedTestimonial(testimonial)
@@ -539,18 +555,18 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
     )
   }
 
-  const renderExpertiseCard = (area: AboutContent) => {
+  const _renderExpertiseCard = (area: AboutContent) => {
     const IconComponent = area.icon && iconMap[area.icon] ? iconMap[area.icon] : Code
     // Get relevant certifications for this expertise area
     const relevantCerts = CERT_TO_EXPERTISE[area.section_key] || []
 
     return (
       <div key={area.id} className="expertise-item-wrapper w-full relative group">
-        {/* Glow Effect Layer */}
-        <div className="absolute -inset-0.5 bg-gradient-to-br from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+        {/* Glow Effect Layer - Removed hover effect */}
+        <div className="absolute -inset-0.5 bg-gradient-to-br from-[var(--accent-primary)]/20 to-[var(--accent-secondary)]/20 rounded-2xl blur opacity-0 transition duration-500"></div>
 
         {/* Main Card Content */}
-        <div className="glass-card relative h-full p-5 flex flex-col border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]">
+        <div className="glass-card relative h-full p-5 flex flex-col transition-all duration-300">
 
           {/* Header: Icon + Cert Badges + Skill Badge */}
           <div className="flex justify-between items-start mb-4">
@@ -573,10 +589,13 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                         className="relative w-7 h-7 rounded-lg bg-white/80 border border-[var(--border-primary)] shadow-sm overflow-hidden hover:scale-110 hover:shadow-md transition-all duration-200 cursor-help"
                         title={cert.name}
                       >
-                        <img
+                        <Image
                           src={cert.icon}
                           alt={cert.name}
+                          width={28}
+                          height={28}
                           className="w-full h-full object-contain p-0.5"
+                          unoptimized
                         />
                       </div>
                     )
@@ -627,10 +646,13 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                   return (
                     <div key={tag} className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[var(--bg-primary)]/50 border border-[var(--border-primary)]/40 hover:border-[var(--accent-secondary)]/40 hover:bg-[var(--bg-primary)] hover:shadow-sm transition-all duration-200 cursor-default group/tag">
                       {logoUrl && (
-                        <img
+                        <Image
                           src={logoUrl}
                           alt={tag}
+                          width={12}
+                          height={12}
                           className="w-3 h-3 object-contain opacity-60 grayscale group-hover/tag:grayscale-0 group-hover/tag:opacity-100 transition-all duration-300"
+                          unoptimized
                         />
                       )}
                       <span className="text-[9px] font-medium text-[var(--text-tertiary)] group-hover/tag:text-[var(--text-primary)] whitespace-nowrap transition-colors">{tag}</span>
@@ -668,8 +690,8 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
       <section className="welcome-banner compact">
         <div className="welcome-left">
           <h1 className="welcome-title text-3xl md:text-5xl font-bold mb-4">Build Fast. <span>Deploy Faster. Scale Smart.</span></h1>
-          <div className="flex items-center gap-3 mt-2">
-            <p className="welcome-subtitle text-lg text-[var(--text-secondary)]">MLOps Architect & AI Platform Engineer • Focusing on: <span className="text-[var(--accent-secondary)] font-semibold">{currentFocus}</span></p>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <p className="welcome-subtitle text-lg text-[var(--text-secondary)]">{currentRoadmapPhase?.role || 'Software Engineer'} • <span className="text-[var(--accent-secondary)] font-semibold">{currentRoadmapPhase?.focus || currentFocus}</span></p>
             <div className="px-2 py-0.5 rounded-md bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20 text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider">
               Phase {kpiStats.current_phase}
             </div>
@@ -745,19 +767,21 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                 {testimonials.map(testimonial => (
                   <li key={testimonial.id} className="testimonials-item min-w-[280px] md:min-w-[340px] lg:min-w-[380px] snap-center">
                     <div
-                      className="group relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/80 to-[var(--bg-secondary)]/40 backdrop-blur-md rounded-2xl p-6 pt-12 border border-[var(--border-primary)] hover:border-[var(--accent-secondary)]/40 transition-all duration-300 hover:shadow-[0_10px_30px_-10px_rgba(142,14,40,0.1)] cursor-pointer"
+                      className="group relative h-full bg-gradient-to-br from-[var(--bg-secondary)]/80 to-[var(--bg-secondary)]/40 backdrop-blur-md rounded-2xl p-6 pt-12 border border-[var(--border-primary)] transition-all duration-300 cursor-default"
                       onClick={() => openTestimonialModal(testimonial)}
                     >
                       <figure className="absolute top-0 left-6 -translate-y-1/2 w-16 h-16 rounded-xl overflow-hidden border-2 border-[var(--bg-primary)] shadow-lg group-hover:scale-105 group-hover:border-[var(--accent-secondary)] transition-all duration-300">
-                        <img
+                        <Image
                           src={testimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
                           alt={testimonial.name}
+                          width={64}
+                          height={64}
                           className="w-full h-full object-cover"
                         />
                       </figure>
                       <h4 className="text-lg font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--accent-primary)] transition-colors">{testimonial.name}</h4>
                       <div className="relative">
-                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-light italic">"{testimonial.text}"</p>
+                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-light italic">&quot;{testimonial.text}&quot;</p>
                       </div>
                       <div className="mt-4 pt-4 border-t border-[var(--border-primary)]/20 flex justify-between items-center">
                         <time className="text-xs text-[var(--text-tertiary)] font-medium">
@@ -812,13 +836,14 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
             </button>
             <div className="modal-img-wrapper">
               <figure className="modal-avatar-box">
-                <img
+                <Image
                   src={selectedTestimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
                   alt={selectedTestimonial.name}
-                  width="80"
+                  width={80}
+                  height={80}
                 />
               </figure>
-              <img src="/assets/images/icon-quote.svg" alt="quote icon" />
+              <Image src="/assets/images/icon-quote.svg" alt="quote icon" width={40} height={40} />
             </div>
             <div className="modal-content">
               <h4 className="h3 modal-title">{selectedTestimonial.name}</h4>

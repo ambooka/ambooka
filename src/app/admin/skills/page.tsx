@@ -31,11 +31,11 @@ interface Skill {
     id: string
     name: string
     category: string
-    proficiency: number
+    proficiency: number | null
     icon_url: string | null
     roadmap_phase: number | null
     is_featured: boolean
-    display_order: number
+    display_order: number | null
 }
 
 const CATEGORIES = ['Languages', 'Frameworks', 'Tools', 'Cloud', 'Databases', 'Certifications', 'Other']
@@ -82,7 +82,7 @@ export default function SkillsManager() {
         setFormData({
             name: skill.name,
             category: skill.category,
-            proficiency: skill.proficiency,
+            proficiency: skill.proficiency ?? 50,
             icon_url: skill.icon_url || '',
             roadmap_phase: skill.roadmap_phase || 1,
             is_featured: skill.is_featured
@@ -113,7 +113,7 @@ export default function SkillsManager() {
             }).eq('id', editingId)
         } else {
             // Create new
-            const maxOrder = skills.length > 0 ? Math.max(...skills.map(s => s.display_order)) + 1 : 0
+            const maxOrder = skills.length > 0 ? Math.max(...skills.map(s => s.display_order ?? 0)) + 1 : 0
             await supabase.from('skills').insert({
                 name: formData.name,
                 category: formData.category,

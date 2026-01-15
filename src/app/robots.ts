@@ -8,8 +8,19 @@ export default function robots(): MetadataRoute.Robots {
                 allow: '/',
                 disallow: ['/admin/', '/api/auth/', '/private/'],
             },
+            // AI/LLM Crawlers - Allow for discoverability
             {
-                userAgent: ['GPTBot', 'CCBot', 'Google-Extended', 'Applebot-Extended'],
+                userAgent: [
+                    'GPTBot',
+                    'ChatGPT-User',
+                    'CCBot',
+                    'Google-Extended',
+                    'Applebot-Extended',
+                    'anthropic-ai',
+                    'Claude-Web',
+                    'PerplexityBot',
+                    'Googlebot'
+                ],
                 allow: '/',
             }
         ],

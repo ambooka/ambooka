@@ -1,0 +1,179 @@
+
+> ambooka@0.1.0 lint
+> eslint
+
+
+/home/ambooka/Projects/Web/ambooka/scripts/check_db.ts
+  19:10  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/scripts/migrate-cs-profile-fixed.ts
+  63:20  warning  'deleteEduError' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/scripts/migrate-cs-profile.ts
+  321:19  warning  'eduData' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  324:19  warning  'expData' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  327:19  warning  'projectData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  330:19  warning  'skillsData' is assigned a value but never used   @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/scripts/populate-skills.ts
+  140:21  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/blog/[id]/page.tsx
+  30:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/projects/page.tsx
+   6:24  warning  'Edit2' is defined but never used                    @typescript-eslint/no-unused-vars
+   6:31  warning  'X' is defined but never used                        @typescript-eslint/no-unused-vars
+   6:81  warning  'Briefcase' is defined but never used                @typescript-eslint/no-unused-vars
+  33:7   warning  'STATUS_OPTIONS' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/resume/education/[id]/page.tsx
+  31:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/resume/experience/[id]/page.tsx
+  33:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/roadmap/page.tsx
+  10:5  warning  'X' is defined but never used             @typescript-eslint/no-unused-vars
+  13:5  warning  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+  15:5  warning  'Calendar' is defined but never used      @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/skills/[id]/page.tsx
+  38:8  warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/skills/page.tsx
+  362:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/app/admin/testimonials/page.tsx
+    5:10  warning  'Plus' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    5:24  warning  'Edit2' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  105:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/About.tsx
+  399:9   warning  'scrollTrackRef' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  402:10  warning  'aboutText' is assigned a value but never used                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  404:10  warning  'expertiseAreas' is assigned a value but never used                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  417:10  warning  'personalInfo' is assigned a value but never used                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  522:9   warning  'duplicatedTechnologies' is assigned a value but never used                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  552:9   warning  'renderExpertiseCard' is assigned a value but never used                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  586:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  640:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  762:25  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  825:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  831:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/Blog.tsx
+    5:19  warning  'Calendar' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    5:29  warning  'Tag' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  130:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/CodeRevealOverlay.tsx
+   34:11  warning  'Particle' is defined but never used                 @typescript-eslint/no-unused-vars
+   79:11  warning  'MAX_PARTICLES' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  121:9   warning  'cachedCode' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  139:11  warning  'easeOutElastic' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  206:16  warning  'e' is defined but never used                        @typescript-eslint/no-unused-vars
+  218:50  warning  'highlightLine' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  262:17  warning  'lastIndex' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  341:13  warning  'deltaTime' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  364:15  warning  'eased' is assigned a value but never used           @typescript-eslint/no-unused-vars
+  387:13  warning  'pulse' is assigned a value but never used           @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/Contact.tsx
+  244:12  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  341:44  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  368:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/Portfolio.tsx
+    6:32   warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    6:95   warning  'Sparkles' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    6:111  warning  'Globe' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    7:10   warning  'supabase' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  161:6    warning  React Hook useEffect has a missing dependency: 'initialProjects'. Either include it or remove the dependency array                                                                                                                                                                       react-hooks/exhaustive-deps
+  174:14   warning  'err' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  264:23   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  298:31   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  399:17   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/Resume.tsx
+  286:9  warning  'skillsGrouped' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/Sidebar.tsx
+    4:35  warning  'CheckCircle' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    4:48  warning  'Phone' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  166:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/TopHeader.tsx
+  15:37  warning  'onProfileClick' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/UtilityBar.tsx
+   15:3   warning  'Download' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+   93:10  warning  'personalInfo' is assigned a value but never used                                                                   @typescript-eslint/no-unused-vars
+  127:6   warning  React Hook useEffect has a missing dependency: 'openResumeModal'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  338:22  warning  'err' is defined but never used                                                                                     @typescript-eslint/no-unused-vars
+  549:14  warning  'err' is defined but never used                                                                                     @typescript-eslint/no-unused-vars
+  627:9   warning  'downloadResumeHTMLFallback' is assigned a value but never used                                                     @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/admin/AdminHeader.tsx
+  36:8   warning  React Hook useEffect has a missing dependency: 'performSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  66:32  warning  'result' is defined but never used                                                                                @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/admin/ProfileWidget.tsx
+  30:23  warning  'error' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/admin/QuickActionsWidget.tsx
+  3:10  warning  'Video' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/admin/StatCard.tsx
+  24:11  warning  'Icon' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/ArchitectureShowcase.tsx
+  3:20  warning  'Server' is defined but never used      @typescript-eslint/no-unused-vars
+  3:35  warning  'Activity' is defined but never used    @typescript-eslint/no-unused-vars
+  3:45  warning  'ArrowRight' is defined but never used  @typescript-eslint/no-unused-vars
+  3:62  warning  'Shield' is defined but never used      @typescript-eslint/no-unused-vars
+  3:70  warning  'GitBranch' is defined but never used   @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/CertificationTracker.tsx
+  3:17  warning  'CheckCircle2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/MetricsWidgets.tsx
+  3:20  warning  'Clock' is defined but never used   @typescript-eslint/no-unused-vars
+  3:65  warning  'Layout' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/ProfileCard.tsx
+  10:12  warning  'profile' is assigned a value but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  31:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/ProjectBlueprints.tsx
+  3:78  warning  'Code2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/ProjectList.tsx
+   3:10  warning  'Check' is defined but never used          @typescript-eslint/no-unused-vars
+   3:17  warning  'Circle' is defined but never used         @typescript-eslint/no-unused-vars
+   3:25  warning  'Monitor' is defined but never used        @typescript-eslint/no-unused-vars
+   3:39  warning  'MessageCircle' is defined but never used  @typescript-eslint/no-unused-vars
+   3:54  warning  'BarChart2' is defined but never used      @typescript-eslint/no-unused-vars
+   3:73  warning  'LinkIcon' is defined but never used       @typescript-eslint/no-unused-vars
+  52:37  warning  'index' is defined but never used          @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/mlops/SkillAccordion.tsx
+  2:17  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/ui/Robot3DFAB.tsx
+  5:19  warning  'OrbitControls' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/ui/input.tsx
+  5:6  warning  'className' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/widgets/ExperienceGanttChart.tsx
+  124:44  warning  'idx' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/src/components/widgets/FeaturedProjectsCarousel.tsx
+  29:11  warning  'carouselRef' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ambooka/Projects/Web/ambooka/update-cv.mjs
+  64:17  warning  'data' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 98 problems (2 errors, 96 warnings)
+

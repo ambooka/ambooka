@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { GitHubService } from '@/services/github'
 import { Github, Star, Users, GitCommit } from 'lucide-react'
+import Image from 'next/image'
 
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
@@ -113,7 +114,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                 setLoading(false)
             }
         })()
-    }, [])
+    }, [initialStats])
 
     if (loading) {
         return (
@@ -226,10 +227,13 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
 
             {/* Contribution Graph */}
             <div className="github-graph">
-                <img
+                <Image
                     src={`https://ghchart.rshah.org/8E0E28/${GITHUB_USERNAME}`}
                     alt="GitHub Contribution Graph"
                     className="contribution-graph"
+                    width={800}
+                    height={120}
+                    unoptimized
                 />
             </div>
 

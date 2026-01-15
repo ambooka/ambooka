@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Activity, Clock, GitBranch, GitCommit, GitPullRequest, Layout, Server, Gauge } from 'lucide-react'
+import { Activity, GitBranch, GitCommit, GitPullRequest, Server, Gauge } from 'lucide-react'
 
 export const GitHubActivity = () => {
     return (

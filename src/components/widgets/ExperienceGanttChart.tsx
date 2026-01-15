@@ -121,7 +121,7 @@ export default function ExperienceGanttChart() {
                     {/* Vertical Thread */}
                     <div className="absolute left-[11px] top-6 bottom-4 w-0.5 bg-gradient-to-b from-[var(--accent-primary)] via-[var(--border-light)]/50 to-transparent" />
 
-                    {experiences.map((exp, idx) => {
+                    {experiences.map((exp) => {
                         const isCurrent = exp.is_current
                         const initials = exp.company.split(' ').map(n => n[0]).join('').substring(0, 2)
                         const duration = calculateDuration(exp.start_date, exp.end_date, exp.is_current)

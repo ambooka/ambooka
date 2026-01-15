@@ -54,7 +54,7 @@ export default function SkillEditor({ params }: { params: { id: string } }) {
             setFormData({
                 name: data.name,
                 category: data.category,
-                proficiency_level: data.proficiency_level || 0,
+                proficiency_level: data.proficiency || 0,
                 is_featured: data.is_featured,
                 display_order: data.display_order || 0
             })
@@ -67,8 +67,11 @@ export default function SkillEditor({ params }: { params: { id: string } }) {
         setSaving(true)
 
         const payload = {
-            ...formData,
-            proficiency_level: formData.proficiency_level || null,
+            name: formData.name,
+            category: formData.category,
+            proficiency: formData.proficiency_level || null,
+            is_featured: formData.is_featured,
+            display_order: formData.display_order,
         }
 
         let error

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { CheckCircle2, Clock, Shield, GraduationCap } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
+import Image from 'next/image'
 
 interface Certification {
     id: string
@@ -212,7 +213,7 @@ const CertificationShowcase = () => {
         const fetchCerts = async () => {
             try {
                 // Fetch from correct 'certifications' table as per error hint
-                const { data, error } = await (supabase as any)
+                const { data, error } = await (supabase as unknown as { from: (t: string) => { select: (c: string) => Promise<{ data: { id: string; name: string; is_obtained: boolean; icon_url: string | null }[] | null; error: Error | null }> } })
                     .from('certifications')
                     .select('*')
 
@@ -222,7 +223,7 @@ const CertificationShowcase = () => {
                 if (!data || data.length === 0) {
                     setCerts(MOCK_CERTS)
                 } else {
-                    setCerts(data.map((c: any) => ({
+                    setCerts(data.map((c) => ({
                         id: c.id,
                         name: c.name,
                         issuer: '', // Not in DB schema, leave empty
@@ -230,7 +231,7 @@ const CertificationShowcase = () => {
                         expiry_date: null,
                         credential_id: null,
                         credential_url: null,
-                        status: c.is_obtained ? 'Obtained' : 'In Pursuit',
+                        status: c.is_obtained ? 'Obtained' : 'Pursuit',
                         category: null,
                         badge_image: c.icon_url || getCertBadgeUrl(c.name || '')
                     })))
@@ -275,10 +276,13 @@ const CertificationShowcase = () => {
                             >
                                 {/* Top Image Section */}
                                 <div className={`relative h-28 flex items-center justify-center p-4 bg-gradient-to-br ${style.gradient}`}>
-                                    <img
-                                        src={cert.badge_image}
+                                    <Image
+                                        src={cert.badge_image || '/assets/badges/aws-saa.png'}
                                         alt={cert.name}
-                                        className={`w-16 h-16 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg ${isPursuit ? 'grayscale opacity-70' : ''}`}
+                                        width={64}
+                                        height={64}
+                                        className={`object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-lg ${isPursuit ? 'grayscale opacity-70' : ''}`}
+                                        unoptimized
                                     />
                                     {/* Background floating icons */}
                                     <GraduationCap className="absolute top-2 right-2 w-4 h-4 text-white/10" />

@@ -15,6 +15,17 @@ interface CharacterInfo {
   textNode: Text | null
 }
 
+interface CaretPosition {
+  offsetNode: Node
+  offset: number
+}
+
+declare global {
+  interface Document {
+    caretPositionFromPoint(x: number, y: number): CaretPosition | null
+  }
+}
+
 interface Token {
   text: string
   type: 'tag' | 'attr' | 'string' | 'comment' | 'text' | 'keyword'
@@ -161,8 +172,8 @@ export default function CodeRevealOverlay() {
 
         if (document.caretRangeFromPoint) {
           range = document.caretRangeFromPoint(x, y)
-        } else if ((document as any).caretPositionFromPoint) {
-          const position = (document as any).caretPositionFromPoint(x, y)
+        } else if (document.caretPositionFromPoint) {
+          const position = document.caretPositionFromPoint(x, y)
           if (position) {
             range = document.createRange()
             range.setStart(position.offsetNode, position.offset)

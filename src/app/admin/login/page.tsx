@@ -26,8 +26,8 @@ export default function AdminLogin() {
             if (error) throw error
 
             router.push('/admin')
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            setError((err as Error).message || 'An error occurred')
         } finally {
             setLoading(false)
         }

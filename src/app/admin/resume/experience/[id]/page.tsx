@@ -226,17 +226,19 @@ export default function ExperienceEditor({ params }: { params: { id: string } })
                 </div>
 
                 {/* Dynamic Arrays */}
-                {[
-                    { field: 'responsibilities', label: 'Responsibilities' },
-                    { field: 'achievements', label: 'Achievements' },
-                    { field: 'technologies', label: 'Technologies' }
-                ].map(({ field, label }) => (
+                {(
+                    [
+                        { field: 'responsibilities', label: 'Responsibilities' },
+                        { field: 'achievements', label: 'Achievements' },
+                        { field: 'technologies', label: 'Technologies' }
+                    ] as const
+                ).map(({ field, label }) => (
                     <div key={field}>
                         <div className="flex justify-between items-center mb-2">
                             <label className="block text-sm font-medium text-gray-700">{label}</label>
                             <button
                                 type="button"
-                                onClick={() => addArrayItem(field as any)}
+                                onClick={() => addArrayItem(field)}
                                 className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
                             >
                                 <Plus size={16} /> Add Item
@@ -248,13 +250,13 @@ export default function ExperienceEditor({ params }: { params: { id: string } })
                                     <input
                                         type="text"
                                         value={item}
-                                        onChange={e => handleArrayChange(field as any, idx, e.target.value)}
+                                        onChange={e => handleArrayChange(field, idx, e.target.value)}
                                         className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
                                         placeholder={`Add ${label.toLowerCase().slice(0, -1)}...`}
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => removeArrayItem(field as any, idx)}
+                                        onClick={() => removeArrayItem(field, idx)}
                                         className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                         <X size={20} />

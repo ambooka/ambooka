@@ -11,8 +11,6 @@ import { Search, Bell, ChevronDown } from 'lucide-react'
 // CoachPro Design Tokens
 const SIDEBAR_WIDTH = 200
 const CONTENT_PADDING = 24
-const CARD_RADIUS = 20
-const CARD_PADDING = 24
 const GAP = 16
 
 export default function AdminLayout({
