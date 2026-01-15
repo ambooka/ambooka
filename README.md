@@ -76,20 +76,25 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 
 ---
 
+## 🎓 Education
+
+<div align="center">
+
+![Maseno University](https://img.shields.io/badge/BSc_Computer_Science-Maseno_University-1E3A8A?style=for-the-badge&logo=graduation-cap&logoColor=white)
+![Starehe Boys](https://img.shields.io/badge/KCSE-Starehe_Boys'_Centre-DC2626?style=for-the-badge&logo=school&logoColor=white)
+
+</div>
+
+---
+
 ## 📊 GitHub Stats
 
 <div align="center">
 
-<a href="https://github.com/ambooka">
-  <img src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&include_all_commits=true&count_private=true&theme=react&hide_border=true&bg_color=0D1117&title_color=14B8A6&icon_color=14B8A6" height="165"/>
-</a>
-<a href="https://github.com/ambooka">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&langs_count=8&theme=react&hide_border=true&bg_color=0D1117&title_color=14B8A6" height="165"/>
-</a>
+[![GitHub Stats](https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
+[![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
 
-<br/>
-
-<img src="https://streak-stats.demolab.com?user=ambooka&theme=react&hide_border=true&background=0D1117&stroke=14B8A6&ring=14B8A6&fire=14B8A6&currStreakLabel=14B8A6" alt="GitHub Streak"/>
+[![GitHub Streak](https://streak-stats.demolab.com?user=ambooka&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
 
 </div>
 
