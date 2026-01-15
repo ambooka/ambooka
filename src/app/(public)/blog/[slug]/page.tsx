@@ -3,17 +3,11 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/integrations/supabase/client'
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 import Sidebar from '@/components/Sidebar'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { BlogPosting, WithContext } from 'schema-dts'
-
-// Initialize Supabase client
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 // ISR: Revalidate every hour
 export const revalidate = 3600
