@@ -91,8 +91,6 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 
 <div align="center">
 
-[![Trophies](https://github-profile-trophy.vercel.app/?username=ambooka&theme=algolia&no-frame=true&no-bg=false&column=4&margin-w=10)](https://github.com/ambooka)
-
 <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=ambooka&theme=algolia" width="100%"/>
 
 <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=ambooka&theme=algolia" height="165"/>
