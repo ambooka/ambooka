@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Generate formatted resume
-        let formattedResume = generateAllFormats(inputData);
+        const formattedResume = generateAllFormats(inputData);
 
         // [RESUME ENHANCEMENT]: Force-inject hardcoded IT skills from Hebatullah experience & JD
         // The user specifically requested hardcoded technical skills for this role.

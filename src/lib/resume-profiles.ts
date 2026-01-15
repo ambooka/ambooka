@@ -247,7 +247,7 @@ export function filterSkillsByRole(
             { name: 'System Maintenance', category: 'IT Support', id: 'it-maint', proficiency_level: 90 },
             { name: 'User Training', category: 'IT Support', id: 'it-train', proficiency_level: 85 },
             { name: 'Ticketing Systems', category: 'IT Support', id: 'it-ticket', proficiency_level: 90 }
-        ] as any[];
+        ] as Array<{ name: string; category: string;[key: string]: unknown }>;
     }
 
     return skills.filter(skill => {

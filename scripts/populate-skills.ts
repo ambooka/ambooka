@@ -208,8 +208,8 @@ async function populateSkills() {
                 if (error) throw error
                 console.log(`✅ Added: ${skill.name}`)
             }
-        } catch (err: any) {
-            console.error(`❌ Error processing ${skill.name}:`, err.message || err)
+        } catch (err: unknown) {
+            console.error(`❌ Error processing ${skill.name}:`, err instanceof Error ? err.message : err)
         }
     }
 

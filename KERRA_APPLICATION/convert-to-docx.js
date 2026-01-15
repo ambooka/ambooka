@@ -1,5 +1,5 @@
-const fs = require('fs');
-const { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType } = require('docx');
+import fs from 'fs';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, Table, TableRow, TableCell, WidthType } from 'docx';
 
 async function convertMdToDocx(mdPath, docxPath) {
     const markdown = fs.readFileSync(mdPath, 'utf-8');
