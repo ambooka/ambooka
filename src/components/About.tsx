@@ -13,8 +13,7 @@ import ExpertiseProgressBar from '@/components/widgets/ExpertiseProgressBar'
 import CertificationShowcase from '@/components/widgets/CertificationShowcase'
 import Sidebar from '@/components/Sidebar'
 import ExperienceGanttChart from '@/components/widgets/ExperienceGanttChart'
-import CoreValuesWidget from '@/components/widgets/CoreValuesWidget'
-import EducationMentorshipWidget from '@/components/widgets/EducationMentorshipWidget'
+import EngineeringBentoGrid from '@/components/widgets/EngineeringBentoGrid'
 import CtaFooterWidget from '@/components/widgets/CtaFooterWidget'
 import { ROADMAP_DATA } from '@/data/roadmap-data'
 
@@ -821,8 +820,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
 
       {/* Closing the Loop - Site Summary Sections */}
       <section className="flex flex-col gap-6 md:gap-20">
-        <CoreValuesWidget />
-        <EducationMentorshipWidget />
+        <EngineeringBentoGrid />
         <CtaFooterWidget onOpenResume={onOpenResume} />
       </section>
 
