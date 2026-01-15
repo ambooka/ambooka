@@ -90,19 +90,12 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 ## 📊 GitHub Stats
 
 <div align="center">
-  
-<table>
-<tr>
-<td>
-<img src="https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=vue&hide_border=true&include_all_commits=true&count_private=true&custom_title=My%20GitHub%20Stats" alt="GitHub Stats"/>
-</td>
-<td>
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=donut-vertical&theme=vue&hide_border=true&langs_count=6" alt="Top Languages"/>
-</td>
-</tr>
-</table>
 
-<img src="https://streak-stats.demolab.com?user=ambooka&theme=vue&hide_border=true" alt="GitHub Streak" width="500"/>
+[![Trophies](https://github-profile-trophy.vercel.app/?username=ambooka&theme=algolia&no-frame=true&no-bg=false&column=4&margin-w=10)](https://github.com/ambooka)
+
+| 📈 Stats | 🔥 Streak |
+|----------|-----------|
+| ![Stats](https://github-profile-summary-cards.vercel.app/api/cards/stats?username=ambooka&theme=algolia) | ![Streak](https://streak-stats.demolab.com?user=ambooka&theme=algolia&hide_border=true) |
 
 </div>
 
