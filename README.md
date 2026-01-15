@@ -110,16 +110,6 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 
 ---
 
-## 🎓 Certifications
-
-<div align="center">
-
-![AWS](https://img.shields.io/badge/AWS_Certified-Solutions_Architect-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
-
-</div>
-
----
-
 ## 📫 Let's Connect!
 
 <div align="center">
