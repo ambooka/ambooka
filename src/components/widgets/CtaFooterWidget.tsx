@@ -61,7 +61,7 @@ export default function CtaFooterWidget({ onOpenResume }: CtaFooterWidgetProps) 
                         {/* Primary Button - Download Resume */}
                         <button
                             onClick={handleDownloadCV}
-                            className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white text-[#0f766e] w-full sm:w-auto transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-[0_15px_50px_rgba(0,0,0,0.3)]"
+                            className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white text-slate-800 w-full sm:w-auto transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] shadow-[0_10px_40px_rgba(0,0,0,0.2)] overflow-hidden hover:shadow-[0_15px_50px_rgba(0,0,0,0.3)]"
                         >
                             {/* Shine Effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -82,13 +82,29 @@ export default function CtaFooterWidget({ onOpenResume }: CtaFooterWidgetProps) 
                         </button>
                     </div>
 
-                    {/* Availability Tag */}
-                    <div className="mt-12 flex items-center gap-3 text-white/50">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-                        </span>
-                        <span className="text-[11px] font-bold uppercase tracking-widest">Available for Remote / Hybrid / On-site</span>
+                    {/* Availability Tags */}
+                    <div className="mt-12 flex flex-col items-center gap-3">
+                        <div className="flex items-center gap-2 text-white/60">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                            </span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest">Open to Work</span>
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] font-bold uppercase tracking-wide hover:bg-white/20 transition-colors cursor-default">
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                                Remote
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] font-bold uppercase tracking-wide hover:bg-white/20 transition-colors cursor-default">
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                                Hybrid
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[11px] font-bold uppercase tracking-wide hover:bg-white/20 transition-colors cursor-default">
+                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                On-site
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
