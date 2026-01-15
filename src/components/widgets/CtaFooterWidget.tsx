@@ -11,13 +11,8 @@ export default function CtaFooterWidget({ onOpenResume }: CtaFooterWidgetProps) 
         if (onOpenResume) {
             onOpenResume()
         } else {
-            // Programmatic download to ensure consistent behavior
-            const link = document.createElement('a')
-            link.href = '/assets/resume.pdf'
-            link.download = 'Hisham_Ambooka_Resume.pdf'
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
+            // Dispatch custom event to open resume modal
+            window.dispatchEvent(new CustomEvent('open-resume-modal'))
         }
     }
 
@@ -48,9 +43,8 @@ export default function CtaFooterWidget({ onOpenResume }: CtaFooterWidgetProps) 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center">
                         <button
                             onClick={handleDownloadCV}
-                            className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-black text-white w-full sm:w-auto transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl overflow-hidden"
+                            className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] text-white w-full sm:w-auto transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-xl overflow-hidden hover:shadow-[0_8px_30px_rgba(20,184,166,0.3)]"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             <span className="relative z-10 text-xs font-black uppercase tracking-[0.2em] flex items-center gap-2">
                                 <Download size={16} /> Download Resume
                             </span>

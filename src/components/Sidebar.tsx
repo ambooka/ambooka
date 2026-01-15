@@ -204,12 +204,9 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
                   onOpenResume()
                   if (onClose) onClose() // Close profile modal if open
                 } else {
-                  const link = document.createElement('a')
-                  link.href = '/assets/resume.pdf'
-                  link.download = 'Hisham_Ambooka_Resume.pdf'
-                  document.body.appendChild(link)
-                  link.click()
-                  document.body.removeChild(link)
+                  // Dispatch custom event to open resume modal
+                  window.dispatchEvent(new CustomEvent('open-resume-modal'))
+                  if (onClose) onClose()
                 }
               }}
               className="btn btn-secondary"

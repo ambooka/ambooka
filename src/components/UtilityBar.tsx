@@ -146,6 +146,17 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
     }
   }, [resumeTrigger])
 
+  // Listen for custom event to open resume modal
+  useEffect(() => {
+    const handleOpenResumeModal = () => {
+      openResumeModal()
+    }
+    window.addEventListener('open-resume-modal', handleOpenResumeModal)
+    return () => {
+      window.removeEventListener('open-resume-modal', handleOpenResumeModal)
+    }
+  }, [])
+
 
   useEffect(() => {
     fetchPersonalInfo()
@@ -882,13 +893,13 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
             {/* Role Variant Selector */}
             <div className="resume-role-selector" style={{
               padding: '12px 20px',
-              borderBottom: '1px solid var(--border-color, #333)',
+              borderBottom: '1px solid var(--border-light, rgba(30, 58, 66, 0.08))',
               display: 'flex',
               alignItems: 'center',
               gap: '12px',
-              background: 'var(--card-bg, #1a1a1a)'
+              background: 'var(--bg-tertiary, #f0f4f5)'
             }}>
-              <label htmlFor="role-select" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary, #888)' }}>
+              <label htmlFor="role-select" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>
                 Resume Type:
               </label>
               <select
@@ -912,9 +923,9 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
                 style={{
                   padding: '8px 12px',
                   borderRadius: '6px',
-                  border: '1px solid var(--border-color, #333)',
-                  background: 'var(--input-bg, #222)',
-                  color: 'var(--text-primary, #fff)',
+                  border: '1px solid var(--border-light, rgba(30, 58, 66, 0.08))',
+                  background: 'var(--bg-secondary, #fff)',
+                  color: 'var(--text-primary)',
                   fontSize: '14px',
                   cursor: 'pointer',
                   minWidth: '200px',
@@ -924,7 +935,7 @@ export default function UtilityBar({ currentTheme, onThemeChange, resumeTrigger 
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
-              <ChevronDown size={16} style={{ marginLeft: '-28px', pointerEvents: 'none', color: 'var(--text-secondary, #888)' }} />
+              <ChevronDown size={16} style={{ marginLeft: '-28px', pointerEvents: 'none', color: 'var(--text-secondary)' }} />
             </div>
 
             <div className="resume-modal-body">
