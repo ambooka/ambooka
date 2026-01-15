@@ -26,14 +26,13 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
-            dist/github-contribution-grid-snake.gif?color_snake=14B8A6&color_dots=#0D1117,#14B8A6
+            public/github-contribution-grid-snake.svg
+            public/github-contribution-grid-snake-dark.svg?palette=github-dark
       
-      - name: Push to output branch
-        uses: crazy-max/ghaction-github-pages@v4
-        with:
-          target_branch: output
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add public/github-contribution-grid-snake*.svg
+          git diff --staged --quiet || git commit -m "chore: update snake animation"
+          git push

@@ -140,7 +140,7 @@ I'm always open to interesting conversations and collaboration opportunities!
 
 <br/>
 
-![Snake animation](https://raw.githubusercontent.com/ambooka/ambooka/output/github-contribution-grid-snake-dark.svg)
+![Snake animation](https://raw.githubusercontent.com/ambooka/ambooka/main/public/github-contribution-grid-snake-dark.svg)
 
 <sub>Built with ☕ and TypeScript by Msah Ambooka</sub>
 
