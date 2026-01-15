@@ -87,14 +87,16 @@ I'm passionate about building **scalable web applications** and **cloud infrastr
 
 ---
 
-## 📊 GitHub Stats
+## 📊 GitHub Activity
 
 <div align="center">
 
-[![GitHub Stats](https://github-readme-stats.vercel.app/api?username=ambooka&show_icons=true&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
-[![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=ambooka&layout=compact&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
+![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=ambooka&theme=react-dark&hide_border=true&area=true)
 
-[![GitHub Streak](https://streak-stats.demolab.com?user=ambooka&theme=tokyonight&hide_border=true)](https://github.com/ambooka)
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=ambooka&theme=github_dark" width="100%"/>
+
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=ambooka&theme=github_dark" height="160"/>
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=ambooka&theme=github_dark" height="160"/>
 
 </div>
 
