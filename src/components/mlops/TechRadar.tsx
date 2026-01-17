@@ -22,7 +22,7 @@ export const TechRadar = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {['Adopt', 'Trial', 'Assess', 'Hold'].map((ring) => (
-                    <div key={ring} className="glass-card p-4 border border-transparent hover:border-gray-200 transition-colors">
+                    <div key={ring} className="card p-4 border border-transparent hover:border-gray-200 transition-colors">
                         <div className="flex items-center gap-2 mb-3">
                             <div className={`w-2 h-2 rounded-full ${ring === 'Adopt' ? 'bg-green-500' :
                                     ring === 'Trial' ? 'bg-blue-500' :

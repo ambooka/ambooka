@@ -8,7 +8,7 @@ export default function CoreValuesWidget() {
             icon: <Zap size={22} strokeWidth={2.5} />,
             title: "Performance First",
             description: "Systems that scale with sub-millisecond precision.",
-            color: "#14b8a6", // Teal
+            color: "var(--accent-primary)", // Matcha
             metric: "99.9%",
             metricLabel: "Uptime"
         },
@@ -16,7 +16,7 @@ export default function CoreValuesWidget() {
             icon: <Shield size={22} strokeWidth={2.5} />,
             title: "Security by Design",
             description: "Proactive security at every stack layer.",
-            color: "#0891b2", // Cyan
+            color: "var(--accent-secondary)", // Sky
             metric: "Zero",
             metricLabel: "Trust"
         },
@@ -24,7 +24,7 @@ export default function CoreValuesWidget() {
             icon: <Target size={22} strokeWidth={2.5} />,
             title: "Pragmatic ML",
             description: "Production-ready AI that solves real problems.",
-            color: "#10b981", // Emerald
+            color: "var(--accent-tertiary)", // Blush
             metric: "E2E",
             metricLabel: "MLOps"
         },
@@ -32,7 +32,7 @@ export default function CoreValuesWidget() {
             icon: <Layers size={22} strokeWidth={2.5} />,
             title: "Clean Architecture",
             description: "Maintainable code that scales with the team.",
-            color: "#8b5cf6", // Violet
+            color: "var(--text-secondary)", // Slate
             metric: "DRY",
             metricLabel: "Principle"
         },
@@ -40,7 +40,7 @@ export default function CoreValuesWidget() {
             icon: <Lightbulb size={22} strokeWidth={2.5} />,
             title: "Continuous Learning",
             description: "Always improving, always evolving.",
-            color: "#f59e0b", // Amber
+            color: "var(--accent-warning)", // Pastel Yellow
             metric: "1%",
             metricLabel: "Daily"
         },
@@ -48,7 +48,7 @@ export default function CoreValuesWidget() {
             icon: <RefreshCw size={22} strokeWidth={2.5} />,
             title: "Iterate & Ship",
             description: "Move fast without breaking things.",
-            color: "#ec4899", // Pink
+            color: "var(--accent-success)", // Soft Teal
             metric: "CI/CD",
             metricLabel: "Always"
         }

@@ -85,15 +85,6 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
           <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
           <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px]">Loading Intelligence...</p>
         </div>
-        <style jsx>{`
-          .animate-spin {
-            animation: spin 1s linear infinite;
-          }
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </article>
     )
   }

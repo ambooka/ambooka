@@ -496,19 +496,6 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
       }
 
       <style jsx>{`
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
         .download-btn:hover:not(:disabled) {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);

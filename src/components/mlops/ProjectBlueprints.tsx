@@ -89,7 +89,7 @@ export const ProjectBlueprints = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {blueprints.map((project) => (
-                <div key={project.id} className="glass-card p-5 group hover:bg-white transition-colors border border-transparent hover:border-gray-200">
+                <div key={project.id} className="card p-5 group hover:bg-white transition-colors border border-transparent hover:border-gray-200">
                     <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                             <div className={`p-3 rounded-xl ${project.color} bg-opacity-50`}>

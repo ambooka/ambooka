@@ -168,17 +168,17 @@ export default function TopHeader({ onProfileClick: _onProfileClick }: { onProfi
                     align-items: center;
                     gap: 8px;
                     padding: 8px 16px;
-                    background: rgba(20, 184, 166, 0.05);
-                    border: 1px solid rgba(20, 184, 166, 0.1);
+                    background: rgba(154, 184, 168, 0.2); /* Matcha Tint */
+                    border: 1px solid rgba(154, 184, 168, 0.3);
                     border-radius: 50px;
                 }
 
                 .availability-dot {
                     width: 8px;
                     height: 8px;
-                    background: #10B981;
+                    background: var(--accent-success); /* Soft Teal */
                     border-radius: 50%;
-                    box-shadow: 0 0 10px #10B981;
+                    box-shadow: 0 0 10px rgba(118, 199, 178, 0.4);
                     animation: pulse-dot 2s infinite;
                 }
 
@@ -191,7 +191,7 @@ export default function TopHeader({ onProfileClick: _onProfileClick }: { onProfi
                 .availability-text {
                     font-size: 0.75rem;
                     font-weight: 600;
-                    color: var(--accent-primary);
+                    color: var(--accent-primary); /* Matcha Green */
                     white-space: nowrap;
                 }
 
@@ -207,22 +207,22 @@ export default function TopHeader({ onProfileClick: _onProfileClick }: { onProfi
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    background: rgba(30, 58, 66, 0.04);
+                    background: rgba(43, 27, 45, 0.05); /* Dark Purple Tint */
                     color: var(--text-secondary);
                     transition: all 0.2s ease;
                     text-decoration: none;
                 }
 
                 .social-btn:hover {
-                    background: rgba(30, 58, 66, 0.08);
-                    color: var(--text-primary);
+                    background: var(--accent-primary);
+                    color: #FFFFFF;
                     transform: translateY(-2px);
                 }
 
                 .divider-v {
                     width: 1px;
                     height: 24px;
-                    background: rgba(30, 58, 66, 0.1);
+                    background: rgba(43, 27, 45, 0.1);
                 }
 
                 .contact-cta {
@@ -238,13 +238,13 @@ export default function TopHeader({ onProfileClick: _onProfileClick }: { onProfi
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.2s ease;
-                    box-shadow: 0 4px 12px rgba(30, 58, 66, 0.15);
+                    box-shadow: var(--shadow-sm);
                 }
 
                 .contact-cta:hover {
                     background: var(--accent-primary);
                     transform: translateY(-2px);
-                    box-shadow: 0 6px 16px rgba(20, 184, 166, 0.2);
+                    box-shadow: var(--shadow-md);
                 }
 
                 /* Responsive */

@@ -75,7 +75,7 @@ export const CertificationTracker = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {certifications.map((cert) => (
-                    <div key={cert.id} className="glass-card p-4 border border-transparent hover:border-[#f4c542]/30 transition-all group">
+                    <div key={cert.id} className="card p-4 border border-transparent hover:border-[#f4c542]/30 transition-all group">
                         <div className="flex justify-between items-start mb-3">
                             <div className={`p-2 rounded-lg ${cert.priority === 'Critical' ? 'bg-red-50 text-red-600' : 'bg-gray-50 text-gray-600'}`}>
                                 <Award size={18} />

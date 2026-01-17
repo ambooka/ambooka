@@ -246,11 +246,21 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                 }
 
                 .stat-card {
-                    background: var(--bg-secondary);
+                    background: var(--glass-bg-subtle);
+                    backdrop-filter: var(--glass-blur);
+                    -webkit-backdrop-filter: var(--glass-blur);
                     border-radius: var(--radius-lg);
                     padding: 16px;
-                    border: 1px solid var(--border-color);
-                    boxShadow: var(--shadow-card);
+                    border: 1px solid var(--glass-border-subtle);
+                    box-shadow: var(--neu-shadow-sm);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .stat-card:hover {
+                    background: var(--glass-bg);
+                    border-color: var(--glass-border-hover);
+                    transform: translateY(-2px);
+                    box-shadow: var(--neu-shadow);
                 }
 
                 @media (max-width: 640px) {

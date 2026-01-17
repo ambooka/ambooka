@@ -228,7 +228,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               placeholder="Search by name, tech or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-[rgba(30,58,66,0.08)] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--accent-primary)] focus:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
+              className="w-full bg-[var(--glass-bg-subtle)] backdrop-blur-md border border-[var(--glass-border-subtle)] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--accent-emerald-base)] focus:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] transition-all shadow-[var(--neu-shadow-inset-sm)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
             />
           </div>
           <div className="flex gap-1 overflow-x-auto overflow-y-visible py-1 px-1 scrollbar-hide bg-[rgba(30,58,66,0.06)] rounded-full border border-[rgba(30,58,66,0.04)]">
@@ -237,8 +237,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                 key={opt.value}
                 onClick={() => { setFilter(opt.value); setCurrentPage(1); }}
                 className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center ${filter === opt.value
-                  ? 'bg-white text-[var(--text-primary)] shadow-[0_2px_8px_rgba(30,58,66,0.1)] font-semibold'
-                  : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-white/50'
+                  ? 'bg-[var(--glass-bg-strong)] text-[var(--accent-emerald-base)] shadow-[var(--neu-shadow-sm)] font-bold border border-[var(--glass-border)]'
+                  : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--glass-bg-subtle)]'
                   }`}
               >
                 {opt.label}
@@ -264,9 +264,9 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                   className="project-item active"
                   style={{ animationDelay: `${idx * 0.05}s` }}
                 >
-                  <div className="project-card-inner bg-[var(--bg-secondary)] border-[var(--border-color)] hover:border-[var(--accent-primary)] shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)]">
+                  <div className="project-card-inner card hover-lift overflow-hidden h-full flex flex-col">
                     {/* Image Header with Overlay */}
-                    <div className="project-img h-56">
+                    <div className="project-img h-56 relative group">
                       <Image
                         src={repo.image}
                         alt={repo.title}
@@ -311,7 +311,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                           </div>
                           <div>
                             <h3 className="project-title !m-0 !text-[var(--text-primary)] !text-lg !font-bold capitalize">{repo.title.replace(/-/g, ' ')}</h3>
-                            <span className="text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-widest">{repo.language}</span>
+                            <span className="text-[10px] font-bold text-[var(--accent-emerald-base)] uppercase tracking-widest">{repo.language}</span>
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-secondary)]">
@@ -331,14 +331,14 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                             href={repo.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--accent-primary)] transition-colors shadow-lg"
+                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--accent-emerald-base)] transition-colors shadow-lg"
                           >
                             <Github size={14} /> Source Code
                           </a>
                         ) : (
                           <button
                             onClick={() => openProject(repo)}
-                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border border-[var(--border-color)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--bg-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-all shadow-sm"
+                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border border-[var(--border-color)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--bg-secondary)] hover:text-[var(--accent-emerald-base)] hover:border-[var(--accent-emerald-base)] transition-all shadow-sm"
                           >
                             <EyeIcon size={14} /> View README
                           </button>
@@ -348,7 +348,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                             href={repo.homepage}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-12 h-12 flex items-center justify-center bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius-sm)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-all shadow-sm"
+                            className="w-12 h-12 flex items-center justify-center bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius-sm)] text-[var(--text-secondary)] hover:text-[var(--accent-emerald-base)] hover:border-[var(--accent-emerald-base)] transition-all shadow-sm"
                             title="Live Preview"
                           >
                             <ArrowUpRight size={20} />
@@ -408,7 +408,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                 <Image src={popupRepo.image} alt={popupRepo.title} width={800} height={256} className="w-full h-full object-cover" unoptimized />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-8">
-                  <span className="text-[var(--accent-primary)] text-xs font-bold uppercase tracking-widest">{popupRepo.language}</span>
+                  <span className="text-[var(--accent-emerald-base)] text-xs font-bold uppercase tracking-widest">{popupRepo.language}</span>
                   <Dialog.Title className="text-3xl font-black text-white uppercase tracking-tight mt-1">{popupRepo.title.replace(/-/g, ' ')}</Dialog.Title>
                 </div>
                 <Dialog.Close className="absolute top-6 right-6 w-10 h-10 bg-black/40 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-black/60 transition-all font-bold">×</Dialog.Close>
@@ -417,7 +417,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[var(--bg-secondary)]">
                 {popupLoading ? (
                   <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <div className="w-10 h-10 border-4 border-[var(--accent-primary)] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-10 h-10 border-4 border-[var(--accent-emerald-base)] border-t-transparent rounded-full animate-spin" />
                     <p className="text-[var(--text-secondary)] font-bold uppercase text-xs tracking-widest">Decrypting README...</p>
                   </div>
                 ) : popupError ? (
@@ -444,7 +444,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     href={popupRepo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--text-primary)] text-[var(--bg-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:bg-[var(--accent-primary)] transition-all shadow-xl"
+                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--text-primary)] text-[var(--bg-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:bg-[var(--accent-emerald-base)] transition-all shadow-xl"
                   >
                     <Github size={20} /> Open Repository
                   </a>
@@ -454,7 +454,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     href={popupRepo.homepage}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-all shadow-lg"
+                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:border-[var(--accent-emerald-base)] hover:text-[var(--accent-emerald-base)] transition-all shadow-lg"
                   >
                     <ExternalLink size={20} /> Live Demo
                   </a>
@@ -473,7 +473,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-emerald-base); }
         
         .project-list {
           display: grid;

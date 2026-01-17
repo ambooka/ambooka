@@ -224,10 +224,6 @@ export default function Contact({ isActive = false }: ContactProps) {
           <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
           <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px]">Establishing Secure Connection...</p>
         </div>
-        <style jsx>{`
-          .animate-spin { animation: spin 1s linear infinite; }
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        `}</style>
       </article >
     )
   }
@@ -382,7 +378,7 @@ export default function Contact({ isActive = false }: ContactProps) {
               <input
                 type="text"
                 name="fullname"
-                className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
+                className="form-input focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
                 placeholder="Full name"
                 required
                 value={formData.fullname}
@@ -428,7 +424,7 @@ export default function Contact({ isActive = false }: ContactProps) {
               <input
                 type="email"
                 name="email"
-                className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
+                className="form-input focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
                 placeholder="Email address"
                 required
                 value={formData.email}
@@ -474,7 +470,7 @@ export default function Contact({ isActive = false }: ContactProps) {
           <div style={{ position: 'relative', marginTop: '16px' }}>
             <textarea
               name="message"
-              className="form-input !bg-[var(--bg-tertiary)] !border-[var(--border-color)] !rounded-[var(--radius-md)] focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm"
+              className="form-input focus:!border-[var(--accent-primary)] focus:!shadow-[0_0_0_4px_var(--accent-primary)]/10 transition-all font-bold text-sm max-h-[200px]"
               placeholder="Your Message"
               required
               rows={6}
@@ -527,7 +523,7 @@ export default function Contact({ isActive = false }: ContactProps) {
             }}
           >
             {submitStatus === 'loading' && (
-              <Loader2 className="w-5 h-5 animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
+              <Loader2 className="w-5 h-5 animate-spin" />
             )}
             {submitStatus === 'success' && (
               <CheckCircle2 className="w-5 h-5" />
@@ -549,11 +545,6 @@ export default function Contact({ isActive = false }: ContactProps) {
       </section>
 
       <style jsx>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        
         @media (max-width: 580px) {
           .contact-form .input-wrapper {
             grid-template-columns: 1fr !important;
