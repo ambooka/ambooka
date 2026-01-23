@@ -4,9 +4,8 @@ import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ExternalLink, Github, ChevronDown, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Sparkles, Lock, Globe, Code, ArrowUpRight } from 'lucide-react'
+import { ExternalLink, Github, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Lock, Code, ArrowUpRight } from 'lucide-react'
 import { fetchProjectReadme } from '@/app/actions/github'
-import { supabase } from '@/integrations/supabase/client'
 
 // --- Constants & Config ---
 
@@ -177,7 +176,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
       } else {
         setPopupContent(result.content || 'No README found.')
       }
-    } catch (err) {
+    } catch (_err) {
       setPopupError('Could not load README.')
     } finally {
       setPopupLoading(false)
