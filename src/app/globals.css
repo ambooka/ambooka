@@ -4,6 +4,18 @@
   /* Theme configuration overrides */
 }
 
+/* ===== STANDARDIZED RESPONSIVE SYSTEM =====
+ * Consolidated from 14 breakpoints to 5 standard ones:
+ * - sm: 640px  (mobile landscape / small tablets)
+ * - md: 768px  (tablets)
+ * - lg: 1024px (small laptops)
+ * - xl: 1280px (desktops)
+ * - 2xl: 1536px (large screens)
+ * 
+ * Mobile-first approach: base styles are for mobile,
+ * then progressively enhance for larger screens.
+ */
+
 :root {
   /* ===== SOFT UI THEME - Clean Modern Design ===== */
 
@@ -7252,4 +7264,448 @@ a:focus-visible,
   background: var(--bg-primary);
   color: var(--text-primary);
   transform: translateY(-1px);
+}
+
+/* =====================================================
+   CONSOLIDATED RESPONSIVE SYSTEM
+   =====================================================
+   Master responsive overrides using 5 standard breakpoints.
+   These rules take precedence over scattered media queries above.
+   ===================================================== */
+
+/* ----- BASE: MOBILE (< 640px) ----- */
+/* Base styles above already handle mobile */
+
+/* ----- SM: SMALL DEVICES (≥ 640px) ----- */
+@media (min-width: 640px) {
+
+  /* Typography scaling */
+  :root {
+    --fs-1: clamp(2rem, 4vw, 2.75rem);
+    --fs-2: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  /* Dashboard grid: 1 column still on small tablets */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* NOTE: Welcome banner responsive handled by original @media (max-width: 900px) */
+
+  /* Navbar: Show labels on small tablets */
+  .navbar-label {
+    display: block;
+  }
+
+  .navbar-link {
+    flex-direction: row;
+    gap: 8px;
+    padding: 15px 10px;
+  }
+
+  /* Project grid */
+  .project-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Blog grid */
+  .blog-posts-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ----- MD: TABLETS (≥ 768px) ----- */
+@media (min-width: 768px) {
+
+  /* Main content spacing */
+  .main-content-full {
+    padding: 0 40px 40px;
+  }
+
+  .page-container {
+    padding: 0 40px;
+  }
+
+  /* Dashboard grid: 2 columns */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* NOTE: Welcome banner responsive handled by original @media (max-width: 900px) */
+
+  /* Sidebar adjustments */
+  .sidebar {
+    max-height: 180px;
+  }
+
+  .sidebar.active {
+    max-height: 600px;
+  }
+
+  /* Contact list grid */
+  .contacts-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 15px;
+  }
+
+  /* Hide mobile nav, show pills */
+  .navbar {
+    display: none;
+  }
+
+  .nav-pills {
+    display: flex;
+  }
+
+  /* Expertise grid */
+  .expertise-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Forms */
+  .input-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .form-btn {
+    width: max-content;
+    margin-left: auto;
+  }
+
+  /* Utility bar position */
+  .utility-bar {
+    bottom: 20px;
+  }
+
+  /* Segments container in welcome banner */
+  .segments-container {
+    max-width: 70%;
+  }
+}
+
+/* ----- LG: LAPTOPS (≥ 1024px) ----- */
+@media (min-width: 1024px) {
+
+  /* Dashboard grid: 3 columns */
+  .dashboard-grid {
+    grid-template-columns: 280px 1fr 300px;
+    gap: 24px;
+  }
+
+  /* Show dashboard left column */
+  .dashboard-left {
+    display: flex;
+  }
+
+  /* Sidebar desktop mode */
+  .sidebar {
+    position: sticky;
+    top: 60px;
+    max-height: none;
+    overflow: visible;
+    padding: 24px;
+  }
+
+  .sidebar-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .avatar-box {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  }
+
+  .avatar-img {
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 50%;
+  }
+
+  .info_more-btn {
+    display: none;
+  }
+
+  .sidebar-info_more {
+    opacity: 1;
+    max-height: none;
+    visibility: visible;
+    transform: translateY(0);
+    margin-top: 20px;
+  }
+
+  /* Navbar as corner badge */
+  .navbar {
+    position: absolute;
+    bottom: auto;
+    top: 0;
+    left: auto;
+    right: 0;
+    width: auto;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-left: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    border-top: none;
+    border-right: none;
+    border-radius: 0 16px 0 16px;
+    padding: 8px 16px;
+    box-shadow: none;
+    display: block;
+  }
+
+  /* Project grid: 3 columns */
+  .project-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Blog grid */
+  .blog-posts-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Expertise grid: 4 columns */
+  .expertise-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Service list */
+  .service-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Testimonials sizing */
+  .testimonials-item {
+    min-width: 340px;
+  }
+
+  /* NOTE: Welcome title handled by original CSS */
+}
+
+/* ----- XL: DESKTOPS (≥ 1280px) ----- */
+@media (min-width: 1280px) {
+
+  /* Dashboard grid: More spacious */
+  .dashboard-grid {
+    grid-template-columns: 300px 1fr 340px;
+    gap: 28px;
+  }
+
+  /* Sidebar wider */
+  .sidebar {
+    padding: 30px;
+  }
+
+  .avatar-box {
+    width: 180px;
+    height: 180px;
+  }
+
+  .avatar-img {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  .info-content .name {
+    font-size: var(--fs-2);
+  }
+
+  /* Project grid */
+  .project-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  /* Blog grid: 3 columns */
+  .blog-posts-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Welcome banner */
+  .welcome-title {
+    font-size: 2.5rem;
+  }
+}
+
+/* ----- 2XL: LARGE SCREENS (≥ 1536px) ----- */
+@media (min-width: 1536px) {
+
+  /* Dashboard grid: Max width */
+  .dashboard-grid {
+    grid-template-columns: 320px 1fr 360px;
+    gap: 32px;
+  }
+
+  /* Project grid: 4 columns on very large screens */
+  .project-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Page container max-width */
+  .page-container {
+    max-width: 1600px;
+    margin-inline: auto;
+  }
+}
+
+/* ----- MOBILE BOTTOM NAV (< 768px) ----- */
+@media (max-width: 767px) {
+
+  /* Show mobile bottom nav */
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    background: var(--bg-primary);
+    backdrop-filter: blur(10px);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    padding: 8px 0;
+  }
+
+  .navbar-list {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 0 8px;
+    gap: 0;
+  }
+
+  .navbar-link {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    font-size: 10px;
+    min-width: 56px;
+  }
+
+  .navbar-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navbar-label {
+    display: block;
+    font-size: 10px;
+  }
+
+  /* Hide desktop nav pills */
+  .nav-pills {
+    display: none;
+  }
+
+  /* Main content padding for bottom nav */
+  main {
+    margin-bottom: 80px;
+  }
+
+  /* Dashboard left hidden on mobile */
+  .dashboard-left {
+    display: none !important;
+  }
+
+  /* Dashboard single column */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-right {
+    order: -1;
+  }
+
+  /* NOTE: Welcome banner responsive handled by original @media (max-width: 900px) */
+
+  /* Utility bar above mobile nav */
+  .utility-bar {
+    bottom: 100px;
+    right: 16px;
+  }
+
+  /* Expertise grid single column */
+  .expertise-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Project/blog grids */
+  .project-list,
+  .blog-posts-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Testimonials horizontal scroll */
+  .testimonials-item {
+    min-width: 280px;
+  }
+
+  /* Header adjustments */
+  .app-header {
+    padding: 12px 16px;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .availability-text {
+    display: none;
+  }
+
+  .divider-v {
+    display: none;
+  }
+}
+
+/* ----- VERY SMALL SCREENS (< 360px) ----- */
+@media (max-width: 359px) {
+  .welcome-stat-value {
+    font-size: 1.5rem;
+  }
+
+  .welcome-title {
+    font-size: 1.25rem;
+  }
+
+  .navbar-link {
+    padding: 8px 8px;
+    min-width: 48px;
+  }
+
+  .navbar-label {
+    font-size: 9px;
+  }
+}
+
+/* ----- PRINT STYLES ----- */
+@media print {
+
+  .navbar,
+  .utility-bar,
+  .nav-pills {
+    display: none !important;
+  }
+
+  .dashboard-grid {
+    display: block;
+  }
+
+  .dashboard-left,
+  .dashboard-right {
+    display: none;
+  }
 }

@@ -1,0 +1,324 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "0"
+          - generic [ref=e15]: "1"
+        - generic [ref=e16]: Issue
+      - button "Collapse issues badge" [ref=e17]:
+        - img [ref=e18]
+  - link "Skip to main content" [ref=e20] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e21]:
+    - generic [ref=e23]:
+      - button "View and Print Resume" [ref=e25] [cursor=pointer]:
+        - img [ref=e26]
+      - button "Toggle theme" [ref=e32] [cursor=pointer]:
+        - img [ref=e33]
+      - button "AI Assistant" [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+    - banner [ref=e41]:
+      - generic [ref=e43]:
+        - generic [ref=e46]: Available for Hire
+        - generic [ref=e48]:
+          - link "GitHub" [ref=e49] [cursor=pointer]:
+            - /url: https://github.com/ambooka
+            - img [ref=e50]
+          - link "LinkedIn" [ref=e53] [cursor=pointer]:
+            - /url: https://linkedin.com/in/ambooka
+            - img [ref=e54]
+        - link [ref=e59] [cursor=pointer]:
+          - /url: /contact
+          - img [ref=e60]
+    - main [ref=e63]:
+      - article [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Building the Future of ML Infrastructure" [level=1] [ref=e67]
+            - generic [ref=e68]:
+              - paragraph [ref=e69]: "MLOps Engineer I •Build engineering foundation: Cloud + Data + ML basics"
+              - generic [ref=e70]: Phase 1/4
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - generic [ref=e74]: Cloud
+                - generic [ref=e76]: 25%
+              - generic [ref=e77]:
+                - generic [ref=e78]: DevOps
+                - generic [ref=e80]: 40%
+              - generic [ref=e81]:
+                - generic [ref=e82]: MLOps
+                - generic [ref=e84]: 20%
+              - generic [ref=e85]:
+                - generic [ref=e86]: Dev
+                - generic [ref=e88]: 15%
+          - generic [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - img [ref=e92]
+                - generic [ref=e95]: "0"
+              - text: Years Exp
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - img [ref=e98]
+                - generic [ref=e102]: "0"
+              - text: Skills
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - img [ref=e105]
+                - generic [ref=e107]: "0"
+              - text: Projects
+        - generic [ref=e108]:
+          - img [ref=e112]
+          - generic [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]:
+                - img [ref=e119]
+                - generic [ref=e122]: GitHub Activity
+              - link "@ambooka" [ref=e123] [cursor=pointer]:
+                - /url: https://github.com/ambooka
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - generic [ref=e126]:
+                  - img [ref=e127]
+                  - generic [ref=e130]: Repositories
+                - generic [ref=e132]:
+                  - generic [ref=e133]: "36"
+                  - generic [ref=e134]: repos
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - img [ref=e141]
+                  - generic [ref=e143]: Stars Earned
+                - generic [ref=e144]:
+                  - generic [ref=e145]:
+                    - generic [ref=e146]: "1"
+                    - generic [ref=e147]: total
+                  - img [ref=e149]
+              - generic [ref=e151]:
+                - generic [ref=e152]:
+                  - img [ref=e153]
+                  - generic [ref=e158]: Followers
+                - generic [ref=e159]:
+                  - generic [ref=e160]:
+                    - generic [ref=e161]: "2"
+                    - generic [ref=e162]: people
+                  - img [ref=e163]
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - img [ref=e168]
+                  - generic [ref=e170]: Public
+                - generic [ref=e171]:
+                  - generic [ref=e172]:
+                    - generic [ref=e173]: 69%
+                    - generic [ref=e174]: 25 of 36
+                  - img [ref=e175]:
+                    - generic [ref=e178]: "25"
+            - img "GitHub Contribution Graph" [ref=e180]
+          - generic [ref=e183]:
+            - img [ref=e184]
+            - paragraph [ref=e188]: Mapping Growth Trajectory...
+        - generic [ref=e190]:
+          - generic [ref=e192]:
+            - heading "About Me" [level=2] [ref=e193]:
+              - img [ref=e194]
+              - text: About Me
+            - paragraph [ref=e197]: Background, interests, and how I work
+          - generic [ref=e198]:
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - img [ref=e201]
+                - generic [ref=e204]: Education
+              - generic [ref=e205]:
+                - generic [ref=e210]:
+                  - generic [ref=e211]:
+                    - img "Maseno University" [ref=e212]
+                    - generic [ref=e213]:
+                      - generic [ref=e214]: BSc Computer Science
+                      - generic [ref=e215]: Maseno University
+                  - generic [ref=e216]: 2020 — 2025
+                - generic [ref=e220]:
+                  - generic [ref=e221]:
+                    - img "Starehe Boys' Centre" [ref=e222]
+                    - generic [ref=e223]:
+                      - generic [ref=e224]: KCSE
+                      - generic [ref=e225]: Starehe Boys' Centre
+                  - generic [ref=e226]: 2015 — 2018
+            - generic [ref=e227]:
+              - generic [ref=e228]:
+                - img [ref=e229]
+                - generic [ref=e232]: Languages
+              - generic [ref=e233]:
+                - generic [ref=e234]:
+                  - generic [ref=e235]: 🇺🇸
+                  - generic [ref=e237]:
+                    - generic [ref=e238]: English
+                    - generic [ref=e239]: Fluent
+                - generic [ref=e242]:
+                  - generic [ref=e243]: 🇰🇪
+                  - generic [ref=e245]:
+                    - generic [ref=e246]: Swahili
+                    - generic [ref=e247]: Native
+                - generic [ref=e250]:
+                  - generic [ref=e251]: 🇸🇦
+                  - generic [ref=e253]:
+                    - generic [ref=e254]: Arabic
+                    - generic [ref=e255]: Basic
+            - generic [ref=e258]:
+              - generic [ref=e259]:
+                - img [ref=e260]
+                - generic [ref=e262]: How I Work
+              - generic [ref=e263]:
+                - generic [ref=e264]:
+                  - generic [ref=e265]: 🌿
+                  - text: Trunk-Based Dev
+                - generic [ref=e266]:
+                  - generic [ref=e267]: 🧪
+                  - text: TDD
+                - generic [ref=e268]:
+                  - generic [ref=e269]: 🔄
+                  - text: GitOps
+                - generic [ref=e270]:
+                  - generic [ref=e271]: 📝
+                  - text: Docs-First
+            - generic [ref=e272]:
+              - img [ref=e273]
+              - blockquote [ref=e276]: “The best code is the code you don't have to write.”
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - img [ref=e285]
+                - generic [ref=e287]: Daily Drivers
+              - generic [ref=e288]:
+                - generic [ref=e289]:
+                  - generic [ref=e290]: ⌨️
+                  - text: Neovim
+                - generic [ref=e291]:
+                  - generic [ref=e292]: 💻
+                  - text: VSCode
+                - generic [ref=e293]:
+                  - generic [ref=e294]: 🌐
+                  - text: Arc
+                - generic [ref=e295]:
+                  - generic [ref=e296]: ⚡
+                  - text: Warp
+                - generic [ref=e297]:
+                  - generic [ref=e298]: 📓
+                  - text: Obsidian
+                - generic [ref=e299]:
+                  - generic [ref=e300]: 📋
+                  - text: Linear
+            - generic [ref=e301]:
+              - generic [ref=e302]:
+                - img [ref=e303]
+                - generic [ref=e308]: Community
+              - paragraph [ref=e309]: Active mentor in open source communities, helping junior developers break into tech through code reviews and pair programming.
+              - generic [ref=e311]:
+                - img [ref=e312]
+                - generic [ref=e317]: 10+ mentees
+            - generic [ref=e318]:
+              - generic [ref=e319]:
+                - generic [ref=e320]: ✨
+                - generic [ref=e321]: Off-Hours
+              - generic [ref=e322]:
+                - generic [ref=e323]:
+                  - img [ref=e324]
+                  - text: Lo-fi
+                - generic [ref=e328]:
+                  - img [ref=e329]
+                  - text: Strategy
+                - generic [ref=e331]:
+                  - img [ref=e332]
+                  - text: Photo
+                - generic [ref=e335]:
+                  - img [ref=e336]
+                  - text: Sci-Fi
+                - generic [ref=e338]:
+                  - img [ref=e339]
+                  - text: Coffee
+                - generic [ref=e341]:
+                  - img [ref=e342]
+                  - text: Travel
+        - generic [ref=e344]:
+          - heading "What I Build" [level=2] [ref=e345]
+          - paragraph [ref=e346]: Bridging the gap between innovative ML research and production-ready infrastructure
+          - generic [ref=e347]:
+            - generic [ref=e348]:
+              - img [ref=e350]
+              - generic [ref=e354]: Core
+              - heading "MLOps Engineering" [level=3] [ref=e355]
+              - paragraph [ref=e356]: End-to-end ML pipelines with automated training, validation, and deployment workflows.
+              - generic [ref=e357]:
+                - generic [ref=e358]: Kubeflow
+                - generic [ref=e359]: MLflow
+                - generic [ref=e360]: Airflow
+            - generic [ref=e361]:
+              - img [ref=e363]
+              - generic [ref=e365]: Infrastructure
+              - heading "Cloud Architecture" [level=3] [ref=e366]
+              - paragraph [ref=e367]: Scalable, cost-effective cloud solutions using IaC and container orchestration.
+              - generic [ref=e368]:
+                - generic [ref=e369]: AWS
+                - generic [ref=e370]: Terraform
+                - generic [ref=e371]: Kubernetes
+            - generic [ref=e372]:
+              - img [ref=e374]
+              - generic [ref=e377]: Development
+              - heading "Full-Stack Development" [level=3] [ref=e378]
+              - paragraph [ref=e379]: Modern web applications with React, Next.js, and Python backend services.
+              - generic [ref=e380]:
+                - generic [ref=e381]: React
+                - generic [ref=e382]: Next.js
+                - generic [ref=e383]: Python
+            - generic [ref=e384]:
+              - img [ref=e386]
+              - generic [ref=e388]: AI/ML
+              - heading "AI/ML Integration" [level=3] [ref=e389]
+              - paragraph [ref=e390]: Model serving, inference optimization, and RAG systems for production AI.
+              - generic [ref=e391]:
+                - generic [ref=e392]: PyTorch
+                - generic [ref=e393]: LangChain
+                - generic [ref=e394]: FastAPI
+        - generic [ref=e396]:
+          - generic [ref=e398]: Compiling Featured Work...
+          - generic [ref=e399]:
+            - generic:
+              - generic:
+                - img
+                - generic: Latest Blog Posts
+              - generic: Loading...
+        - generic [ref=e409]:
+          - generic [ref=e410]:
+            - img [ref=e411]
+            - text: Ready for the next challenge
+          - heading "Let's Build Something Significant." [level=2] [ref=e414]:
+            - text: Let's Build Something
+            - generic [ref=e415]: Significant.
+          - paragraph [ref=e417]: Currently seeking opportunities to apply MLOps and Full-Stack expertise to high-impact production systems.
+          - generic [ref=e418]:
+            - button "Download Resume" [ref=e419] [cursor=pointer]:
+              - generic [ref=e421]:
+                - img [ref=e422]
+                - text: Download Resume
+            - button "Get in Touch" [ref=e425] [cursor=pointer]:
+              - generic [ref=e426]:
+                - img [ref=e427]
+                - text: Get in Touch
+                - img [ref=e430]
+          - generic [ref=e433]:
+            - generic [ref=e438]: Open to Work
+            - generic [ref=e439]:
+              - generic [ref=e440]:
+                - img [ref=e441]
+                - text: Remote
+              - generic [ref=e443]:
+                - img [ref=e444]
+                - text: Hybrid
+              - generic [ref=e446]:
+                - img [ref=e447]
+                - text: On-site
+  - alert [ref=e449]
+```

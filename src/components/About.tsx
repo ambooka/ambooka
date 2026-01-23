@@ -102,6 +102,11 @@ const FALLBACK_TECHNOLOGIES: Technology[] = [
 interface KpiStats {
   years_experience?: string
   current_phase?: string
+  tagline?: string
+  headline?: string
+  role?: string
+  focus?: string
+  project_count?: number
   expertise_breakdown?: {
     software?: number
     cloud_infra?: number
@@ -157,19 +162,18 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
   const [currentFocus, setCurrentFocus] = useState(currentRoadmapPhase?.title || 'Phase 1: Foundations')
   const [_personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(initialData?.personalInfo || null)
 
-  // Expertise breakdown for the segmented progress bar
-  const [expertiseBreakdown] = useState({
-    mlops: 30,
-    cloud: 25,
-    devops: 30,
-    development: 15
-  })
+  // Expertise breakdown - computed from kpiStats (from DB)
+  const expertiseBreakdown = {
+    cloud: kpiStats.expertise_breakdown?.cloud_infra ?? 30,
+    devops: kpiStats.expertise_breakdown?.software ?? 35,
+    mlops: kpiStats.expertise_breakdown?.ml_ai ?? 35,
+    development: kpiStats.expertise_breakdown?.data ?? 0
+  }
 
   const segments = [
     { label: 'Cloud', pct: expertiseBreakdown.cloud, type: 'dark' },
     { label: 'DevOps', pct: expertiseBreakdown.devops, type: 'yellow' },
-    { label: 'MLOps', pct: expertiseBreakdown.mlops, type: 'striped' },
-    { label: 'Dev', pct: expertiseBreakdown.development, type: 'light' }
+    { label: 'MLOps', pct: expertiseBreakdown.mlops, type: 'striped' }
   ]
 
   useEffect(() => {
@@ -217,7 +221,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
         setTestimonials(testimonialsResult.data)
       }
 
-      // Update project count from GitHub (more accurate than DB)
+      // Update project count from GitHub (more accurate than DB unless overridden)
       try {
         const githubService = new GitHubService(GITHUB_TOKEN)
         const repos = await githubService.getRepositories(GITHUB_USERNAME, {
@@ -225,11 +229,31 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
           sortBy: 'updated',
           includePrivate: Boolean(GITHUB_TOKEN)
         })
-        if (repos.length > 0) {
-          setProjectCount(repos.length)
+
+        let count = repos.length
+
+        // Use DB project count if higher (manual override for private projects)
+        if (personalInfoResult.data) {
+          const info = personalInfoResult.data as unknown as PersonalInfo
+          const dbStats = info.kpi_stats as unknown as KpiStats
+          if (dbStats?.project_count && dbStats.project_count > count) {
+            count = dbStats.project_count
+          }
+        }
+
+        if (count > 0) {
+          setProjectCount(count)
         }
       } catch (e) {
         console.error('Error fetching GitHub repos:', e)
+        // Fallback to DB count if GitHub fetch fails
+        if (personalInfoResult.data) {
+          const info = personalInfoResult.data as unknown as PersonalInfo
+          const dbStats = info.kpi_stats as unknown as KpiStats
+          if (dbStats?.project_count) {
+            setProjectCount(dbStats.project_count)
+          }
+        }
       }
 
       // Update skills count
@@ -301,16 +325,16 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
       <section className="welcome-banner compact">
         <div className="welcome-left">
           <h1 className="welcome-title text-3xl md:text-5xl font-bold mb-4">
-            <span className="text-gradient-static">Building the Future</span> of ML Infrastructure
+            {kpiStats.headline || <><span className="text-gradient-static">Building the Future</span> of ML Infrastructure</>}
           </h1>
           <div className="flex items-center gap-3 mt-2 flex-wrap">
             <p className="welcome-subtitle text-lg text-[var(--text-secondary)]">
-              {currentRoadmapPhase?.role || 'Software Engineer'} •
-              <span className="text-[var(--accent-primary)] font-semibold ml-1">{currentRoadmapPhase?.focus || currentFocus}</span>
+              {kpiStats.role || 'MLOps Engineer I'} •
+              <span className="text-[var(--accent-primary)] font-semibold ml-1">{kpiStats.focus || 'Build engineering foundation: Cloud + Data + ML basics'}</span>
             </p>
             <div className="px-3 py-1 rounded-full bg-gradient-to-r from-[var(--accent-primary)]/10 to-[var(--accent-tertiary)]/10 border border-[var(--accent-primary)]/20 text-[10px] font-bold text-[var(--accent-primary)] uppercase tracking-wider flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse"></span>
-              Phase {kpiStats.current_phase}
+              Phase {kpiStats.current_phase || '1 - Foundations'}
             </div>
           </div>
 
@@ -334,7 +358,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                 <circle cx="12" cy="8" r="5" />
                 <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
               </svg>
-              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '5')} /></span>
+              <span className="welcome-stat-value"><StatCounter value={parseInt(kpiStats.years_experience || '5')} />+</span>
             </div>
             <span className="welcome-stat-label">Years Exp</span>
           </div>

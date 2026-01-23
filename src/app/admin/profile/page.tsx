@@ -46,13 +46,21 @@ interface SocialLink {
     display_order: number
 }
 
-interface KpiStat {
-    label: string
-    value: string
-    color: string
-    type: string
-    section: string
-    display_order: number
+interface KpiStatsData {
+    headline?: string
+    tagline?: string
+    role?: string
+    focus?: string
+    current_phase?: string
+    years_experience?: string
+    years_exp?: string
+    project_count?: number
+    expertise_breakdown?: {
+        cloud_infra?: number
+        software?: number
+        ml_ai?: number
+        data?: number
+    }
 }
 
 interface ExpertiseItem {
@@ -110,8 +118,10 @@ export default function ProfileManager() {
     const [newSocial, setNewSocial] = useState({ platform: 'GitHub', url: '', icon_url: '' })
 
     // KPI stats
-    const [kpiStats, setKpiStats] = useState<KpiStat[]>([])
-    const [newKpi, setNewKpi] = useState({ label: '', value: '', color: '#0d9488', type: 'number', section: 'header' })
+    const [kpiData, setKpiData] = useState<KpiStatsData>({
+        headline: '', tagline: '', role: '', focus: '', current_phase: '', years_experience: '5', years_exp: '5+', project_count: 0,
+        expertise_breakdown: { cloud_infra: 30, software: 35, ml_ai: 35, data: 0 }
+    })
 
     useEffect(() => {
         fetchProfile()
@@ -147,7 +157,26 @@ export default function ProfileManager() {
                 })))
             }
             setSocialLinks((data.social_links as unknown as SocialLink[]) || [])
-            setKpiStats((data.kpi_stats as unknown as KpiStat[]) || [])
+
+            if (data.kpi_stats) {
+                const stats = data.kpi_stats as unknown as KpiStatsData
+                setKpiData({
+                    headline: stats.headline || '',
+                    tagline: stats.tagline || '',
+                    role: stats.role || '',
+                    focus: stats.focus || '',
+                    current_phase: stats.current_phase || '',
+                    years_experience: stats.years_experience || '5',
+                    years_exp: stats.years_exp || '5+',
+                    project_count: stats.project_count || 0,
+                    expertise_breakdown: {
+                        cloud_infra: stats.expertise_breakdown?.cloud_infra ?? 30,
+                        software: stats.expertise_breakdown?.software ?? 35,
+                        ml_ai: stats.expertise_breakdown?.ml_ai ?? 35,
+                        data: stats.expertise_breakdown?.data ?? 0
+                    }
+                })
+            }
         }
         setLoading(false)
     }
@@ -160,7 +189,7 @@ export default function ProfileManager() {
             about_text: aboutText,
             expertise: expertise as unknown as undefined,
             social_links: socialLinks as unknown as undefined,
-            kpi_stats: kpiStats as unknown as undefined
+            kpi_stats: kpiData as unknown as undefined
         }).eq('id', profileId)
         setSaving(false)
         setShowSuccess(true)
@@ -258,22 +287,22 @@ export default function ProfileManager() {
     }
 
     // KPI Stats handlers
-    const addKpiStat = () => {
-        if (!newKpi.label.trim() || !newKpi.value.trim()) return
-        const stat: KpiStat = {
-            ...newKpi,
-            display_order: kpiStats.length
-        }
-        setKpiStats([...kpiStats, stat])
-        setNewKpi({ label: '', value: '', color: '#0d9488', type: 'number', section: 'header' })
+    // KPI Stats handlers - no longer dynamic list
+    const updateKpiData = (field: keyof KpiStatsData, value: string | number) => {
+        setKpiData({ ...kpiData, [field]: value })
     }
 
-    const removeKpiStat = (index: number) => {
-        setKpiStats(kpiStats.filter((_, i) => i !== index))
-    }
-
-    const updateKpiStat = (index: number, field: string, value: string) => {
-        setKpiStats(kpiStats.map((s, i) => i === index ? { ...s, [field]: value } : s))
+    const updateExpertiseBreakdown = (field: string, value: number) => {
+        // Ensure expertise_breakdown exists
+        const currentBreakdown = kpiData.expertise_breakdown || { cloud_infra: 0, software: 0, ml_ai: 0, data: 0 }
+        
+        setKpiData({
+            ...kpiData,
+            expertise_breakdown: {
+                ...currentBreakdown,
+                [field]: value
+            }
+        })
     }
 
     const tabs = [
@@ -567,47 +596,102 @@ export default function ProfileManager() {
                     </div>
                 )}
 
-                {/* KPI Stats Tab */}
+                {/* KPI Stats Tab - NEW STRUCTURED */}
                 {activeTab === 'kpis' && (
-                    <div>
-                        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
-                            Add KPI stats to display on your portfolio. Changes are saved when you click &quot;Save All Changes&quot;.
-                        </p>
-                        {kpiStats.length > 0 && (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
-                                {kpiStats.map((stat, index) => (
-                                    <div key={index} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: 12, borderRadius: 12, background: 'rgba(241, 245, 249, 0.6)' }}>
-                                        <input type="text" value={stat.label} onChange={(e) => updateKpiStat(index, 'label', e.target.value)} placeholder="Label" style={{ ...inputStyle, width: 150 }} />
-                                        <input type="text" value={stat.value} onChange={(e) => updateKpiStat(index, 'value', e.target.value)} placeholder="Value" style={{ ...inputStyle, width: 120 }} />
-                                        <select value={stat.section} onChange={(e) => updateKpiStat(index, 'section', e.target.value)} style={{ ...inputStyle, width: 120 }}>
-                                            {KPI_SECTIONS.map(s => <option key={s} value={s}>{s}</option>)}
-                                        </select>
-                                        <button onClick={() => removeKpiStat(index)} style={{ padding: 10, borderRadius: 8, background: 'rgba(254, 242, 242, 0.8)', color: '#ef4444', border: 'none', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                        <div>
+                            <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
+                                Configure your Welcome Banner and Key Performance Indicators.
+                            </p>
+                        </div>
+
+                        {/* Banner Section */}
+                        <div style={{ padding: 20, borderRadius: 16, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(226, 232, 240, 0.6)' }}>
+                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#334155', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 4, height: 16, borderRadius: 2, background: '#0d9488' }}></span>
+                                Welcome Banner Content
+                            </h3>
+                            <div style={{ display: 'grid', gap: 16 }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16 }}>
+                                    <div>
+                                        <label style={labelStyle}>Headline</label>
+                                        <input type="text" value={kpiData.headline} onChange={(e) => updateKpiData('headline', e.target.value)} placeholder="Building the Future of..." style={inputStyle} />
                                     </div>
-                                ))}
+                                    <div>
+                                        <label style={labelStyle}>Tagline</label>
+                                        <input type="text" value={kpiData.tagline} onChange={(e) => updateKpiData('tagline', e.target.value)} placeholder="Build Fast. Deploy Faster..." style={inputStyle} />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                                    <div>
+                                        <label style={labelStyle}>Role</label>
+                                        <input type="text" value={kpiData.role} onChange={(e) => updateKpiData('role', e.target.value)} placeholder="MLOps Engineer I" style={inputStyle} />
+                                    </div>
+                                    <div>
+                                        <label style={labelStyle}>Focus</label>
+                                        <input type="text" value={kpiData.focus} onChange={(e) => updateKpiData('focus', e.target.value)} placeholder="Cloud + Data + ML basics" style={inputStyle} />
+                                    </div>
+                                </div>
                             </div>
-                        )}
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'end', padding: 16, borderRadius: 12, background: 'rgba(240, 253, 250, 0.6)', border: '1px dashed rgba(13, 148, 136, 0.3)' }}>
-                            <div style={{ width: 150 }}>
-                                <label style={{ ...labelStyle, fontSize: 11 }}>Label *</label>
-                                <input type="text" value={newKpi.label} onChange={(e) => setNewKpi({ ...newKpi, label: e.target.value })} placeholder="e.g. Projects" style={inputStyle} />
+                        </div>
+
+                        {/* Stats Section */}
+                        <div style={{ padding: 20, borderRadius: 16, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(226, 232, 240, 0.6)' }}>
+                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#334155', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 4, height: 16, borderRadius: 2, background: '#6366f1' }}></span>
+                                Key Metrics
+                            </h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16 }}>
+                                <div>
+                                    <label style={labelStyle}>Current Phase</label>
+                                    <input type="text" value={kpiData.current_phase} onChange={(e) => updateKpiData('current_phase', e.target.value)} placeholder="Phase 1 - Foundations" style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Years Exp (Display)</label>
+                                    <input type="text" value={kpiData.years_exp} onChange={(e) => updateKpiData('years_exp', e.target.value)} placeholder="5+" style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Years (Counter)</label>
+                                    <input type="number" value={kpiData.years_experience} onChange={(e) => updateKpiData('years_experience', e.target.value)} placeholder="5" style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Project Count (Override)</label>
+                                    <input type="number" value={kpiData.project_count || ''} onChange={(e) => updateKpiData('project_count', parseInt(e.target.value) || 0)} placeholder="Auto if empty" style={inputStyle} />
+                                </div>
                             </div>
-                            <div style={{ width: 120 }}>
-                                <label style={{ ...labelStyle, fontSize: 11 }}>Value *</label>
-                                <input type="text" value={newKpi.value} onChange={(e) => setNewKpi({ ...newKpi, value: e.target.value })} placeholder="e.g. 35+" style={inputStyle} />
+                        </div>
+
+                        {/* Expertise Breakdown */}
+                        <div style={{ padding: 20, borderRadius: 16, background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(226, 232, 240, 0.6)' }}>
+                            <h3 style={{ fontSize: 14, fontWeight: 700, color: '#334155', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <span style={{ width: 4, height: 16, borderRadius: 2, background: '#f59e0b' }}></span>
+                                Expertise Breakdown (%)
+                            </h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16 }}>
+                                <div>
+                                    <label style={labelStyle}>Cloud Infra</label>
+                                    <input type="number" value={kpiData.expertise_breakdown?.cloud_infra ?? 30} onChange={(e) => updateExpertiseBreakdown('cloud_infra', parseInt(e.target.value) || 0)} style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Software / DevOps</label>
+                                    <input type="number" value={kpiData.expertise_breakdown?.software ?? 35} onChange={(e) => updateExpertiseBreakdown('software', parseInt(e.target.value) || 0)} style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>ML & AI</label>
+                                    <input type="number" value={kpiData.expertise_breakdown?.ml_ai ?? 35} onChange={(e) => updateExpertiseBreakdown('ml_ai', parseInt(e.target.value) || 0)} style={inputStyle} />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>Data (Hidden?)</label>
+                                    <input type="number" value={kpiData.expertise_breakdown?.data ?? 0} onChange={(e) => updateExpertiseBreakdown('data', parseInt(e.target.value) || 0)} style={inputStyle} />
+                                </div>
                             </div>
-                            <div style={{ width: 120 }}>
-                                <label style={{ ...labelStyle, fontSize: 11 }}>Section</label>
-                                <select value={newKpi.section} onChange={(e) => setNewKpi({ ...newKpi, section: e.target.value })} style={inputStyle}>
-                                    {KPI_SECTIONS.map(s => <option key={s} value={s}>{s}</option>)}
-                                </select>
-                            </div>
-                            <button onClick={addKpiStat} disabled={!newKpi.label.trim() || !newKpi.value.trim()} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '12px 16px', borderRadius: 10, background: (newKpi.label.trim() && newKpi.value.trim()) ? 'linear-gradient(135deg, #14b8a6, #0f766e)' : '#e2e8f0', color: (newKpi.label.trim() && newKpi.value.trim()) ? 'white' : '#94a3b8', fontSize: 14, fontWeight: 500, border: 'none', cursor: 'pointer' }}>
-                                <Plus size={16} /> Add
-                            </button>
+                            <p style={{ marginTop: 8, fontSize: 12, color: '#64748b' }}>
+                                Total: {(kpiData.expertise_breakdown?.cloud_infra || 0) + (kpiData.expertise_breakdown?.software || 0) + (kpiData.expertise_breakdown?.ml_ai || 0) + (kpiData.expertise_breakdown?.data || 0)}%
+                            </p>
                         </div>
                     </div>
                 )}
+
             </div>
         </div>
     )

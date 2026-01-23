@@ -8,7 +8,7 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
     reporter: 'html',
     use: {
-        baseURL: 'http://localhost:3001',
+        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
         trace: 'on-first-retry',
     },
     projects: [
@@ -18,8 +18,10 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'npm run dev -- -p 3001',
-        url: 'http://localhost:3001',
-        reuseExistingServer: !process.env.CI,
+        command: 'yarn dev',
+        url: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+        reuseExistingServer: true, // Always reuse for local dev
+        timeout: 120 * 1000,
     },
 });
+

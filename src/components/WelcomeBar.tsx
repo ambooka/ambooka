@@ -7,21 +7,71 @@ import { GitHubService } from '@/services/github'
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
 
-export default function WelcomeBar() {
-    const [expertise] = useState({
-        mlops: 30,
-        cloud: 25,
-        devops: 30,
-        development: 15
-    })
+// Default values as fallback
+const DEFAULT_EXPERTISE = {
+    mlops: 35,
+    cloud: 30,
+    devops: 35,
+    development: 0 // Hidden
+}
 
-    const [yearsExp] = useState('5+')
+const DEFAULT_KPI_STATS = {
+    years_exp: '5+',
+    tagline: 'Build Fast. Deploy Faster. Scale Smart.'
+}
+
+interface Expertise {
+    mlops: number
+    cloud: number
+    devops: number
+    development: number
+}
+
+interface KpiStats {
+    years_exp?: string
+    tagline?: string
+    [key: string]: string | number | undefined
+}
+
+export default function WelcomeBar() {
+    const [expertise, setExpertise] = useState<Expertise>(DEFAULT_EXPERTISE)
+    const [kpiStats, setKpiStats] = useState<KpiStats>(DEFAULT_KPI_STATS)
     const [skillCount, setSkillCount] = useState(40)
     const [projectCount, setProjectCount] = useState(25)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         (async () => {
             try {
+                setIsLoading(true)
+
+                // Fetch personal_info including expertise and kpi_stats
+                const { data: personalInfo, error: personalError } = await supabase
+                    .from('personal_info')
+                    .select('expertise, kpi_stats')
+                    .single()
+
+                if (!personalError && personalInfo) {
+                    // Set expertise from DB if available
+                    if (personalInfo.expertise && typeof personalInfo.expertise === 'object') {
+                        const exp = personalInfo.expertise as Record<string, number>
+                        setExpertise({
+                            mlops: exp.mlops ?? DEFAULT_EXPERTISE.mlops,
+                            cloud: exp.cloud ?? DEFAULT_EXPERTISE.cloud,
+                            devops: exp.devops ?? DEFAULT_EXPERTISE.devops,
+                            development: exp.development ?? DEFAULT_EXPERTISE.development
+                        })
+                    }
+
+                    // Set KPI stats from DB if available
+                    if (personalInfo.kpi_stats && typeof personalInfo.kpi_stats === 'object') {
+                        setKpiStats({
+                            ...DEFAULT_KPI_STATS,
+                            ...(personalInfo.kpi_stats as KpiStats)
+                        })
+                    }
+                }
+
                 // Fetch skills count from DB
                 const { count: skillsCount } = await supabase
                     .from('skills')
@@ -44,6 +94,8 @@ export default function WelcomeBar() {
                 }
             } catch (e) {
                 console.error('Error fetching stats:', e)
+            } finally {
+                setIsLoading(false)
             }
         })()
     }, [])
@@ -51,14 +103,13 @@ export default function WelcomeBar() {
     const segments = [
         { label: 'Cloud', pct: expertise.cloud, type: 'dark' },
         { label: 'DevOps', pct: expertise.devops, type: 'yellow' },
-        { label: 'MLOps', pct: expertise.mlops, type: 'striped' },
-        { label: 'Dev', pct: expertise.development, type: 'light' }
+        { label: 'MLOps', pct: expertise.mlops, type: 'striped' }
     ]
 
     return (
         <section className="welcome-bar">
             <div className="welcome-left">
-                <h3 className="welcome-title">Build Fast. <span>Deploy Faster. Scale Smart.</span></h3>
+                <h3 className="welcome-title">{kpiStats.tagline || DEFAULT_KPI_STATS.tagline}</h3>
 
                 <div className="segments-container">
                     {segments.map((seg, i) => (
@@ -79,7 +130,7 @@ export default function WelcomeBar() {
                             <circle cx="12" cy="8" r="5" />
                             <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
                         </svg>
-                        <span className="welcome-stat-value">{yearsExp}</span>
+                        <span className="welcome-stat-value">{kpiStats.years_exp || DEFAULT_KPI_STATS.years_exp}</span>
                     </div>
                     <span className="welcome-stat-label">Years</span>
                 </div>
