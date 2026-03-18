@@ -1,0 +1,524 @@
+'use client'
+
+import { useState, useEffect, useMemo } from 'react'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { GitHubService, GitHubRepo } from '../services/github'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { ExternalLink, Github, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Lock, Code, ArrowUpRight, X } from 'lucide-react'
+import { fetchProjectReadme } from '@/app/actions/github'
+import { cn } from '@/lib/utils'
+import { Dialog, DialogContent, DialogOverlay, DialogPortal, DialogClose } from '@/components/ui'
+import AnimatedPage from '@/components/AnimatedPage'
+import {
+  fadeUp,
+  staggerContainer,
+  staggerChildScale,
+  scrollRevealTransition,
+  defaultViewport,
+} from '@/lib/motion'
+
+// --- Constants & Config ---
+
+const LOGO_MAP: Record<string, string> = {
+  'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
+  'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
+  'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
+  'Go': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original-wordmark.svg',
+  'Java': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
+  'C++': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg',
+  'C#': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg',
+  'PHP': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',
+  'Ruby': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg',
+  'Swift': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg',
+  'Kotlin': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg',
+  'Rust': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-plain.svg',
+  'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
+  'Kubernetes': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg',
+  'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+  'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+  'Vue': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg',
+  'Angular': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg',
+  'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg',
+  'HTML': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
+  'CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
+  'Sass': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg',
+  'PostgreSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
+  'MySQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+  'MongoDB': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+  'Redis': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg',
+  'GraphQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg',
+  'Unity': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg'
+}
+
+const defaultGithubConfig = {
+  username: 'ambooka',
+  featuredThreshold: 5,
+  maxRepos: 100,
+  sortBy: 'updated' as const
+}
+
+const getProjectImage = (repo: GitHubRepo): string => {
+  if (repo.homepage) {
+    return `https://opengraph.githubassets.com/1/${repo.owner?.login}/${repo.name}`
+  }
+  return 'https://opengraph.githubassets.com/1/torvalds/reddit-news'
+}
+
+// --- Portfolio Component ---
+
+interface Project {
+  id: number | string
+  category: string
+  title: string
+  image: string
+  url: string
+  description: string
+  stars: number
+  language: string
+  isPrivate?: boolean
+  ownerLogin?: string
+  homepage?: string | null
+  isFeatured?: boolean
+  updatedAt?: string
+}
+
+interface PortfolioProps {
+  isActive?: boolean
+  github?: {
+    username: string
+    token?: string
+    featuredThreshold: number
+    maxRepos: number
+    sortBy: 'updated' | 'stars' | 'created'
+  }
+  initialProjects?: Project[]
+}
+
+export default function Portfolio({ isActive = false, github = defaultGithubConfig, initialProjects }: PortfolioProps) {
+  const [filter, setFilter] = useState('all')
+  const [loading, setLoading] = useState(!initialProjects)
+  const [error, setError] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const PROJECTS_PER_PAGE = 12
+
+  const [projects, setProjects] = useState<Array<Project>>(initialProjects || [])
+
+  // README state
+  const [popupLoading, setPopupLoading] = useState(false)
+  const [popupError, setPopupError] = useState<string | null>(null)
+  const [popupContent, setPopupContent] = useState<string | null>(null)
+  const [popupRepo, setPopupRepo] = useState<Project | null>(null)
+
+  useEffect(() => {
+    if (initialProjects) return
+
+    const fetchProjects = async () => {
+      setLoading(true)
+      try {
+        const githubService = new GitHubService(github.token)
+        const repos = await githubService.getRepositories(github.username, {
+          maxRepos: github.maxRepos,
+          sortBy: github.sortBy,
+          includePrivate: Boolean(github.token)
+        })
+
+        const mappedProjects = repos.map(repo => ({
+          id: repo.id,
+          category: repo.language?.toLowerCase() || 'other',
+          title: repo.name,
+          image: getProjectImage(repo),
+          url: repo.html_url,
+          description: repo.description || '',
+          stars: repo.stargazers_count,
+          language: repo.language || 'Other',
+          isPrivate: !!repo.private,
+          ownerLogin: repo.owner?.login,
+          homepage: repo.homepage,
+          isFeatured: repo.stargazers_count >= github.featuredThreshold || !!repo.homepage,
+          updatedAt: repo.pushed_at || repo.updated_at
+        }))
+
+        mappedProjects.sort((a, b) => {
+          const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0
+          const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0
+          return dateB - dateA
+        })
+
+        setProjects(mappedProjects)
+      } catch (error) {
+        console.error('Failed to fetch projects:', error)
+        setError('Failed to load projects.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [github, initialProjects])
+
+  const openProject = async (repo: Project) => {
+    setPopupRepo(repo)
+    setPopupError(null)
+    setPopupContent(null)
+    setPopupLoading(true)
+
+    try {
+      const owner = repo.ownerLogin || github.username
+      const result = await fetchProjectReadme(owner, repo.title)
+
+      if (result.error) {
+        setPopupError(result.error)
+      } else {
+        setPopupContent(result.content || 'No README found.')
+      }
+    } catch {
+      setPopupError('Could not load README.')
+    } finally {
+      setPopupLoading(false)
+    }
+  }
+
+  const filteredProjects = useMemo(() => {
+    let result = projects
+    if (filter !== 'all') {
+      result = result.filter(p => p.category === filter.toLowerCase())
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
+      result = result.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.language.toLowerCase().includes(q))
+    }
+    return result
+  }, [projects, filter, searchQuery])
+
+  const paginatedProjects = useMemo(() => {
+    const start = (currentPage - 1) * PROJECTS_PER_PAGE
+    return filteredProjects.slice(start, start + PROJECTS_PER_PAGE)
+  }, [filteredProjects, currentPage])
+
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE)
+
+  const filterOptions = [
+    { value: 'all', label: 'All' },
+    ...Array.from(new Set(projects.map(p => p.language))).filter(Boolean).map(lang => ({
+      value: lang.toLowerCase(),
+      label: lang
+    }))
+  ]
+
+  return (
+    <AnimatedPage>
+    <article className={cn("w-full max-w-full m-0 p-0", isActive ? "block" : "hidden")} data-page="portfolio">
+      <motion.header
+        className="mb-8"
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        transition={scrollRevealTransition}
+      >
+        <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] capitalize relative inline-block pb-3">
+          Project Portfolio
+          <div className="absolute bottom-0 left-0 w-10 h-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))]" />
+        </h2>
+        <p className="mt-4 text-[0.94rem] leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[600px]">
+          A showcase of my recent work, open-source contributions, and technical experiments.
+        </p>
+      </motion.header>
+
+      <section>
+        {/* Expanded Controls */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] w-5 h-5 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search by name, tech or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[hsl(var(--accent))] focus:ring-2 focus:ring-[hsl(var(--accent)/0.2)] transition-all shadow-sm text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
+            />
+          </div>
+          <div className="flex gap-1 overflow-x-auto py-1 px-1 scrollbar-none [&::-webkit-scrollbar]:hidden bg-[hsl(var(--muted))] rounded-full border border-[hsl(var(--border))]">
+            {filterOptions.map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => { setFilter(opt.value); setCurrentPage(1); }}
+                className={cn(
+                  "px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center border",
+                  filter === opt.value
+                    ? "bg-[hsl(var(--background))] text-[hsl(var(--accent))] shadow-sm font-bold border-[hsl(var(--border))]"
+                    : "bg-transparent text-[hsl(var(--muted-foreground))] border-transparent hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--background))/50]"
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="h-[400px] bg-[hsl(var(--muted))] animate-pulse rounded-2xl" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 text-red-500 bg-[hsl(var(--muted))] rounded-2xl border border-red-500/20">{error}</div>
+        ) : (
+          <>
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 w-full"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+            >
+              {paginatedProjects.map((repo) => (
+                <motion.div
+                  key={repo.id}
+                  variants={staggerChildScale}
+                >
+                  <div className={cn(
+                    "group h-full flex flex-col overflow-hidden rounded-2xl",
+                    "border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/30",
+                    "shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[hsl(var(--accent))/0.3]"
+                  )}>
+                    {/* Image Header with Overlay */}
+                    <div className="relative h-56 overflow-hidden bg-[hsl(var(--muted))]">
+                      <Image
+                        src={repo.image}
+                        alt={repo.title}
+                        width={400}
+                        height={224}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        unoptimized
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 backdrop-blur-sm">
+                        <button
+                          onClick={() => openProject(repo)}
+                          className="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black hover:scale-110 transition-all backdrop-blur-md"
+                          title="View README"
+                        >
+                          <EyeIcon size={20} />
+                        </button>
+                        {!repo.isPrivate && (
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black hover:scale-110 transition-all backdrop-blur-md"
+                            title="View Code"
+                          >
+                            <Github size={20} />
+                          </a>
+                        )}
+                      </div>
+                      {repo.isPrivate && (
+                        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[0.6rem] font-bold uppercase tracking-widest flex items-center gap-1.5 z-10">
+                          <Lock size={10} /> Private
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Body */}
+                    <div className="flex-1 p-6 flex flex-col">
+                      <div className="flex justify-between items-start mb-4 gap-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-[hsl(var(--muted))] border border-[hsl(var(--border))] flex items-center justify-center p-2 shrink-0">
+                            {LOGO_MAP[repo.language] ? (
+                              <Image src={LOGO_MAP[repo.language]} alt={repo.language} width={40} height={40} className="w-full h-full object-contain" unoptimized />
+                            ) : (
+                              <Code className="text-[hsl(var(--muted-foreground))]" size={20} />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-base font-bold text-[hsl(var(--foreground))] capitalize truncate" title={repo.title.replace(/-/g, ' ')}>
+                              {repo.title.replace(/-/g, ' ')}
+                            </h3>
+                            <span className="text-[0.6rem] font-bold text-[hsl(var(--accent))] uppercase tracking-widest block truncate">
+                              {repo.language}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-xs font-bold text-[hsl(var(--muted-foreground))] shrink-0">
+                          <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                          {repo.stars}
+                        </div>
+                      </div>
+
+                      <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))] line-clamp-3 mb-6 flex-1 opacity-90">
+                        {repo.description || 'Integrating complex systems with elegant solutions. This project showcases scalable architecture and modern engineering practices.'}
+                      </p>
+
+                      {/* Actions */}
+                      <div className="flex gap-2.5 mt-auto">
+                        {!repo.isPrivate ? (
+                          <a
+                            href={repo.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                              "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
+                              "bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold uppercase tracking-widest",
+                              "shadow-sm transition-all hover:bg-[hsl(var(--accent))] hover:-translate-y-px"
+                            )}
+                          >
+                            <Github size={14} /> Source Code
+                          </a>
+                        ) : (
+                          <button
+                            onClick={() => openProject(repo)}
+                            className={cn(
+                              "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
+                              "bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] text-[11px] font-bold uppercase tracking-widest",
+                              "shadow-sm transition-all hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.3] hover:bg-[hsl(var(--accent))/0.05] hover:-translate-y-px"
+                            )}
+                          >
+                            <EyeIcon size={14} /> View README
+                          </button>
+                        )}
+                        {repo.homepage && (
+                          <a
+                            href={repo.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={cn(
+                              "w-11 h-11 flex items-center justify-center shrink-0 rounded-xl",
+                              "bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]",
+                              "shadow-sm transition-all hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.3] hover:bg-[hsl(var(--accent))/0.05] hover:-translate-y-px"
+                            )}
+                            title="Live Preview"
+                          >
+                            <ArrowUpRight size={20} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Pagination UI */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-3 mt-12 pb-8">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--accent))/0.5] shadow-sm disabled:opacity-30 disabled:hover:border-[hsl(var(--border))] transition-all flex items-center justify-center"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="flex items-center gap-1 bg-[hsl(var(--muted))] p-1 rounded-full border border-[hsl(var(--border))]">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setCurrentPage(p)}
+                      className={cn(
+                        "w-10 h-10 rounded-full text-sm font-medium transition-all flex items-center justify-center",
+                        currentPage === p
+                          ? "bg-[hsl(var(--background))] text-[hsl(var(--foreground))] shadow-sm font-semibold"
+                          : "bg-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--card))]"
+                      )}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--accent))/0.5] shadow-sm disabled:opacity-30 disabled:hover:border-[hsl(var(--border))] transition-all flex items-center justify-center"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </section>
+
+      {/* README Preview Modal */}
+      {popupRepo && (
+        <DialogPrimitive.Root open={!!popupRepo} onOpenChange={(open) => {
+          if (!open) setPopupRepo(null)
+        }}>
+          <DialogPrimitive.Portal>
+            <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+            <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 flex flex-col w-[94vw] max-w-[800px] max-h-[90vh] translate-x-[-50%] translate-y-[-50%] border-0 bg-[hsl(var(--card))] shadow-2xl rounded-2xl overflow-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] outline-none">
+              
+              <div className="relative h-48 md:h-64 shrink-0 bg-black">
+                <Image src={popupRepo.image} alt={popupRepo.title} fill className="object-cover opacity-60" unoptimized />
+                <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[hsl(var(--card))] via-[hsl(var(--card))/80] to-transparent" />
+                
+                <div className="absolute bottom-6 left-6 md:left-8 pr-12">
+                  <span className="text-[hsl(var(--accent))] text-[0.65rem] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md bg-[hsl(var(--accent))/0.1] backdrop-blur-md border border-[hsl(var(--accent))/0.2]">
+                    {popupRepo.language}
+                  </span>
+                  <DialogPrimitive.Title className="text-2xl md:text-3xl font-extrabold text-[hsl(var(--foreground))] uppercase tracking-tight mt-3 truncate max-w-full">
+                    {popupRepo.title.replace(/-/g, ' ')}
+                  </DialogPrimitive.Title>
+                </div>
+                
+                <DialogPrimitive.Close className="absolute top-4 right-4 md:top-6 md:right-6 w-9 h-9 border-0 rounded-full inline-flex items-center justify-center bg-black/40 text-white backdrop-blur-md cursor-pointer transition-all duration-200 hover:rotate-90 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:ring-offset-2 focus:ring-offset-black disabled:pointer-events-none">
+                  <X size={18} />
+                  <span className="sr-only">Close</span>
+                </DialogPrimitive.Close>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 md:p-10 scrollbar-thin scrollbar-thumb-[hsl(var(--border))] scrollbar-track-transparent">
+                {popupLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 gap-4">
+                    <div className="w-10 h-10 border-4 border-[hsl(var(--accent))] border-t-transparent rounded-full animate-spin" />
+                    <p className="text-[hsl(var(--muted-foreground))] font-bold uppercase text-xs tracking-widest">Decrypting README...</p>
+                  </div>
+                ) : popupError ? (
+                  <div className="p-6 md:p-8 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4">
+                    <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center shrink-0">
+                      <Lock size={20} className="text-red-500" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-base mb-1">Access Restricted</p>
+                      <p className="text-sm opacity-80">{popupError}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[hsl(var(--accent))] prose-a:no-underline hover:prose-a:underline prose-code:text-[hsl(var(--accent))] prose-code:bg-[hsl(var(--accent))/0.1] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none">
+                    <div
+                      className="[&>*:first-child]:mt-0"
+                      dangerouslySetInnerHTML={{ __html: popupContent || '' }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="p-6 md:p-8 bg-[hsl(var(--muted))] border-t border-[hsl(var(--border))] flex flex-col sm:flex-row gap-4 shrink-0">
+                {!popupRepo.isPrivate && (
+                  <a
+                    href={popupRepo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-3 bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-bold uppercase tracking-widest py-3.5 rounded-xl hover:bg-[hsl(var(--accent))] transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:ring-offset-2 focus:ring-offset-[hsl(var(--muted))]"
+                  >
+                    <Github size={18} /> Open Repository
+                  </a>
+                )}
+                {popupRepo.homepage && (
+                  <a
+                    href={popupRepo.homepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-3 bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs font-bold uppercase tracking-widest py-3.5 rounded-xl hover:border-[hsl(var(--accent))] hover:text-[hsl(var(--accent))] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:ring-offset-2 focus:ring-offset-[hsl(var(--muted))]"
+                  >
+                    <ExternalLink size={18} /> Live Demo
+                  </a>
+                )}
+              </div>
+            </DialogPrimitive.Content>
+          </DialogPrimitive.Portal>
+        </DialogPrimitive.Root>
+      )}
+    </article>
+    </AnimatedPage>
+  )
+}
