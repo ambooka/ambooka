@@ -285,7 +285,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
           initial="hidden"
           animate="visible"
           className={cn(
-            "relative overflow-hidden p-6 rounded-[22px]",
+            "relative overflow-hidden p-6 rounded-2xl",
             "border border-[hsl(var(--border))]",
             "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
             "shadow-sm",
@@ -479,7 +479,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
         {/* 4. Expertise Section (What I Build) */}
         <motion.section
           className={cn(
-            "relative overflow-hidden p-6 lg:p-7 rounded-[22px]",
+            "relative overflow-hidden p-6 lg:p-7 rounded-2xl",
             "border border-[hsl(var(--border))]",
             "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
             "shadow-sm text-left"

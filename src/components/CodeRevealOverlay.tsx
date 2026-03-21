@@ -479,17 +479,17 @@ export default function CodeRevealOverlay() {
         // Sync character box with breathing
         const boxScale = 1 + (breathe * 0.15)
 
-        // Outer glow ring - burgundy for light mode, gold for dark mode
+        // Outer glow ring — accent-colored
         ctx.shadowBlur = 12 + (charPulse * 8)
-        ctx.shadowColor = isDark ? '#C9A961' : '#8E0E28' // Gold for dark, burgundy for light
-        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.3 + (charPulse * 0.2)})` : `rgba(142, 14, 40, ${0.4 + (charPulse * 0.3)})`
+        ctx.shadowColor = isDark ? '#C9A961' : '#14B8A6'
+        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.3 + (charPulse * 0.2)})` : `rgba(20, 184, 166, ${0.4 + (charPulse * 0.3)})`
         ctx.lineWidth = 3
         const outerSize = 6 * boxScale
         ctx.strokeRect(circleX - outerSize, circleY - outerSize, outerSize * 2, outerSize * 2)
 
         // Inner indicator
         ctx.shadowBlur = 6
-        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.6 + (charPulse * 0.3)})` : `rgba(142, 14, 40, ${0.7 + (charPulse * 0.3)})`
+        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.6 + (charPulse * 0.3)})` : `rgba(20, 184, 166, ${0.7 + (charPulse * 0.3)})`
         ctx.lineWidth = 2
         const innerSize = 3 * boxScale
         ctx.strokeRect(circleX - innerSize, circleY - innerSize, innerSize * 2, innerSize * 2)
