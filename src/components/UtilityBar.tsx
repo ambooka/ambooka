@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import AiChatPanel from '@/components/widgets/AiChatPanel'
 import ResumeBuilderPanel from '@/components/widgets/ResumeBuilderPanel'
+import { cn } from '@/lib/utils'
 
 interface UtilityBarProps {
   resumeTrigger?: number
@@ -12,7 +13,6 @@ interface UtilityBarProps {
 export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
   const [isChatOpen, setIsChatOpen] = useState(false)
 
-  // Fetch personal info on mount (shared context)
   useEffect(() => {
     const fetchPersonalInfo = async () => {
       try {
@@ -22,16 +22,29 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
       }
     }
     fetchPersonalInfo()
-
   }, [])
 
   return (
     <>
-      {/* Floating Utility Bar */}
-      <div className="fixed right-6 bottom-6 md:top-1/2 md:-translate-y-1/2 md:bottom-auto z-50 flex md:flex-col items-center gap-3 p-2 bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-full shadow-lg backdrop-blur-md">
+      {/* Floating Utility Bar — right edge on desktop, bottom-right on mobile */}
+      <div className={cn(
+        "fixed z-50",
+        /* Desktop: vertically centered on right edge */
+        "md:right-5 md:top-1/2 md:-translate-y-1/2 md:bottom-auto",
+        /* Mobile: bottom-right, above the MobileBottomNav */
+        "right-4 bottom-24 md:bottom-auto",
+        /* Layout */
+        "flex md:flex-col items-center gap-2",
+        "p-2.5 rounded-2xl",
+        /* Glassmorphism card */
+        "bg-[hsl(var(--card)/0.85)] backdrop-blur-xl",
+        "border border-[hsl(var(--border))]",
+        "shadow-xl"
+      )}>
         <ResumeBuilderPanel resumeTrigger={resumeTrigger} />
 
-        <div className="h-4 md:h-[1px] w-[1px] md:w-4 bg-[hsl(var(--border))]" />
+        {/* Separator */}
+        <div className="h-px w-6 md:h-6 md:w-px bg-[hsl(var(--border))]" />
 
         <AiChatPanel isOpen={isChatOpen} onToggle={() => setIsChatOpen(prev => !prev)} />
       </div>

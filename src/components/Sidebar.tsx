@@ -208,12 +208,12 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
   const renderContent = () => (
     <div className={cn(
       "relative overflow-y-auto max-h-inherit",
-      isModal ? "p-[1.4rem] pb-[calc(1.4rem+env(safe-area-inset-bottom))] max-sm:p-4" : "p-4"
+      isModal ? "p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] max-sm:p-5" : "p-5"
     )}>
       {/* ━━━ Hero: Header + Profile Photo ━━━ */}
       <div className={cn(
-        "grid items-start mb-6 max-sm:grid-cols-1 max-sm:text-left",
-        isModal ? "grid-cols-[1fr_auto] gap-5" : "grid-cols-[1fr_auto] gap-3 mb-4"
+        "grid items-start mb-7 max-sm:grid-cols-1 max-sm:text-left",
+        isModal ? "grid-cols-[1fr_auto] gap-6" : "grid-cols-[1fr_auto] gap-4 mb-5"
       )}>
         <div className="min-w-0">
           <h2 className={cn(
@@ -251,7 +251,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
       </div>
 
       {/* ━━━ Contact ━━━ */}
-      <div className={cn("mb-5", isModal ? "" : "mb-3.5")}>
+      <div className={cn("mb-6", isModal ? "" : "mb-5")}>
         <h3 className={cn("font-serif italic font-bold text-[hsl(var(--foreground))] tracking-[-0.01em]", isModal ? "text-[1.15rem] mb-2.5" : "text-[0.92rem] mb-2")}>Contact</h3>
         <div className={cn("grid gap-2.5 max-sm:grid-cols-1", isModal ? "grid-cols-2" : "grid-cols-1 gap-1.5")}>
           {profile.email && (
@@ -289,12 +289,15 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
         </div>
       </div>
 
+      {/* ━━━ Separator ━━━ */}
+      <div className="h-px w-full bg-[hsl(var(--border))] mb-6" />
+
       {/* ━━━ Two-column sections ━━━ */}
-      <div className={cn("grid gap-5 max-[400px]:grid-cols-1", isModal ? "grid-cols-2" : "gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2")}>
+      <div className={cn("grid gap-6 max-[400px]:grid-cols-1", isModal ? "grid-cols-2" : "gap-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2")}>
         {/* Left column */}
         <div className="min-w-0">
           {/* Education / Credentials */}
-          <div className={cn("mb-5", isModal ? "" : "mb-3.5")}>
+          <div className={cn("mb-6", isModal ? "" : "mb-4")}>
             <h3 className={cn("font-serif italic font-bold text-[hsl(var(--foreground))] tracking-[-0.01em]", isModal ? "text-[1.15rem] mb-2.5" : "text-[0.92rem] mb-2")}>Education</h3>
             {obtainedCerts.length > 0 ? (
               <div className="flex flex-col gap-2">
@@ -401,8 +404,11 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
         </div>
       </div>
 
+      {/* ━━━ Separator ━━━ */}
+      <div className="h-px w-full bg-[hsl(var(--border))] mt-2 mb-5" />
+
       {/* ━━━ Action Buttons ━━━ */}
-      <div className={cn("grid gap-2.5 mt-3 max-[768px]:grid-cols-2", isModal ? "grid-cols-2" : "grid-cols-1 md:grid-cols-2 max-md:grid-cols-2")}>
+      <div className={cn("grid gap-3", isModal ? "grid-cols-2" : "grid-cols-2")}>
         <a href={`mailto:${profile.email || 'hello@ambooka.dev'}`} className={cn(
           "inline-flex items-center justify-center gap-2 border-0 text-[0.78rem] font-extrabold no-underline cursor-pointer transition-all hover:-translate-y-0.5",
           "bg-gradient-to-br from-[hsl(var(--accent)/0.96)] to-[hsl(168_80%_35%/0.92)] text-white shadow-[0_12px_24px_hsl(var(--accent)/0.2)] hover:shadow-[0_16px_32px_hsl(var(--accent)/0.28)]",
