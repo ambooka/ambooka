@@ -75,8 +75,12 @@ export default function CodeRevealOverlay() {
       return
     }
 
-    // Smoke particle system - covers code and disperses on hover
-    const MAX_PARTICLES = 100
+    // Sparkle particle system for magical effect
+    const MAX_SPARKLES = 50
+    const sparkles: Particle[] = []
+
+    // Holographic ring rotation
+    let holoAngle = 0
 
     // Spring physics for smoother movement
     const springState = {
@@ -122,7 +126,7 @@ export default function CodeRevealOverlay() {
     let lastHovered: HTMLElement | null = null
     let lastCharInfo: CharacterInfo | null = null
 
-    const MAX_RADIUS = 160
+    const MAX_RADIUS = 200
     const SPRING_STIFFNESS = 0.15
     const SPRING_DAMPING = 0.85
 
@@ -344,6 +348,9 @@ export default function CodeRevealOverlay() {
       // Update scan line animation
       scanLineOffset = (scanLineOffset + 2) % 400
 
+      // Update holographic ring rotation
+      holoAngle += 0.008
+
       // Spring physics for radius
       const targetR = (isEnabled && currentHovered) ? MAX_RADIUS : 0
       const radiusSpring = applySpring(springState.currentRadius, targetR, springState.velocityRadius)
@@ -390,13 +397,78 @@ export default function CodeRevealOverlay() {
       // Check current theme
       const isDark = document.documentElement.getAttribute('data-theme')?.includes('dark') || false
 
+      // Spawn sparkle particles around the circle edge
+      if (currentHovered && springState.currentRadius > 20 && sparkles.length < MAX_SPARKLES && Math.random() < 0.4) {
+        const angle = Math.random() * Math.PI * 2
+        const dist = springState.currentRadius * (0.85 + Math.random() * 0.3)
+        sparkles.push({
+          x: circleX + Math.cos(angle) * dist,
+          y: circleY + Math.sin(angle) * dist,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5 - 0.3,
+          life: 1,
+          maxLife: 1,
+          size: 1 + Math.random() * 2.5,
+          color: isDark ? 'rgba(201, 169, 97,' : 'rgba(20, 184, 166,'
+        })
+      }
+
+      // === SPARKLE PARTICLES ===
+      for (let i = sparkles.length - 1; i >= 0; i--) {
+        const p = sparkles[i]
+        p.x += p.vx
+        p.y += p.vy
+        p.life -= 0.012
+        if (p.life <= 0) { sparkles.splice(i, 1); continue }
+        const alpha = p.life * 0.7
+        ctx.save()
+        ctx.globalAlpha = alpha
+        // Diamond sparkle shape
+        ctx.fillStyle = p.color + alpha + ')'
+        ctx.shadowBlur = 6
+        ctx.shadowColor = p.color + '0.5)'
+        ctx.beginPath()
+        ctx.moveTo(p.x, p.y - p.size)
+        ctx.lineTo(p.x + p.size * 0.6, p.y)
+        ctx.lineTo(p.x, p.y + p.size)
+        ctx.lineTo(p.x - p.size * 0.6, p.y)
+        ctx.closePath()
+        ctx.fill()
+        ctx.restore()
+      }
+
+      // === HOLOGRAPHIC ROTATING RING ===
+      ctx.save()
+      const ringRadius = springState.currentRadius * breatheScale * 1.05
+      const holoGrad = ctx.createConicGradient(holoAngle, circleX, circleY)
+      holoGrad.addColorStop(0, isDark ? 'rgba(201, 169, 97, 0.3)' : 'rgba(20, 184, 166, 0.25)')
+      holoGrad.addColorStop(0.2, isDark ? 'rgba(139, 233, 253, 0.2)' : 'rgba(124, 58, 237, 0.2)')
+      holoGrad.addColorStop(0.4, isDark ? 'rgba(255, 121, 198, 0.25)' : 'rgba(20, 184, 166, 0.3)')
+      holoGrad.addColorStop(0.6, isDark ? 'rgba(80, 250, 123, 0.2)' : 'rgba(8, 145, 178, 0.2)')
+      holoGrad.addColorStop(0.8, isDark ? 'rgba(241, 250, 140, 0.25)' : 'rgba(124, 58, 237, 0.25)')
+      holoGrad.addColorStop(1, isDark ? 'rgba(201, 169, 97, 0.3)' : 'rgba(20, 184, 166, 0.25)')
+      ctx.strokeStyle = holoGrad
+      ctx.lineWidth = 2
+      ctx.shadowBlur = 12
+      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.4)' : 'rgba(20, 184, 166, 0.35)'
+      ctx.beginPath()
+      ctx.arc(circleX, circleY, ringRadius, 0, Math.PI * 2)
+      ctx.stroke()
+      // Second thinner inner ring
+      ctx.lineWidth = 0.8
+      ctx.globalAlpha = 0.5
+      ctx.beginPath()
+      ctx.arc(circleX, circleY, ringRadius - 6, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.restore()
+
       // Outer glow around entire reveal area for depth
       ctx.save()
-      ctx.globalAlpha = 0.2 * breathe
-      ctx.shadowBlur = 40
-      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.6)' : 'rgba(142, 14, 40, 0.5)' // Gold for dark, burgundy for light
-      ctx.strokeStyle = isDark ? 'rgba(201, 169, 97, 0.2)' : 'rgba(142, 14, 40, 0.15)'
-      ctx.lineWidth = 1
+      ctx.globalAlpha = 0.35 * breathe
+      ctx.shadowBlur = 60
+      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.7)' : 'rgba(20, 184, 166, 0.6)'
+      ctx.strokeStyle = isDark ? 'rgba(201, 169, 97, 0.25)' : 'rgba(20, 184, 166, 0.2)'
+      ctx.lineWidth = 1.5
       ctx.beginPath()
       ctx.arc(circleX, circleY, springState.currentRadius * breatheScale, 0, Math.PI * 2)
       ctx.stroke()
@@ -543,15 +615,15 @@ export default function CodeRevealOverlay() {
                   break
                 }
 
-                // Theme-aware colors with higher opacity for light mode
-                let color = isDark ? 'rgba(248, 248, 242, 0.3)' : 'rgba(60, 60, 60, 0.45)'
+                // Theme-aware colors — brighter for visibility
+                let color = isDark ? 'rgba(248, 248, 242, 0.5)' : 'rgba(60, 60, 60, 0.6)'
                 switch (token.type) {
-                  case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.35)' : 'rgba(142, 14, 40, 0.55)'; break; // Burgundy
-                  case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.32)' : 'rgba(45, 95, 63, 0.5)'; break; // Dark green
-                  case 'string': color = isDark ? 'rgba(241, 250, 140, 0.3)' : 'rgba(184, 134, 11, 0.5)'; break; // Dark gold
-                  case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.25)' : 'rgba(98, 114, 164, 0.4)'; break;
-                  case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.35)' : 'rgba(142, 14, 40, 0.6)'; break; // Burgundy
-                  case 'text': color = isDark ? 'rgba(248, 248, 242, 0.28)' : 'rgba(60, 60, 60, 0.42)'; break;
+                  case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.55)' : 'rgba(20, 184, 166, 0.7)'; break;
+                  case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.5)' : 'rgba(45, 95, 63, 0.65)'; break;
+                  case 'string': color = isDark ? 'rgba(241, 250, 140, 0.5)' : 'rgba(184, 134, 11, 0.65)'; break;
+                  case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.4)' : 'rgba(98, 114, 164, 0.55)'; break;
+                  case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.55)' : 'rgba(20, 184, 166, 0.75)'; break;
+                  case 'text': color = isDark ? 'rgba(248, 248, 242, 0.45)' : 'rgba(60, 60, 60, 0.58)'; break;
                 }
 
                 ctx.fillStyle = color
@@ -574,16 +646,16 @@ export default function CodeRevealOverlay() {
                 break
               }
 
-              // Theme-aware colors for new code
-              let color = isDark ? 'rgba(248, 248, 242, 0.3)' : 'rgba(60, 60, 60, 0.45)'
+              // Theme-aware colors — brighter for visibility
+              let color = isDark ? 'rgba(248, 248, 242, 0.5)' : 'rgba(60, 60, 60, 0.6)'
 
               switch (token.type) {
-                case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.35)' : 'rgba(142, 14, 40, 0.55)'; break;      // Burgundy
-                case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.32)' : 'rgba(45, 95, 63, 0.5)'; break;      // Dark green
-                case 'string': color = isDark ? 'rgba(241, 250, 140, 0.3)' : 'rgba(184, 134, 11, 0.5)'; break;    // Dark gold
-                case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.25)' : 'rgba(98, 114, 164, 0.4)'; break;   // Gray
-                case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.35)' : 'rgba(142, 14, 40, 0.6)'; break;  // Burgundy
-                case 'text': color = isDark ? 'rgba(248, 248, 242, 0.28)' : 'rgba(60, 60, 60, 0.42)'; break;     // Dark
+                case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.55)' : 'rgba(20, 184, 166, 0.7)'; break;
+                case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.5)' : 'rgba(45, 95, 63, 0.65)'; break;
+                case 'string': color = isDark ? 'rgba(241, 250, 140, 0.5)' : 'rgba(184, 134, 11, 0.65)'; break;
+                case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.4)' : 'rgba(98, 114, 164, 0.55)'; break;
+                case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.55)' : 'rgba(20, 184, 166, 0.75)'; break;
+                case 'text': color = isDark ? 'rgba(248, 248, 242, 0.45)' : 'rgba(60, 60, 60, 0.58)'; break;
               }
 
               ctx.fillStyle = color
@@ -606,13 +678,13 @@ export default function CodeRevealOverlay() {
 
       // Horizontal scan lines
       const scanSpeed = (Date.now() / 30) % (springState.currentRadius * 2)
-      for (let i = -springState.currentRadius; i < springState.currentRadius; i += 4) {
+      for (let i = -springState.currentRadius; i < springState.currentRadius; i += 3) {
         const lineY = circleY + i + scanSpeed - springState.currentRadius
         const distFromCenter = Math.abs(lineY - circleY)
-        const scanOpacity = Math.max(0, 1 - distFromCenter / springState.currentRadius) * 0.08
+        const scanOpacity = Math.max(0, 1 - distFromCenter / springState.currentRadius) * 0.12
 
         if (scanOpacity > 0.01) {
-          ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${scanOpacity})` : `rgba(142, 14, 40, ${scanOpacity})`
+          ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${scanOpacity})` : `rgba(20, 184, 166, ${scanOpacity})`
           ctx.lineWidth = 0.5
           ctx.beginPath()
           ctx.moveTo(circleX - springState.currentRadius, lineY)
@@ -620,6 +692,16 @@ export default function CodeRevealOverlay() {
           ctx.stroke()
         }
       }
+
+      // Vertical sweep line (dramatic x-ray scanner)
+      const sweepX = circleX + Math.sin(Date.now() / 800) * springState.currentRadius * 0.8
+      const sweepOpacity = 0.15 + breathe * 0.1
+      ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${sweepOpacity})` : `rgba(20, 184, 166, ${sweepOpacity})`
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(sweepX, circleY - springState.currentRadius)
+      ctx.lineTo(sweepX, circleY + springState.currentRadius)
+      ctx.stroke()
 
       // X-ray noise/grain effect
       const noiseIntensity = 0.03 * breathe
@@ -631,7 +713,7 @@ export default function CodeRevealOverlay() {
 
         ctx.fillStyle = isDark
           ? `rgba(201, 169, 97, ${Math.random() * noiseIntensity})`
-          : `rgba(142, 14, 40, ${Math.random() * noiseIntensity})`
+          : `rgba(20, 184, 166, ${Math.random() * noiseIntensity})`
         ctx.fillRect(noiseX, noiseY, 1, 1)
       }
 
