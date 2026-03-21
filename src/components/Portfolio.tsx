@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
-<<<<<<< HEAD
 import { motion } from 'framer-motion'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
@@ -18,12 +17,6 @@ import {
   scrollRevealTransition,
   defaultViewport,
 } from '@/lib/motion'
-=======
-import { GitHubService, GitHubRepo } from '../services/github'
-import * as Dialog from '@radix-ui/react-dialog'
-import { ExternalLink, Github, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Lock, Code, ArrowUpRight } from 'lucide-react'
-import { fetchProjectReadme } from '@/app/actions/github'
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
 // --- Constants & Config ---
 
@@ -110,25 +103,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   const [currentPage, setCurrentPage] = useState(1)
   const PROJECTS_PER_PAGE = 12
 
-<<<<<<< HEAD
   const [projects, setProjects] = useState<Array<Project>>(initialProjects || [])
-=======
-  const [projects, setProjects] = useState<Array<{
-    id: number | string
-    category: string
-    title: string
-    image: string
-    url: string
-    description: string
-    stars: number
-    language: string
-    isPrivate?: boolean
-    ownerLogin?: string
-    homepage?: string | null
-    isFeatured?: boolean
-    updatedAt?: string
-  }>>(initialProjects || [])
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
   // README state
   const [popupLoading, setPopupLoading] = useState(false)
@@ -181,11 +156,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     }
 
     fetchProjects()
-<<<<<<< HEAD
   }, [github, initialProjects])
-=======
-  }, [github])
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
   const openProject = async (repo: Project) => {
     setPopupRepo(repo)
@@ -202,11 +173,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
       } else {
         setPopupContent(result.content || 'No README found.')
       }
-<<<<<<< HEAD
     } catch {
-=======
-    } catch (_err) {
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
       setPopupError('Could not load README.')
     } finally {
       setPopupLoading(false)
@@ -241,7 +208,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
   ]
 
   return (
-<<<<<<< HEAD
     <AnimatedPage>
     <article className={cn("w-full max-w-full m-0 p-0", isActive ? "block" : "hidden")} data-page="portfolio">
       <motion.header
@@ -265,52 +231,25 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[hsl(var(--muted-foreground))] w-5 h-5 pointer-events-none" />
-=======
-    <article className={`portfolio portfolio-tab ${isActive ? 'active' : ''}`} data-page="portfolio">
-      <header className="mb-8">
-        <h2 className="h2 article-title">Project Portfolio</h2>
-        <p className="article-text mt-2">A showcase of my recent work, open-source contributions, and technical experiments.</p>
-      </header>
-
-      <section className="projects-section">
-        {/* Expanded Controls */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5 pointer-events-none" />
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             <input
               type="text"
               placeholder="Search by name, tech or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-<<<<<<< HEAD
               className="w-full bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[hsl(var(--accent))] focus:ring-2 focus:ring-[hsl(var(--accent)/0.2)] transition-all shadow-sm text-[hsl(var(--foreground))] placeholder:text-[hsl(var(--muted-foreground))]"
             />
           </div>
           <div className="flex gap-1 overflow-x-auto py-1 px-1 scrollbar-none [&::-webkit-scrollbar]:hidden bg-[hsl(var(--muted))] rounded-full border border-[hsl(var(--border))]">
-=======
-              className="w-full bg-[var(--glass-bg-subtle)] backdrop-blur-md border border-[var(--glass-border-subtle)] rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-[var(--accent-emerald-base)] focus:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] transition-all shadow-[var(--neu-shadow-inset-sm)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)]"
-            />
-          </div>
-          <div className="flex gap-1 overflow-x-auto overflow-y-visible py-1 px-1 scrollbar-hide bg-[rgba(30,58,66,0.06)] rounded-full border border-[rgba(30,58,66,0.04)]">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             {filterOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { setFilter(opt.value); setCurrentPage(1); }}
-<<<<<<< HEAD
                 className={cn(
                   "px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center border",
                   filter === opt.value
                     ? "bg-[hsl(var(--background))] text-[hsl(var(--accent))] shadow-sm font-bold border-[hsl(var(--border))]"
                     : "bg-transparent text-[hsl(var(--muted-foreground))] border-transparent hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--background))/50]"
                 )}
-=======
-                className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center justify-center ${filter === opt.value
-                  ? 'bg-[var(--glass-bg-strong)] text-[var(--accent-emerald-base)] shadow-[var(--neu-shadow-sm)] font-bold border border-[var(--glass-border)]'
-                  : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--glass-bg-subtle)]'
-                  }`}
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
               >
                 {opt.label}
               </button>
@@ -319,7 +258,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         </div>
 
         {loading ? (
-<<<<<<< HEAD
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="h-[400px] bg-[hsl(var(--muted))] animate-pulse rounded-2xl" />
@@ -347,33 +285,11 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                   )}>
                     {/* Image Header with Overlay */}
                     <div className="relative h-56 overflow-hidden bg-[hsl(var(--muted))]">
-=======
-          <div className="project-list">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-[400px] bg-[var(--bg-tertiary)] animate-pulse rounded-[var(--radius-xl)]" />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="text-center py-20 text-[var(--accent-error)] bg-[var(--bg-tertiary)] rounded-[var(--radius-xl)] border border-[var(--accent-error)]/20">{error}</div>
-        ) : (
-          <>
-            <div className="project-list">
-              {paginatedProjects.map((repo, idx) => (
-                <div
-                  key={repo.id}
-                  className="project-item active"
-                  style={{ animationDelay: `${idx * 0.05}s` }}
-                >
-                  <div className="project-card-inner card hover-lift overflow-hidden h-full flex flex-col">
-                    {/* Image Header with Overlay */}
-                    <div className="project-img h-56 relative group">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                       <Image
                         src={repo.image}
                         alt={repo.title}
                         width={400}
                         height={224}
-<<<<<<< HEAD
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         unoptimized
                       />
@@ -381,15 +297,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                         <button
                           onClick={() => openProject(repo)}
                           className="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black hover:scale-110 transition-all backdrop-blur-md"
-=======
-                        className="w-full h-full object-cover"
-                        unoptimized
-                      />
-                      <div className="project-item-icon-box opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-md flex gap-4 flex-row p-4">
-                        <button
-                          onClick={() => openProject(repo)}
-                          className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-black transition-all"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                           title="View README"
                         >
                           <EyeIcon size={20} />
@@ -399,31 +306,22 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                             href={repo.url}
                             target="_blank"
                             rel="noopener noreferrer"
-<<<<<<< HEAD
                             className="w-12 h-12 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black hover:scale-110 transition-all backdrop-blur-md"
-=======
-                            className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white hover:text-black transition-all"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                             title="View Code"
                           >
                             <Github size={20} />
                           </a>
                         )}
                       </div>
-<<<<<<< HEAD
                       {repo.isPrivate && (
                         <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-[0.6rem] font-bold uppercase tracking-widest flex items-center gap-1.5 z-10">
                           <Lock size={10} /> Private
                         </div>
                       )}
-=======
-                      {repo.isPrivate && <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 z-10"><Lock size={10} /> Private</div>}
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                     </div>
 
                     {/* Body */}
                     <div className="flex-1 p-6 flex flex-col">
-<<<<<<< HEAD
                       <div className="flex justify-between items-start mb-4 gap-2">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-[hsl(var(--muted))] border border-[hsl(var(--border))] flex items-center justify-center p-2 shrink-0">
@@ -443,71 +341,38 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-xs font-bold text-[hsl(var(--muted-foreground))] shrink-0">
-=======
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-[var(--radius-sm)] bg-[var(--bg-tertiary)] border border-[var(--border-color)] flex items-center justify-center p-2">
-                            {LOGO_MAP[repo.language] ? (
-                              <Image src={LOGO_MAP[repo.language]} alt={repo.language} width={40} height={40} className="w-full h-full object-contain" unoptimized />
-                            ) : (
-                              <Code className="text-[var(--text-secondary)]" size={20} />
-                            )}
-                          </div>
-                          <div>
-                            <h3 className="project-title !m-0 !text-[var(--text-primary)] !text-lg !font-bold capitalize">{repo.title.replace(/-/g, ' ')}</h3>
-                            <span className="text-[10px] font-bold text-[var(--accent-emerald-base)] uppercase tracking-widest">{repo.language}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-secondary)]">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                           <Star size={12} className="text-yellow-500 fill-yellow-500" />
                           {repo.stars}
                         </div>
                       </div>
 
-<<<<<<< HEAD
                       <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))] line-clamp-3 mb-6 flex-1 opacity-90">
-=======
-                      <p className="project-text !text-[var(--text-secondary)] !text-sm leading-relaxed line-clamp-3 mb-6 flex-1 opacity-80">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                         {repo.description || 'Integrating complex systems with elegant solutions. This project showcases scalable architecture and modern engineering practices.'}
                       </p>
 
                       {/* Actions */}
-<<<<<<< HEAD
                       <div className="flex gap-2.5 mt-auto">
-=======
-                      <div className="flex gap-3">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                         {!repo.isPrivate ? (
                           <a
                             href={repo.url}
                             target="_blank"
                             rel="noopener noreferrer"
-<<<<<<< HEAD
                             className={cn(
                               "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
                               "bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold uppercase tracking-widest",
                               "shadow-sm transition-all hover:bg-[hsl(var(--accent))] hover:-translate-y-px"
                             )}
-=======
-                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--accent-emerald-base)] transition-colors shadow-lg"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                           >
                             <Github size={14} /> Source Code
                           </a>
                         ) : (
                           <button
                             onClick={() => openProject(repo)}
-<<<<<<< HEAD
                             className={cn(
                               "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
                               "bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] text-[11px] font-bold uppercase tracking-widest",
                               "shadow-sm transition-all hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.3] hover:bg-[hsl(var(--accent))/0.05] hover:-translate-y-px"
                             )}
-=======
-                            className="flex-1 flex items-center justify-center gap-2 bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border border-[var(--border-color)] text-[11px] font-black uppercase tracking-widest py-3 rounded-[var(--radius-sm)] hover:bg-[var(--bg-secondary)] hover:text-[var(--accent-emerald-base)] hover:border-[var(--accent-emerald-base)] transition-all shadow-sm"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                           >
                             <EyeIcon size={14} /> View README
                           </button>
@@ -517,15 +382,11 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                             href={repo.homepage}
                             target="_blank"
                             rel="noopener noreferrer"
-<<<<<<< HEAD
                             className={cn(
                               "w-11 h-11 flex items-center justify-center shrink-0 rounded-xl",
                               "bg-[hsl(var(--muted))] border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]",
                               "shadow-sm transition-all hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.3] hover:bg-[hsl(var(--accent))/0.05] hover:-translate-y-px"
                             )}
-=======
-                            className="w-12 h-12 flex items-center justify-center bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-[var(--radius-sm)] text-[var(--text-secondary)] hover:text-[var(--accent-emerald-base)] hover:border-[var(--accent-emerald-base)] transition-all shadow-sm"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                             title="Live Preview"
                           >
                             <ArrowUpRight size={20} />
@@ -534,7 +395,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                       </div>
                     </div>
                   </div>
-<<<<<<< HEAD
                 </motion.div>
               ))}
             </motion.div>
@@ -550,40 +410,16 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                   <ChevronLeft size={18} />
                 </button>
                 <div className="flex items-center gap-1 bg-[hsl(var(--muted))] p-1 rounded-full border border-[hsl(var(--border))]">
-=======
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination UI */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-3 mt-16 pb-10">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="w-10 h-10 rounded-full bg-white border border-[rgba(30,58,66,0.08)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:shadow-[0_4px_12px_rgba(30,58,66,0.1)] disabled:opacity-30 disabled:hover:shadow-none transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] flex items-center justify-center"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <div className="flex items-center gap-1 bg-[rgba(30,58,66,0.06)] p-1 rounded-full border border-[rgba(30,58,66,0.04)]">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                     <button
                       key={p}
                       onClick={() => setCurrentPage(p)}
-<<<<<<< HEAD
                       className={cn(
                         "w-10 h-10 rounded-full text-sm font-medium transition-all flex items-center justify-center",
                         currentPage === p
                           ? "bg-[hsl(var(--background))] text-[hsl(var(--foreground))] shadow-sm font-semibold"
                           : "bg-transparent text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--card))]"
                       )}
-=======
-                      className={`w-10 h-10 rounded-full text-sm font-medium transition-all flex items-center justify-center ${currentPage === p
-                        ? 'bg-white text-[var(--text-primary)] shadow-[0_2px_8px_rgba(30,58,66,0.1)] font-semibold'
-                        : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-white/50'
-                        }`}
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                     >
                       {p}
                     </button>
@@ -592,11 +428,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-<<<<<<< HEAD
                   className="w-10 h-10 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--accent))/0.5] shadow-sm disabled:opacity-30 disabled:hover:border-[hsl(var(--border))] transition-all flex items-center justify-center"
-=======
-                  className="w-10 h-10 rounded-full bg-white border border-[rgba(30,58,66,0.08)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:shadow-[0_4px_12px_rgba(30,58,66,0.1)] disabled:opacity-30 disabled:hover:shadow-none transition-all shadow-[0_2px_8px_rgba(30,58,66,0.06)] flex items-center justify-center"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                 >
                   <ChevronRight size={18} />
                 </button>
@@ -608,7 +440,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
 
       {/* README Preview Modal */}
       {popupRepo && (
-<<<<<<< HEAD
         <DialogPrimitive.Root open={!!popupRepo} onOpenChange={(open) => {
           if (!open) setPopupRepo(null)
         }}>
@@ -648,71 +479,28 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     </div>
                     <div>
                       <p className="font-bold text-base mb-1">Access Restricted</p>
-=======
-        <Dialog.Root open={!!popupRepo} onOpenChange={() => setPopupRepo(null)}>
-          <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-md z-[1000]" />
-            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[800px] max-h-[90vh] bg-[var(--bg-primary)] rounded-[var(--radius-xl)] overflow-hidden z-[1001] border border-[var(--border-color)] shadow-2xl flex flex-col">
-              <div className="relative h-64 flex-shrink-0">
-                <Image src={popupRepo.image} alt={popupRepo.title} width={800} height={256} className="w-full h-full object-cover" unoptimized />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-6 left-8">
-                  <span className="text-[var(--accent-emerald-base)] text-xs font-bold uppercase tracking-widest">{popupRepo.language}</span>
-                  <Dialog.Title className="text-3xl font-black text-white uppercase tracking-tight mt-1">{popupRepo.title.replace(/-/g, ' ')}</Dialog.Title>
-                </div>
-                <Dialog.Close className="absolute top-6 right-6 w-10 h-10 bg-black/40 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-black/60 transition-all font-bold">×</Dialog.Close>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-[var(--bg-secondary)]">
-                {popupLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 gap-4">
-                    <div className="w-10 h-10 border-4 border-[var(--accent-emerald-base)] border-t-transparent rounded-full animate-spin" />
-                    <p className="text-[var(--text-secondary)] font-bold uppercase text-xs tracking-widest">Decrypting README...</p>
-                  </div>
-                ) : popupError ? (
-                  <div className="p-8 bg-red-50 text-[var(--accent-error)] rounded-[var(--radius-lg)] border border-[var(--accent-error)]/20 flex items-center gap-4">
-                    <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"><Lock size={20} /></div>
-                    <div>
-                      <p className="font-bold">Access Restricted</p>
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                       <p className="text-sm opacity-80">{popupError}</p>
                     </div>
                   </div>
                 ) : (
-<<<<<<< HEAD
                   <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[hsl(var(--accent))] prose-a:no-underline hover:prose-a:underline prose-code:text-[hsl(var(--accent))] prose-code:bg-[hsl(var(--accent))/0.1] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none">
                     <div
                       className="[&>*:first-child]:mt-0"
-=======
-                  <div className="prose prose-slate max-w-none dark:prose-invert">
-                    <div
-                      className="p-6 bg-[var(--bg-tertiary)] rounded-[var(--radius-lg)] border border-[var(--border-color)] text-[var(--text-primary)] [&>*:first-child]:mt-0"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                       dangerouslySetInnerHTML={{ __html: popupContent || '' }}
                     />
                   </div>
                 )}
               </div>
 
-<<<<<<< HEAD
               <div className="p-6 md:p-8 bg-[hsl(var(--muted))] border-t border-[hsl(var(--border))] flex flex-col sm:flex-row gap-4 shrink-0">
-=======
-              <div className="p-8 bg-[var(--bg-tertiary)] border-t border-[var(--border-color)] flex gap-4">
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                 {!popupRepo.isPrivate && (
                   <a
                     href={popupRepo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-<<<<<<< HEAD
                     className="flex-1 flex items-center justify-center gap-3 bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-xs font-bold uppercase tracking-widest py-3.5 rounded-xl hover:bg-[hsl(var(--accent))] transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:ring-offset-2 focus:ring-offset-[hsl(var(--muted))]"
                   >
                     <Github size={18} /> Open Repository
-=======
-                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--text-primary)] text-[var(--bg-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:bg-[var(--accent-emerald-base)] transition-all shadow-xl"
-                  >
-                    <Github size={20} /> Open Repository
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                   </a>
                 )}
                 {popupRepo.homepage && (
@@ -720,7 +508,6 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     href={popupRepo.homepage}
                     target="_blank"
                     rel="noopener noreferrer"
-<<<<<<< HEAD
                     className="flex-1 flex items-center justify-center gap-3 bg-[hsl(var(--card))] border border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-xs font-bold uppercase tracking-widest py-3.5 rounded-xl hover:border-[hsl(var(--accent))] hover:text-[hsl(var(--accent))] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))] focus:ring-offset-2 focus:ring-offset-[hsl(var(--muted))]"
                   >
                     <ExternalLink size={18} /> Live Demo
@@ -735,43 +522,3 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
     </AnimatedPage>
   )
 }
-=======
-                    className="flex-1 flex items-center justify-center gap-3 bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-black uppercase tracking-widest py-4 rounded-[var(--radius-md)] hover:border-[var(--accent-emerald-base)] hover:text-[var(--accent-emerald-base)] transition-all shadow-lg"
-                  >
-                    <ExternalLink size={20} /> Live Demo
-                  </a>
-                )}
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
-      )}
-
-      <style jsx>{`
-        .portfolio-tab { display: none; }
-        .portfolio-tab.active { display: block; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-emerald-base); }
-        
-        .project-list {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-          gap: 30px;
-          width: 100%;
-        }
-
-        @media (max-width: 768px) {
-          .project-list {
-            grid-template-columns: 1fr;
-            gap: 20px;
-          }
-        }
-      `}</style>
-    </article>
-  )
-}
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e

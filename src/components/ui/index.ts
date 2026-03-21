@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // UI Primitives — barrel export
 export { Button, ButtonLink, buttonVariants } from "./Button"
 export type { ButtonProps, ButtonLinkProps } from "./Button"
@@ -37,24 +36,3 @@ export {
   TableCell,
   TableCaption,
 } from "./table"
-=======
-/**
- * UI Components Index
- * Central export for all UI primitives
- */
-
-// Core Components
-export { Card, CardHeader, CardTitle, CardContent, CardFooter } from './Card'
-export type { CardVariant } from './Card'
-
-export { Button, ButtonLink } from './Button'
-export type { ButtonVariant, ButtonSize } from './Button'
-
-export { Input } from './input'
-
-// Dialog (default export)
-export { default as Dialog } from './Dialog'
-
-// Badge (default export)
-export { default as Badge } from './Badge'
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e

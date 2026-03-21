@@ -15,6 +15,7 @@ interface Message {
 interface AiChatPanelProps {
   isOpen: boolean
   onToggle: () => void
+  hideButton?: boolean
 }
 
 function escapeHtmlAndPreserveNewlines(input: string | undefined) {
@@ -28,7 +29,7 @@ function escapeHtmlAndPreserveNewlines(input: string | undefined) {
   return escaped
 }
 
-export default function AiChatPanel({ isOpen, onToggle }: AiChatPanelProps) {
+export default function AiChatPanel({ isOpen, onToggle, hideButton = false }: AiChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'system-welcome',
@@ -224,6 +225,7 @@ export default function AiChatPanel({ isOpen, onToggle }: AiChatPanelProps) {
   return (
     <>
       {/* AI Assistant Button */}
+      {!hideButton && (
       <div className="relative group">
         <button
           onClick={onToggle}
@@ -238,6 +240,7 @@ export default function AiChatPanel({ isOpen, onToggle }: AiChatPanelProps) {
           <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-[hsl(var(--popover))] border-r border-b border-[hsl(var(--border))] rotate-[-45deg]" />
         </div>
       </div>
+      )}
 
       {/* Chat Modal */}
       {isOpen && (

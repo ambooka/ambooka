@@ -1,15 +1,9 @@
 'use client'
 
-<<<<<<< HEAD
 import { useState, useEffect } from 'react'
 import { GitHubService } from '@/services/github'
 import { ChevronLeft, ChevronRight, Star, ExternalLink, Github, Sparkles, FolderIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
-=======
-import { useState, useEffect, useRef } from 'react'
-import { GitHubService } from '@/services/github'
-import { ChevronLeft, ChevronRight, Star, ExternalLink, Github, Sparkles, FolderIcon } from 'lucide-react'
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
@@ -26,31 +20,18 @@ interface FeaturedProject {
 
 interface FeaturedProjectsCarouselProps {
     compact?: boolean
-<<<<<<< HEAD
     embedded?: boolean
 }
 
 export default function FeaturedProjectsCarousel({ compact = false, embedded = false }: FeaturedProjectsCarouselProps) {
-=======
-}
-
-export default function FeaturedProjectsCarousel({ compact = false }: FeaturedProjectsCarouselProps) {
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
     const [projects, setProjects] = useState<FeaturedProject[]>([])
     const [loading, setLoading] = useState(true)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
-<<<<<<< HEAD
     const embeddedCompact = embedded && compact
 
     useEffect(() => {
         ;(async () => {
-=======
-    const _carouselRef = useRef<HTMLDivElement>(null)
-
-    useEffect(() => {
-        (async () => {
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             try {
                 const githubService = new GitHubService(GITHUB_TOKEN)
                 const repos = await githubService.getRepositories(GITHUB_USERNAME, {
@@ -94,7 +75,6 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
     const goNext = () => setCurrentIndex(prev => (prev + 1) % projects.length)
     const goPrev = () => setCurrentIndex(prev => (prev - 1 + projects.length) % projects.length)
 
-<<<<<<< HEAD
     if (loading) {
         return (
             <div className={cn(
@@ -148,37 +128,10 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                         embeddedCompact || compact ? "w-7 h-7" : "w-9 h-9"
                     )}>
                         <ChevronRight size={embeddedCompact || compact ? 14 : 18} />
-=======
-    if (loading) return <div className="glass-card p-12 animate-pulse text-center font-black text-[var(--text-tertiary)] uppercase tracking-widest">Compiling Featured Work...</div>
-
-    return (
-        <div
-            className={`projects-widget glass-card group/main h-full ${compact ? 'p-3' : 'p-4'}`}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-        >
-            <div className={`flex justify-between items-center ${compact ? 'mb-2' : 'mb-4'}`}>
-                <div className="flex items-center gap-2">
-                    <div className={`${compact ? 'h-6 w-6' : 'h-7 w-7'} rounded-lg bg-[var(--accent-secondary)]/10 flex items-center justify-center text-[var(--accent-secondary)] border border-[var(--accent-secondary)]/20 shadow-sm`}>
-                        <Sparkles size={compact ? 12 : 14} />
-                    </div>
-                    <div>
-                        <h2 className={`${compact ? 'text-xs' : 'text-sm'} font-black text-[var(--text-primary)] tracking-tight uppercase`}>Featured Projects</h2>
-                        {!compact && <p className="text-[7px] text-[var(--text-tertiary)] font-bold uppercase tracking-widest mt-0.5">Production Ready Solutions</p>}
-                    </div>
-                </div>
-                <div className="flex gap-1.5">
-                    <button onClick={goPrev} className={`${compact ? 'w-6 h-6' : 'w-7 h-7'} rounded-full bg-[var(--bg-primary)] border border-[var(--border-light)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--accent-primary)] hover:text-white hover:border-[var(--accent-primary)] transition-all active:scale-95 shadow-sm`}>
-                        <ChevronLeft size={compact ? 12 : 14} />
-                    </button>
-                    <button onClick={goNext} className={`${compact ? 'w-6 h-6' : 'w-7 h-7'} rounded-full bg-[var(--bg-primary)] border border-[var(--border-light)] flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--accent-primary)] hover:text-white hover:border-[var(--accent-primary)] transition-all active:scale-95 shadow-sm`}>
-                        <ChevronRight size={compact ? 12 : 14} />
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                     </button>
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div className={cn("relative overflow-hidden rounded-2xl", 
                 compact ? (embedded ? "h-[182px] sm:h-[196px]" : "h-[120px]") : "h-[280px]"
             )}>
@@ -196,23 +149,10 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                             )}>
                                 {/* Decorative Background Icon */}
                                 <FolderIcon className="absolute -right-6 -bottom-6 w-32 h-32 text-[hsl(var(--foreground))] opacity-[0.03] group-hover/card:scale-110 group-hover/card:rotate-[-5deg] transition-all duration-700" />
-=======
-            <div className={`relative overflow-hidden rounded-xl ${compact ? 'h-[120px]' : 'h-[280px]'}`}>
-                <div
-                    className="flex h-full transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
-                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                >
-                    {projects.map((project) => (
-                        <div key={project.id} className="w-full shrink-0 px-1">
-                            <div className="h-full bg-gradient-to-br from-[var(--bg-primary)]/40 to-[var(--bg-secondary)]/80 rounded-xl p-3 md:p-4 border border-[var(--border-light)] shadow-sm relative overflow-hidden group">
-                                {/* Decorative Background Icon */}
-                                <FolderIcon className="absolute -right-6 -bottom-6 w-28 h-28 text-[var(--text-primary)] opacity-[0.03] group-hover:scale-110 transition-transform duration-700" />
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
                                 <div className="relative z-10 h-full flex flex-col">
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex flex-col">
-<<<<<<< HEAD
                                             <span className={cn(
                                                 "font-black uppercase tracking-[0.15em] text-[hsl(var(--accent))] mb-1.5",
                                                 embeddedCompact || compact ? "text-[8px]" : "text-[10px]"
@@ -232,20 +172,11 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                                                 embeddedCompact || compact ? "px-2 py-1 text-[10px]" : "px-3 py-1.5 text-xs"
                                             )}>
                                                 <Star size={embeddedCompact || compact ? 12 : 14} className="text-[#fbbf24] fill-[#fbbf24]" />
-=======
-                                            <span className="text-[7px] font-black uppercase tracking-widest text-[var(--accent-primary)] mb-0.5">{project.language}</span>
-                                            <h4 className="text-base font-black text-[var(--text-primary)] uppercase tracking-tight">{project.name}</h4>
-                                        </div>
-                                        <div className="flex gap-1.5">
-                                            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[var(--bg-primary)] border border-[var(--border-light)] text-[8px] font-black text-[var(--text-secondary)]">
-                                                <Star size={9} className="text-yellow-500" />
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                                                 {project.stars}
                                             </div>
                                         </div>
                                     </div>
 
-<<<<<<< HEAD
                                     <p className={cn(
                                         "text-[hsl(var(--muted-foreground))] leading-relaxed flex-1 font-medium",
                                         embeddedCompact || compact ? "text-xs line-clamp-3 mb-3" : "text-sm sm:text-[0.95rem] line-clamp-3 mb-5"
@@ -268,19 +199,6 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                                                     embeddedCompact || compact ? "w-8 h-8" : "w-9 h-9"
                                                 )}>
                                                 <ExternalLink size={embeddedCompact || compact ? 14 : 15} />
-=======
-                                    <p className="text-[10px] text-[var(--text-secondary)] leading-relaxed mb-4 flex-1 line-clamp-3 font-medium opacity-80">{project.description}</p>
-
-                                    <div className="flex gap-2">
-                                        <a href={project.url} target="_blank" rel="noopener noreferrer"
-                                            className="px-3 py-1.5 rounded-full bg-[var(--text-primary)] text-[var(--bg-primary)] text-[8px] font-black uppercase tracking-widest flex items-center gap-1.5 hover:bg-[var(--accent-primary)] transition-colors shadow-lg">
-                                            <Github size={11} /> Repository
-                                        </a>
-                                        {project.homepage && (
-                                            <a href={project.homepage} target="_blank" rel="noopener noreferrer"
-                                                className="w-7 h-7 rounded-full border border-[var(--border-light)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--accent-secondary)] hover:border-[var(--accent-secondary)] transition-all">
-                                                <ExternalLink size={13} />
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                                             </a>
                                         )}
                                     </div>
@@ -291,7 +209,6 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                 </div>
             </div>
 
-<<<<<<< HEAD
             <div className="flex justify-center gap-1.5 mt-4">
                 {projects.map((_, i) => (
                     <button
@@ -300,13 +217,6 @@ export default function FeaturedProjectsCarousel({ compact = false }: FeaturedPr
                             "transition-all duration-500 rounded-full h-1.5",
                             i === currentIndex ? "w-6 bg-[hsl(var(--accent))]" : "w-1.5 bg-[hsl(var(--border))] hover:bg-[hsl(var(--muted-foreground))]/50"
                         )}
-=======
-            <div className="flex justify-center gap-2 mt-4">
-                {projects.map((_, i) => (
-                    <button
-                        key={i}
-                        className={`transition-all duration-500 rounded-full h-1.5 ${i === currentIndex ? 'w-8 bg-[var(--accent-primary)]' : 'w-1.5 bg-[var(--border-light)]'}`}
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                         onClick={() => goToSlide(i)}
                     />
                 ))}

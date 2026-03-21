@@ -64,7 +64,7 @@ export interface RoadmapData {
 export const ROADMAP_DATA: RoadmapData = {
     executiveSummary: {
         title: "AI / ML Engineer Career Roadmap",
-        subtitle: "CS Graduate → AI/ML Engineer · 26-Month Nexus Platform Build",
+        subtitle: "CS Graduate → AI/ML Engineer · Roadmap",
         metrics: [
             { label: "Total Duration", value: "26", unit: "Months", icon: Clock, color: "bg-blue-600" },
             { label: "Weekly Projects", value: "104", unit: "Total", icon: Target, color: "bg-green-600" },
@@ -93,7 +93,7 @@ export const ROADMAP_DATA: RoadmapData = {
             salary: "Portfolio Phase",
             focus: "Python mastery, Linux/VPS admin, Docker Compose, SQL, Git CI/CD",
             weeklyHours: "~20h",
-            keyDeliverable: "Nexus v0.1 — Dockerised CLI + static HTTPS site on Hetzner VPS",
+            keyDeliverable: "Dockerised CLI + static HTTPS site on Hetzner VPS",
             tracks: [
                 { name: "Python Core", skills: ["Python 3.12", "OOP", "Type Hints", "pytest", "Decorators", "Generators"] },
                 { name: "Computer Science", skills: ["Algorithms", "Data Structures", "Big-O", "Design Patterns"] },
@@ -110,7 +110,7 @@ export const ROADMAP_DATA: RoadmapData = {
             salary: "Portfolio Phase",
             focus: "TypeScript, React, Node.js REST API, k3s Kubernetes, AWS Terraform",
             weeklyHours: "~25h",
-            keyDeliverable: "Nexus v0.2 — Full-stack app on k3s + AWS Terraform + Prometheus",
+            keyDeliverable: "Full-stack app on k3s + AWS Terraform + Prometheus",
             tracks: [
                 { name: "TypeScript & React", skills: ["TS Type System", "React Hooks", "Zustand", "RTL"] },
                 { name: "Node.js API", skills: ["Express", "OpenAPI", "JWT Auth", "BullMQ", "Redis"] },
@@ -127,7 +127,7 @@ export const ROADMAP_DATA: RoadmapData = {
             salary: "Portfolio Phase",
             focus: "Statistics, linear algebra, PyTorch, HuggingFace, FastAPI model serving",
             weeklyHours: "~25h",
-            keyDeliverable: "Nexus v0.3 — FastAPI ML model API (HuggingFace + scikit-learn) on k3s",
+            keyDeliverable: "FastAPI ML model API (HuggingFace + scikit-learn) on k3s",
             tracks: [
                 { name: "Mathematics", skills: ["Linear Algebra", "Calculus / Gradients", "Statistics", "Probability"] },
                 { name: "Classical ML", skills: ["scikit-learn Pipelines", "EDA", "Feature Engineering", "Optuna"] },
@@ -144,7 +144,7 @@ export const ROADMAP_DATA: RoadmapData = {
             salary: "$120K–$180K",
             focus: "LLMs, RAG, LangChain, fine-tuning, MLflow, drift detection, evals",
             weeklyHours: "~25h",
-            keyDeliverable: "Nexus v0.4 — RAG chatbot + prompt evals + retraining pipeline live",
+            keyDeliverable: "RAG chatbot + prompt evals + retraining pipeline live",
             tracks: [
                 { name: "Prompt Engineering", skills: ["Zero/Few-shot", "Chain-of-Thought", "ReAct", "LLM-as-Judge"] },
                 { name: "LLM Engineering", skills: ["OpenAI/Anthropic APIs", "RAG (naive→advanced)", "pgvector", "LangChain LCEL"] },
@@ -161,7 +161,7 @@ export const ROADMAP_DATA: RoadmapData = {
             salary: "$180K–$240K+",
             focus: "LangGraph, multi-agent systems, safety layers, red teaming",
             weeklyHours: "~20h",
-            keyDeliverable: "Nexus v1.0 — Complete public AI platform at ambooka.dev → apply for roles",
+            keyDeliverable: "Complete public AI platform at ambooka.dev → apply for roles",
             tracks: [
                 { name: "Agent Architecture", skills: ["ReAct Loop", "LangGraph StateGraph", "Tool Use", "Memory"] },
                 { name: "Multi-Agent", skills: ["Supervisor Pattern", "CrewAI", "AutoGen", "Agent Evals"] },
@@ -173,7 +173,7 @@ export const ROADMAP_DATA: RoadmapData = {
     projects: [
         {
             id: 1,
-            title: "Nexus v0.1 — The Toolbox",
+            title: "The Toolbox",
             description: "Dockerised Python CLI + static HTTPS site on Hetzner VPS with GitHub Actions CI/CD.",
             stack: ["Python 3.12", "Docker Compose", "Nginx", "PostgreSQL", "GitHub Actions"],
             status: "In Progress",
@@ -182,7 +182,7 @@ export const ROADMAP_DATA: RoadmapData = {
         },
         {
             id: 2,
-            title: "Nexus v0.2 — The Platform",
+            title: "The Platform",
             description: "Full-stack TypeScript app on k3s Kubernetes with Terraform-managed AWS infrastructure and Prometheus monitoring.",
             stack: ["TypeScript", "React", "Node.js", "k3s", "Terraform", "Prometheus"],
             status: "Planned",
@@ -191,7 +191,7 @@ export const ROADMAP_DATA: RoadmapData = {
         },
         {
             id: 3,
-            title: "Nexus v0.3 — Intelligence Layer",
+            title: "Intelligence Layer",
             description: "FastAPI ML model API serving HuggingFace transformer and scikit-learn classifier with SHAP explanations.",
             stack: ["PyTorch", "HuggingFace", "FastAPI", "DVC", "scikit-learn"],
             status: "Planned",
@@ -200,7 +200,7 @@ export const ROADMAP_DATA: RoadmapData = {
         },
         {
             id: 4,
-            title: "Nexus v0.4 — AI Platform",
+            title: "AI Platform",
             description: "RAG chatbot over a personal knowledge base with prompt evals, QLoRA fine-tuned model, and automated retraining pipeline.",
             stack: ["LangChain", "LlamaIndex", "pgvector", "MLflow", "Evidently"],
             status: "Planned",
@@ -209,7 +209,7 @@ export const ROADMAP_DATA: RoadmapData = {
         },
         {
             id: 5,
-            title: "Nexus v1.0 — Complete AI Platform",
+            title: "Complete AI Platform",
             description: "Autonomous research agent (LangGraph), multi-agent pipelines, safety layer, and red team report — live at ambooka.dev.",
             stack: ["LangGraph", "CrewAI", "Guardrails AI", "Triton", "AutoGen"],
             status: "Planned",

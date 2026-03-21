@@ -30,9 +30,10 @@ interface ResumeData {
 
 interface ResumeBuilderPanelProps {
   resumeTrigger?: number
+  hideButton?: boolean
 }
 
-export default function ResumeBuilderPanel({ resumeTrigger = 0 }: ResumeBuilderPanelProps) {
+export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = false }: ResumeBuilderPanelProps) {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
   const [selectedRole, setSelectedRole] = useState<RoleVariant>('software-engineer')
@@ -151,6 +152,7 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0 }: ResumeBuilderP
   return (
     <>
       {/* Resume Button */}
+      {!hideButton && (
       <div className="relative group">
         <button
           onClick={openResumeModal}
@@ -170,6 +172,7 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0 }: ResumeBuilderP
           <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-[hsl(var(--popover))] border-r border-b border-[hsl(var(--border))] rotate-[-45deg]" />
         </div>
       </div>
+      )}
 
       {/* Resume Modal */}
       {isResumeModalOpen && (

@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-<<<<<<< HEAD
-=======
-// widgets.css merged into globals.css
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -165,10 +161,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#1e1e1f" media="(prefers-color-scheme: dark)" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-<<<<<<< HEAD
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-=======
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         <link rel="dns-prefetch" href="https://api.github.com" />
       </head>
       <body
@@ -178,11 +171,7 @@ export default function RootLayout({
         {/* Skip to main content link for accessibility */}
         <a
           href="#main-content"
-<<<<<<< HEAD
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[hsl(var(--accent))] focus:text-white focus:rounded-lg focus:outline-none"
-=======
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[var(--accent-primary)] focus:text-white focus:rounded-lg focus:outline-none"
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         >
           Skip to main content
         </a>

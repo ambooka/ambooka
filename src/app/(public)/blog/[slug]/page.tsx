@@ -23,15 +23,9 @@ export async function generateStaticParams() {
 }
 
 interface Props {
-<<<<<<< HEAD
     params: Promise<{
         slug: string
     }>
-=======
-    params: {
-        slug: string
-    }
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 }
 
 async function getBlogPost(slug: string) {
@@ -55,12 +49,8 @@ async function getBlogPost(slug: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-<<<<<<< HEAD
     const resolvedParams = await params;
     const post = await getBlogPost(resolvedParams.slug)
-=======
-    const post = await getBlogPost(params.slug)
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
     if (!post) {
         return {
@@ -88,22 +78,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             images: post.image_url ? [post.image_url] : [],
         },
         alternates: {
-<<<<<<< HEAD
             canonical: `/blog/${resolvedParams.slug}`,
-=======
-            canonical: `/blog/${params.slug}`,
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         }
     }
 }
 
 export default async function BlogPostPage({ params }: Props) {
-<<<<<<< HEAD
     const resolvedParams = await params;
     const post = await getBlogPost(resolvedParams.slug)
-=======
-    const post = await getBlogPost(params.slug)
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
     if (!post) {
         notFound()

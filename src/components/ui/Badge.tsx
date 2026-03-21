@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
@@ -37,25 +36,3 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants }
-=======
-import React from 'react';
-
-interface BadgeProps {
-  variant?: 'default' | 'secondary';
-  className?: string;
-  children: React.ReactNode;
-}
-
-const Badge: React.FC<BadgeProps> = ({ variant = 'default', className, children }) => {
-  const baseStyles = 'inline-flex items-center px-2 py-1 text-xs font-medium rounded';
-  const variantStyles = variant === 'secondary' ? 'bg-gray-200 text-gray-800' : 'bg-blue-500 text-white';
-
-  return (
-    <span className={`${baseStyles} ${variantStyles} ${className}`}>
-      {children}
-    </span>
-  );
-};
-
-export default Badge;
->>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
