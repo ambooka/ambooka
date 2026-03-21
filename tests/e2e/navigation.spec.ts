@@ -109,7 +109,11 @@ test.describe('Navigation Tests', () => {
 
             // Dashboard grid should exist on desktop
             await page.setViewportSize({ width: 1280, height: 800 });
+<<<<<<< HEAD
             const dashboardGrid = page.locator('.dashboard-grid, [data-testid="dashboard-grid"]');
+=======
+            const dashboardGrid = page.locator('.dashboard-grid');
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             if (await dashboardGrid.count() > 0) {
                 await expect(dashboardGrid.first()).toBeVisible();
             }
@@ -141,7 +145,11 @@ test.describe('Navigation Tests', () => {
             await page.waitForTimeout(1000);
 
             // Article title should be visible
+<<<<<<< HEAD
             const articleTitle = page.locator('.article-title, [data-testid="article-title"], h1');
+=======
+            const articleTitle = page.locator('.article-title');
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             if (await articleTitle.count() > 0) {
                 await expect(articleTitle.first()).toBeVisible();
             }
@@ -155,7 +163,11 @@ test.describe('Navigation Tests', () => {
             await page.waitForTimeout(2000);
 
             // Project list or loading skeleton should be visible
+<<<<<<< HEAD
             const projectList = page.locator('.project-list, [data-testid="project-list"], [class*="project"]');
+=======
+            const projectList = page.locator('.project-list, [class*="project"]');
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             if (await projectList.count() > 0) {
                 await expect(projectList.first()).toBeVisible();
             }

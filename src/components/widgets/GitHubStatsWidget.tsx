@@ -1,5 +1,6 @@
 'use client'
 
+<<<<<<< HEAD
 import { type CSSProperties, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { ArrowUpRight, Code2, Github, Globe, Star, Users } from 'lucide-react'
@@ -10,6 +11,15 @@ import { cn } from '@/lib/utils'
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
 const NUMBER_FORMATTER = new Intl.NumberFormat('en-US')
+=======
+import { useState, useEffect } from 'react'
+import { GitHubService } from '@/services/github'
+import { Github, Star, Users, GitCommit } from 'lucide-react'
+import Image from 'next/image'
+
+const GITHUB_USERNAME = 'ambooka'
+const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
 interface LanguageData {
     name: string
@@ -26,6 +36,7 @@ interface GitHubStats {
     topLanguages: LanguageData[]
 }
 
+<<<<<<< HEAD
 const EMPTY_STATS: GitHubStats = {
     totalRepos: 0,
     totalStars: 0,
@@ -34,6 +45,8 @@ const EMPTY_STATS: GitHubStats = {
     topLanguages: []
 }
 
+=======
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 // Language logos
 const LANGUAGE_CONFIG: Record<string, { color: string; logo?: string }> = {
     TypeScript: { color: '#3178c6', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
@@ -64,16 +77,31 @@ interface GitHubStatsWidgetProps {
     initialStats?: GitHubStats
 }
 
+<<<<<<< HEAD
 const formatNumber = (value: number) => NUMBER_FORMATTER.format(value)
 
 export default function GitHubStatsWidget({ fullWidth = false, compact = false, initialStats }: GitHubStatsWidgetProps) {
     const [stats, setStats] = useState<GitHubStats>(initialStats || EMPTY_STATS)
+=======
+export default function GitHubStatsWidget({ fullWidth = false, compact = false, initialStats }: GitHubStatsWidgetProps) {
+    const [stats, setStats] = useState<GitHubStats>(initialStats || {
+        totalRepos: 0,
+        totalStars: 0,
+        followers: 0,
+        publicRepos: 0,
+        topLanguages: []
+    })
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
     const [loading, setLoading] = useState(!initialStats)
 
     useEffect(() => {
         if (initialStats) return
+<<<<<<< HEAD
 
         ;(async () => {
+=======
+        (async () => {
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             try {
                 const githubService = new GitHubService(GITHUB_TOKEN)
                 const repos = await githubService.getRepositories(GITHUB_USERNAME, {
@@ -83,7 +111,11 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                 })
 
                 const totalStars = repos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0)
+<<<<<<< HEAD
                 const publicRepos = repos.filter(repo => !repo.private).length
+=======
+                const publicRepos = repos.filter(r => !r.private).length
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
                 const langCounts: Record<string, number> = {}
                 repos.forEach(repo => {
@@ -111,6 +143,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                         const userData = await userRes.json()
                         followers = userData.followers || 0
                     }
+<<<<<<< HEAD
                 } catch (error) {
                     console.error('Failed to fetch user profile:', error)
                 }
@@ -118,12 +151,22 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                 setStats({ totalRepos: repos.length, totalStars, followers, publicRepos, topLanguages })
             } catch (error) {
                 console.error('Failed to fetch GitHub stats:', error)
+=======
+                } catch (e) {
+                    console.error('Failed to fetch user profile:', e)
+                }
+
+                setStats({ totalRepos: repos.length, totalStars, followers, publicRepos, topLanguages })
+            } catch (e) {
+                console.error('Failed to fetch GitHub stats:', e)
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             } finally {
                 setLoading(false)
             }
         })()
     }, [initialStats])
 
+<<<<<<< HEAD
     const publicShare = stats.totalRepos > 0 ? Math.round((stats.publicRepos / stats.totalRepos) * 100) : 0
     const visibleLanguages = stats.topLanguages.slice(0, compact ? 5 : 6)
 
@@ -204,11 +247,19 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                         </div>
                     ))}
                 </div>
+=======
+    if (loading) {
+        return (
+            <div className={`github-stats-widget ${fullWidth ? 'github-fullwidth' : ''}`}>
+                <div className="widget-header"><Github size={16} /><span>GitHub Activity</span></div>
+                <div className="loading-placeholder">Loading...</div>
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
             </div>
         )
     }
 
     return (
+<<<<<<< HEAD
         <div className={cn(
             "@container w-full relative overflow-hidden rounded-[24px] p-[clamp(0.9rem,1.8vw,1.3rem)] border border-[hsl(var(--accent))/0.18] shadow-[0_14px_30px_rgba(15,23,42,0.08)]",
             "bg-gradient-to-b from-white/70 to-white/40 dark:from-slate-900/90 dark:to-slate-900/95 transition-colors",
@@ -238,10 +289,20 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                     </div>
                 </div>
 
+=======
+        <div className={`github-stats-widget ${compact ? 'github-compact' : ''} ${fullWidth ? 'github-fullwidth' : ''}`}>
+            {/* Header */}
+            <div className="github-header px-1 md:px-0">
+                <div className="github-title">
+                    <Github size={18} />
+                    <span>GitHub Activity</span>
+                </div>
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                 <a
                     href={`https://github.com/${GITHUB_USERNAME}`}
                     target="_blank"
                     rel="noopener noreferrer"
+<<<<<<< HEAD
                     className="inline-flex flex-col sm:flex-row items-center justify-center w-full sm:w-auto gap-1.5 px-3.5 py-2 rounded-full border border-[hsl(var(--border))] bg-white/60 dark:bg-white/10 text-[0.82rem] font-bold text-[hsl(var(--foreground))] no-underline shadow-sm transition-all hover:-translate-y-px hover:border-[hsl(var(--accent))/0.28] hover:text-[hsl(var(--accent))]"
                 >
                     <span>@{GITHUB_USERNAME}</span>
@@ -401,6 +462,275 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                     )}
                 </section>
             </div>
+=======
+                    className="github-profile-link"
+                >
+                    @{GITHUB_USERNAME}
+                </a>
+            </div>
+
+            {/* Stats Cards Grid - With meaningful graphics */}
+            <div className="stats-cards-grid">
+                {/* Repos Card - with folder stack graphic */}
+                <div className="stat-card">
+                    <div className="stat-card-header">
+                        <Github size={14} />
+                        <span>Repositories</span>
+                    </div>
+                    <div className="stat-card-body">
+                        <div className="stat-card-value">
+                            <span className="big-num">{stats.totalRepos}</span>
+                            <span className="unit">repos</span>
+                        </div>
+                        <div className="folder-stack">
+                            <div className="folder f1" />
+                            <div className="folder f2" />
+                            <div className="folder f3" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stars Card - with actual star icons */}
+                <div className="stat-card">
+                    <div className="stat-card-header">
+                        <Star size={14} />
+                        <span>Stars Earned</span>
+                    </div>
+                    <div className="stat-card-body">
+                        <div className="stat-card-value">
+                            <span className="big-num">{stats.totalStars}</span>
+                            <span className="unit">total</span>
+                        </div>
+                        <div className="stars-visual">
+                            {[...Array(Math.min(stats.totalStars, 5))].map((_, i) => (
+                                <Star key={i} size={10} className="star-icon" fill="#f59e0b" color="#f59e0b" />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Followers Card - with growth trend */}
+                <div className="stat-card">
+                    <div className="stat-card-header">
+                        <Users size={14} />
+                        <span>Followers</span>
+                    </div>
+                    <div className="stat-card-body">
+                        <div className="stat-card-value">
+                            <span className="big-num">{stats.followers}</span>
+                            <span className="unit">people</span>
+                        </div>
+                        <svg className="growth-line" viewBox="0 0 50 24">
+                            <path d="M2,20 L10,16 L18,18 L26,12 L34,14 L42,8 L48,4" fill="none" stroke="var(--accent-primary)" strokeWidth="2" strokeLinecap="round" />
+                            <circle cx="48" cy="4" r="3" fill="var(--accent-primary)" />
+                        </svg>
+                    </div>
+                </div>
+
+                {/* Public vs Private - with percentage ring */}
+                <div className="stat-card">
+                    <div className="stat-card-header">
+                        <GitCommit size={14} />
+                        <span>Public</span>
+                    </div>
+                    <div className="stat-card-body">
+                        <div className="stat-card-value">
+                            <span className="big-num">{stats.totalRepos > 0 ? Math.round((stats.publicRepos / stats.totalRepos) * 100) : 0}%</span>
+                            <span className="unit">{stats.publicRepos} of {stats.totalRepos}</span>
+                        </div>
+                        <svg className="percent-ring" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--border-light)" strokeWidth="4" />
+                            <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-secondary)" strokeWidth="4"
+                                strokeDasharray={`${stats.totalRepos > 0 ? (stats.publicRepos / stats.totalRepos) * 88 : 0} 88`}
+                                strokeLinecap="round" transform="rotate(-90 18 18)" />
+                            <text x="18" y="20" textAnchor="middle" fontSize="8" fill="var(--text-primary)" fontWeight="600">
+                                {stats.publicRepos}
+                            </text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            {/* Contribution Graph */}
+            <div className="github-graph">
+                <Image
+                    src={`https://ghchart.rshah.org/8E0E28/${GITHUB_USERNAME}`}
+                    alt="GitHub Contribution Graph"
+                    className="contribution-graph"
+                    width={800}
+                    height={120}
+                    unoptimized
+                />
+            </div>
+
+            <style jsx>{`
+                .stats-cards-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 8px;
+                    margin-bottom: 12px;
+                }
+
+                .stat-card {
+                    background: var(--glass-bg-subtle);
+                    backdrop-filter: var(--glass-blur);
+                    -webkit-backdrop-filter: var(--glass-blur);
+                    border-radius: var(--radius-lg);
+                    padding: 16px;
+                    border: 1px solid var(--glass-border-subtle);
+                    box-shadow: var(--neu-shadow-sm);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                .stat-card:hover {
+                    background: var(--glass-bg);
+                    border-color: var(--glass-border-hover);
+                    transform: translateY(-2px);
+                    box-shadow: var(--neu-shadow);
+                }
+
+                @media (max-width: 640px) {
+                    .stat-card {
+                        padding: 12px 10px;
+                    }
+                }
+
+                .stat-card-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-primary);
+                    margin-bottom: 8px;
+                }
+
+                .stat-card-header svg {
+                    opacity: 0.7;
+                }
+
+                .stat-card-body {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                }
+
+                .stat-card-value {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .big-num {
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: var(--text-primary);
+                    line-height: 1;
+                }
+
+                .unit {
+                    font-size: 9px;
+                    color: var(--text-tertiary);
+                    margin-top: 3px;
+                }
+
+                /* Folder Stack Graphic */
+                .folder-stack {
+                    position: relative;
+                    width: 32px;
+                    height: 28px;
+                }
+
+                .folder {
+                    position: absolute;
+                    width: 20px;
+                    height: 14px;
+                    background: var(--border-light);
+                    border-radius: 2px 6px 4px 4px;
+                    border: 1px solid rgba(0,0,0,0.1);
+                }
+
+                .folder::before {
+                    content: '';
+                    position: absolute;
+                    top: -4px;
+                    left: 0;
+                    width: 8px;
+                    height: 4px;
+                    background: inherit;
+                    border-radius: 2px 2px 0 0;
+                }
+
+                .folder.f1 { bottom: 0; left: 0; background: var(--accent-primary); opacity: 0.9; }
+                .folder.f2 { bottom: 4px; left: 4px; background: var(--accent-secondary); opacity: 0.7; }
+                .folder.f3 { bottom: 8px; left: 8px; background: var(--text-tertiary); opacity: 0.5; }
+
+                /* Stars Visual */
+                .stars-visual {
+                    display: flex;
+                    gap: 2px;
+                    align-items: center;
+                }
+
+                .stars-visual :global(.star-icon) {
+                    filter: drop-shadow(0 1px 2px rgba(245, 158, 11, 0.3));
+                }
+
+                /* Growth Line */
+                .growth-line {
+                    width: 50px;
+                    height: 24px;
+                }
+
+                .github-graph {
+                    margin-top: 16px;
+                    width: 100%;
+                    overflow: hidden;
+                    display: flex;
+                    justify-content: center;
+                }
+
+                .contribution-graph {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                @media (min-width: 769px) {
+                    .github-graph {
+                        width: calc(100% + 32px); /* Bleed past parent padding only on desktop */
+                        margin-left: -16px;
+                        margin-right: -16px;
+                    }
+
+                    .github-compact .stats-cards-grid {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+
+                    .github-compact .stat-card {
+                        padding: 10px;
+                    }
+
+                    .github-compact .big-num {
+                        font-size: 18px;
+                    }
+
+                    .github-compact .stat-card-header {
+                        font-size: 9px;
+                        margin-bottom: 4px;
+                    }
+                    
+                    .github-compact .github-graph {
+                        max-height: none;
+                        margin-top: 12px;
+                        width: calc(100% + 32px);
+                        margin-left: -16px;
+                        margin-right: -16px;
+                    }
+                }
+            `}</style>
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         </div>
     )
 }

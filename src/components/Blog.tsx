@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+<<<<<<< HEAD
 import { motion } from 'framer-motion'
 import { Loader2, Calendar, Eye } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
@@ -15,6 +16,10 @@ import {
   scrollRevealTransition,
   defaultViewport,
 } from '@/lib/motion'
+=======
+import { Loader2 } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
 
 interface BlogProps {
   isActive?: boolean
@@ -80,6 +85,7 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
 
   if (loading) {
     return (
+<<<<<<< HEAD
       <article className={cn("w-full max-w-full m-0 p-0", isActive ? "block" : "hidden")} data-page="blog">
         <header className="mb-10">
           <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] capitalize relative inline-block pb-3">
@@ -90,6 +96,22 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
         <div className="flex flex-col items-center justify-center min-h-[300px] gap-3">
           <Loader2 size={40} className="animate-spin text-[hsl(var(--accent))]" />
           <p className="text-[hsl(var(--muted-foreground))] font-bold uppercase tracking-widest text-[10px]">Loading Intelligence...</p>
+=======
+      <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
+        <header>
+          <h2 className="h2 article-title">Blog</h2>
+        </header>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '300px',
+          flexDirection: 'column',
+          gap: '12px'
+        }}>
+          <Loader2 size={40} className="animate-spin text-[var(--accent-primary)]" />
+          <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px]">Loading Intelligence...</p>
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         </div>
       </article>
     )
@@ -97,6 +119,7 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
 
   if (blogPosts.length === 0) {
     return (
+<<<<<<< HEAD
       <article className={cn("w-full max-w-full m-0 p-0", isActive ? "block" : "hidden")} data-page="blog">
         <header className="mb-10">
           <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] capitalize relative inline-block pb-3">
@@ -107,12 +130,26 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
         <div className="text-center py-20 px-5 text-[hsl(var(--muted-foreground))] border border-[hsl(var(--border))] rounded-2xl bg-[hsl(var(--muted))]">
           <p className="text-lg font-bold mb-2 text-[hsl(var(--foreground))]">No blog posts yet</p>
           <p className="text-sm opacity-80">Check back soon for new content!</p>
+=======
+      <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
+        <header>
+          <h2 className="h2 article-title">Blog</h2>
+        </header>
+        <div style={{
+          textAlign: 'center',
+          padding: '60px 20px',
+          color: 'var(--text-secondary)'
+        }}>
+          <p style={{ fontSize: '18px', marginBottom: '8px' }}>No blog posts yet</p>
+          <p style={{ fontSize: '14px', opacity: 0.7 }}>Check back soon for new content!</p>
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
         </div>
       </article>
     )
   }
 
   return (
+<<<<<<< HEAD
     <AnimatedPage>
     <article className={cn("w-full max-w-full m-0 p-0", isActive ? "block" : "hidden")} data-page="blog">
       <motion.header
@@ -171,10 +208,40 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
                     <span className="w-1 h-1 rounded-full bg-[hsl(var(--border))]" />
                     <time dateTime={post.published_at || ''} className="text-[hsl(var(--muted-foreground))] flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
+=======
+    <article className={`blog portfolio-tab ${isActive ? 'active' : ''}`} data-page="blog">
+      <header>
+        <h2 className="h2 article-title">Blog</h2>
+      </header>
+
+      <section className="blog-posts">
+        <ul className="blog-posts-list">
+          {blogPosts.map(post => (
+            <li key={post.id} className="blog-post-item">
+              <Link href={`/blog/${post.slug}`} className="block h-full">
+                <figure className="blog-banner-box">
+                  <Image
+                    src={post.image_url || 'https://via.placeholder.com/800x600?text=Blog+Post'}
+                    alt={post.title}
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    onError={handleImageError}
+                    className="w-full h-auto"
+                  />
+                </figure>
+
+                <div className="blog-content !p-8">
+                  <div className="blog-meta !mb-4">
+                    <p className="blog-category !text-[var(--accent-primary)] !font-black !uppercase !tracking-widest !text-[10px]">{post.category}</p>
+                    <span className="dot !bg-[var(--border-color)]"></span>
+                    <time dateTime={post.published_at || ''} className="!text-[var(--text-tertiary)] !font-bold !uppercase !tracking-tighter !text-[11px]">
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
                       {formatDate(post.published_at)}
                     </time>
                   </div>
 
+<<<<<<< HEAD
                   {/* Title */}
                   <h3 className="text-xl font-black text-[hsl(var(--foreground))] leading-tight mb-3 line-clamp-2 group-hover:text-[hsl(var(--accent))] transition-colors">
                     {post.title}
@@ -220,3 +287,41 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
     </AnimatedPage>
   )
 }
+=======
+                  <h3 className="h3 blog-item-title !text-[var(--text-primary)] !font-black !uppercase !tracking-tight !mb-4 group-hover:text-[var(--accent-primary)] transition-colors line-clamp-2">{post.title}</h3>
+                  <p className="blog-text !text-[var(--text-secondary)] !text-sm leading-relaxed line-clamp-3 mb-6 opacity-80">{post.excerpt || post.content.slice(0, 150)}...</p>
+
+                  {post.tags && post.tags.length > 0 && (
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '6px',
+                      marginTop: '12px'
+                    }}>
+                      {post.tags.slice(0, 3).map((tag, idx) => (
+                        <span key={idx} style={{
+                          padding: '4px 12px',
+                          background: 'var(--bg-tertiary)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          color: 'var(--text-secondary)',
+                          border: '1px solid var(--border-color)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px'
+                        }}>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </article>
+  )
+}
+>>>>>>> b754ef8ef81ee05ffa20e4e0ac5049621c5b0e0e
