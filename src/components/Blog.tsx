@@ -8,6 +8,7 @@ import { Loader2, Calendar, Eye } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { cn } from '@/lib/utils'
 import AnimatedPage from '@/components/AnimatedPage'
+import { getCardPattern } from '@/lib/design-patterns'
 import {
   fadeUp,
   staggerContainer,
@@ -136,7 +137,9 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
           whileInView="visible"
           viewport={defaultViewport}
         >
-          {blogPosts.map((post) => (
+          {blogPosts.map((post, index) => {
+            const pattern = getCardPattern(index);
+            return (
             <motion.li
               key={post.id}
               variants={staggerChildScale}
@@ -144,7 +147,10 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
             >
               <Link 
                 href={`/blog/${post.slug}`} 
-                className="flex flex-col h-full bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md hover:border-[hsl(var(--accent))/0.4]"
+                className={cn(
+                  "group relative flex flex-col h-full border border-[hsl(var(--border))] rounded-2xl overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[hsl(var(--accent))/0.4]",
+                  pattern.bgClass
+                )}
               >
                 {/* Image Banner */}
                 <figure className="relative w-full h-56 m-0 overflow-hidden bg-[hsl(var(--muted))] shrink-0">
@@ -161,7 +167,8 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
                 </figure>
 
                 {/* Content */}
-                <div className="p-6 md:p-7 flex flex-col flex-1">
+                <div className="relative p-6 md:p-7 flex flex-col flex-1 z-10">
+                  <div className={cn(pattern.blobClass, "-z-10 pointer-events-none")} />
                   
                   {/* Meta */}
                   <div className="flex items-center gap-3 mb-4 text-xs font-semibold uppercase tracking-wider">
@@ -213,7 +220,8 @@ export default function Blog({ isActive = false, initialPosts }: BlogProps) {
                 </div>
               </Link>
             </motion.li>
-          ))}
+            );
+          })}
         </motion.ul>
       </section>
     </article>

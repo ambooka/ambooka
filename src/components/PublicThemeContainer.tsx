@@ -48,7 +48,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
 
     return (
         <div className={cn(
-            "w-full min-h-screen relative overflow-x-hidden",
+            "w-full min-h-screen relative",
             isLoaded ? "opacity-100" : "opacity-0",
             "transition-opacity duration-200"
         )}>
@@ -58,7 +58,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
 
             <TopHeader onProfileClick={() => setIsProfileOpen(true)} />
 
-            <main id="main-content" className="w-full pb-28 md:pb-12 pt-4 mb-8 px-3 sm:px-4 md:px-6 lg:px-8 flex justify-center">
+            <main id="main-content" className="w-full pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-12 pt-4 mb-8 px-3 sm:px-4 md:px-6 lg:px-8 flex justify-center">
                 <div className="w-full max-w-[1440px]">
                     <AnimatePresence mode="wait" initial={false}>
                         <div key={pathname}>

@@ -31,7 +31,7 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
     const embeddedCompact = embedded && compact
 
     useEffect(() => {
-        ;(async () => {
+        ; (async () => {
             try {
                 const githubService = new GitHubService(GITHUB_TOKEN)
                 const repos = await githubService.getRepositories(GITHUB_USERNAME, {
@@ -132,7 +132,7 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
                 </div>
             </div>
 
-            <div className={cn("relative overflow-hidden rounded-2xl", 
+            <div className={cn("relative overflow-hidden rounded-2xl",
                 compact ? (embedded ? "h-[182px] sm:h-[196px]" : "h-[120px]") : "h-[280px]"
             )}>
                 <div
@@ -187,7 +187,7 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
                                     <div className="flex gap-2">
                                         <a href={project.url} target="_blank" rel="noopener noreferrer"
                                             className={cn(
-                                                "rounded-full bg-[hsl(var(--foreground))] text-[hsl(var(--background))] font-black uppercase tracking-widest flex items-center gap-2 transition-all hover:bg-[hsl(var(--accent))] hover:scale-[1.02] shadow-md",
+                                                "rounded-full  text-[hsl(var(--background))] font-black uppercase tracking-widest flex items-center gap-2 transition-all hover:bg-[hsl(var(--accent))] hover:scale-[1.02] shadow-md",
                                                 embeddedCompact || compact ? "px-3 py-2 text-[9px]" : "px-4 py-2.5 text-[10px]"
                                             )}>
                                             <Github size={embeddedCompact || compact ? 13 : 15} /> Repository

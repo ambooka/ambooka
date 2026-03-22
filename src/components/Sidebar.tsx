@@ -191,8 +191,8 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
 
         <aside className={cn(
           "relative z-10 w-full overflow-hidden rounded-[24px] border border-[hsl(var(--border))]",
-          "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]",
-          "shadow-xl transition-transform duration-300",
+          "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
+          "shadow-md transition-transform duration-300",
           isModal ? "max-w-[36rem] max-h-[92vh] rounded-b-none" : "",
           isModal && !isOpen ? "translate-y-full" : isModal ? "translate-y-0" : ""
         )}>
@@ -443,8 +443,8 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
     return (
       <aside className={cn(
         "relative w-full overflow-hidden rounded-[24px] border border-[hsl(var(--border))]",
-        "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
-        "shadow-xl"
+        "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
+        "shadow-md"
       )}>
         {renderContent()}
       </aside>
@@ -468,7 +468,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
             className={cn(
               "relative z-10 w-full max-w-[36rem] max-h-[92vh] overflow-hidden",
               "rounded-[24px] rounded-b-none border border-[hsl(var(--border))]",
-              "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
+              "bg-[hsl(var(--card))/0.9] backdrop-blur-2xl",
               "shadow-xl"
             )}
             variants={sidebarSlideUp}

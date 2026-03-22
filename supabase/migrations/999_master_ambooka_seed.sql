@@ -1,7 +1,7 @@
 -- =====================================================================
 -- MASTER SEED: Abdulrahman (Msah) Ambooka — AI/ML Engineer Roadmap
 -- Portfolio: ambooka.dev  |  GitHub: ambooka
--- Roadmap: 5-Phase Nexus Platform, 26 months, CS Graduate accelerated
+-- Roadmap: 5-Phase Roadmap Platform, 26 months, CS Graduate accelerated
 -- Run this in Supabase SQL Editor to reset all career content
 -- =====================================================================
 
@@ -16,7 +16,7 @@ UPDATE personal_info SET
   email          = 'abdulrahmanambooka@gmail.com',
   phone          = '+254111384390',
   location       = 'Nairobi, Kenya',
-  summary        = 'CS graduate building toward an AI/ML Engineer role through the Nexus platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Learning in public on ambooka.dev.',
+  summary        = 'CS graduate building toward an AI/ML Engineer role through the Roadmap platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Learning in public on ambooka.dev.',
   linkedin_url   = 'https://www.linkedin.com/in/abdulrahman-ambooka/',
   github_url     = 'https://github.com/ambooka',
   website_url    = 'https://ambooka.dev',
@@ -39,7 +39,7 @@ SELECT
   'abdulrahmanambooka@gmail.com',
   '+254111384390',
   'Nairobi, Kenya',
-  'CS graduate building toward an AI/ML Engineer role through the Nexus platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system.',
+  'CS graduate building toward an AI/ML Engineer role through the Roadmap platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system.',
   'https://www.linkedin.com/in/abdulrahman-ambooka/',
   'https://github.com/ambooka',
   'https://ambooka.dev',
@@ -64,7 +64,7 @@ VALUES
   '2024-06-30',
   false,
   'Second Class Honours (Upper Division)',
-  'Comprehensive CS education covering algorithms, data structures, software engineering, database systems, computer networks, and artificial intelligence. The degree provides a 40–50% acceleration on the Nexus Phase 1–2 curriculum — foundational CS concepts, complexity analysis, design patterns, and networking basics are already covered.',
+  'Comprehensive CS education covering algorithms, data structures, software engineering, database systems, computer networks, and artificial intelligence. The degree provides a 40–50% acceleration on the Roadmap Phase 1–2 curriculum — foundational CS concepts, complexity analysis, design patterns, and networking basics are already covered.',
   1
 ),
 (
@@ -94,7 +94,7 @@ VALUES
   '2025-01-01',
   NULL,
   true,
-  'Providing IT operations support and digital transformation services for a Nairobi-based enterprise. This role runs in parallel with the Nexus roadmap — production infrastructure challenges here directly inform Phase 1 Linux and networking study.',
+  'Providing IT operations support and digital transformation services for a Nairobi-based enterprise. This role runs in parallel with the Roadmap roadmap — production infrastructure challenges here directly inform Phase 1 Linux and networking study.',
   ARRAY[
     'Manage and maintain company IT infrastructure: Windows servers, networking, and workstations',
     'Provide Tier-1 and Tier-2 technical support to staff across hardware, software, and connectivity',
@@ -117,7 +117,7 @@ VALUES
   '2022-01-01',
   NULL,
   true,
-  'Delivering full-stack web applications, APIs, and dashboards to clients across Kenya and globally. This freelance practice is the foundation of the Nexus Phase 1–2 web engineering skills — real client projects using the same stack (React, Node.js, PostgreSQL, Docker).',
+  'Delivering full-stack web applications, APIs, and dashboards to clients across Kenya and globally. This freelance practice is the foundation of the Roadmap Phase 1–2 web engineering skills — real client projects using the same stack (React, Node.js, PostgreSQL, Docker).',
   ARRAY[
     'Design and build full-stack web applications using React, Next.js, Node.js, and PostgreSQL',
     'Integrate payment gateways including Safaricom Daraja API (M-Pesa) for Kenyan clients',
@@ -156,69 +156,69 @@ VALUES
 
 
 -- =====================================================================
--- 4. PORTFOLIO PROJECTS  (Nexus platform phases + real freelance work)
+-- 4. PORTFOLIO PROJECTS  (Roadmap platform phases + real freelance work)
 -- =====================================================================
 DELETE FROM portfolio_content;
 
 INSERT INTO portfolio_content (title, category, description, technologies, github_url, live_url, image_url, tags, is_featured, display_order)
 VALUES
 (
-  'Nexus v0.1 — The Toolbox',
+  'Roadmap v0.1 — The Toolbox',
   'devops',
   'Phase 1 milestone: Dockerised Python CLI utility suite with pytest coverage ≥80%, served over HTTPS from a Hetzner VPS behind Nginx, with a GitHub Actions pipeline (lint → test → build → push GHCR → deploy).',
   ARRAY['Python 3.12', 'Docker Compose', 'Nginx', 'PostgreSQL', 'GitHub Actions', 'pytest'],
-  'https://github.com/ambooka/nexus',
+  'https://github.com/ambooka/roadmap',
   'https://ambooka.dev',
-  '/assets/images/projects/nexus-v01.png',
-  ARRAY['Python', 'Docker', 'CI/CD', 'VPS', 'Nexus Phase 1'],
+  '/assets/images/projects/roadmap-v01.png',
+  ARRAY['Python', 'Docker', 'CI/CD', 'VPS', 'Roadmap Phase 1'],
   true,
   1
 ),
 (
-  'Nexus v0.2 — The Platform',
+  'Roadmap v0.2 — The Platform',
   'web_app',
   'Phase 2 milestone (upcoming): Full-stack TypeScript monorepo — React SPA + Node.js REST API + PostgreSQL + Redis on k3s Kubernetes, with Terraform-managed AWS infrastructure and Prometheus/Grafana/Loki observability.',
   ARRAY['TypeScript', 'React', 'Node.js', 'k3s', 'Helm', 'Terraform', 'AWS', 'Prometheus', 'Grafana'],
-  'https://github.com/ambooka/nexus',
+  'https://github.com/ambooka/roadmap',
   '#',
-  '/assets/images/projects/nexus-v02.png',
-  ARRAY['TypeScript', 'Kubernetes', 'Terraform', 'Observability', 'Nexus Phase 2'],
+  '/assets/images/projects/roadmap-v02.png',
+  ARRAY['TypeScript', 'Kubernetes', 'Terraform', 'Observability', 'Roadmap Phase 2'],
   true,
   2
 ),
 (
-  'Nexus v0.3 — Intelligence Layer',
+  'Roadmap v0.3 — Intelligence Layer',
   'ai_ml',
   'Phase 3 milestone (planned): FastAPI ML model service exposing a scikit-learn classifier and a fine-tuned HuggingFace transformer with SHAP explanations, DVC data versioning, and a CI quality gate.',
   ARRAY['Python', 'PyTorch', 'HuggingFace', 'scikit-learn', 'FastAPI', 'DVC', 'SHAP', 'Airflow'],
-  'https://github.com/ambooka/nexus',
+  'https://github.com/ambooka/roadmap',
   '#',
-  '/assets/images/projects/nexus-v03.png',
-  ARRAY['ML', 'HuggingFace', 'FastAPI', 'MLOps', 'Nexus Phase 3'],
+  '/assets/images/projects/roadmap-v03.png',
+  ARRAY['ML', 'HuggingFace', 'FastAPI', 'MLOps', 'Roadmap Phase 3'],
   true,
   3
 ),
 (
-  'Nexus v0.4 — AI Platform',
+  'Roadmap v0.4 — AI Platform',
   'ai_ml',
   'Phase 4 milestone (planned): RAG chatbot over a personal knowledge base with hybrid search + re-ranking, QLoRA fine-tuned domain model in MLflow registry, Evidently drift detection, and automated retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API', 'Anthropic API'],
-  'https://github.com/ambooka/nexus',
+  'https://github.com/ambooka/roadmap',
   '#',
-  '/assets/images/projects/nexus-v04.png',
-  ARRAY['RAG', 'LangChain', 'MLOps', 'Fine-tuning', 'Nexus Phase 4'],
+  '/assets/images/projects/roadmap-v04.png',
+  ARRAY['RAG', 'LangChain', 'MLOps', 'Fine-tuning', 'Roadmap Phase 4'],
   true,
   4
 ),
 (
-  'Nexus v1.0 — Complete AI Platform',
+  'Roadmap v1.0 — Complete AI Platform',
   'ai_ml',
   'Phase 5 milestone (planned): Autonomous research agent (LangGraph supervisor), multi-agent code review pipeline, long-term vector memory, guardrails safety layer, and a red team report — live at ambooka.dev.',
   ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton', 'LlamaIndex'],
-  'https://github.com/ambooka/nexus',
+  'https://github.com/ambooka/roadmap',
   'https://ambooka.dev',
-  '/assets/images/projects/nexus-v10.png',
-  ARRAY['Agents', 'LangGraph', 'Safety', 'Multi-agent', 'Nexus Phase 5'],
+  '/assets/images/projects/roadmap-v10.png',
+  ARRAY['Agents', 'LangGraph', 'Safety', 'Multi-agent', 'Roadmap Phase 5'],
   true,
   5
 ),
@@ -343,7 +343,7 @@ DELETE FROM public.about_content;
 INSERT INTO public.about_content (section_key, title, content, icon, badge, display_order, is_active) VALUES
 (
   'about_text', NULL,
-  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured 26-month plan — the Nexus platform. Every week I ship a project to GitHub. Every phase ships a live deployment to ambooka.dev. The CS degree cuts Phase 1–2 by ~40%, letting me reach the AI/ML work faster. Currently: Phase 1 — Foundations & Tooling.',
+  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured 26-month plan — the Roadmap platform. Every week I ship a project to GitHub. Every phase ships a live deployment to ambooka.dev. The CS degree cuts Phase 1–2 by ~40%, letting me reach the AI/ML work faster. Currently: Phase 1 — Foundations & Tooling.',
   NULL, NULL, 0, true
 ),
 (
@@ -385,7 +385,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 
 
 -- =====================================================================
--- 8. ROADMAP PHASES  (5-phase Nexus plan)
+-- 8. ROADMAP PHASES  (5-phase Roadmap plan)
 -- =====================================================================
 
 -- Ensure table exists (idempotent)
@@ -500,39 +500,39 @@ DELETE FROM public.projects WHERE github_url LIKE '%ambooka%' OR github_url LIKE
 INSERT INTO public.projects (title, description, stack, status, is_featured, display_order, github_url, live_url)
 VALUES
 (
-  'Nexus v0.1 — The Toolbox',
+  'Roadmap v0.1 — The Toolbox',
   'Dockerised Python CLI + static HTTPS site on Hetzner VPS. GitHub Actions pipeline: lint → test → build → push GHCR → deploy.',
   ARRAY['Python 3.12', 'Docker Compose', 'Nginx', 'PostgreSQL', 'pytest', 'GitHub Actions'],
   'In Progress', true, 1,
-  'https://github.com/ambooka/nexus', 'https://ambooka.dev'
+  'https://github.com/ambooka/roadmap', 'https://ambooka.dev'
 ),
 (
-  'Nexus v0.2 — The Platform',
+  'Roadmap v0.2 — The Platform',
   'Full-stack TypeScript monorepo on k3s Kubernetes. React SPA + Node.js API + AWS Terraform + Prometheus/Grafana.',
   ARRAY['TypeScript', 'React', 'Node.js', 'k3s', 'Helm', 'Terraform', 'AWS', 'Prometheus'],
   'Planned', true, 2,
-  'https://github.com/ambooka/nexus', '#'
+  'https://github.com/ambooka/roadmap', '#'
 ),
 (
-  'Nexus v0.3 — Intelligence Layer',
+  'Roadmap v0.3 — Intelligence Layer',
   'FastAPI ML service: HuggingFace transformer + scikit-learn classifier + SHAP explanations + DVC + CI quality gate.',
   ARRAY['PyTorch', 'HuggingFace', 'scikit-learn', 'FastAPI', 'DVC', 'SHAP', 'Airflow'],
   'Planned', true, 3,
-  'https://github.com/ambooka/nexus', '#'
+  'https://github.com/ambooka/roadmap', '#'
 ),
 (
-  'Nexus v0.4 — AI Platform',
+  'Roadmap v0.4 — AI Platform',
   'RAG chatbot (hybrid search + re-ranking), QLoRA fine-tuned model in MLflow registry, Evidently drift detection, retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API'],
   'Planned', true, 4,
-  'https://github.com/ambooka/nexus', '#'
+  'https://github.com/ambooka/roadmap', '#'
 ),
 (
-  'Nexus v1.0 — Complete AI Platform',
+  'Roadmap v1.0 — Complete AI Platform',
   'Autonomous research agent (LangGraph supervisor), multi-agent pipelines, safety layer, red team report. Live at ambooka.dev.',
   ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton Inference Server'],
   'Planned', true, 5,
-  'https://github.com/ambooka/nexus', 'https://ambooka.dev'
+  'https://github.com/ambooka/roadmap', 'https://ambooka.dev'
 );
 
 

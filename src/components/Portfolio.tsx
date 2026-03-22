@@ -10,6 +10,7 @@ import { fetchProjectReadme } from '@/app/actions/github'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogContent, DialogOverlay, DialogPortal, DialogClose } from '@/components/ui'
 import AnimatedPage from '@/components/AnimatedPage'
+import { getCardPattern } from '@/lib/design-patterns'
 import {
   fadeUp,
   staggerContainer,
@@ -273,15 +274,17 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
               initial="hidden"
               animate="visible"
             >
-              {paginatedProjects.map((repo) => (
+              {paginatedProjects.map((repo, index) => {
+                const pattern = getCardPattern(index);
+                return (
                 <motion.div
                   key={repo.id}
                   variants={staggerChildScale}
                 >
                   <div className={cn(
-                    "group h-full flex flex-col overflow-hidden rounded-2xl",
-                    "border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/30",
-                    "shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-[hsl(var(--accent))/0.3]"
+                    "group relative h-full flex flex-col overflow-hidden rounded-2xl",
+                    "border border-[hsl(var(--border))]", pattern.bgClass,
+                    "shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[hsl(var(--accent))/0.3]"
                   )}>
                     {/* Image Header with Overlay */}
                     <div className="relative h-56 overflow-hidden bg-[hsl(var(--muted))]">
@@ -321,7 +324,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     </div>
 
                     {/* Body */}
-                    <div className="flex-1 p-6 flex flex-col">
+                    <div className="relative flex-1 p-6 flex flex-col z-10">
+                      <div className={cn(pattern.blobClass, "-z-10 pointer-events-none")} />
                       <div className="flex justify-between items-start mb-4 gap-2">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-[hsl(var(--muted))] border border-[hsl(var(--border))] flex items-center justify-center p-2 shrink-0">
@@ -396,7 +400,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                     </div>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
 
             {/* Pagination UI */}
@@ -445,7 +450,7 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         }}>
           <DialogPrimitive.Portal>
             <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-            <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 flex flex-col w-[94vw] max-w-[800px] max-h-[90vh] translate-x-[-50%] translate-y-[-50%] border-0 bg-[hsl(var(--card))] shadow-2xl rounded-2xl overflow-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] outline-none">
+            <DialogPrimitive.Content className="fixed left-[50%] top-[50%] z-50 flex flex-col w-[94vw] max-w-[800px] max-h-[90vh] translate-x-[-50%] translate-y-[-50%] border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.9] backdrop-blur-2xl shadow-2xl rounded-2xl overflow-hidden duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] outline-none">
               
               <div className="relative h-48 md:h-64 shrink-0 bg-black">
                 <Image src={popupRepo.image} alt={popupRepo.title} fill className="object-cover opacity-60" unoptimized />

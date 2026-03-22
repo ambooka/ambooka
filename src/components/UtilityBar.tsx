@@ -32,7 +32,8 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
         "fixed z-50",
         "md:right-5 md:top-1/2 md:-translate-y-1/2 md:bottom-auto",
         "right-4 bottom-24 md:bottom-auto",
-        "flex md:flex-col items-center gap-2",
+        "flex flex-col items-center gap-3",
+        "scale-90 md:scale-100 origin-bottom-right md:origin-center",
         "p-2.5 rounded-2xl",
         "bg-[hsl(var(--card)/0.85)] backdrop-blur-xl",
         "border border-[hsl(var(--border))]",
@@ -60,7 +61,7 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
         </div>
 
         {/* Separator */}
-        <div className="h-px w-6 md:h-6 md:w-px bg-[hsl(var(--border))]" />
+        <div className="h-px w-6 bg-[hsl(var(--border))]" />
 
         {/* AI Chat trigger */}
         <div className="relative group">

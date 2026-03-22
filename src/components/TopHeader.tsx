@@ -29,9 +29,8 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                 "max-w-[1560px] mx-auto flex items-center justify-between gap-3",
                 "px-3 py-2.5 rounded-3xl",
                 "border border-[hsl(var(--border))]",
-                "bg-gradient-to-b from-[hsl(var(--card)/0.62)] to-[hsl(var(--card)/0.4)]",
-                "shadow-lg",
-                "dark:from-[hsl(var(--card)/0.3)] dark:to-[hsl(var(--card)/0.1)]"
+                "bg-[hsl(var(--card))/0.82] backdrop-blur-xl",
+                "shadow-md"
             )}>
                 {/* Logo */}
                 <div className="shrink-0">
@@ -40,7 +39,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                         className={cn(
                             "inline-flex items-center justify-center min-h-[2.55rem]",
                             "px-4 py-2.5 rounded-full",
-                            "bg-[hsl(var(--card)/0.82)] border border-[hsl(var(--border))]",
+                            "bg-[hsl(var(--card)/0.82)] backdrop-blur-md border border-[hsl(var(--border))]",
                             "text-[hsl(var(--foreground))] text-sm font-extrabold tracking-tighter",
                             "shadow-md hover:-translate-y-px hover:shadow-lg transition-all duration-200"
                         )}
@@ -95,13 +94,12 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                         type="button"
                         whileTap={buttonTap}
                         className={cn(
-                            "hidden max-lg:inline-flex items-center gap-1.5",
+                            "hidden sm:inline-flex lg:hidden items-center gap-1.5",
                             "min-h-[2.45rem] px-3.5 py-2.5 rounded-full",
                             "border border-[hsl(var(--border))] bg-[hsl(var(--foreground)/0.05)]",
                             "text-[hsl(var(--foreground))] text-[0.78rem] font-bold",
                             "hover:-translate-y-px hover:bg-[hsl(var(--accent)/0.1)] hover:text-[hsl(var(--accent))]",
-                            "transition-all duration-200 cursor-pointer",
-                            "max-[420px]:w-[2.7rem] max-[420px]:p-0 max-[420px]:justify-center"
+                            "transition-all duration-200 cursor-pointer"
                         )}
                         onClick={onProfileClick}
                         aria-label="Open profile panel"
@@ -163,21 +161,19 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     </div>
 
                     {/* Contact CTA */}
-                    <motion.div whileTap={buttonTap} whileHover={{ scale: 1.03 }}>
+                    <motion.div whileTap={buttonTap} whileHover={{ scale: 1.03 }} className="hidden md:block">
                         <Link
                             href="/contact"
                             className={cn(
                                 "inline-flex items-center gap-1.5",
                                 "min-h-[2.5rem] px-3.5 py-2.5 rounded-full",
-                                "bg-[hsl(var(--foreground))] text-white",
                                 "text-[0.79rem] font-bold",
                                 "shadow-lg hover:bg-[hsl(var(--accent))]",
-                                "transition-colors duration-200",
-                                "max-md:w-[2.7rem] max-md:p-0 max-md:justify-center"
+                                "transition-colors duration-200"
                             )}
                         >
                             <Send size={14} />
-                            <span className="max-lg:hidden">Let&apos;s Talk</span>
+                            <span>Let&apos;s Talk</span>
                         </Link>
                     </motion.div>
                 </div>

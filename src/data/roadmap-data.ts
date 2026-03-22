@@ -69,7 +69,7 @@ export const ROADMAP_DATA: RoadmapData = {
             { label: "Total Duration", value: "26", unit: "Months", icon: Clock, color: "bg-blue-600" },
             { label: "Weekly Projects", value: "104", unit: "Total", icon: Target, color: "bg-green-600" },
             { label: "Certifications", value: "8+", unit: "Mapped", icon: Award, color: "bg-purple-600" },
-            { label: "Portfolio Phases", value: "5", unit: "Nexus", icon: Briefcase, color: "bg-orange-600" },
+            { label: "Portfolio Phases", value: "5", unit: "Phases", icon: Briefcase, color: "bg-orange-600" },
         ],
         targets: [
             { label: "Certifications", value: "8+", detail: "Phase-Mapped" },

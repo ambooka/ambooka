@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import AnimatedPage from '@/components/AnimatedPage'
+import { getCardPattern } from '@/lib/design-patterns'
 import {
   fadeUp,
   staggerContainer,
@@ -408,14 +409,20 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
             <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-4">
               {resumeData.skills
                 .filter(skill => skill.is_featured)
-                .map((skill) => (
+                .map((skill, index) => {
+                  const pattern = getCardPattern(index);
+                  return (
                   <div
                     key={skill.id}
-                    className="group relative flex flex-col items-center gap-3 p-5 bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-2xl shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md hover:border-[hsl(var(--accent))/0.5] overflow-hidden"
+                    className={cn(
+                      "group relative flex flex-col items-center gap-3 p-5 border border-[hsl(var(--border))] rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[hsl(var(--accent))/0.5] overflow-hidden",
+                      pattern.bgClass
+                    )}
                   >
-                    <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))] opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+                    <div className={cn(pattern.blobClass, "z-0 pointer-events-none")} />
                     
-                    <div className="w-12 h-12 relative flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <div className="relative w-12 h-12 rounded-xl flex items-center justify-center bg-[hsl(var(--card))] border border-[hsl(var(--border))] group-hover:border-[hsl(var(--accent))/0.3] transition-colors z-10">
                       <Image
                         src={getSkillLogo(skill.name)}
                         alt={skill.name}
@@ -430,7 +437,8 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
                       {skill.name}
                     </span>
                   </div>
-                ))}
+                );
+              })}
             </div>
           </div>
         </motion.section>

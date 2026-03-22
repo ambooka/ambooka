@@ -226,20 +226,20 @@ export default function AiChatPanel({ isOpen, onToggle, hideButton = false }: Ai
     <>
       {/* AI Assistant Button */}
       {!hideButton && (
-      <div className="relative group">
-        <button
-          onClick={onToggle}
-          aria-label="AI Assistant"
-          className="flex items-center justify-center w-12 h-12 rounded-full border-none text-white shadow-[0_4px_12px_hsl(var(--accent)/0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_16px_hsl(var(--accent)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] focus-visible:ring-offset-2"
-          style={{ background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--secondary)))' }}
-        >
-          <Sparkles size={20} />
-        </button>
-        <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 px-3 py-1.5 bg-[hsl(var(--popover))] border border-[hsl(var(--border))] rounded-md text-[11px] font-bold text-[hsl(var(--popover-foreground))] whitespace-nowrap shadow-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity hidden md:block z-50">
-          AI Assistant
-          <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-[hsl(var(--popover))] border-r border-b border-[hsl(var(--border))] rotate-[-45deg]" />
+        <div className="relative group">
+          <button
+            onClick={onToggle}
+            aria-label="AI Assistant"
+            className="flex items-center justify-center w-12 h-12 rounded-full border-none text-white shadow-[0_4px_12px_hsl(var(--accent)/0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_16px_hsl(var(--accent)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] focus-visible:ring-offset-2"
+            style={{ background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--secondary)))' }}
+          >
+            <Sparkles size={20} />
+          </button>
+          <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 px-3 py-1.5 bg-[hsl(var(--popover))] border border-[hsl(var(--border))] rounded-md text-[11px] font-bold text-[hsl(var(--popover-foreground))] whitespace-nowrap shadow-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity hidden md:block z-50">
+            AI Assistant
+            <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-[hsl(var(--popover))] border-r border-b border-[hsl(var(--border))] rotate-[-45deg]" />
+          </div>
         </div>
-      </div>
       )}
 
       {/* Chat Modal */}

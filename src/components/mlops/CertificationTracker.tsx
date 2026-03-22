@@ -69,7 +69,7 @@ export const CertificationTracker = () => {
     return (
         <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-medium text-gray-900">Certification Nexus</h3>
+                <h3 className="text-lg font-medium text-gray-900">Certification Roadmap</h3>
                 <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Total Value: $10k+ Salary Boost</span>
             </div>
 

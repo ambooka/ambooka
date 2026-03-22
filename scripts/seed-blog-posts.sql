@@ -1,12 +1,12 @@
--- Nexus AI/ML Engineering Journey — Blog seed posts
+-- Roadmap AI/ML Engineering Journey — Blog seed posts
 -- Replace the author_id UUID with your actual admin user from auth.users
 
 INSERT INTO public.blog_posts (title, slug, excerpt, content, category, tags, is_published, published_at, author_id)
 VALUES
 (
-    'Week 1 on the Nexus Roadmap: Building a Python CLI from Scratch',
-    'nexus-week-1-python-cli',
-    'Started the 26-month Nexus roadmap. Here is what I learned building my first proper Python CLI — the decorators that surprised me and why pytest already feels indispensable.',
+    'Week 1 on the Roadmap Roadmap: Building a Python CLI from Scratch',
+    'roadmap-week-1-python-cli',
+    'Started the 26-month Roadmap roadmap. Here is what I learned building my first proper Python CLI — the decorators that surprised me and why pytest already feels indispensable.',
     '# Week 1: Python CLI from Scratch
 
 ## What I Built
@@ -17,12 +17,12 @@ Unit converter CLI with argparse, rich for colour-coded output, and a README wit
 - Building `@retry(n, exceptions)` from scratch made decorators click: they are functions returning functions.
 - Eight test cases, one `@pytest.mark.parametrize` block. Before this week I was writing eight separate test functions.
 
-## The Nexus Connection
-Everything lives at `nexus/tools/unit_converter.py`. The `@retry` utility gets imported directly into Phase 4 LLM API wrappers.
+## The Roadmap Connection
+Everything lives at `roadmap/tools/unit_converter.py`. The `@retry` utility gets imported directly into Phase 4 LLM API wrappers.
 
-*All code at github.com/ambooka/nexus*',
+*All code at github.com/ambooka/roadmap*',
     'Engineering',
-    ARRAY['Python', 'Nexus Roadmap', 'CLI', 'pytest', 'Phase 1'],
+    ARRAY['Python', 'Roadmap Roadmap', 'CLI', 'pytest', 'Phase 1'],
     true,
     NOW() - INTERVAL '3 weeks',
     'd21498c2-14cf-44cb-a95c-131390ce035c'
@@ -47,10 +47,10 @@ Genuinely cheap enough to run for 26 months without financial pressure.
 - UFW: scoping `allow from VPC_CIDR` vs public `allow PORT`
 - fail2ban: 40-80 SSH bot attempts in first 6 hours on any fresh VPS
 
-## Nexus Connection
+## Roadmap Connection
 This VPS now serves ambooka.dev. Every phase adds a new Docker Compose service. GitHub Actions deploys via SSH on every merge to main.
 
-*Script at nexus/infrastructure/vps/vps_bootstrap.sh*',
+*Script at roadmap/infrastructure/vps/vps_bootstrap.sh*',
     'DevOps',
     ARRAY['Linux', 'VPS', 'Docker', 'Nginx', 'Hetzner', 'Phase 1'],
     true,
@@ -61,7 +61,7 @@ This VPS now serves ambooka.dev. Every phase adds a new Docker Compose service. 
     'The CS Degree Advantage: Where It Helps and Where It Does Not',
     'cs-degree-advantage-ml-roadmap',
     'Having a CS degree cuts the first two phases of the AI/ML roadmap by 40-50%. Here is exactly which topics I already knew, which needed refreshing, and which the degree completely missed.',
-    '# CS Degree Advantage on the Nexus Roadmap
+    '# CS Degree Advantage on the Roadmap Roadmap
 
 ## Already Know Cold (2× speed)
 - Complexity analysis (Big-O) — algorithms course
@@ -81,7 +81,7 @@ This VPS now serves ambooka.dev. Every phase adds a new Docker Compose service. 
 ## Net Result
 40-50% acceleration is real but unevenly distributed. Fast on Week 1-7 (Python, algorithms, OOP). Full speed on Week 8-16 (VPS, Docker, CI/CD). Strong foundation for Phase 3 maths (linear algebra, probability all in curriculum).',
     'Career',
-    ARRAY['CS Degree', 'AI/ML Roadmap', 'Learning in Public', 'Nexus'],
+    ARRAY['CS Degree', 'AI/ML Roadmap', 'Learning in Public', 'Roadmap'],
     true,
     NOW() - INTERVAL '1 week',
     'd21498c2-14cf-44cb-a95c-131390ce035c'
@@ -116,7 +116,7 @@ Phase 3 (Months 12-17) builds foundations. Phase 4 (Months 18-23) builds on them
 (
     'Seven Things Tutorials Do Not Tell You About Production RAG',
     'production-rag-lessons',
-    'Moving from a RAG demo to a production RAG system is not incremental — it is a different problem. Here are the seven lessons from building Nexus v0.4.',
+    'Moving from a RAG demo to a production RAG system is not incremental — it is a different problem. Here are the seven lessons from building Roadmap v0.4.',
     '# Seven Production RAG Lessons
 
 ## 1. Naive Chunking Destroys Retrieval

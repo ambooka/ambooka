@@ -34,13 +34,13 @@ const PHASE_COLORS: Record<number, { accent: string; dim: string; text: string }
   5: { accent: '#ec4899', dim: 'rgba(236,72,153,0.12)', text: '#db2777' },
 }
 
-// Nexus milestone label per phase
+// Roadmap milestone label per phase
 const PHASE_MILESTONE: Record<number, string> = {
-  1: 'Nexus v0.1 — Toolbox',
-  2: 'Nexus v0.2 — Platform',
-  3: 'Nexus v0.3 — ML Layer',
-  4: 'Nexus v0.4 — AI Platform',
-  5: 'Nexus v1.0 — Complete',
+  1: 'Roadmap v1 — Toolbox',
+  2: 'Roadmap v2 — Platform',
+  3: 'Roadmap v3 — ML Layer',
+  4: 'Roadmap v4 — AI Platform',
+  5: 'Roadmap v5 — Goal',
 }
 
 // Weeks per phase
@@ -116,19 +116,19 @@ export default function CareerTimelineWidget() {
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--border))] shadow-sm min-h-[300px] items-center justify-center">
+      <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[hsl(var(--card))/0.8] backdrop-blur-xl border border-[hsl(var(--border))] shadow-md min-h-[300px] items-center justify-center">
         <Target size={32} className="animate-spin text-[hsl(var(--accent))]" />
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--border))] shadow-sm">
+    <div className="flex flex-col gap-4 p-5 rounded-2xl bg-[hsl(var(--card))/0.8] backdrop-blur-xl border border-[hsl(var(--border))] shadow-md">
       {/* ── Header ─────────────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 text-[0.72rem] font-[800] tracking-widest uppercase text-[hsl(var(--foreground))]">
           <Target size={14} className="text-[hsl(var(--accent))]" />
-          <span>Nexus Roadmap</span>
+          <span>Career Roadmap</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[0.62rem] font-[600] whitespace-nowrap text-[hsl(var(--muted-foreground))]">

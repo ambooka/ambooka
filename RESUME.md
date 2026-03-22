@@ -9,7 +9,7 @@
 
 ## PROFESSIONAL SUMMARY
 
-CS graduate (Maseno University) with 3+ years of full-stack development experience, transitioning into AI/ML Engineering through a structured 26-month plan — the Nexus platform. Currently in Phase 1 (Foundations & Tooling): building and shipping production Python, Docker, SQL, and CI/CD systems to a live VPS. The CS degree accelerates the foundational phases by 40–50%, allowing earlier entry into ML and AI engineering work. Demonstrated ability to deliver production software: M-Pesa integrations, custom dashboards, and REST APIs for Kenyan SME clients.
+CS graduate (Maseno University) with 3+ years of full-stack development experience, transitioning into AI/ML Engineering through a structured 26-month plan — the Roadmap platform. Currently in Phase 1 (Foundations & Tooling): building and shipping production Python, Docker, SQL, and CI/CD systems to a live VPS. The CS degree accelerates the foundational phases by 40–50%, allowing earlier entry into ML and AI engineering work. Demonstrated ability to deliver production software: M-Pesa integrations, custom dashboards, and REST APIs for Kenyan SME clients.
 
 ---
 
@@ -58,7 +58,7 @@ CS graduate (Maseno University) with 3+ years of full-stack development experien
 
 ## KEY PROJECTS
 
-### **Nexus — AI/ML Engineering Portfolio Platform** *(In Progress)*
+### **Roadmap — AI/ML Engineering Portfolio Platform** *(In Progress)*
 - 26-month, 5-phase project: Dockerised CLI → full-stack app → ML API → AI platform → multi-agent system
 - Phase 1 (Current): Python CLI + static HTTPS site on Hetzner VPS, GitHub Actions CI/CD
 - Phase 4 (Planned): RAG chatbot, QLoRA fine-tuning, MLflow model registry, drift detection

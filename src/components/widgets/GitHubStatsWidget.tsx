@@ -169,8 +169,8 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
     if (loading) {
         return (
             <div className={cn(
-                "w-full relative overflow-hidden rounded-[24px] p-[clamp(0.9rem,1.8vw,1.3rem)] border border-[hsl(var(--accent))/0.18] shadow-[0_14px_30px_rgba(15,23,42,0.08)]",
-                "bg-gradient-to-b from-white/70 to-white/40 dark:from-slate-900/90 dark:to-slate-900/95 transition-colors",
+                "w-full relative overflow-hidden rounded-[24px] p-[clamp(0.9rem,1.8vw,1.3rem)] border border-[hsl(var(--accent))/0.18] shadow-md",
+                "bg-[hsl(var(--card))/0.8] backdrop-blur-xl transition-colors",
                 compact && "p-3",
                 fullWidth && "max-w-none"
             )}>
@@ -197,7 +197,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2.5">
                     {Array.from({ length: 4 }).map((_, index) => (
-                        <div key={index} className="flex flex-col gap-3 min-h-[114px] p-3 rounded-2xl border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md shadow-sm">
+                        <div key={index} className="flex flex-col gap-3 min-h-[114px] p-3 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.6] backdrop-blur-md shadow-sm">
                             <span className="block w-[42%] h-3 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
                             <span className="block w-[64%] h-8 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
                             <span className="block w-[86%] h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
@@ -210,8 +210,8 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
 
     return (
         <div className={cn(
-            "@container w-full relative overflow-hidden rounded-[24px] p-[clamp(0.9rem,1.8vw,1.3rem)] border border-[hsl(var(--accent))/0.18] shadow-[0_14px_30px_rgba(15,23,42,0.08)]",
-            "bg-gradient-to-b from-white/70 to-white/40 dark:from-slate-900/90 dark:to-slate-900/95 transition-colors",
+            "@container w-full relative overflow-hidden rounded-[24px] p-[clamp(0.9rem,1.8vw,1.3rem)] border border-[hsl(var(--accent))/0.18] shadow-md",
+            "bg-[hsl(var(--card))/0.8] backdrop-blur-xl transition-colors",
             compact && "p-3",
             fullWidth && "max-w-none"
         )}>
@@ -254,7 +254,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                     <article
                         key={item.label}
                         className={cn(
-                            "relative overflow-hidden rounded-2xl p-3 border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md shadow-sm",
+                            "relative overflow-hidden rounded-2xl p-3 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.6] backdrop-blur-md shadow-sm",
                             compact ? "min-h-[106px]" : "min-h-[114px]"
                         )}
                         style={{ '--card-accent': item.accentStrong, '--card-glow': item.accentSoft } as CSSProperties}
@@ -300,7 +300,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
             <div className="grid grid-cols-1 @[66rem]:grid-cols-[minmax(0,1.42fr)_minmax(16rem,0.92fr)] gap-3 mt-3 items-start">
                 <div className="grid grid-cols-1 gap-3 order-1 min-w-0">
                     {/* Graph Panel */}
-                    <section className="p-3 rounded-2xl border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md shadow-sm min-w-0">
+                    <section className="p-3 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.6] backdrop-blur-md shadow-sm min-w-0">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
                             <div className="min-w-0">
                                 <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-[hsl(var(--accent))/0.16] bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] text-[0.62rem] font-[800] tracking-widest uppercase mb-1">
@@ -330,13 +330,13 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                     </section>
 
                     {/* Featured Panel */}
-                    <section className="p-2 sm:p-3 rounded-2xl border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/30 dark:from-white/10 dark:to-white/5 backdrop-blur-md shadow-sm">
+                    <section className="p-2 sm:p-3 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.6] backdrop-blur-md shadow-sm">
                         <FeaturedProjectsCarousel compact embedded />
                     </section>
                 </div>
 
                 {/* Language Panel */}
-                <section className="order-2 p-3 rounded-2xl border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/30 dark:from-[hsl(var(--accent))/0.1] dark:to-white/5 backdrop-blur-md shadow-sm min-w-0">
+                <section className="order-2 p-3 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.6] backdrop-blur-md shadow-sm min-w-0">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
                         <div className="min-w-0">
                             <span className="inline-flex items-center px-2.5 py-1 rounded-full border border-[hsl(var(--accent))/0.16] bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] text-[0.62rem] font-[800] tracking-widest uppercase mb-1">

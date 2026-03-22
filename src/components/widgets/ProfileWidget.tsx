@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
     GraduationCap,
@@ -14,26 +14,28 @@ import {
     MessageCircle,
     Mail,
     Download,
-    Globe
+    Globe,
+    BriefcaseBusiness
 } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
 
 export interface SocialLink {
-  id?: string
-  platform: string
-  url: string
-  icon_url: string | null
-  is_active?: boolean
+    id?: string
+    platform: string
+    url: string
+    icon_url: string | null
+    is_active?: boolean
 }
 
 export interface PersonalInfo {
-  full_name: string
-  title: string
-  avatar_url: string | null
-  about_text: string | null
-  email?: string
-  phone?: string
-  location?: string
-  social_links?: SocialLink[] | null
+    full_name: string
+    title: string
+    avatar_url: string | null
+    about_text: string | null
+    email?: string
+    phone?: string
+    location?: string
+    social_links?: SocialLink[] | null
 }
 
 export interface ProfileWidgetProps {
@@ -49,8 +51,7 @@ const CURRENT_FOCUS = [
     'Python foundations',
     'Docker + Linux',
     'PostgreSQL + APIs',
-    'CI/CD workflows',
-]
+];
 
 const EDUCATION = [
     {
@@ -83,7 +84,17 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
         location: 'Nairobi, Kenya',
         social_links: []
     } as PersonalInfo;
-    
+
+    const [experiences, setExperiences] = useState<{company: string, position: string, start_date: string, end_date: string | null, is_current: boolean}[]>([])
+
+    useEffect(() => {
+        const fetchExperience = async () => {
+            const { data } = await supabase.from('experience').select('*').order('start_date', { ascending: false }).limit(3)
+            if (data) setExperiences(data)
+        }
+        fetchExperience()
+    }, [])
+
     const socialLinks = (profile.social_links || []).filter(link => link.is_active !== false);
 
     const renderSocialIcon = (social: SocialLink) => {
@@ -107,7 +118,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
     }
 
     return (
-        <article className="relative overflow-hidden rounded-2xl p-4 sm:p-5 border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--accent))/0.07] to-transparent bg-[hsl(var(--card))] shadow-sm transition-all hover:border-[hsl(var(--border))] hover:shadow-md">
+        <article className="relative overflow-hidden rounded-2xl p-4 sm:p-5 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md transition-all hover:border-[hsl(var(--border))] hover:shadow-lg">
             <div className="flex items-center gap-3 mb-3.5 text-xs font-extrabold tracking-widest uppercase text-[hsl(var(--foreground))]">
                 <div className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent))/0.12] text-[hsl(var(--accent))] shrink-0">
                     <Rocket size={16} />
@@ -145,7 +156,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                     </div>
 
                     <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
-                        {profile.about_text || 'I am a computer science graduate building the Nexus platform in public as a practical route from full-stack delivery into AI/ML engineering.'}
+                        {profile.about_text || 'I am a computer science graduate building my career roadmap in public as a practical route from full-stack delivery into AI/ML engineering.'}
                     </p>
 
                     <p className="m-0 mt-3 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
@@ -251,6 +262,44 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                             Phase 1 is all about making the fundamentals boring, reliable, and repeatable before the platform grows more ambitious.
                         </p>
                     </aside>
+
+                    {experiences.length > 0 && (
+                        <aside className="flex flex-col gap-3">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
+                                <BriefcaseBusiness size={14} /> Work Experience
+                            </span>
+                            <div className="flex flex-wrap gap-2.5 pt-1">
+                                {experiences.map((exp) => {
+                                    const startYear = new Date(exp.start_date).getFullYear();
+                                    const endYear = exp.is_current ? 'Present' : (exp.end_date ? new Date(exp.end_date).getFullYear() : '');
+                                    
+                                    return (
+                                        <div 
+                                            key={exp.company + exp.position} 
+                                            className="group relative inline-flex items-center gap-2.5 p-1 pr-4 rounded-full border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/20 dark:from-white/[0.03] dark:to-transparent backdrop-blur-md shadow-sm transition-all duration-300 hover:border-[hsl(var(--accent))/0.4] hover:shadow-md hover:-translate-y-0.5 cursor-default overflow-hidden"
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--accent))/0.08] to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
+                                            
+                                            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-[hsl(var(--background))] border border-[hsl(var(--border))] shadow-sm text-[hsl(var(--foreground))] font-black text-xs shrink-0 z-10 transition-colors group-hover:border-[hsl(var(--accent))/0.3] group-hover:text-[hsl(var(--accent))]">
+                                                {exp.company.charAt(0).toUpperCase()}
+                                            </div>
+                                            
+                                            <div className="relative flex flex-col justify-center z-10 py-0.5">
+                                                <span className="text-[11.5px] font-bold text-[hsl(var(--foreground))] leading-tight">
+                                                    {exp.position}
+                                                </span>
+                                                <span className="text-[9.5px] font-semibold tracking-wider text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 uppercase mt-[1px]">
+                                                    <span className="text-[hsl(var(--accent))] truncate max-w-[90px] sm:max-w-[120px]">{exp.company}</span>
+                                                    <span className="w-1 h-1 rounded-full bg-[hsl(var(--border))] shrink-0" />
+                                                    <span className="shrink-0">{startYear} - {endYear}</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </aside>
+                    )}
                 </div>
             </div>
         </article>

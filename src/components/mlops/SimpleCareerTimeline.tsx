@@ -1,196 +1,202 @@
 'use client'
-import React from 'react'
-import { Zap, Layers, Trophy, Briefcase, ChevronsRight, TrendingUp } from 'lucide-react'
+import React, { useMemo } from 'react'
+import { motion } from 'framer-motion'
+import { 
+    Zap, 
+    Trophy, 
+    Briefcase, 
+    TrendingUp, 
+    Code, 
+    Globe, 
+    Database, 
+    Brain, 
+    Target,
+    ArrowRight,
+    Calendar,
+    Clock,
+    DollarSign
+} from 'lucide-react'
+import { ROADMAP_DATA } from '@/data/roadmap-data'
+import { cn } from '@/lib/utils'
 
-// Nexus Career Map — CS Graduate → AI/ML Engineer
-const nodes = [
-    {
-        id: 'cs',
-        title: 'START',
-        role: 'CS Graduate',
-        years: '2019-2024',
-        x: 10,
-        y: 80,
-        color: 'border-green-400',
-        bg: 'bg-green-50/95',
-        icon: Zap,
-        inputs: ['Algorithms', 'CS Fund.'],
-        outputs: ['Python', 'Linux']
-    },
-    {
-        id: 'fullstack',
-        title: 'FOUNDATION',
-        role: 'Full-Stack Dev',
-        years: '2022-Present',
-        x: 35,
-        y: 50,
-        color: 'border-blue-400',
-        bg: 'bg-blue-50/95',
-        icon: Briefcase,
-        inputs: ['React', 'Node.js'],
-        outputs: ['Cloud', 'APIs']
-    },
-    {
-        id: 'nexus',
-        title: 'CURRENT',
-        role: 'Nexus — Phase 1',
-        years: '2025-Present',
-        x: 62,
-        y: 20,
-        color: 'border-[#f4c542]',
-        bg: 'bg-[#1a1a1a]',
-        isCurrent: true,
-        icon: Layers,
-        metrics: [{ label: 'Phase', val: '1 / 5' }, { label: 'Weeks', val: '1-16' }],
-        inputs: ['Docker', 'CI/CD'],
-        outputs: ['VPS Live', 'k3s']
-    },
-    {
-        id: 'aiml',
-        title: 'TARGET',
-        role: 'AI/ML Engineer',
-        years: '2027+',
-        x: 88,
-        y: 35,
-        color: 'border-purple-400',
-        bg: 'bg-white/90',
-        isFuture: true,
-        icon: Trophy,
-        inputs: ['LLMs', 'RAG'],
-        outputs: ['Agents', 'MLOps']
+// Animation variants aligned with the rest of the app
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+        }
     }
-]
+} as any
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 15, scale: 0.98 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            type: "spring",
+            stiffness: 120,
+            damping: 20
+        }
+    }
+} as any
+
+const iconMap: Record<string, any> = {
+    'phase1': Zap,
+    'phase2': Globe,
+    'phase3': Database,
+    'phase4': Brain,
+    'phase5': Trophy,
+    'default': Code
+}
 
 export const SimpleCareerTimeline = () => {
+    const phases = ROADMAP_DATA.phases
+
     return (
-        <div className="flex flex-col h-full bg-[#fcfbf7] rounded-[24px] relative overflow-hidden font-sans border border-gray-100/50 shadow-sm">
-            {/* Header */}
-            <div className="absolute top-4 left-6 z-30">
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                    <TrendingUp size={16} className="text-[#e0b836]" />
-                    Career Trajectory
-                </h3>
-                <p className="text-[10px] text-gray-400 font-medium pl-6">Skills & Growth Map</p>
+        <motion.div 
+            className="rounded-3xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl p-5 sm:p-6 shadow-sm overflow-hidden relative"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={containerVariants}
+        >
+            {/* 1. Header Section - Blog style */}
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative z-10">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[hsl(var(--accent))/0.2] bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                        <Target size={22} />
+                    </div>
+                    <div>
+                        <p className="text-[11px] font-[900] uppercase tracking-[0.2em] text-[hsl(var(--muted-foreground))] leading-none mb-1.5">
+                            Career Roadmap
+                        </p>
+                        <h3 className="text-xl font-black text-[hsl(var(--foreground))] tracking-tight">
+                            MLOps & AI Engineering
+                        </h3>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[hsl(var(--muted)/0.5)] border border-[hsl(var(--border))]">
+                    <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] animate-pulse" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--foreground))]">
+                        Currently: {phases[0].title.split(': ')[1]}
+                    </span>
+                </div>
             </div>
 
-            {/* Graph Container */}
-            <div className="relative w-full h-[360px] mt-4">
-
-                {/* 1. The Connector Line (SVG Layer) */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="career-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#4ade80" />
-                            <stop offset="50%" stopColor="#60a5fa" />
-                            <stop offset="70%" stopColor="#f4c542" />
-                            <stop offset="100%" stopColor="#a855f7" />
-                        </linearGradient>
-                    </defs>
-                    <path
-                        d="M 10 80 C 25 80 25 50 35 50 C 50 50 50 20 62 20 C 75 20 80 35 88 35"
-                        fill="none"
-                        stroke="url(#career-gradient)"
-                        strokeWidth="1"
-                        strokeLinecap="round"
-                        vectorEffect="non-scaling-stroke"
-                        className="opacity-60 dashed"
-                        strokeDasharray="4 4"
-                    />
-                </svg>
-
-                {/* 2. The Cards (Nodes) - Exact Career Map Style */}
-                {nodes.map((node) => {
-                    const Icon = node.icon
-                    const isDark = node.isCurrent
+            {/* 2. Phases Grid - Compact Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 relative z-10">
+                {phases.map((phase, idx) => {
+                    const Icon = iconMap[phase.id] || iconMap.default
+                    const isCurrent = idx === 0
 
                     return (
-                        <div
-                            key={node.id}
-                            className={`absolute transform -translate-x-1/2 -translate-y-1/2 z-20 w-[140px] group transition-all duration-300 hover:z-50 hover:scale-110`}
-                            style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                        <motion.div
+                            key={phase.id}
+                            variants={itemVariants}
+                            className={cn(
+                                "group relative flex flex-col rounded-[24px] border border-[hsl(var(--border))] p-4 md:p-5 transition-all duration-300",
+                                isCurrent 
+                                    ? "bg-gradient-to-br from-[hsl(var(--accent))/0.08] to-transparent border-[hsl(var(--accent))/0.25] shadow-[0_8px_30px_rgb(0,0,0,0.04)]" 
+                                    : "bg-[hsl(var(--card)/0.4)] hover:bg-[hsl(var(--card)/0.6)] hover:border-[hsl(var(--accent))/0.2]"
+                            )}
                         >
-                            {/* Node Dot behind card */}
-                            <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full z-0 shadow-sm ${isDark ? 'bg-[#f4c542] animate-ping opacity-20' : 'bg-gray-300'
-                                }`}></div>
+                            {/* Decorative phase number */}
+                            <span className="absolute top-4 right-5 text-4xl font-black text-[hsl(var(--foreground))] opacity-[0.03] select-none group-hover:opacity-[0.06] transition-opacity">
+                                0{idx + 1}
+                            </span>
 
-                            {/* CARD COMPONENT: Exact Match to Career Map */}
-                            <div className={`relative rounded-md border ${node.color} ${node.bg} backdrop-blur-md shadow-sm hover:shadow-xl flex flex-col overflow-hidden`}>
-
-                                {/* Header */}
-                                <div className={`px-2 py-1.5 border-b flex justify-between items-center ${isDark ? 'border-gray-700 bg-gray-900/50' : 'border-gray-100 bg-white/50'
-                                    }`}>
-                                    <div className="flex flex-col">
-                                        <span className={`text-[7px] font-bold tracking-widest leading-none ${isDark ? 'text-[#f4c542]' : 'text-gray-400'
-                                            }`}>
-                                            {node.title}
-                                        </span>
-                                        <div className={`font-bold text-[9px] leading-tight mt-0.5 whitespace-nowrap ${isDark ? 'text-white' : 'text-gray-800'
-                                            }`}>
-                                            {node.role}
-                                        </div>
-                                    </div>
-                                    <div className={`p-0.5 rounded ${isDark ? 'bg-gray-800 text-[#f4c542]' : 'bg-white text-gray-500 shadow-sm'
-                                        }`}>
-                                        <Icon size={10} />
-                                    </div>
+                            {/* Phase Icon & Badge */}
+                            <div className="mb-4 flex items-center justify-between">
+                                <div className={cn(
+                                    "flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300",
+                                    isCurrent 
+                                        ? "bg-[hsl(var(--accent))] text-[hsl(var(--background))] scale-110 shadow-lg" 
+                                        : "bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] group-hover:bg-[hsl(var(--accent))/0.1] group-hover:text-[hsl(var(--accent))]"
+                                )}>
+                                    <Icon size={16} />
                                 </div>
-
-                                {/* Body */}
-                                <div className="p-1.5 flex-1 flex flex-col justify-center gap-1.5">
-
-                                    {/* Metrics (Only if present) */}
-                                    {node.metrics && (
-                                        <div className="flex gap-1">
-                                            {node.metrics.map((m, idx) => (
-                                                <div key={idx} className="bg-gray-800/80 border border-gray-700 rounded px-1 py-0.5 flex-1 text-center">
-                                                    <div className="text-[6px] text-gray-400 uppercase leading-none">{m.label}</div>
-                                                    <div className="text-[8px] font-bold text-green-400 leading-none">{m.val}</div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {/* Inputs / Outputs Flow */}
-                                    <div className="flex justify-between items-center relative gap-1">
-                                        {/* Inputs */}
-                                        <div className="flex flex-col gap-1 w-1/2">
-                                            {node.inputs.map((txt, idx) => (
-                                                <div key={idx} className="flex items-center gap-1">
-                                                    <div className="w-1 h-1 rounded-full bg-gray-400 shrink-0"></div>
-                                                    <span className={`text-[7px] font-medium leading-none whitespace-nowrap overflow-hidden text-ellipsis ${isDark ? 'text-gray-400' : 'text-gray-500'
-                                                        }`}>{txt}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* Center Arrow */}
-                                        <div className="opacity-20 shrink-0">
-                                            <ChevronsRight size={10} className={isDark ? 'text-white' : 'text-black'} />
-                                        </div>
-
-                                        {/* Outputs */}
-                                        <div className="flex flex-col gap-1 w-1/2 items-end">
-                                            {node.outputs.map((txt, idx) => (
-                                                <div key={idx} className="flex items-center gap-1">
-                                                    <span className={`text-[7px] font-bold leading-none whitespace-nowrap overflow-hidden text-ellipsis ${isDark ? 'text-gray-200' : 'text-gray-700'
-                                                        }`}>{txt}</span>
-                                                    <div className="w-1 h-1 rounded-full bg-blue-400 shrink-0"></div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Footer: Years */}
-                                <div className={`px-1 py-0.5 text-[6px] font-mono text-center leading-none ${isDark ? 'bg-gray-800 text-gray-500' : 'bg-white/40 text-gray-400'
-                                    }`}>
-                                    {node.years}
+                                <div className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(var(--card))]/50 border border-[hsl(var(--border))] px-2.5 py-0.5 text-[9px] font-black uppercase tracking-tighter text-[hsl(var(--muted-foreground))]">
+                                    <Clock size={10} className="text-[hsl(var(--accent))]" />
+                                    {phase.duration.split(' ')[1]}
                                 </div>
                             </div>
-                        </div>
+
+                            {/* Phase Body */}
+                            <div className="flex-1">
+                                <h4 className={cn(
+                                    "text-sm font-black leading-tight tracking-tight mb-2 group-hover:text-[hsl(var(--accent))] transition-colors",
+                                    isCurrent ? "text-[hsl(var(--foreground))]" : "text-[hsl(var(--foreground))/0.9]"
+                                )}>
+                                    {phase.role}
+                                </h4>
+                                <p className="text-[0.8rem] leading-snug text-[hsl(var(--muted-foreground))] line-clamp-2 mb-4">
+                                    {phase.focus.split(', ').slice(0, 2).join(', ')}...
+                                </p>
+                            </div>
+
+                            {/* Skills/Tags container */}
+                            <div className="flex flex-wrap gap-1.5 mb-5">
+                                {phase.tracks[0].skills.slice(0, 2).map((skill, sIdx) => (
+                                    <span 
+                                        key={sIdx} 
+                                        className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[hsl(var(--muted)/0.4)] border border-[hsl(var(--border)/0.5)] text-[hsl(var(--muted-foreground))] uppercase tracking-tighter"
+                                    >
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+
+                            {/* Deliverable Section (Footer) */}
+                            <div className="mt-auto pt-4 border-t border-[hsl(var(--border)/0.5)] flex items-center justify-between gap-2">
+                                <div className="flex flex-col gap-0.5 min-w-0">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-[hsl(var(--accent))] opacity-80">Deliverable</span>
+                                    <span className="text-[10px] font-bold text-[hsl(var(--foreground))] truncate italic">
+                                        &quot;{phase.keyDeliverable.split(' ')[0]}...&quot;
+                                    </span>
+                                </div>
+                                <div className={cn(
+                                    "h-7 w-7 shrink-0 flex items-center justify-center rounded-full transition-all duration-300",
+                                    isCurrent ? "bg-[hsl(var(--accent))] text-[hsl(var(--background))]" : "bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] opacity-0 group-hover:opacity-100"
+                                )}>
+                                    <ArrowRight size={12} />
+                                </div>
+                            </div>
+                        </motion.div>
                     )
                 })}
             </div>
-        </div>
+
+            {/* 3. Bottom Execution Summary (Similar to blog footers) */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 py-4 border-t border-[hsl(var(--border)/0.5)] relative z-10">
+                <div className="flex items-center gap-2">
+                    <Calendar size={14} className="text-[hsl(var(--accent))]" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
+                        Total Path: <span className="text-[hsl(var(--foreground))]">26 Months</span>
+                    </span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Briefcase size={14} className="text-[hsl(var(--accent))]" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
+                        Target Role: <span className="text-[hsl(var(--foreground))]">Senior AI Engineer</span>
+                    </span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <DollarSign size={14} className="text-[hsl(var(--accent))]" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
+                        Target: <span className="text-[hsl(var(--foreground))]">$180K+</span>
+                    </span>
+                </div>
+            </div>
+
+            {/* Subtle background decoration */}
+            <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-[hsl(var(--accent)/0.03)] rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,hsl(var(--accent)/0.02)_0%,transparent_70%)] pointer-events-none" />
+        </motion.div>
     )
 }

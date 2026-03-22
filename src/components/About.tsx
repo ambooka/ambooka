@@ -22,6 +22,7 @@ import {
 } from '@/components/ui'
 import { Button } from '@/components/ui'
 import AnimatedPage from '@/components/AnimatedPage'
+import { getCardPattern } from '@/lib/design-patterns'
 import {
   fadeUp,
   fadeScale,
@@ -287,8 +288,8 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
           className={cn(
             "relative overflow-hidden p-6 rounded-2xl",
             "border border-[hsl(var(--border))]",
-            "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
-            "shadow-sm",
+            "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
+            "shadow-md",
             "lg:grid lg:grid-cols-[1fr_auto] lg:gap-5 lg:items-center max-sm:p-4"
           )}>
           {/* Decorative background glow */}
@@ -342,7 +343,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                 key={i}
                 className={cn(
                   "flex-1 min-w-[80px] p-3 rounded-2xl border border-[hsl(var(--border))]",
-                  "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/30",
+                  "bg-[hsl(var(--card))/0.6] backdrop-blur-md",
                   "shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
                   i === 2 && "max-sm:col-span-2"
                 )}
@@ -397,23 +398,27 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
             {/* Testimonials */}
             {testimonials.length > 0 && (
               <section className={cn(
-                "p-5 rounded-2xl border border-[hsl(var(--border))] shadow-sm overflow-hidden",
-                "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50"
+                "p-5 rounded-2xl border border-[hsl(var(--border))] shadow-md overflow-hidden",
+                "bg-[hsl(var(--card))/0.8] backdrop-blur-xl"
               )}>
                 <h3 className="text-xs tracking-widest uppercase font-extrabold text-[hsl(var(--muted-foreground))] mb-3">
                   Recommendations
                 </h3>
                 <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[hsl(var(--border))] scrollbar-track-transparent snap-x">
-                  {testimonials.map(testimonial => (
+                  {testimonials.map((testimonial, index) => {
+                    const pattern = getCardPattern(index);
+                    return (
                     <div
                       key={testimonial.id}
                       onClick={() => openTestimonialModal(testimonial)}
                       className={cn(
                         "group relative shrink-0 w-[min(84vw,340px)] snap-center cursor-pointer",
-                        "p-5 pt-10 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--border))]",
+                        "p-5 pt-10 rounded-2xl border border-[hsl(var(--border))]",
+                        pattern.bgClass,
                         "shadow-sm hover:shadow-md hover:border-[hsl(var(--accent))/0.2] transition-all duration-300"
                       )}
                     >
+                      <div className={cn(pattern.blobClass, "z-0 pointer-events-none")} />
                       <div className="absolute top-0 left-5 -translate-y-1/2 w-14 h-14 rounded-xl overflow-hidden border-2 border-[hsl(var(--card))] shadow-md group-hover:scale-105 group-hover:border-[hsl(var(--accent))] transition-all duration-300">
                         <Image
                           src={testimonial.avatar_url || '/assets/images/avatar-placeholder.png'}
@@ -438,7 +443,8 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                         </span>
                       </div>
                     </div>
-                  ))}
+                  );
+                })}
                 </div>
               </section>
             )}
@@ -481,8 +487,8 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
           className={cn(
             "relative overflow-hidden p-6 lg:p-7 rounded-2xl",
             "border border-[hsl(var(--border))]",
-            "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/50",
-            "shadow-sm text-left"
+            "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
+            "shadow-md text-left"
           )}
           variants={fadeUp}
           initial="hidden"
@@ -497,7 +503,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
             What I Build
           </h2>
           <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
-            Building the Nexus AI platform across 5 phases — from Dockerised CLI to production multi-agent systems
+            Building an AI/ML Engineering roadmap across 5 phases — from Dockerised CLI to production multi-agent systems
           </p>
 
           <motion.div
@@ -554,20 +560,23 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                   </svg>
                 )
               }
-            ].map((card, i) => (
+            ].map((card, i) => {
+              const pattern = getCardPattern(i);
+              return (
             <motion.div
                 key={i}
                 variants={staggerChildScale}
                 className={cn(
                   "group relative overflow-hidden rounded-2xl p-5 border border-[hsl(var(--border))]",
-                  "bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/40",
+                  pattern.bgClass,
                   "shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-[hsl(var(--accent))/0.2]"
                 )}
               >
+                <div className={cn(pattern.blobClass, "z-0 pointer-events-none")} />
                 {/* Edge highlight on hover */}
-                <div className="absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-[hsl(var(--accent))] to-[hsl(var(--secondary))] opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-[hsl(var(--accent))] to-[hsl(var(--secondary))] opacity-0 transition-opacity group-hover:opacity-100 z-10" />
 
-                <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center mb-3", card.iconBase)}>
+                <div className={cn("relative w-11 h-11 rounded-xl flex items-center justify-center mb-3 z-10", card.iconBase)}>
                   {card.iconSvg}
                 </div>
 
@@ -586,7 +595,8 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
                   ))}
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </motion.div>
         </motion.section>
 
@@ -595,7 +605,7 @@ export default function About({ isActive = false, onOpenResume, initialData }: A
         <motion.section
           className={cn(
             "relative overflow-hidden rounded-2xl p-5 lg:p-6 lg:flex lg:items-center lg:justify-between gap-4",
-            "border border-[hsl(var(--border))] bg-[hsl(var(--card))]"
+            "border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md"
           )}
           variants={fadeUp}
           initial="hidden"

@@ -55,7 +55,7 @@ export default function EngineeringBentoGrid() {
                 {/* Principles Card */}
                 <motion.article 
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm"
+                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md"
                 >
                     <div className="flex items-center gap-3 mb-6 relative z-10">
                         <div className="p-2.5 rounded-xl bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))]">
@@ -90,7 +90,7 @@ export default function EngineeringBentoGrid() {
                 {/* Daily Tools Card */}
                 <motion.article 
                     whileHover={{ scale: 1.01, y: -2 }}
-                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm col-span-1 lg:col-span-2 flex flex-col justify-between"
+                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md col-span-1 lg:col-span-2 flex flex-col justify-between"
                 >
                     <div className="flex items-center gap-3 mb-6 relative z-10">
                         <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-500">
@@ -122,7 +122,7 @@ export default function EngineeringBentoGrid() {
                 {/* Building In Public Card */}
                 <motion.article 
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-gradient-to-br from-[hsl(var(--card))] to-[hsl(var(--muted))]/30 shadow-sm col-span-1 md:col-span-2 flex flex-col justify-center"
+                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md col-span-1 md:col-span-2 flex flex-col justify-center"
                 >
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-2.5 rounded-xl bg-[hsl(var(--secondary))]/10 text-[hsl(var(--secondary))]">
@@ -147,7 +147,7 @@ export default function EngineeringBentoGrid() {
                 {/* Off Hours Card */}
                 <motion.article 
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm"
+                    className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md"
                 >
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-500">
