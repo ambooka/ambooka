@@ -49,7 +49,7 @@ export type Project = {
   title: string;
   oneLine: string;
   category: ProjectCategory;
-  warModeWeek: number;
+  displayOrder: number;
   status: ProjectStatus;
   completionPercent: number;
   featured?: boolean;

@@ -1,4 +1,8 @@
-import type { Project, ProjectCategory, ProjectStatus } from "@/types/portfolio";
+import type {
+  Project,
+  ProjectCategory,
+  ProjectStatus,
+} from "@/types/portfolio";
 
 export const portfolioMode = "evidence-first" as const;
 
@@ -25,7 +29,9 @@ export const categoryLabels: Record<ProjectCategory, string> = {
   writing: "Writing",
 };
 
-const evidence = (overrides: Partial<Project["engineeringEvidence"]> = {}): Project["engineeringEvidence"] => ({
+const evidence = (
+  overrides: Partial<Project["engineeringEvidence"]> = {},
+): Project["engineeringEvidence"] => ({
   tests: false,
   ci: false,
   docker: false,
@@ -40,159 +46,340 @@ export const projects: Project[] = [
   {
     slug: "ambooka-dev-portfolio-platform",
     title: "ambooka.dev Portfolio Platform",
-    oneLine: "Full-stack Next.js portfolio platform with Supabase CMS, admin area, resume variants, GitHub activity sync, and Playwright e2e tests.",
+    oneLine:
+      "Full-stack Next.js portfolio platform with Supabase CMS, admin area, resume variants, GitHub activity sync, and Playwright e2e tests.",
     category: "frontend",
     displayOrder: 1,
     status: "completed",
     completionPercent: 92,
     featured: true,
     anchor: true,
-    problem: "A normal static portfolio cannot show live technical proof, role-specific resumes, project evidence, or controlled content updates.",
-    solution: "Built a full-stack portfolio platform with public pages, admin CMS, Supabase-backed content, SEO, project case studies, resume data, and test automation.",
-    businessValue: "Turns personal career evidence into a searchable, recruiter-readable software product instead of a static CV page.",
-    stack: ["Next.js", "TypeScript", "React", "Supabase", "PostgreSQL", "Playwright", "Tailwind CSS", "Vercel"],
-    coreSkills: ["full-stack architecture", "CMS design", "SEO", "admin UX", "typed frontend", "test automation"],
+    problem:
+      "A normal static portfolio cannot show live technical proof, role-specific resumes, project evidence, or controlled content updates.",
+    solution:
+      "Built a full-stack portfolio platform with public pages, admin CMS, Supabase-backed content, SEO, project case studies, resume data, and test automation.",
+    businessValue:
+      "Turns personal career evidence into a searchable, recruiter-readable software product instead of a static CV page.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Supabase",
+      "PostgreSQL",
+      "Playwright",
+      "Tailwind CSS",
+      "Vercel",
+    ],
+    coreSkills: [
+      "full-stack architecture",
+      "CMS design",
+      "SEO",
+      "admin UX",
+      "typed frontend",
+      "test automation",
+    ],
     proof: {
       github: "https://github.com/ambooka/ambooka",
       liveDemo: "https://ambooka.dev",
       caseStudy: "/case-studies/ambooka-dev-portfolio-platform",
     },
-    engineeringEvidence: evidence({ tests: true, ci: true, databaseMigrations: true, docs: true, deployed: true }),
-    metrics: { uptime: "Public Vercel deployment", businessImpact: "Primary recruiter-facing proof platform" },
-    recruiterSummary: "Built and maintains a full-stack Next.js portfolio/CMS with Supabase data, admin content management, resume variants, GitHub sync, SEO and e2e tests.",
+    engineeringEvidence: evidence({
+      tests: true,
+      ci: true,
+      databaseMigrations: true,
+      docs: true,
+      deployed: true,
+    }),
+    metrics: {
+      uptime: "Public Vercel deployment",
+      businessImpact: "Primary recruiter-facing proof platform",
+    },
+    recruiterSummary:
+      "Built and maintains a full-stack Next.js portfolio/CMS with Supabase data, admin content management, resume variants, GitHub sync, SEO and e2e tests.",
   },
   {
     slug: "hebatullah-erpnext-implementation",
     title: "Hebatullah ERPNext Implementation",
-    oneLine: "Enterprise ERP rollout replacing manual inventory, finance, procurement and HR workflows for a 70+ staff organization.",
+    oneLine:
+      "Enterprise ERP rollout replacing manual inventory, finance, procurement and HR workflows for a 70+ staff organization.",
     category: "enterprise",
     displayOrder: 2,
     status: "completed",
     completionPercent: 90,
     featured: true,
     anchor: true,
-    problem: "Core business processes were manual, fragmented across paper/Excel, and difficult to audit across inventory, finance, procurement and HR.",
-    solution: "Implemented ERPNext from scratch: chart of accounts, item catalogue, procurement workflows, business process mapping and operational support.",
-    businessValue: "Improved operational visibility, process consistency and enterprise data structure for a real company environment.",
-    stack: ["ERPNext", "Frappe", "MariaDB", "Python", "Linux", "Business Process Design", "Windows Server", "Active Directory"],
-    coreSkills: ["ERP implementation", "requirements analysis", "business systems", "systems administration", "process automation"],
-    proof: { caseStudy: "/case-studies/hebatullah-erpnext-implementation", liveDemo: "https://hebatullah.com" },
-    engineeringEvidence: evidence({ databaseMigrations: true, docs: true, deployed: true, monitoring: true }),
-    metrics: { businessImpact: "Serves 70+ office staff and supports 300+ field-worker attendance records" },
-    recruiterSummary: "Implemented ERPNext for a real trading company, covering accounting structure, item master data, procurement workflows and operational IT support.",
+    problem:
+      "Core business processes were manual, fragmented across paper/Excel, and difficult to audit across inventory, finance, procurement and HR.",
+    solution:
+      "Implemented ERPNext from scratch: chart of accounts, item catalogue, procurement workflows, business process mapping and operational support.",
+    businessValue:
+      "Improved operational visibility, process consistency and enterprise data structure for a real company environment.",
+    stack: [
+      "ERPNext",
+      "Frappe",
+      "MariaDB",
+      "Python",
+      "Linux",
+      "Business Process Design",
+      "Windows Server",
+      "Active Directory",
+    ],
+    coreSkills: [
+      "ERP implementation",
+      "requirements analysis",
+      "business systems",
+      "systems administration",
+      "process automation",
+    ],
+    proof: {
+      caseStudy: "/case-studies/hebatullah-erpnext-implementation",
+      liveDemo: "https://hebatullah.com",
+    },
+    engineeringEvidence: evidence({
+      databaseMigrations: true,
+      docs: true,
+      deployed: true,
+      monitoring: true,
+    }),
+    metrics: {
+      businessImpact:
+        "Serves 70+ office staff and supports 300+ field-worker attendance records",
+    },
+    recruiterSummary:
+      "Implemented ERPNext for a real trading company, covering accounting structure, item master data, procurement workflows and operational IT support.",
   },
   {
     slug: "mpesa-payment-integration-library",
     title: "M-Pesa Payment Integration Library",
-    oneLine: "Production Safaricom Daraja integration for STK Push, B2C, C2B callbacks, retries, typed responses and transaction audit logs.",
+    oneLine:
+      "Production Safaricom Daraja integration for STK Push, B2C, C2B callbacks, retries, typed responses and transaction audit logs.",
     category: "backend",
     displayOrder: 3,
     status: "completed",
     completionPercent: 95,
     featured: true,
     anchor: true,
-    problem: "Kenyan e-commerce clients need reliable M-Pesa payment flows that handle callbacks, retries, failures and transaction auditability.",
-    solution: "Built a Node.js + TypeScript Daraja API abstraction with typed schemas, BullMQ async jobs, exponential backoff, webhook validation and PostgreSQL audit logging.",
-    businessValue: "Deployed in a live e-commerce environment processing KES 1M+/month.",
-    stack: ["Node.js", "TypeScript", "PostgreSQL", "BullMQ", "Redis", "Safaricom Daraja API", "REST APIs"],
-    coreSkills: ["payment integrations", "webhooks", "job queues", "idempotency", "transaction logging"],
-    proof: { github: "https://github.com/ambooka/pesapal-minidb", caseStudy: "/case-studies/mpesa-payment-integration-library" },
-    engineeringEvidence: evidence({ tests: true, ci: true, databaseMigrations: true, docs: true, deployed: true }),
-    metrics: { throughput: "KES 1M+/month client processing volume", businessImpact: "Real-money payment integration" },
-    recruiterSummary: "Built a production M-Pesa Daraja integration with STK Push, B2C, C2B callbacks, async retries and transaction audit logging.",
+    problem:
+      "Kenyan e-commerce clients need reliable M-Pesa payment flows that handle callbacks, retries, failures and transaction auditability.",
+    solution:
+      "Built a Node.js + TypeScript Daraja API abstraction with typed schemas, BullMQ async jobs, exponential backoff, webhook validation and PostgreSQL audit logging.",
+    businessValue:
+      "Deployed in a live e-commerce environment processing KES 1M+/month.",
+    stack: [
+      "Node.js",
+      "TypeScript",
+      "PostgreSQL",
+      "BullMQ",
+      "Redis",
+      "Safaricom Daraja API",
+      "REST APIs",
+    ],
+    coreSkills: [
+      "payment integrations",
+      "webhooks",
+      "job queues",
+      "idempotency",
+      "transaction logging",
+    ],
+    proof: {
+      github: "https://github.com/ambooka/pesapal-minidb",
+      caseStudy: "/case-studies/mpesa-payment-integration-library",
+    },
+    engineeringEvidence: evidence({
+      tests: true,
+      ci: true,
+      databaseMigrations: true,
+      docs: true,
+      deployed: true,
+    }),
+    metrics: {
+      throughput: "KES 1M+/month client processing volume",
+      businessImpact: "Real-money payment integration",
+    },
+    recruiterSummary:
+      "Built a production M-Pesa Daraja integration with STK Push, B2C, C2B callbacks, async retries and transaction audit logging.",
   },
   {
     slug: "sme-invoicing-reporting-dashboard",
     title: "SME Invoicing & Reporting Dashboard",
-    oneLine: "React + FastAPI dashboard replacing manual Excel invoicing with PDF generation, WhatsApp notifications and analytics.",
+    oneLine:
+      "React + FastAPI dashboard replacing manual Excel invoicing with PDF generation, WhatsApp notifications and analytics.",
     category: "backend",
     displayOrder: 4,
     status: "completed",
     completionPercent: 90,
     featured: true,
     anchor: true,
-    problem: "A Nairobi SME relied on manual Excel invoicing, causing repetitive work, delays, and weak reporting visibility.",
-    solution: "Built a custom dashboard with automated invoice generation, PDF outputs, WhatsApp notifications and live analytics.",
-    businessValue: "Reduced manual processing effort by roughly 80% and improved operational visibility.",
-    stack: ["React", "TypeScript", "FastAPI", "Python", "PostgreSQL", "Docker", "Africa's Talking API", "PDF generation"],
-    coreSkills: ["business automation", "REST APIs", "PDF workflows", "notifications", "analytics dashboards"],
+    problem:
+      "A Nairobi SME relied on manual Excel invoicing, causing repetitive work, delays, and weak reporting visibility.",
+    solution:
+      "Built a custom dashboard with automated invoice generation, PDF outputs, WhatsApp notifications and live analytics.",
+    businessValue:
+      "Reduced manual processing effort by roughly 80% and improved operational visibility.",
+    stack: [
+      "React",
+      "TypeScript",
+      "FastAPI",
+      "Python",
+      "PostgreSQL",
+      "Docker",
+      "Africa's Talking API",
+      "PDF generation",
+    ],
+    coreSkills: [
+      "business automation",
+      "REST APIs",
+      "PDF workflows",
+      "notifications",
+      "analytics dashboards",
+    ],
     proof: { caseStudy: "/case-studies/sme-invoicing-reporting-dashboard" },
-    engineeringEvidence: evidence({ tests: true, docker: true, databaseMigrations: true, docs: true, deployed: true }),
+    engineeringEvidence: evidence({
+      tests: true,
+      docker: true,
+      databaseMigrations: true,
+      docs: true,
+      deployed: true,
+    }),
     metrics: { businessImpact: "Reduced manual processing effort by 80%" },
-    recruiterSummary: "Delivered a business automation dashboard that replaced manual invoicing with API-backed workflows, PDF output, notifications and analytics.",
+    recruiterSummary:
+      "Delivered a business automation dashboard that replaced manual invoicing with API-backed workflows, PDF output, notifications and analytics.",
   },
   {
     slug: "ai-powered-surveillance-system",
     title: "AI-Powered Surveillance System",
-    oneLine: "Final-year research project using YOLO, OpenCV and Flask for real-time object detection, threat classification and alerting.",
+    oneLine:
+      "Final-year research project using YOLO, OpenCV and Flask for real-time object detection, threat classification and alerting.",
     category: "ml",
     displayOrder: 5,
     status: "completed",
     completionPercent: 88,
     featured: true,
     anchor: true,
-    problem: "Urban surveillance workflows need faster automated threat recognition and alerting to support response teams.",
-    solution: "Designed and implemented a real-time video inference pipeline using YOLO architectures, OpenCV stream processing and a Flask backend.",
-    businessValue: "Demonstrated applied computer vision, model evaluation, latency trade-offs and an automated alerting pipeline.",
-    stack: ["Python", "PyTorch", "YOLOv5/v8", "OpenCV", "Flask", "NumPy", "Linux"],
-    coreSkills: ["computer vision", "real-time inference", "model evaluation", "API backend", "alerting pipeline"],
+    problem:
+      "Urban surveillance workflows need faster automated threat recognition and alerting to support response teams.",
+    solution:
+      "Designed and implemented a real-time video inference pipeline using YOLO architectures, OpenCV stream processing and a Flask backend.",
+    businessValue:
+      "Demonstrated applied computer vision, model evaluation, latency trade-offs and an automated alerting pipeline.",
+    stack: [
+      "Python",
+      "PyTorch",
+      "YOLOv5/v8",
+      "OpenCV",
+      "Flask",
+      "NumPy",
+      "Linux",
+    ],
+    coreSkills: [
+      "computer vision",
+      "real-time inference",
+      "model evaluation",
+      "API backend",
+      "alerting pipeline",
+    ],
     proof: { caseStudy: "/case-studies/ai-powered-surveillance-system" },
-    engineeringEvidence: evidence({ tests: false, ci: false, docker: false, monitoring: true, docs: true, deployed: false }),
-    metrics: { modelAccuracy: "Evaluated accuracy-latency trade-offs across YOLO variants" },
-    recruiterSummary: "Built an end-to-end computer vision research system for real-time object detection, threat classification and alert generation.",
+    engineeringEvidence: evidence({
+      tests: false,
+      ci: false,
+      docker: false,
+      monitoring: true,
+      docs: true,
+      deployed: false,
+    }),
+    metrics: {
+      modelAccuracy:
+        "Evaluated accuracy-latency trade-offs across YOLO variants",
+    },
+    recruiterSummary:
+      "Built an end-to-end computer vision research system for real-time object detection, threat classification and alert generation.",
   },
   {
     slug: "hebatullah-cms-website-rebuild",
     title: "Hebatullah CMS Website Rebuild",
-    oneLine: "Reworked a static company website into a CMS-managed site so the marketing team can update content without developer involvement.",
+    oneLine:
+      "Reworked a static company website into a CMS-managed site so the marketing team can update content without developer involvement.",
     category: "frontend",
     displayOrder: 6,
     status: "completed",
     completionPercent: 88,
     featured: false,
     anchor: false,
-    problem: "The company website was static and required developer intervention for content updates.",
-    solution: "Migrated the site to a content-managed setup with cleaner update workflows for non-technical staff.",
-    businessValue: "Reduced dependency on developers for routine marketing content updates.",
+    problem:
+      "The company website was static and required developer intervention for content updates.",
+    solution:
+      "Migrated the site to a content-managed setup with cleaner update workflows for non-technical staff.",
+    businessValue:
+      "Reduced dependency on developers for routine marketing content updates.",
     stack: ["CMS", "Web Administration", "Content Modeling", "SEO", "Hosting"],
     coreSkills: ["content systems", "client handoff", "web administration"],
     proof: { liveDemo: "https://hebatullah.com" },
     engineeringEvidence: evidence({ docs: true, deployed: true }),
     metrics: { businessImpact: "Marketing team can update content directly" },
-    recruiterSummary: "Converted a static business site into a CMS-driven web presence for operational maintainability.",
+    recruiterSummary:
+      "Converted a static business site into a CMS-driven web presence for operational maintainability.",
   },
   {
     slug: "it-infrastructure-rollout",
     title: "Company IT Infrastructure Rollout",
-    oneLine: "Installed and commissioned switches, wireless access points, cabling, VoIP desk phones, CCTV and biometric attendance systems.",
+    oneLine:
+      "Installed and commissioned switches, wireless access points, cabling, VoIP desk phones, CCTV and biometric attendance systems.",
     category: "devops",
     displayOrder: 7,
     status: "completed",
     completionPercent: 90,
     featured: false,
     anchor: false,
-    problem: "A growing company needed reliable office infrastructure, network access, security systems and user support.",
-    solution: "Supported end-to-end infrastructure setup and administration across networking, Windows Server, AD, CCTV, VoIP and biometrics.",
-    businessValue: "Supports 70+ staff operations and 300+ field-worker attendance records.",
-    stack: ["Windows Server", "Active Directory", "TCP/IP", "VoIP", "CCTV", "Biometric Systems", "Networking"],
-    coreSkills: ["IT systems", "networking", "helpdesk", "server administration", "hardware deployment"],
+    problem:
+      "A growing company needed reliable office infrastructure, network access, security systems and user support.",
+    solution:
+      "Supported end-to-end infrastructure setup and administration across networking, Windows Server, AD, CCTV, VoIP and biometrics.",
+    businessValue:
+      "Supports 70+ staff operations and 300+ field-worker attendance records.",
+    stack: [
+      "Windows Server",
+      "Active Directory",
+      "TCP/IP",
+      "VoIP",
+      "CCTV",
+      "Biometric Systems",
+      "Networking",
+    ],
+    coreSkills: [
+      "IT systems",
+      "networking",
+      "helpdesk",
+      "server administration",
+      "hardware deployment",
+    ],
     proof: { caseStudy: "/case-studies/it-infrastructure-rollout" },
-    engineeringEvidence: evidence({ monitoring: true, docs: true, deployed: true }),
-    metrics: { businessImpact: "70+ staff and 300+ field-worker system support" },
-    recruiterSummary: "Handled practical IT infrastructure delivery and support across network, server, security and user systems.",
+    engineeringEvidence: evidence({
+      monitoring: true,
+      docs: true,
+      deployed: true,
+    }),
+    metrics: {
+      businessImpact: "70+ staff and 300+ field-worker system support",
+    },
+    recruiterSummary:
+      "Handled practical IT infrastructure delivery and support across network, server, security and user systems.",
   },
 ];
 
 export const anchorProjects = projects.filter((project) => project.anchor);
 export const featuredProjects = projects.filter((project) => project.featured);
-export const projectCategories = Array.from(new Set(projects.map((project) => project.category))) as ProjectCategory[];
+export const projectCategories = Array.from(
+  new Set(projects.map((project) => project.category)),
+) as ProjectCategory[];
 
 export const portfolioStats = {
   anchorSystems: anchorProjects.length,
   evidenceProjects: projects.length,
   coreLanguages: 5,
   languagesTouched: 15,
-  completedProjects: projects.filter((project) => project.status === "completed").length,
+  completedProjects: projects.filter(
+    (project) => project.status === "completed",
+  ).length,
 };
 
 export function getProject(slug: string) {
