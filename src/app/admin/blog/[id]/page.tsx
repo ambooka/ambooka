@@ -20,7 +20,13 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
         slug: '',
         tags: [] as string[],
         is_published: false,
-        category: 'blog'
+        category: 'blog',
+        seo_title: '',
+        meta_description: '',
+        generation_topic: '',
+        reading_time_minutes: 5,
+        ai_generated: false,
+        published_at: null as string | null
     })
 
     useEffect(() => {
@@ -51,7 +57,13 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                 slug: data.slug,
                 tags: data.tags || [],
                 is_published: data.is_published,
-                category: data.category
+                category: data.category,
+                seo_title: data.seo_title || '',
+                meta_description: data.meta_description || '',
+                generation_topic: data.generation_topic || '',
+                reading_time_minutes: data.reading_time_minutes || 5,
+                ai_generated: data.ai_generated || false,
+                published_at: data.published_at
             })
         }
         setLoading(false)
@@ -74,6 +86,7 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
             ...formData,
             slug: finalSlug,
             tags: formData.tags.length > 0 ? formData.tags : [],
+            published_at: formData.is_published ? (formData.published_at || new Date().toISOString()) : null,
             updated_at: new Date().toISOString()
         }
 
@@ -179,6 +192,41 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                     />
                 </div>
 
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">SEO Title</label>
+                        <input
+                            type="text"
+                            value={formData.seo_title}
+                            onChange={e => setFormData({ ...formData, seo_title: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Optional custom search title"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Generation Topic</label>
+                        <input
+                            type="text"
+                            value={formData.generation_topic}
+                            onChange={e => setFormData({ ...formData, generation_topic: e.target.value })}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Trend or prompt used"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Meta Description</label>
+                    <textarea
+                        rows={2}
+                        value={formData.meta_description}
+                        onChange={e => setFormData({ ...formData, meta_description: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+                        placeholder="Optional search/social description..."
+                    />
+                </div>
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Content (Markdown supported)</label>
                     <textarea
@@ -201,6 +249,11 @@ export default function BlogPostEditor({ params }: { params: { id: string } }) {
                         />
                         <span className="text-sm font-medium text-gray-700">Publish Post</span>
                     </label>
+                    {formData.ai_generated && (
+                        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                            AI-assisted draft
+                        </span>
+                    )}
                 </div>
 
                 {/* Tags */}

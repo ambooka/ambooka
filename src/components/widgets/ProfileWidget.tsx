@@ -47,10 +47,13 @@ const PROFILE_FACTS = [
     { label: 'Base', value: 'Nairobi, Kenya' },
 ]
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI'
+const LEGACY_TITLE_PATTERN = /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i
+
 const CURRENT_FOCUS = [
-    'Python foundations',
-    'Docker + Linux',
-    'PostgreSQL + APIs',
+    'Software products',
+    'Business systems',
+    'Applied AI/ML',
 ];
 
 const EDUCATION = [
@@ -75,10 +78,16 @@ const LANGUAGES = [
     { name: 'Arabic', flag: '🇸🇦' },
 ]
 
+const normalizeProfessionalTitle = (title?: string | null) => {
+    const value = title?.trim()
+    if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE
+    return value
+}
+
 export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWidgetProps = {}) {
     const profile = personalInfo || {
         full_name: 'Msah Ambooka',
-        title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
+        title: PROFESSIONAL_TITLE,
         avatar_url: '/assets/images/my-avatar.jpg',
         about_text: 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.',
         location: 'Nairobi, Kenya',
@@ -86,6 +95,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
     } as PersonalInfo;
 
     const [experiences, setExperiences] = useState<{company: string, position: string, start_date: string, end_date: string | null, is_current: boolean}[]>([])
+    const displayTitle = normalizeProfessionalTitle(profile.title)
 
     useEffect(() => {
         const fetchExperience = async () => {
@@ -150,7 +160,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                                 {profile.full_name || 'Msah Ambooka'}
                             </h3>
                             <div className="text-[0.78rem] sm:text-[0.85rem] text-[hsl(var(--muted-foreground))] font-medium mt-0.5 truncate">
-                                {profile.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering'}
+                                {displayTitle}
                             </div>
                         </div>
                     </div>
@@ -259,7 +269,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                             ))}
                         </div>
                         <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))] ml-1">
-                            Focused on practical software delivery, reliable systems, business automation, IT operations, and applied AI/ML foundations.
+                            Focused on practical software delivery, reliable systems, business automation, and applied AI/ML.
                         </p>
                     </aside>
 

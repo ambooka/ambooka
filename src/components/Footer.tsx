@@ -16,8 +16,8 @@ const NAV_LINKS = [
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/ambooka', icon: <Github size={18} /> },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/ambooka', icon: <Linkedin size={18} /> },
-  { label: 'Email', href: 'mailto:hello@ambooka.dev', icon: <Mail size={18} /> },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/abdulrahman-ambooka/', icon: <Linkedin size={18} /> },
+  { label: 'Email', href: 'mailto:abdulrahmanambooka@gmail.com', icon: <Mail size={18} /> },
 ] as const
 
 export default function Footer() {

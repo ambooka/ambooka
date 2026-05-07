@@ -1,22 +1,22 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { GitHubService, GitHubRepo } from '../services/github'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { ExternalLink, Github, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Lock, Code, ArrowUpRight, X } from 'lucide-react'
+import { ExternalLink, Github, EyeIcon, Star, Search, ChevronLeft, ChevronRight, Lock, Code, ArrowUpRight, X, CheckCircle2 } from 'lucide-react'
 import { fetchProjectReadme } from '@/app/actions/github'
 import { cn } from '@/lib/utils'
-import { Dialog, DialogContent, DialogOverlay, DialogPortal, DialogClose } from '@/components/ui'
 import AnimatedPage from '@/components/AnimatedPage'
 import { getCardPattern } from '@/lib/design-patterns'
+import type { Project as FeaturedProject } from '@/types/portfolio'
 import {
   fadeUp,
   staggerContainer,
   staggerChildScale,
   scrollRevealTransition,
-  defaultViewport,
 } from '@/lib/motion'
 
 // --- Constants & Config ---
@@ -94,9 +94,22 @@ interface PortfolioProps {
     sortBy: 'updated' | 'stars' | 'created'
   }
   initialProjects?: Project[]
+  featuredProjects?: FeaturedProject[]
 }
 
-export default function Portfolio({ isActive = false, github = defaultGithubConfig, initialProjects }: PortfolioProps) {
+const FEATURED_LIMIT = 6
+
+const evidenceLabels: Array<[keyof FeaturedProject['engineeringEvidence'], string]> = [
+  ['deployed', 'Deployed'],
+  ['tests', 'Tests'],
+  ['ci', 'CI'],
+  ['docker', 'Docker'],
+  ['databaseMigrations', 'Migrations'],
+  ['monitoring', 'Monitoring'],
+  ['docs', 'Docs'],
+]
+
+export default function Portfolio({ isActive = false, github = defaultGithubConfig, initialProjects, featuredProjects = [] }: PortfolioProps) {
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(!initialProjects)
   const [error, setError] = useState<string | null>(null)
@@ -200,6 +213,11 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
 
   const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE)
 
+  const visibleFeaturedProjects = featuredProjects
+    .filter(project => project.featured)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .slice(0, FEATURED_LIMIT)
+
   const filterOptions = [
     { value: 'all', label: 'All' },
     ...Array.from(new Set(projects.map(p => p.language))).filter(Boolean).map(lang => ({
@@ -218,16 +236,168 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         animate="visible"
         transition={scrollRevealTransition}
       >
-        <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] capitalize relative inline-block pb-3">
-          Project Portfolio
+        <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] relative inline-block pb-3">
+          Portfolio
           <div className="absolute bottom-0 left-0 w-10 h-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))]" />
         </h2>
         <p className="mt-4 text-[0.94rem] leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[600px]">
-          A showcase of my recent work, open-source contributions, and technical experiments.
+          Selected proof-first projects first, followed by a live GitHub archive for experiments, source work, and ongoing builds.
         </p>
       </motion.header>
 
-      <section>
+      {visibleFeaturedProjects.length > 0 && (
+        <section className="mb-14" aria-labelledby="featured-work-title">
+          <div className="flex flex-col gap-2 mb-6">
+            <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[hsl(var(--accent))]">
+              Featured Work
+            </span>
+            <h3 id="featured-work-title" className="text-2xl font-black tracking-tight text-[hsl(var(--foreground))]">
+              Professional Proof
+            </h3>
+            <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[780px]">
+              Curated projects with real business context, implementation detail, measurable impact, or case-study evidence.
+            </p>
+          </div>
+
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-2 gap-5"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            {visibleFeaturedProjects.map((project, index) => {
+              const pattern = getCardPattern(index)
+              const metrics = Object.entries(project.metrics || {})
+                .filter(([, value]) => Boolean(value))
+                .slice(0, 2)
+              const positiveEvidence = evidenceLabels
+                .filter(([key]) => project.engineeringEvidence[key])
+                .slice(0, 4)
+
+              return (
+                <motion.article
+                  key={project.slug}
+                  variants={staggerChildScale}
+                  className={cn(
+                    "relative overflow-hidden rounded-2xl border border-[hsl(var(--border))] p-5 md:p-6",
+                    "shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[hsl(var(--accent))/0.28]",
+                    pattern.bgClass
+                  )}
+                >
+                  <div className={cn(pattern.blobClass, "-z-10 pointer-events-none")} />
+
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <span className="rounded-full border border-[hsl(var(--accent))/0.18] bg-[hsl(var(--accent))/0.1] px-3 py-1 text-[0.64rem] font-bold uppercase tracking-widest text-[hsl(var(--accent))]">
+                      {project.category.replace(/_/g, ' ')}
+                    </span>
+                    <span className="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.65] px-3 py-1 text-[0.64rem] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+                      {project.status.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+
+                  <h4 className="text-xl font-black leading-tight tracking-tight text-[hsl(var(--foreground))]">
+                    {project.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+                    {project.oneLine}
+                  </p>
+
+                  <div className="mt-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.58] p-4">
+                    <p className="text-[0.72rem] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+                      Impact
+                    </p>
+                    <p className="mt-1 text-sm font-semibold leading-relaxed text-[hsl(var(--foreground))]">
+                      {project.businessValue}
+                    </p>
+                    {metrics.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {metrics.map(([key, value]) => (
+                          <span
+                            key={key}
+                            className="rounded-lg bg-[hsl(var(--accent))/0.1] px-2.5 py-1 text-[0.68rem] font-bold text-[hsl(var(--accent))]"
+                          >
+                            {value}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.stack.slice(0, 6).map(tech => (
+                      <span
+                        key={tech}
+                        className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.45] px-2.5 py-1 text-[0.68rem] font-semibold text-[hsl(var(--muted-foreground))]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {positiveEvidence.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {positiveEvidence.map(([, label]) => (
+                        <span
+                          key={label}
+                          className="inline-flex items-center gap-1.5 rounded-full text-[0.68rem] font-bold text-[hsl(var(--foreground))]"
+                        >
+                          <CheckCircle2 size={13} className="text-[hsl(var(--accent))]" />
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-5 flex flex-wrap gap-2.5">
+                    {project.proof.caseStudy && (
+                      <Link
+                        href={project.proof.caseStudy}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[hsl(var(--accent))/0.25] bg-[hsl(var(--accent))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.9]"
+                      >
+                        Case Study <ArrowUpRight size={14} />
+                      </Link>
+                    )}
+                    {project.proof.github && (
+                      <a
+                        href={project.proof.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] shadow-sm transition-colors hover:border-[hsl(var(--accent))/0.35] hover:bg-[hsl(var(--accent))/0.08] hover:text-[hsl(var(--accent))]"
+                      >
+                        Source <Github size={14} />
+                      </a>
+                    )}
+                    {project.proof.liveDemo && (
+                      <a
+                        href={project.proof.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.68] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] transition-colors hover:border-[hsl(var(--accent))/0.35] hover:text-[hsl(var(--accent))]"
+                      >
+                        Live <ExternalLink size={14} />
+                      </a>
+                    )}
+                  </div>
+                </motion.article>
+              )
+            })}
+          </motion.div>
+        </section>
+      )}
+
+      <section aria-labelledby="repo-archive-title">
+        <div className="flex flex-col gap-2 mb-6">
+          <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[hsl(var(--accent))]">
+            GitHub Archive
+          </span>
+          <h3 id="repo-archive-title" className="text-2xl font-black tracking-tight text-[hsl(var(--foreground))]">
+            Repository Archive
+          </h3>
+          <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[760px]">
+            A live archive of public and private development work, experiments, and ongoing builds. Featured work above is the curated professional layer.
+          </p>
+        </div>
+
         {/* Expanded Controls */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">
@@ -269,7 +439,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
         ) : (
           <>
             <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 w-full"
+              className="project-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 w-full"
+              data-testid="project-list"
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
@@ -363,8 +534,8 @@ export default function Portfolio({ isActive = false, github = defaultGithubConf
                             rel="noopener noreferrer"
                             className={cn(
                               "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
-                              "bg-[hsl(var(--foreground))] text-[hsl(var(--background))] text-[11px] font-bold uppercase tracking-widest",
-                              "shadow-sm transition-all hover:bg-[hsl(var(--accent))] hover:-translate-y-px"
+                              "bg-[hsl(var(--accent))] text-white text-[11px] font-bold uppercase tracking-widest",
+                              "border border-[hsl(var(--accent))/0.25] shadow-sm transition-all hover:bg-[hsl(var(--accent))/0.9] hover:-translate-y-px"
                             )}
                           >
                             <Github size={14} /> Source Code

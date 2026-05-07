@@ -242,7 +242,7 @@ async function migrateProfile() {
   ];
 
   for (const exp of experience) {
-    const { error } = await supabase.from("experience").insert(exp as any);
+    const { error } = await supabase.from("experience").insert(exp as never);
     if (error) {
       console.error(`❌ Error adding ${exp.company}:`, error.message);
     } else {

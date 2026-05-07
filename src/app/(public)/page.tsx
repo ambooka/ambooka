@@ -3,12 +3,16 @@ import { supabase } from '@/integrations/supabase/client'
 import { GitHubService } from '@/services/github'
 import { Metadata } from 'next'
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI'
+
 // ISR: Revalidate every hour
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
-    description: 'Portfolio of Msah Ambooka, a software engineer and full-stack developer with IT systems, ERP implementation, payment integration, and applied AI/ML experience.',
+    title: {
+        absolute: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
+    },
+    description: 'Portfolio of Msah Ambooka, a software engineer working across full-stack products, business systems, payment integrations, and applied AI/ML.',
 }
 
 const GITHUB_USERNAME = 'ambooka'

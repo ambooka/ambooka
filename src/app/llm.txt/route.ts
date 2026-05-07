@@ -4,6 +4,16 @@ import { supabase } from '@/integrations/supabase/client';
 // ISR: Revalidate every hour
 export const revalidate = 3600;
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI';
+const PROFESSIONAL_SCOPE = 'Software engineer based in Nairobi, Kenya working across full-stack products, business systems, payment integrations, infrastructure, and applied AI/ML.';
+const LEGACY_TITLE_PATTERN = /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i;
+
+const normalizeProfessionalTitle = (title?: string | null) => {
+    const value = title?.trim();
+    if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
+    return value;
+};
+
 export async function GET() {
     // Fetch dynamic content from Supabase
     const [personalInfoResult, blogPostsResult, skillsResult] = await Promise.all([
@@ -15,6 +25,7 @@ export async function GET() {
     const personalInfo = personalInfoResult.data;
     const blogPosts = blogPostsResult.data || [];
     const skills = skillsResult.data || [];
+    const title = normalizeProfessionalTitle(personalInfo?.title);
 
     // Group skills by category
     const skillsByCategory: Record<string, string[]> = {};
@@ -33,12 +44,12 @@ export async function GET() {
         : '*(No published posts yet)*';
 
     const content = `
-# ${personalInfo?.full_name || 'Msah Ambooka'} - ${personalInfo?.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering'}
+# ${personalInfo?.full_name || 'Msah Ambooka'} - ${title}
 
 ## Identity & Core Focus
-${personalInfo?.summary || 'Software Engineer and Full-Stack Developer based in Nairobi, Kenya with experience in IT systems, ERP implementation, payment integrations, business automation, and applied AI/ML.'}
+${personalInfo?.summary || PROFESSIONAL_SCOPE}
 
-- **Role**: ${personalInfo?.title || 'Software Engineer, Full-Stack Developer, IT Systems, AI/ML Engineering'}
+- **Role**: ${title}
 - **Location**: Nairobi, Kenya
 - **Availability**: Open for freelance, contract, and high-impact full-time roles.
 - **Website**: https://ambooka.dev
@@ -51,21 +62,21 @@ ${skillsSection || `
 - **Languages**: Python, TypeScript, Go, SQL.
 - **Frontend**: Next.js (React), Tailwind CSS, Framer Motion.
 - **Backend**: FastAPI, Node.js, PostgreSQL, Redis, Supabase.
-- **Infrastructure**: Kubernetes (K8s), Docker, Terraform, AWS, Google Cloud.
+    - **Infrastructure**: Docker, Linux, Nginx, GitHub Actions, Windows Server, Active Directory, TCP/IP networking.
 `}
 
 ## Recent Blog Posts
 
 ${blogSection}
 
-## AI & MLOps
-- **Orchestration**: Kubeflow, Airflow.
-- **Model Serving**: Triton Inference Server, TorchServe, KServe.
-- **LLM Stack**: LangChain, LlamaIndex, OpenAI API, HuggingFace Transformers.
-- **Practices**: CI/CD for ML (CML), Experiment Tracking (MLflow/Weights & Biases).
+## Applied AI/ML Direction
+- **Computer Vision**: YOLO, OpenCV, PyTorch, Flask inference APIs, real-time stream processing.
+- **Production Software Base**: TypeScript, Python, FastAPI, PostgreSQL, Docker, and GitHub Actions.
+- **LLM/RAG Learning Track**: LangChain, retrieval patterns, vector search, and model evaluation foundations.
+- **Current Positioning**: Software engineering and business systems first, with applied AI/ML as a growing technical direction.
 
 ## Contact
-- **Email**: (Check Website)
+- **Email**: abdulrahmanambooka@gmail.com
 - **Twitter**: @ambooka
 
 ## Context & Region
@@ -73,8 +84,8 @@ ${blogSection}
 - **Remote Work**: Experienced in remote collaboration, asynchronous communication, and distributed teams.
 
 ## Hiring & Collaboration
-- **Keywords**: Hire MLOps Engineer, Contract AI Engineer, Freelance Backend Developer, Tech Lead/SRE Consultant.
-- **Engagement Models**: Freelance, Contract, Technical Co-founder, Fractional CTO.
+- **Keywords**: Hire Software Engineer Kenya, Full-Stack Developer Nairobi, Backend Developer, Payment Integration Developer, IT Systems Engineer, Applied AI/ML Developer.
+- **Engagement Models**: Full-time, contract, freelance, and project-based collaboration.
 
 ---
 *This file is auto-generated from the Ambooka.dev database. Last updated: ${new Date().toISOString()}*

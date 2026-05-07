@@ -141,7 +141,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                             <Github size={17} />
                         </motion.a>
                         <motion.a
-                            href="https://linkedin.com/in/ambooka"
+                            href="https://www.linkedin.com/in/abdulrahman-ambooka/"
                             target="_blank"
                             rel="noopener noreferrer"
                             whileHover={{ y: -2 }}

@@ -47,9 +47,18 @@ interface PersonalInfo {
   social_links?: SocialLink[] | null
 }
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI'
+const LEGACY_TITLE_PATTERN = /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i
+
+const normalizeProfessionalTitle = (title?: string | null) => {
+  const value = title?.trim()
+  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE
+  return value
+}
+
 const DEFAULT_PERSONAL_INFO: PersonalInfo = {
   full_name: 'Msah Ambooka',
-  title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
+  title: PROFESSIONAL_TITLE,
   avatar_url: null,
   about_text: 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.',
   email: 'hello@ambooka.dev',
@@ -86,6 +95,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([])
   const [obtainedCerts, setObtainedCerts] = useState<ObtainedCert[]>([])
   const profile = personalInfo ?? DEFAULT_PERSONAL_INFO
+  const displayTitle = normalizeProfessionalTitle(profile.title)
   const isStandardSidebar = !isModal
 
   useEffect(() => {
@@ -225,7 +235,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
             My name is <strong className="text-[hsl(var(--foreground))]">{profile.full_name}</strong>.
           </p>
           <p className={cn("text-[hsl(var(--muted-foreground))] leading-relaxed mb-1.5", isModal ? "text-sm" : "text-[0.76rem]")}>
-            I am {profile.title ? <span>a <strong className="text-[hsl(var(--foreground))]">{profile.title.split(' ')[0]}</strong> {profile.title.split(' ').slice(1).join(' ')}</span> : 'a Software Engineer'} based in {profile.location || 'Nairobi, Kenya'} with experience through projects and subjects in university.
+            I work as a <strong className="text-[hsl(var(--foreground))]">{displayTitle}</strong> based in {profile.location || 'Nairobi, Kenya'}, with experience across shipped products, business systems, and applied AI/ML work.
           </p>
           <p className={cn("italic text-[hsl(var(--muted-foreground))] leading-relaxed mt-2.5", isModal ? "text-[0.78rem]" : "text-xs line-clamp-2")}>
             {profile.about_text || 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.'}
@@ -494,4 +504,3 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
     </AnimatePresence>
   )
 }
-

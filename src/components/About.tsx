@@ -8,10 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { GitHubService } from "@/services/github";
 import GitHubStatsWidget from "@/components/widgets/GitHubStatsWidget";
 import LatestBlogWidget from "@/components/widgets/LatestBlogWidget";
-import CareerTimelineWidget from "@/components/widgets/CareerTimelineWidget";
 import EngineeringBentoGrid from "@/components/widgets/EngineeringBentoGrid";
 import ProfileWidget from "@/components/widgets/ProfileWidget";
-import { ROADMAP_DATA } from "@/data/roadmap-data";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -34,6 +32,10 @@ import {
 
 const GITHUB_USERNAME = "ambooka";
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
+const PROFESSIONAL_TITLE = "Software Engineer, Systems & AI";
+const PROFESSIONAL_SCOPE =
+  "Full-stack products, payment integrations, business systems, infrastructure, and applied AI/ML.";
+const PROFESSIONAL_FOCUS = "Software · Systems · Applied AI";
 
 // --- Interfaces (from original file) ---
 interface Testimonial {
@@ -169,17 +171,11 @@ export default function About({
     initialData?.testimonials || [],
   );
 
-  const currentPhaseIndex = 0; // Phase 1 of 5 is current
-  const totalPhases = ROADMAP_DATA.phases.length; // 5
-
   const [skillCount, setSkillCount] = useState(40);
   const [projectCount, setProjectCount] = useState(25);
   const [kpiStats, setKpiStats] = useState<KpiStats>({
     years_experience:
       initialData?.personalInfo?.kpi_stats?.years_experience || "3+",
-    current_phase:
-      initialData?.personalInfo?.kpi_stats?.current_phase ||
-      `${currentPhaseIndex + 1}/${totalPhases}`,
     expertise_breakdown: initialData?.personalInfo?.kpi_stats
       ?.expertise_breakdown || {
       software: 40,
@@ -192,30 +188,7 @@ export default function About({
     initialData?.personalInfo || null,
   );
 
-  const expertiseBreakdown = {
-    cloud: kpiStats.expertise_breakdown?.cloud_infra ?? 30,
-    devops: kpiStats.expertise_breakdown?.software ?? 35,
-    mlops: kpiStats.expertise_breakdown?.ml_ai ?? 35,
-    development: kpiStats.expertise_breakdown?.data ?? 0,
-  };
-
-  const segments = [
-    {
-      label: "Software Eng.",
-      pct: expertiseBreakdown.cloud,
-      colorClass: "bg-[hsl(var(--foreground))] text-[hsl(var(--background))]",
-    },
-    {
-      label: "Cloud / Infra",
-      pct: expertiseBreakdown.devops,
-      colorClass: "bg-[hsl(var(--accent))] text-white",
-    },
-    {
-      label: "AI / ML",
-      pct: expertiseBreakdown.mlops,
-      colorClass: "bg-[hsl(var(--secondary))] text-white",
-    },
-  ];
+  const focusAreas = ["Software Engineering", "Business Systems", "Applied AI/ML"];
 
   useEffect(() => {
     if (!initialData) {
@@ -281,31 +254,6 @@ export default function About({
         setSkillCount(skillsResult.data.length);
       }
 
-      interface RoadmapPhase {
-        status: string;
-      }
-      type RoadmapPhaseClient = {
-        from: (table: "roadmap_phases") => {
-          select: (columns: string) => {
-            order: (column: string) => Promise<{ data: RoadmapPhase[] | null }>;
-          };
-        };
-      };
-      const { data: phasesData } = await (
-        supabase as unknown as RoadmapPhaseClient
-      )
-        .from("roadmap_phases")
-        .select("*")
-        .order("phase_number");
-      if (phasesData && phasesData.length > 0) {
-        const completedCount = phasesData.filter(
-          (p: RoadmapPhase) => p.status === "completed",
-        ).length;
-        setKpiStats((prev) => ({
-          ...prev,
-          current_phase: `${completedCount}/${phasesData.length}`,
-        }));
-      }
     } catch (error) {
       console.error("Error fetching about data:", error);
     } finally {
@@ -374,53 +322,33 @@ export default function About({
                 variants={staggerChild}
                 className="!text-[1.75rem] sm:!text-3xl lg:!text-4xl font-extrabold mb-3 leading-tight tracking-tight text-[hsl(var(--foreground))]"
               >
-                {kpiStats.headline || (
-                  <>
-                    <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
-                      Software Engineer
-                    </span>{" "}
-                    | Full-Stack Developer
-                  </>
-                )}
+                <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
+                  Software Engineer
+                </span>
+                , Systems & AI
               </motion.h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
                 <p className="text-[0.8rem] md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  {kpiStats.role || "Software Engineer"} •
+                  {kpiStats.role || PROFESSIONAL_TITLE} •
                   <span className="text-[hsl(var(--accent))] font-semibold ml-1">
-                    {kpiStats.focus ||
-                      "Python · TypeScript · React · Next.js · FastAPI · PostgreSQL · Docker"}
+                    {kpiStats.focus || PROFESSIONAL_SCOPE}
                   </span>
                 </p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))]/10 to-[hsl(var(--secondary))]/10 border border-[hsl(var(--accent))]/20 text-[9px] font-bold text-[hsl(var(--accent))] uppercase tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] animate-pulse" />
-                  Focus{" "}
-                  {kpiStats.current_phase || "Software · IT Systems · AI/ML"}
+                  {PROFESSIONAL_FOCUS}
                 </div>
               </div>
 
-              {/* Segmented Progress Bar */}
-              <div className="flex gap-2 mt-4 sm:mt-5">
-                {segments.map((seg, i) => (
-                  <div
-                    key={i}
-                    className="flex flex-col gap-1"
-                    style={{ flex: seg.pct }}
+              <div className="flex flex-wrap gap-2 mt-4 sm:mt-5">
+                {focusAreas.map((area) => (
+                  <span
+                    key={area}
+                    className="inline-flex items-center rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.55] px-3 py-1.5 text-[0.72rem] font-bold text-[hsl(var(--foreground))] shadow-sm"
                   >
-                    <span className="text-[0.64rem] tracking-wider uppercase font-bold text-[hsl(var(--muted-foreground))]">
-                      {seg.label}
-                    </span>
-                    <div
-                      className={cn(
-                        "h-6 rounded-full flex items-center px-2.5",
-                        seg.colorClass,
-                      )}
-                    >
-                      <span className="text-[0.66rem] font-bold">
-                        {seg.pct}%
-                      </span>
-                    </div>
-                  </div>
+                    {area}
+                  </span>
                 ))}
               </div>
             </motion.div>
@@ -534,18 +462,6 @@ export default function About({
               </div>
             </motion.div>
           </motion.div>
-
-          {/* 2.5. Career Timeline (Horizontal) */}
-          <motion.section
-            className="min-w-0 mb-6 lg:mb-8"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={defaultViewport}
-            transition={scrollRevealTransition}
-          >
-            <CareerTimelineWidget />
-          </motion.section>
 
           {/* 3. Engineering Bento Grid */}
           <motion.section

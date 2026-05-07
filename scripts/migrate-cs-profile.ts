@@ -227,7 +227,7 @@ async function migrateProfile() {
   ];
 
   for (const exp of experience) {
-    const { error } = await supabase.from("experience").insert(exp as any);
+    const { error } = await supabase.from("experience").insert(exp as never);
     if (error) {
       console.error(`❌ Error adding ${exp.company}:`, error.message);
     } else {
@@ -440,7 +440,7 @@ async function migrateProfile() {
   for (const project of projects) {
     const { error } = await supabase
       .from("portfolio_content")
-      .insert(project as any);
+      .insert(project as never);
     if (error) {
       console.error(`❌ Error adding ${project.title}:`, error.message);
     } else {

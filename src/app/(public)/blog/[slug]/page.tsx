@@ -1,18 +1,26 @@
-
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { supabase } from '@/integrations/supabase/client'
-import { ArrowLeft, Calendar, Clock } from 'lucide-react'
-import Sidebar from '@/components/Sidebar'
-import { JsonLd } from '@/components/seo/JsonLd'
+import { ArrowLeft, Calendar, Clock, ExternalLink, Sparkles } from 'lucide-react'
 import { BlogPosting, WithContext } from 'schema-dts'
+import { supabase } from '@/integrations/supabase/client'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { getReadingTimeMinutes, markdownToHtml, stripMarkdown } from '@/lib/blog-markdown'
 
-// ISR: Revalidate every hour
 export const revalidate = 3600
 
-// Pre-render all published blog posts at build time
+interface Props {
+    params: Promise<{
+        slug: string
+    }>
+}
+
+interface BlogSource {
+    title: string
+    url: string
+}
+
 export async function generateStaticParams() {
     const { data: posts } = await supabase
         .from('blog_posts')
@@ -22,13 +30,7 @@ export async function generateStaticParams() {
     return (posts || []).map((post) => ({ slug: post.slug }))
 }
 
-interface Props {
-    params: Promise<{
-        slug: string
-    }>
-}
-
-async function getBlogPost(slug: string) {
+async function getBlogPost(slug: string, incrementView = false) {
     const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
@@ -36,162 +38,214 @@ async function getBlogPost(slug: string) {
         .eq('is_published', true)
         .single()
 
-    if (error || !data) {
-        return null
-    }
+    if (error || !data) return null
 
-    // Increment view count (fire and forget)
-    // Note: In server component, this might not be ideal without cache revalidation, 
-    // but acceptable for simple counter. ideally should be an API route.
-    await (supabase as unknown as { rpc: (fn: string, params: Record<string, string>) => Promise<unknown> }).rpc('increment_page_view', { page_slug: slug })
+    if (incrementView) {
+        await (supabase as unknown as { rpc: (fn: string, params: Record<string, string>) => Promise<unknown> }).rpc(
+            'increment_page_view',
+            { page_slug: slug },
+        )
+    }
 
     return data
 }
 
+const parseSources = (value: unknown): BlogSource[] => {
+    if (!Array.isArray(value)) return []
+
+    return value
+        .map((source) => source as Partial<BlogSource>)
+        .filter((source) => source.url && /^https?:\/\//.test(source.url))
+        .map((source) => ({
+            title: source.title || source.url || 'Source',
+            url: source.url || '',
+        }))
+}
+
+const getDescription = (post: Awaited<ReturnType<typeof getBlogPost>>) => {
+    if (!post) return 'Technical article by Msah Ambooka.'
+    return post.meta_description || post.excerpt || stripMarkdown(post.content).slice(0, 160)
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const resolvedParams = await params;
+    const resolvedParams = await params
     const post = await getBlogPost(resolvedParams.slug)
 
     if (!post) {
-        return {
-            title: 'Post Not Found',
-        }
+        return { title: 'Post Not Found' }
     }
 
+    const description = getDescription(post)
+    const title = post.seo_title || post.title
     const publishedTime = post.published_at || new Date().toISOString()
 
     return {
-        title: `${post.title} | Msah Ambooka`,
-        description: post.excerpt || post.content.slice(0, 160),
+        title,
+        description,
+        keywords: post.tags || [],
+        alternates: {
+            canonical: `/blog/${resolvedParams.slug}`,
+        },
         openGraph: {
-            title: post.title,
-            description: post.excerpt || post.content.slice(0, 160),
+            title,
+            description,
             type: 'article',
             publishedTime,
+            modifiedTime: post.updated_at || publishedTime,
             authors: ['Msah Ambooka'],
-            images: post.image_url ? [{ url: post.image_url }] : [],
+            images: post.image_url ? [{ url: post.image_url, alt: post.title }] : [{ url: '/og-image.png', alt: title }],
         },
         twitter: {
             card: 'summary_large_image',
-            title: post.title,
-            description: post.excerpt || post.content.slice(0, 160),
-            images: post.image_url ? [post.image_url] : [],
+            title,
+            description,
+            images: post.image_url ? [post.image_url] : ['/og-image.png'],
         },
-        alternates: {
-            canonical: `/blog/${resolvedParams.slug}`,
-        }
     }
 }
 
-export default async function BlogPostPage({ params }: Props) {
-    const resolvedParams = await params;
-    const post = await getBlogPost(resolvedParams.slug)
-
-    if (!post) {
-        notFound()
+const ArticleCover = ({ title, imageUrl, category }: { title: string; imageUrl: string | null; category: string }) => {
+    if (imageUrl) {
+        return (
+            <Image
+                src={imageUrl}
+                alt={title}
+                fill
+                priority
+                className="object-cover"
+                unoptimized
+            />
+        )
     }
 
+    return (
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--foreground)),hsl(var(--accent))_55%,hsl(var(--secondary)))]">
+            <div className="absolute inset-x-0 top-0 h-px bg-white/35" />
+            <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full border border-white/20" />
+            <div className="absolute bottom-8 left-8 right-8">
+                <span className="inline-flex rounded-md bg-white/14 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white/90">
+                    {category || 'Engineering'}
+                </span>
+                <p className="mt-4 max-w-3xl text-3xl font-black leading-tight text-white sm:text-4xl">{title}</p>
+            </div>
+        </div>
+    )
+}
+
+export default async function BlogPostPage({ params }: Props) {
+    const resolvedParams = await params
+    const post = await getBlogPost(resolvedParams.slug, true)
+
+    if (!post) notFound()
+
+    const sources = parseSources(post.source_urls)
+    const readingTime = post.reading_time_minutes || getReadingTimeMinutes(post.content)
+    const articleBody = stripMarkdown(post.content)
     const jsonLd: WithContext<BlogPosting> = {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: post.title,
-        image: post.image_url ? [post.image_url] : [],
+        image: post.image_url ? [post.image_url] : ['https://ambooka.dev/og-image.png'],
         datePublished: post.published_at || undefined,
         dateModified: post.updated_at || post.published_at || undefined,
         author: {
             '@type': 'Person',
             name: 'Msah Ambooka',
-            url: 'https://ambooka.dev'
+            url: 'https://ambooka.dev',
         },
-        description: post.excerpt || post.content.slice(0, 160),
-        articleBody: post.content
+        publisher: {
+            '@type': 'Person',
+            name: 'Msah Ambooka',
+        },
+        mainEntityOfPage: `https://ambooka.dev/blog/${post.slug}`,
+        description: getDescription(post),
+        keywords: post.tags?.join(', '),
+        wordCount: articleBody.split(/\s+/).filter(Boolean).length,
+        timeRequired: `PT${readingTime}M`,
+        articleBody,
     }
 
     return (
-        <>
-            <Sidebar />
-            <main className="main-content relative min-h-screen pb-12">
-                <JsonLd schema={jsonLd} />
+        <article className="mx-auto w-full max-w-5xl">
+            <JsonLd schema={jsonLd} />
 
-                {/* Navigation Bar Replacement */}
-                <nav
-                    className="navbar absolute top-0 left-0 right-0 p-6 flex items-center justify-between z-10"
-                    style={{
-                        background: 'rgba(30, 30, 31, 0.8)',
-                        backdropFilter: 'blur(10px)',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
-                    }}
-                >
-                    <Link
-                        href="/#blog"
-                        className="flex items-center gap-2 text-[var(--accent-color)] hover:text-[var(--accent-color-hover)] transition-colors font-medium"
-                    >
-                        <ArrowLeft size={20} />
-                        <span>Back to Portfolio</span>
-                    </Link>
-                </nav>
+            <Link
+                href="/blog"
+                className="mb-6 inline-flex items-center gap-2 text-sm font-bold text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--accent))]"
+            >
+                <ArrowLeft className="h-4 w-4" />
+                Back to blog
+            </Link>
 
-                <article
-                    className="blog-active px-6 pt-24 max-w-4xl mx-auto"
-                    style={{ animation: 'fadeInUp 0.6s ease-out' }}
-                >
-                    <header className="mb-10 text-center">
-                        {post.tags && post.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2 justify-center mb-6">
-                                {post.tags.map((tag: string, idx: number) => (
-                                    <span key={idx} className="bg-[var(--accent-color-alpha)] text-[var(--accent-color)] px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
+            <header className="mb-8">
+                <div className="mb-4 flex flex-wrap items-center gap-3 text-[0.72rem] font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(var(--accent))/0.1] px-3 py-1 text-[hsl(var(--accent))]">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        {post.ai_generated ? 'AI-assisted draft' : post.category}
+                    </span>
+                    <span>{post.category}</span>
+                    <span className="h-1 w-1 rounded-full bg-[hsl(var(--border))]" />
+                    <time dateTime={post.published_at || undefined} className="inline-flex items-center gap-1.5">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {new Date(post.published_at || Date.now()).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                        })}
+                    </time>
+                    <span className="inline-flex items-center gap-1.5">
+                        <Clock className="h-3.5 w-3.5" />
+                        {readingTime} min read
+                    </span>
+                </div>
 
-                        <h1
-                            className="h1 article-title mb-6 leading-tight"
-                            style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)' }}
-                        >
-                            {post.title}
-                        </h1>
+                <h1 className="max-w-4xl text-[2.25rem] font-black leading-tight tracking-tight text-[hsl(var(--foreground))] sm:text-5xl">
+                    {post.title}
+                </h1>
+                <p className="mt-5 max-w-3xl text-base leading-relaxed text-[hsl(var(--muted-foreground))] sm:text-lg">
+                    {post.excerpt}
+                </p>
 
-                        <div className="flex items-center justify-center gap-6 text-[var(--text-secondary)] text-sm">
-                            <div className="flex items-center gap-2">
-                                <Calendar size={16} />
-                                <time dateTime={post.published_at || undefined}>
-                                    {new Date(post.published_at || Date.now()).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </time>
-                            </div>
-                            {/* Placeholder for read time if we want to calculate it */}
-                            <div className="flex items-center gap-2">
-                                <Clock size={16} />
-                                <span>5 min read</span>
-                            </div>
-                        </div>
-                    </header>
-
-                    {post.image_url && (
-                        <figure className="w-full h-[400px] relative rounded-xl overflow-hidden mb-12 shadow-2xl">
-                            <Image
-                                src={post.image_url}
-                                alt={post.title}
-                                fill
-                                className="object-cover"
-                                priority
-                            />
-                        </figure>
-                    )}
-
-                    <div className="blog-content-body prose prose-lg prose-invert max-w-none text-[var(--text-gray)]">
-                        {/* Note: In a real app, use a markdown parser like react-markdown here */}
-                        <div dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br/>') }} />
+                {post.tags && post.tags.length > 0 && (
+                    <div className="mt-6 flex flex-wrap gap-2">
+                        {post.tags.map((tag) => (
+                            <span key={tag} className="rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.72] px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+                                {tag}
+                            </span>
+                        ))}
                     </div>
-                </article>
-            </main>
+                )}
+            </header>
 
-            {/* Styles moved to inline/tailwind to avoid styled-jsx issues in Server Component */}
-        </>
+            <figure className="relative mb-10 h-[22rem] overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--muted))] shadow-md sm:h-[28rem]">
+                <ArticleCover title={post.title} imageUrl={post.image_url} category={post.category} />
+            </figure>
+
+            <div
+                className="blog-article mx-auto max-w-3xl text-[hsl(var(--foreground))]"
+                dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+            />
+
+            {sources.length > 0 && (
+                <section className="mx-auto mt-12 max-w-3xl border-t border-[hsl(var(--border))] pt-8">
+                    <h2 className="text-sm font-black uppercase tracking-widest text-[hsl(var(--foreground))]">Sources</h2>
+                    <ul className="mt-4 grid gap-3">
+                        {sources.map((source) => (
+                            <li key={source.url}>
+                                <a
+                                    href={source.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group flex items-start justify-between gap-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.72] p-4 text-sm font-semibold text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
+                                >
+                                    <span>{source.title}</span>
+                                    <ExternalLink className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--accent))]" />
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+        </article>
     )
 }

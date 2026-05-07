@@ -3,17 +3,18 @@ import { GitHubService, GitHubRepo } from '@/services/github'
 import { Metadata } from 'next'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { ItemList, WithContext } from 'schema-dts'
+import { projects as proofProjects } from '@/data/war-mode-projects'
 
 // ISR: Revalidate every hour
 export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
-        title: 'Portfolio | Msah Ambooka',
-        description: 'Explore featured projects in MLOps, AI, and Cloud Engineering. From Kubernetes clusters to LLM agents, view the code behind the systems.',
+        title: 'Portfolio',
+        description: 'Featured software engineering, business systems, payment integration, IT infrastructure, and applied AI/ML projects by Msah Ambooka.',
         openGraph: {
             title: 'Portfolio | Msah Ambooka',
-            description: 'Explore featured projects in MLOps, AI, and Cloud Engineering.',
+            description: 'Proof-first project work across business systems, payments, IT infrastructure, and applied AI/ML.',
             images: ['/og-image.png'], // Ensure fallback consistency
         }
     }
@@ -53,6 +54,9 @@ interface Project {
 
 export default async function PortfolioPage() {
     let initialProjects: Project[] = []
+    const featuredProjects = proofProjects
+        .filter(project => project.featured)
+        .sort((a, b) => a.displayOrder - b.displayOrder)
 
     try {
         const githubService = new GitHubService(githubConfig.token)
@@ -87,12 +91,23 @@ export default async function PortfolioPage() {
         console.error('Failed to fetch projects server-side:', error)
     }
 
-    const itemListSchema: WithContext<ItemList> = {
+    const itemListSchema = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        itemListElement: initialProjects.map((project, index) => ({
+        itemListElement: [
+            ...featuredProjects.map((project, index) => ({
+                '@type': 'ListItem',
+                position: index + 1,
+                item: {
+                    '@type': 'CreativeWork',
+                    name: project.title,
+                    description: project.oneLine,
+                    url: `https://ambooka.dev${project.proof.caseStudy || '/portfolio'}`
+                }
+            })),
+            ...initialProjects.map((project, index) => ({
             '@type': 'ListItem',
-            position: index + 1,
+            position: featuredProjects.length + index + 1,
             item: {
                 '@type': 'SoftwareSourceCode',
                 name: project.title,
@@ -101,12 +116,13 @@ export default async function PortfolioPage() {
                 programmingLanguage: project.language
             }
         }))
-    }
+        ]
+    } as unknown as WithContext<ItemList>
 
     return (
         <>
             <JsonLd schema={itemListSchema} />
-            <Portfolio isActive={true} github={githubConfig} initialProjects={initialProjects} />
+            <Portfolio isActive={true} github={githubConfig} initialProjects={initialProjects} featuredProjects={featuredProjects} />
         </>
     )
 }

@@ -22,6 +22,7 @@ export default function StaticNoise({
     const [isActive, setIsActive] = useState(false);
     const [mounted, setMounted] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const cleanupRef = useRef<(() => void) | null>(null);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -72,6 +73,9 @@ export default function StaticNoise({
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        cleanupRef.current?.();
+        cleanupRef.current = null;
+
         let animationFrameId: number;
 
         const resizeCanvas = () => {
@@ -107,7 +111,7 @@ export default function StaticNoise({
 
         loop();
 
-        (canvas as any)._cleanup = () => {
+        cleanupRef.current = () => {
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
@@ -116,9 +120,8 @@ export default function StaticNoise({
     // Cleanup effect
     useEffect(() => {
         return () => {
-            if (canvasRef.current && (canvasRef.current as any)._cleanup) {
-                (canvasRef.current as any)._cleanup();
-            }
+            cleanupRef.current?.();
+            cleanupRef.current = null;
         }
     }, []);
 

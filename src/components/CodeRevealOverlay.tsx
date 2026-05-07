@@ -1,59 +1,129 @@
-/**
- * X-Ray Code Inspector - Premium Animation Effects
- * Enhanced with particle trails, scan lines, and spring physics
- */
-
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
 
-interface CharacterInfo {
-  char: string
-  lineIndex: number
-  columnIndex: number
-  element: HTMLElement
-  textNode: Text | null
-}
-
-interface CaretPosition {
-  offsetNode: Node
-  offset: number
-}
-
-declare global {
-  interface Document {
-    caretPositionFromPoint(x: number, y: number): CaretPosition | null
-  }
-}
-
-interface Token {
-  text: string
-  type: 'tag' | 'attr' | 'string' | 'comment' | 'text' | 'keyword'
-}
-
-interface Particle {
+type PointerState = {
   x: number
   y: number
-  vx: number
-  vy: number
-  life: number
-  maxLife: number
-  size: number
-  color: string
+  target: HTMLElement | null
+}
+
+type TokenType = 'bracket' | 'tag' | 'attr' | 'string' | 'text'
+
+type Token = {
+  text: string
+  type: TokenType
+}
+
+const PANEL_WIDTH = 360
+const PANEL_HEIGHT = 188
+const PANEL_PADDING = 16
+const LINE_HEIGHT = 18
+const MAX_LINES = 7
+const MAX_LINE_CHARS = 62
+
+const IGNORED_TAGS = new Set([
+  'HTML',
+  'BODY',
+  'SCRIPT',
+  'STYLE',
+  'CANVAS',
+  'SVG',
+  'PATH',
+])
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value))
+}
+
+function isInspectableElement(element: HTMLElement | null) {
+  if (!element) return false
+  if (IGNORED_TAGS.has(element.tagName)) return false
+  if (element.closest('[data-code-reveal-ignore="true"]')) return false
+
+  const rect = element.getBoundingClientRect()
+  if (rect.width < 24 || rect.height < 16) return false
+
+  return true
+}
+
+function compactClassName(className: string) {
+  return className
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter(cls => !cls.includes('motion-') && !cls.startsWith('data-['))
+    .slice(0, 5)
+    .join(' ')
+}
+
+function getElementSnippet(element: HTMLElement): string[] {
+  const tag = element.tagName.toLowerCase()
+  const attrs: string[] = []
+  const id = element.getAttribute('id')
+  const href = element.getAttribute('href')
+  const ariaLabel = element.getAttribute('aria-label')
+  const role = element.getAttribute('role')
+  const className = compactClassName(element.className || '')
+  const text = (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim()
+
+  if (id) attrs.push(`id="${id}"`)
+  if (role) attrs.push(`role="${role}"`)
+  if (ariaLabel) attrs.push(`aria-label="${ariaLabel}"`)
+  if (href) attrs.push(`href="${href}"`)
+  if (className) attrs.push(`class="${className}"`)
+
+  const open = `<${tag}${attrs.length ? ` ${attrs.join(' ')}` : ''}>`
+  const close = `</${tag}>`
+  const content = text && !['input', 'img', 'br'].includes(tag)
+    ? text.slice(0, 120)
+    : ''
+
+  const lines = content
+    ? [open, `  ${content}`, close]
+    : [open.replace(/>$/, ' />')]
+
+  return lines.map(line => (
+    line.length > MAX_LINE_CHARS ? `${line.slice(0, MAX_LINE_CHARS - 1)}…` : line
+  ))
+}
+
+function tokenizeLine(line: string): Token[] {
+  const tokens: Token[] = []
+  const attrRegex = /(<\/?|\/?>)|([a-zA-Z][\w:-]*)(=)("[^"]*")|([a-zA-Z][\w:-]*)|([^<>\s=]+)/g
+  let match: RegExpExecArray | null
+
+  while ((match = attrRegex.exec(line)) !== null) {
+    const [text, bracket, attrWithValue, equals, stringValue, bareWord, other] = match
+
+    if (bracket) {
+      tokens.push({ text: bracket, type: 'bracket' })
+    } else if (attrWithValue) {
+      tokens.push({ text: attrWithValue, type: tokens.length <= 1 ? 'tag' : 'attr' })
+      tokens.push({ text: equals, type: 'bracket' })
+      tokens.push({ text: stringValue, type: 'string' })
+    } else if (bareWord) {
+      tokens.push({ text: bareWord, type: tokens.length <= 1 ? 'tag' : 'attr' })
+    } else if (other) {
+      tokens.push({ text, type: 'text' })
+    }
+
+    const nextChar = line[attrRegex.lastIndex]
+    if (nextChar === ' ') tokens.push({ text: ' ', type: 'text' })
+  }
+
+  return tokens.length ? tokens : [{ text: line, type: 'text' }]
 }
 
 export default function CodeRevealOverlay() {
-  const codeCanvasRef = useRef<HTMLCanvasElement>(null)
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
-  const [hoveredElement, setHoveredElement] = useState<HTMLElement | null>(null)
-  const [currentChar, setCurrentChar] = useState<CharacterInfo | null>(null)
-  const [isEnabled, setIsEnabled] = useState(true)
-
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const pointerRef = useRef<PointerState>({ x: -1000, y: -1000, target: null })
+  const frameRef = useRef<number | null>(null)
+  const opacityRef = useRef(0)
+  const [isEnabled, setIsEnabled] = useState(false)
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Alt + X to toggle
-      if (e.altKey && e.key.toLowerCase() === 'x') {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey && event.key.toLowerCase() === 'x') {
         setIsEnabled(prev => !prev)
       }
     }
@@ -63,851 +133,190 @@ export default function CodeRevealOverlay() {
   }, [])
 
   useEffect(() => {
-    const canvas = codeCanvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current
+    if (!canvas || !isEnabled) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // If disabled, clear canvas and stop
-    if (!isEnabled) {
+    const isFinePointer = window.matchMedia('(pointer: fine)').matches
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (!isFinePointer || prefersReducedMotion) {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       return
     }
 
-    // Sparkle particle system for magical effect
-    const MAX_SPARKLES = 50
-    const sparkles: Particle[] = []
-
-    // Holographic ring rotation
-    let holoAngle = 0
-
-    // Spring physics for smoother movement
-    const springState = {
-      targetX: 0,
-      currentX: 0,
-      targetY: 0,
-      currentY: 0,
-      targetRadius: 0,
-      currentRadius: 0,
-      velocityX: 0,
-      velocityY: 0,
-      velocityRadius: 0
-    }
-
-    // Scroll state for code position
-    const scrollState = {
-      targetX: 0,
-      currentX: 0,
-      targetY: 0,
-      currentY: 0,
-      velocityX: 0,
-      velocityY: 0
-    }
-
-    // Transition state for smooth code changes
-    const transitionState = {
-      isTransitioning: false,
-      progress: 0,
-      duration: 300, // ms
-      startTime: 0,
-      previousCode: null as LineData[] | null,
-      newCode: null as LineData[] | null
-    }
-
-    let currentMouseX = -1000
-    let currentMouseY = -1000
-    let currentHovered: HTMLElement | null = null
-    let currentCharInfo: CharacterInfo | null = null
-    let scanLineOffset = 0
-
-    // Cache for the code string to avoid expensive re-parsing
-    let cachedCode: string | null = null
-    let lastHovered: HTMLElement | null = null
-    let lastCharInfo: CharacterInfo | null = null
-
-    const MAX_RADIUS = 200
-    const SPRING_STIFFNESS = 0.15
-    const SPRING_DAMPING = 0.85
-
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = Math.floor(window.innerWidth * dpr)
+      canvas.height = Math.floor(window.innerHeight * dpr)
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
 
-    // Enhanced easing functions
-    const easeInOutCubic = (t: number): number => {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-    }
-
-    const easeOutElastic = (t: number): number => {
-      const c4 = (2 * Math.PI) / 3
-      return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1
-    }
-
-    // Spring physics for natural motion
-    const applySpring = (current: number, target: number, velocity: number): { value: number, velocity: number } => {
-      const force = (target - current) * SPRING_STIFFNESS
-      const damping = velocity * SPRING_DAMPING
-      const acceleration = force - damping
-
-      const newVelocity = velocity + acceleration
-      const newValue = current + newVelocity
-
-      return { value: newValue, velocity: newVelocity }
-    }
-
-    // Enhanced lerp with velocity
-    const smoothLerp = (start: number, end: number, velocity: number, factor: number = 0.2): { value: number, velocity: number } => {
-      const distance = end - start
-      const speedFactor = Math.min(1, Math.abs(distance) / 500)
-      const adjustedFactor = factor * (1 - speedFactor * 0.25)
-
-      const newValue = start + distance * adjustedFactor
-      const newVelocity = distance * adjustedFactor
-
-      return { value: newValue, velocity: newVelocity }
-    }
-
-    // Get character at specific position using browser APIs
-    const getCharacterAtPoint = (x: number, y: number): CharacterInfo | null => {
-      try {
-        let range: Range | null = null
-
-        if (document.caretRangeFromPoint) {
-          range = document.caretRangeFromPoint(x, y)
-        } else if (document.caretPositionFromPoint) {
-          const position = document.caretPositionFromPoint(x, y)
-          if (position) {
-            range = document.createRange()
-            range.setStart(position.offsetNode, position.offset)
-          }
-        }
-
-        if (!range) return null
-
-        const node = range.startContainer
-        const offset = range.startOffset
-
-        if (node.nodeType !== Node.TEXT_NODE) return null
-
-        const textNode = node as Text
-        const text = textNode.textContent || ''
-
-        if (offset >= text.length) return null
-
-        const char = text[offset] || ''
-        const element = textNode.parentElement
-        if (!element) return null
-
-        const elementText = element.textContent || ''
-        const beforeText = elementText.substring(0, elementText.indexOf(text) + offset)
-        const lines = beforeText.split('\n')
-        const lineIndex = lines.length - 1
-        const columnIndex = lines[lines.length - 1].length
-
-        return { char, lineIndex, columnIndex, element, textNode }
-      } catch (e) {
-        return null
+    const getPanelPosition = (x: number, y: number) => {
+      const side = x + PANEL_WIDTH + 28 <= window.innerWidth ? 22 : -PANEL_WIDTH - 22
+      return {
+        x: clamp(x + side, 14, window.innerWidth - PANEL_WIDTH - 14),
+        y: clamp(y - 44, 14, window.innerHeight - PANEL_HEIGHT - 14),
       }
     }
 
-    // Tokenize and format HTML with syntax highlighting
-    interface LineData {
-      lineNumber: number
-      tokens: Token[]
-      isHighlighted: boolean
+    const drawRoundedRect = (x: number, y: number, width: number, height: number, radius: number) => {
+      ctx.beginPath()
+      ctx.moveTo(x + radius, y)
+      ctx.lineTo(x + width - radius, y)
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
+      ctx.lineTo(x + width, y + height - radius)
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
+      ctx.lineTo(x + radius, y + height)
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
+      ctx.lineTo(x, y + radius)
+      ctx.quadraticCurveTo(x, y, x + radius, y)
+      ctx.closePath()
     }
 
-    const tokenizeAndFormatHTML = (html: string, highlightLine: number = -1): LineData[] => {
-      let indent = 0
-      const tab = '  '
-      const lines: LineData[] = []
-      let currentLineNum = 1
+    const colorForToken = (type: TokenType, dark: boolean) => {
+      if (dark) {
+        return {
+          bracket: 'rgba(148, 163, 184, 0.72)',
+          tag: 'rgba(94, 234, 212, 0.94)',
+          attr: 'rgba(191, 219, 254, 0.9)',
+          string: 'rgba(253, 224, 71, 0.88)',
+          text: 'rgba(226, 232, 240, 0.76)',
+        }[type]
+      }
 
-      html = html.replace(/>\s+</g, '><').trim()
-      const rawTokens = html.split(/(<[^>]+>)/g).filter(Boolean)
-
-      rawTokens.forEach(token => {
-        const lineTokens: Token[] = []
-
-        // Indentation
-        if (token.match(/^<\//)) {
-          indent = Math.max(0, indent - 1)
-        }
-
-        // Add indentation token
-        if (indent > 0) {
-          lineTokens.push({ text: tab.repeat(indent), type: 'text' })
-        }
-
-        // Tokenize the tag/content
-        if (token.startsWith('<')) {
-          // It's a tag
-          const tagMatch = token.match(/^<(\/?)(\w+)([\s\S]*?)(\/?)>$/)
-          if (tagMatch) {
-            const [, slash1, tagName, attrs, slash2] = tagMatch
-
-            lineTokens.push({ text: '<' + slash1, type: 'tag' })
-            lineTokens.push({ text: tagName, type: 'keyword' })
-
-            // Parse attributes
-            if (attrs) {
-              const attrRegex = /(\s+)([\w-]+)(?:(=)("[^"]*"|'[^']*'))?/g
-              let match
-              let lastIndex = 0
-
-              while ((match = attrRegex.exec(attrs)) !== null) {
-                const [full, space, name, eq, value] = match
-                lineTokens.push({ text: space, type: 'text' })
-                lineTokens.push({ text: name, type: 'attr' })
-                if (eq) lineTokens.push({ text: eq, type: 'text' })
-                if (value) lineTokens.push({ text: value, type: 'string' })
-                lastIndex = match.index + full.length
-              }
-            }
-
-            lineTokens.push({ text: slash2 + '>', type: 'tag' })
-          } else {
-            // Fallback for complex tags
-            lineTokens.push({ text: token, type: 'tag' })
-          }
-
-          if (!token.match(/^<\//) && !token.match(/\/>$/) && !token.match(/^<br/)) {
-            indent++
-          }
-        } else {
-          // It's text content
-          const text = token.trim()
-          if (text) {
-            lineTokens.push({ text: text, type: 'text' })
-          }
-        }
-
-        if (lineTokens.length > 0 && !(lineTokens.length === 1 && lineTokens[0].text.trim() === '')) {
-          // Check if this line corresponds to the highlighted character's line
-          // This is an approximation since we're re-formatting. 
-          // Ideally we map original lines to formatted lines, but for now we rely on the passed index.
-          // However, the previous logic passed highlightLine index based on formatted output.
-          // We'll calculate isHighlighted in the draw loop or pass the correct index.
-          // Actually, let's just push the line.
-          lines.push({
-            lineNumber: currentLineNum++,
-            tokens: lineTokens,
-            isHighlighted: false // Will be set later or ignored
-          })
-        }
-      })
-
-      return lines
+      return {
+        bracket: 'rgba(71, 85, 105, 0.68)',
+        tag: 'rgba(15, 118, 110, 0.95)',
+        attr: 'rgba(67, 56, 202, 0.86)',
+        string: 'rgba(146, 64, 14, 0.86)',
+        text: 'rgba(30, 41, 59, 0.72)',
+      }[type]
     }
 
-    // Cache for tokens
-    let cachedLines: LineData[] | null = null
+    const draw = () => {
+      const { x, y, target } = pointerRef.current
+      const shouldShow = isInspectableElement(target) && x >= 0 && y >= 0
+      const opacityTarget = shouldShow ? 1 : 0
+      opacityRef.current += (opacityTarget - opacityRef.current) * 0.18
 
-    const getElementCode = (element: HTMLElement, charInfo: CharacterInfo | null = null): LineData[] => {
-      if (element === lastHovered && charInfo === lastCharInfo && cachedLines) {
-        return cachedLines
-      }
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
-      const clone = element.cloneNode(true) as HTMLElement
-      // We don't pass highlightLine here anymore, we determine it by char index mapping if possible
-      // But since we reformatted, the line index from charInfo (which is based on original DOM text) 
-      // might not match formatted lines 1:1. 
-      // For now, let's just format it.
-      const lines = tokenizeAndFormatHTML(clone.outerHTML)
+      if (opacityRef.current > 0.01 && target) {
+        const alpha = opacityRef.current
+        const dark = document.body.getAttribute('data-theme')?.includes('dark') ?? false
+        const rect = target.getBoundingClientRect()
+        const panel = getPanelPosition(x, y)
+        const lines = getElementSnippet(target).slice(0, MAX_LINES)
 
-      // Attempt to highlight the line corresponding to the cursor
-      // This is tricky with reformatting. The previous implementation had a simplified mapping.
-      // Let's rely on the charInfo.lineIndex if it matches our formatted lines count, 
-      // or just highlight the line under the cursor position in the canvas.
-
-      if (charInfo && charInfo.lineIndex < lines.length) {
-        // This is a rough approximation. 
-        // A better way is to highlight based on mouse Y relative to code scroll.
-      }
-
-      lastHovered = element
-      lastCharInfo = charInfo
-      cachedLines = lines
-      return lines
-    }
-
-
-
-    let lastFrameTime = Date.now()
-
-    const drawCodeLayer = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      // Calculate delta time for smooth animations
-      const currentTime = Date.now()
-      const deltaTime = Math.min((currentTime - lastFrameTime) / 1000, 0.1) // Cap at 100ms
-      lastFrameTime = currentTime
-
-      // Update scan line animation
-      scanLineOffset = (scanLineOffset + 2) % 400
-
-      // Update holographic ring rotation
-      holoAngle += 0.008
-
-      // Spring physics for radius
-      const targetR = (isEnabled && currentHovered) ? MAX_RADIUS : 0
-      const radiusSpring = applySpring(springState.currentRadius, targetR, springState.velocityRadius)
-      springState.currentRadius = radiusSpring.value
-      springState.velocityRadius = radiusSpring.velocity
-
-      if (springState.currentRadius < 1 || !currentHovered || currentMouseX < 0) return
-
-      const rect = currentHovered.getBoundingClientRect()
-      const lines = getElementCode(currentHovered, currentCharInfo)
-
-      // Update transition progress
-      if (transitionState.isTransitioning) {
-        const elapsed = Date.now() - transitionState.startTime
-        transitionState.progress = Math.min(elapsed / transitionState.duration, 1)
-
-        // Use easeOutCubic for smooth transition
-        const eased = 1 - Math.pow(1 - transitionState.progress, 3)
-
-        if (transitionState.progress >= 1) {
-          transitionState.isTransitioning = false
-          transitionState.previousCode = null
-        }
-      }
-
-      const circleX = currentMouseX
-      const circleY = currentMouseY
-
-      // SAVE CONTEXT
-      ctx.save()
-
-      // Breathing animation for the circle
-      const breathe = (Math.sin(Date.now() / 1200) + 1) / 2
-      const breatheScale = 1 + (breathe * 0.03) // 3% breathing effect
-
-      // Realistic X-ray intensity flicker (like medical imaging)
-      const flicker = 0.92 + (Math.random() * 0.08) // Random flicker between 92-100%
-      const xrayIntensity = flicker * (0.95 + breathe * 0.05)
-
-      // Character position indicator with pulsing glow
-      const pulse = (Math.sin(Date.now() / 350) + 1) / 2
-      const secondaryPulse = (Math.sin(Date.now() / 500 + Math.PI / 2) + 1) / 2
-
-      // Check current theme
-      const isDark = document.documentElement.getAttribute('data-theme')?.includes('dark') || false
-
-      // Spawn sparkle particles around the circle edge
-      if (currentHovered && springState.currentRadius > 20 && sparkles.length < MAX_SPARKLES && Math.random() < 0.4) {
-        const angle = Math.random() * Math.PI * 2
-        const dist = springState.currentRadius * (0.85 + Math.random() * 0.3)
-        sparkles.push({
-          x: circleX + Math.cos(angle) * dist,
-          y: circleY + Math.sin(angle) * dist,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5 - 0.3,
-          life: 1,
-          maxLife: 1,
-          size: 1 + Math.random() * 2.5,
-          color: isDark ? 'rgba(201, 169, 97,' : 'rgba(20, 184, 166,'
-        })
-      }
-
-      // === SPARKLE PARTICLES ===
-      for (let i = sparkles.length - 1; i >= 0; i--) {
-        const p = sparkles[i]
-        p.x += p.vx
-        p.y += p.vy
-        p.life -= 0.012
-        if (p.life <= 0) { sparkles.splice(i, 1); continue }
-        const alpha = p.life * 0.7
         ctx.save()
         ctx.globalAlpha = alpha
-        // Diamond sparkle shape
-        ctx.fillStyle = p.color + alpha + ')'
-        ctx.shadowBlur = 6
-        ctx.shadowColor = p.color + '0.5)'
+
+        // Element outline
+        ctx.strokeStyle = dark ? 'rgba(94, 234, 212, 0.52)' : 'rgba(15, 118, 110, 0.48)'
+        ctx.lineWidth = 1
+        drawRoundedRect(rect.left - 4, rect.top - 4, rect.width + 8, rect.height + 8, 10)
+        ctx.stroke()
+
+        // Thin pointer connector
+        ctx.strokeStyle = dark ? 'rgba(148, 163, 184, 0.28)' : 'rgba(71, 85, 105, 0.22)'
         ctx.beginPath()
-        ctx.moveTo(p.x, p.y - p.size)
-        ctx.lineTo(p.x + p.size * 0.6, p.y)
-        ctx.lineTo(p.x, p.y + p.size)
-        ctx.lineTo(p.x - p.size * 0.6, p.y)
-        ctx.closePath()
+        ctx.moveTo(x, y)
+        ctx.lineTo(panel.x + (panel.x > x ? 0 : PANEL_WIDTH), panel.y + 44)
+        ctx.stroke()
+
+        // Panel shadow and frame
+        ctx.shadowColor = 'rgba(15, 23, 42, 0.18)'
+        ctx.shadowBlur = 22
+        ctx.shadowOffsetY = 12
+        ctx.fillStyle = dark ? 'rgba(15, 23, 42, 0.88)' : 'rgba(255, 255, 255, 0.91)'
+        drawRoundedRect(panel.x, panel.y, PANEL_WIDTH, PANEL_HEIGHT, 14)
         ctx.fill()
+        ctx.shadowBlur = 0
+        ctx.shadowOffsetY = 0
+        ctx.strokeStyle = dark ? 'rgba(148, 163, 184, 0.2)' : 'rgba(15, 118, 110, 0.14)'
+        ctx.stroke()
+
+        // Header rule
+        ctx.fillStyle = dark ? 'rgba(94, 234, 212, 0.86)' : 'rgba(15, 118, 110, 0.82)'
+        ctx.font = '700 11px ui-sans-serif, system-ui, sans-serif'
+        ctx.letterSpacing = '0px'
+        ctx.fillText(target.tagName.toLowerCase(), panel.x + PANEL_PADDING, panel.y + 24)
+
+        ctx.strokeStyle = dark ? 'rgba(148, 163, 184, 0.14)' : 'rgba(15, 118, 110, 0.1)'
+        ctx.beginPath()
+        ctx.moveTo(panel.x + PANEL_PADDING, panel.y + 38)
+        ctx.lineTo(panel.x + PANEL_WIDTH - PANEL_PADDING, panel.y + 38)
+        ctx.stroke()
+
+        ctx.font = '500 12px "Geist Mono", "JetBrains Mono", Consolas, monospace'
+        lines.forEach((line, index) => {
+          const yPos = panel.y + 62 + index * LINE_HEIGHT
+          let xPos = panel.x + PANEL_PADDING
+
+          ctx.fillStyle = dark ? 'rgba(148, 163, 184, 0.34)' : 'rgba(71, 85, 105, 0.32)'
+          ctx.textAlign = 'right'
+          ctx.fillText(String(index + 1), xPos + 13, yPos)
+          ctx.textAlign = 'left'
+
+          xPos += 28
+          for (const token of tokenizeLine(line)) {
+            ctx.fillStyle = colorForToken(token.type, dark)
+            ctx.fillText(token.text, xPos, yPos)
+            xPos += ctx.measureText(token.text).width
+          }
+        })
+
         ctx.restore()
       }
 
-      // === HOLOGRAPHIC ROTATING RING ===
-      ctx.save()
-      const ringRadius = springState.currentRadius * breatheScale * 1.05
-      const holoGrad = ctx.createConicGradient(holoAngle, circleX, circleY)
-      holoGrad.addColorStop(0, isDark ? 'rgba(201, 169, 97, 0.3)' : 'rgba(20, 184, 166, 0.25)')
-      holoGrad.addColorStop(0.2, isDark ? 'rgba(139, 233, 253, 0.2)' : 'rgba(124, 58, 237, 0.2)')
-      holoGrad.addColorStop(0.4, isDark ? 'rgba(255, 121, 198, 0.25)' : 'rgba(20, 184, 166, 0.3)')
-      holoGrad.addColorStop(0.6, isDark ? 'rgba(80, 250, 123, 0.2)' : 'rgba(8, 145, 178, 0.2)')
-      holoGrad.addColorStop(0.8, isDark ? 'rgba(241, 250, 140, 0.25)' : 'rgba(124, 58, 237, 0.25)')
-      holoGrad.addColorStop(1, isDark ? 'rgba(201, 169, 97, 0.3)' : 'rgba(20, 184, 166, 0.25)')
-      ctx.strokeStyle = holoGrad
-      ctx.lineWidth = 2
-      ctx.shadowBlur = 12
-      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.4)' : 'rgba(20, 184, 166, 0.35)'
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, ringRadius, 0, Math.PI * 2)
-      ctx.stroke()
-      // Second thinner inner ring
-      ctx.lineWidth = 0.8
-      ctx.globalAlpha = 0.5
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, ringRadius - 6, 0, Math.PI * 2)
-      ctx.stroke()
-      ctx.restore()
-
-      // Outer glow around entire reveal area for depth
-      ctx.save()
-      ctx.globalAlpha = 0.35 * breathe
-      ctx.shadowBlur = 60
-      ctx.shadowColor = isDark ? 'rgba(201, 169, 97, 0.7)' : 'rgba(20, 184, 166, 0.6)'
-      ctx.strokeStyle = isDark ? 'rgba(201, 169, 97, 0.25)' : 'rgba(20, 184, 166, 0.2)'
-      ctx.lineWidth = 1.5
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, springState.currentRadius * breatheScale, 0, Math.PI * 2)
-      ctx.stroke()
-      ctx.restore()
-
-      if (currentCharInfo) {
-        const charPulse = easeInOutCubic(secondaryPulse)
-        // Sync character box with breathing
-        const boxScale = 1 + (breathe * 0.15)
-
-        // Outer glow ring — accent-colored
-        ctx.shadowBlur = 12 + (charPulse * 8)
-        ctx.shadowColor = isDark ? '#C9A961' : '#14B8A6'
-        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.3 + (charPulse * 0.2)})` : `rgba(20, 184, 166, ${0.4 + (charPulse * 0.3)})`
-        ctx.lineWidth = 3
-        const outerSize = 6 * boxScale
-        ctx.strokeRect(circleX - outerSize, circleY - outerSize, outerSize * 2, outerSize * 2)
-
-        // Inner indicator
-        ctx.shadowBlur = 6
-        ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${0.6 + (charPulse * 0.3)})` : `rgba(20, 184, 166, ${0.7 + (charPulse * 0.3)})`
-        ctx.lineWidth = 2
-        const innerSize = 3 * boxScale
-        ctx.strokeRect(circleX - innerSize, circleY - innerSize, innerSize * 2, innerSize * 2)
-      }
-
-      // Draw code with ultra-dense x-ray aesthetic
-      ctx.font = '11px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
-      ctx.textAlign = 'left'
-      ctx.shadowBlur = 0
-
-      const lineHeight = 14
-      const totalTextHeight = lines.length * lineHeight
-
-      // Calculate max line width
-      let maxLineWidth = 0
-      lines.forEach(line => {
-        const text = line.tokens.map(t => t.text).join('')
-        const width = ctx.measureText(text).width
-        if (width > maxLineWidth) maxLineWidth = width
-      })
-
-      // Target Scroll Calculation
-      const relativeX = Math.max(0, Math.min(1, (currentMouseX - rect.left) / rect.width))
-      const relativeY = Math.max(0, Math.min(1, (currentMouseY - rect.top) / rect.height))
-
-      const diameter = springState.currentRadius * 2
-
-      // Horizontal Target
-      if (maxLineWidth <= diameter - 60) {
-        scrollState.targetX = circleX - (maxLineWidth / 2)
-      } else {
-        const maxScrollX = maxLineWidth - diameter + 100
-        const scrollOffsetX = relativeX * maxScrollX
-        scrollState.targetX = (circleX - springState.currentRadius) - scrollOffsetX + 50
-      }
-
-      // Vertical Target
-      if (totalTextHeight <= diameter) {
-        scrollState.targetY = circleY - (totalTextHeight / 2) + (lineHeight * 0.7)
-      } else {
-        const maxScrollY = totalTextHeight - diameter
-        const scrollOffsetY = relativeY * maxScrollY
-        scrollState.targetY = (circleY - springState.currentRadius) - scrollOffsetY + 30
-      }
-
-      // Apply cinematic slow-motion scroll
-      const xResult = smoothLerp(scrollState.currentX, scrollState.targetX, scrollState.velocityX, 0.12)
-      const yResult = smoothLerp(scrollState.currentY, scrollState.targetY, scrollState.velocityY, 0.12)
-
-      scrollState.currentX = xResult.value
-      scrollState.velocityX = xResult.velocity
-      scrollState.currentY = yResult.value
-      scrollState.velocityY = yResult.velocity
-
-      const startX = scrollState.currentX
-      const startY = scrollState.currentY
-
-      // REALISTIC X-RAY SCAN EFFECT
-      ctx.save()
-
-      // Apply subtle zoom like looking through x-ray lens
-      ctx.translate(circleX, circleY)
-      ctx.scale(1.08, 1.08)
-      ctx.translate(-circleX, -circleY)
-
-      // Draw code lines with syntax highlighting
-      lines.forEach((line, i) => {
-        const lineY = startY + i * lineHeight
-
-        if (lineY > circleY - springState.currentRadius - 40 && lineY < circleY + springState.currentRadius + 40) {
-          const distY = Math.abs(lineY - circleY)
-          const fadeFactor = Math.max(0, 1 - Math.pow(distY / springState.currentRadius, 1.3))
-          const opacity = 0.95 * fadeFactor * xrayIntensity // Apply x-ray flicker
-
-          if (opacity > 0.02) {
-            // Line Numbers Gutter (ultra-compact)
-            const gutterWidth = 24
-            const lineNumX = startX - gutterWidth
-
-            ctx.fillStyle = isDark ? `rgba(200, 200, 200, ${opacity * 0.2})` : `rgba(60, 60, 60, ${opacity * 0.32})`
-            ctx.textAlign = 'right'
-            ctx.font = '9px "Fira Code", monospace'
-            ctx.fillText(line.lineNumber.toString(), lineNumX - 2, lineY)
-
-            // Draw Gutter Separator (very subtle)
-            ctx.strokeStyle = `rgba(200, 200, 200, ${opacity * 0.08})`
-            ctx.beginPath()
-            ctx.moveTo(lineNumX, lineY - 12)
-            ctx.lineTo(lineNumX, lineY + 4)
-            ctx.stroke()
-
-            // Highlight current line background (very subtle)
-            if (line.lineNumber === (currentCharInfo?.lineIndex || -1) + 1) {
-              const highlightPulse = (Math.sin(Date.now() / 300) + 1) / 2
-              ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.06 + highlightPulse * 0.03})`
-              ctx.fillRect(startX - gutterWidth, lineY - 13, maxLineWidth + gutterWidth + 20, lineHeight)
-            }
-
-            // Draw Tokens (ultra-dense x-ray style)
-            let currentX = startX
-            ctx.textAlign = 'left'
-            ctx.font = '11px "Fira Code", "JetBrains Mono", Consolas, Monaco, monospace'
-            const MAX_TEXT_WIDTH = 600 // Wider for dense multi-line content
-
-            // Calculate transition opacity
-            const transitionOpacity = transitionState.isTransitioning
-              ? (1 - Math.pow(1 - transitionState.progress, 3)) // easeOutCubic
-              : 1
-
-            // Draw old code fading out during transition
-            if (transitionState.isTransitioning && transitionState.previousCode && i < transitionState.previousCode.length) {
-              const oldLine = transitionState.previousCode[i]
-              let oldX = startX
-              const fadeOutOpacity = 1 - transitionOpacity
-
-              for (const token of oldLine.tokens) {
-                // Check for truncation
-                if (oldX - startX > MAX_TEXT_WIDTH) {
-                  ctx.fillStyle = 'rgba(248, 248, 242, 0.3)'
-                  ctx.globalAlpha = opacity * fadeOutOpacity
-                  ctx.fillText('...', oldX, lineY)
-                  ctx.globalAlpha = 1.0
-                  break
-                }
-
-                // Theme-aware colors — brighter for visibility
-                let color = isDark ? 'rgba(248, 248, 242, 0.5)' : 'rgba(60, 60, 60, 0.6)'
-                switch (token.type) {
-                  case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.55)' : 'rgba(20, 184, 166, 0.7)'; break;
-                  case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.5)' : 'rgba(45, 95, 63, 0.65)'; break;
-                  case 'string': color = isDark ? 'rgba(241, 250, 140, 0.5)' : 'rgba(184, 134, 11, 0.65)'; break;
-                  case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.4)' : 'rgba(98, 114, 164, 0.55)'; break;
-                  case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.55)' : 'rgba(20, 184, 166, 0.75)'; break;
-                  case 'text': color = isDark ? 'rgba(248, 248, 242, 0.45)' : 'rgba(60, 60, 60, 0.58)'; break;
-                }
-
-                ctx.fillStyle = color
-                ctx.globalAlpha = opacity * fadeOutOpacity
-                ctx.fillText(token.text, oldX, lineY)
-                oldX += ctx.measureText(token.text).width
-                ctx.globalAlpha = 1.0
-              }
-            }
-
-            // Draw new code
-            for (const token of line.tokens) {
-              // Check for truncation
-              if (currentX - startX > MAX_TEXT_WIDTH) {
-                ctx.fillStyle = 'rgba(248, 248, 242, 0.3)'
-                const finalOpacity = transitionState.isTransitioning ? opacity * transitionOpacity : opacity
-                ctx.globalAlpha = finalOpacity
-                ctx.fillText('...', currentX, lineY)
-                ctx.globalAlpha = 1.0
-                break
-              }
-
-              // Theme-aware colors — brighter for visibility
-              let color = isDark ? 'rgba(248, 248, 242, 0.5)' : 'rgba(60, 60, 60, 0.6)'
-
-              switch (token.type) {
-                case 'tag': color = isDark ? 'rgba(255, 121, 198, 0.55)' : 'rgba(20, 184, 166, 0.7)'; break;
-                case 'attr': color = isDark ? 'rgba(80, 250, 123, 0.5)' : 'rgba(45, 95, 63, 0.65)'; break;
-                case 'string': color = isDark ? 'rgba(241, 250, 140, 0.5)' : 'rgba(184, 134, 11, 0.65)'; break;
-                case 'comment': color = isDark ? 'rgba(98, 114, 164, 0.4)' : 'rgba(98, 114, 164, 0.55)'; break;
-                case 'keyword': color = isDark ? 'rgba(139, 233, 253, 0.55)' : 'rgba(20, 184, 166, 0.75)'; break;
-                case 'text': color = isDark ? 'rgba(248, 248, 242, 0.45)' : 'rgba(60, 60, 60, 0.58)'; break;
-              }
-
-              ctx.fillStyle = color
-              const finalOpacity = transitionState.isTransitioning ? opacity * transitionOpacity : opacity
-              ctx.globalAlpha = finalOpacity
-              ctx.fillText(token.text, currentX, lineY)
-              currentX += ctx.measureText(token.text).width
-              ctx.globalAlpha = 1.0
-            }
-
-            ctx.shadowBlur = 0
-          }
-        }
-      })
-      ctx.restore() // End x-ray scan effect
-
-      // REALISTIC X-RAY SCAN LINES (moving)
-      ctx.save()
-      ctx.globalCompositeOperation = 'source-over'
-
-      // Horizontal scan lines
-      const scanSpeed = (Date.now() / 30) % (springState.currentRadius * 2)
-      for (let i = -springState.currentRadius; i < springState.currentRadius; i += 3) {
-        const lineY = circleY + i + scanSpeed - springState.currentRadius
-        const distFromCenter = Math.abs(lineY - circleY)
-        const scanOpacity = Math.max(0, 1 - distFromCenter / springState.currentRadius) * 0.12
-
-        if (scanOpacity > 0.01) {
-          ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${scanOpacity})` : `rgba(20, 184, 166, ${scanOpacity})`
-          ctx.lineWidth = 0.5
-          ctx.beginPath()
-          ctx.moveTo(circleX - springState.currentRadius, lineY)
-          ctx.lineTo(circleX + springState.currentRadius, lineY)
-          ctx.stroke()
-        }
-      }
-
-      // Vertical sweep line (dramatic x-ray scanner)
-      const sweepX = circleX + Math.sin(Date.now() / 800) * springState.currentRadius * 0.8
-      const sweepOpacity = 0.15 + breathe * 0.1
-      ctx.strokeStyle = isDark ? `rgba(201, 169, 97, ${sweepOpacity})` : `rgba(20, 184, 166, ${sweepOpacity})`
-      ctx.lineWidth = 1
-      ctx.beginPath()
-      ctx.moveTo(sweepX, circleY - springState.currentRadius)
-      ctx.lineTo(sweepX, circleY + springState.currentRadius)
-      ctx.stroke()
-
-      // X-ray noise/grain effect
-      const noiseIntensity = 0.03 * breathe
-      for (let n = 0; n < 15; n++) {
-        const angle = Math.random() * Math.PI * 2
-        const dist = Math.random() * springState.currentRadius * 0.8
-        const noiseX = circleX + Math.cos(angle) * dist
-        const noiseY = circleY + Math.sin(angle) * dist
-
-        ctx.fillStyle = isDark
-          ? `rgba(201, 169, 97, ${Math.random() * noiseIntensity})`
-          : `rgba(20, 184, 166, ${Math.random() * noiseIntensity})`
-        ctx.fillRect(noiseX, noiseY, 1, 1)
-      }
-
-      ctx.restore()
-
-      // Ultra-smooth gradient mask with x-ray glow
-      ctx.globalCompositeOperation = 'destination-in'
-
-      // Calculate breathing radius for gradient
-      const breathingRadius = springState.currentRadius * breatheScale
-
-      // Use exponential falloff for imperceptible edges
-      const gradient = ctx.createRadialGradient(
-        circleX, circleY, breathingRadius * 0.2,  // Start fade very early
-        circleX, circleY, breathingRadius * 1.5   // Extend way beyond circle
-      )
-
-      // Many stops with exponential/squared falloff for ultra-smooth fade
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 1)')       // 100% - solid center
-      gradient.addColorStop(0.25, 'rgba(0, 0, 0, 0.98)') // 98% - barely fading
-      gradient.addColorStop(0.4, 'rgba(0, 0, 0, 0.92)')  // 92% - gentle start
-      gradient.addColorStop(0.55, 'rgba(0, 0, 0, 0.75)') // 75% - visible fade
-      gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.5)')   // 50% - half transparent
-      gradient.addColorStop(0.82, 'rgba(0, 0, 0, 0.25)') // 25% - very translucent
-      gradient.addColorStop(0.92, 'rgba(0, 0, 0, 0.08)') // 8% - barely visible
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')       // 0% - fully transparent
-
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(circleX, circleY, breathingRadius * 1.6, 0, Math.PI * 2) // Even larger for smoothness
-      ctx.fill()
-
-      ctx.restore()
-
-
+      frameRef.current = requestAnimationFrame(draw)
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
-      currentMouseX = e.clientX
-      currentMouseY = e.clientY
-      setMousePos({ x: e.clientX, y: e.clientY })
-
-      const element = e.target as HTMLElement
-
-      const charInfo = getCharacterAtPoint(e.clientX, e.clientY)
-      if (charInfo) {
-        currentCharInfo = charInfo
-        setCurrentChar(charInfo)
-      }
-
-      if (element !== currentHovered) {
-        // Trigger transition when element changes
-        if (currentHovered && cachedLines) {
-          transitionState.previousCode = cachedLines
-          transitionState.isTransitioning = true
-          transitionState.progress = 0
-          transitionState.startTime = Date.now()
-        }
-
-        currentHovered = element
-        setHoveredElement(element)
-        cachedCode = null
-      } else if (charInfo !== currentCharInfo) {
-        cachedCode = null
+    const handlePointerMove = (event: PointerEvent) => {
+      const rawTarget = event.target instanceof HTMLElement ? event.target : null
+      const target = rawTarget?.closest('a, button, article, section, div, header, main, form, input, textarea, h1, h2, h3, p, span') as HTMLElement | null
+      pointerRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        target: isInspectableElement(target) ? target : rawTarget,
       }
     }
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0]
-        currentMouseX = touch.clientX
-        currentMouseY = touch.clientY
-        setMousePos({ x: touch.clientX, y: touch.clientY })
-
-        const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
-
-        const charInfo = getCharacterAtPoint(touch.clientX, touch.clientY)
-        if (charInfo) {
-          currentCharInfo = charInfo
-          setCurrentChar(charInfo)
-        }
-
-        if (element !== currentHovered) {
-          // Trigger transition when element changes
-          if (currentHovered && cachedLines) {
-            transitionState.previousCode = cachedLines
-            transitionState.isTransitioning = true
-            transitionState.progress = 0
-            transitionState.startTime = Date.now()
-          }
-
-          currentHovered = element
-          setHoveredElement(element)
-          cachedCode = null
-        } else if (charInfo !== currentCharInfo) {
-          cachedCode = null
-        }
-      }
+    const handlePointerLeave = () => {
+      pointerRef.current = { x: -1000, y: -1000, target: null }
     }
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const touch = e.touches[0]
-        currentMouseX = touch.clientX
-        currentMouseY = touch.clientY
-        setMousePos({ x: touch.clientX, y: touch.clientY })
-
-        const element = document.elementFromPoint(touch.clientX, touch.clientY) as HTMLElement
-        currentHovered = element
-        setHoveredElement(element)
-      }
-    }
-
-    const handleTouchEnd = () => {
-      // Keep the effect visible for a moment after touch ends
-      setTimeout(() => {
-        currentMouseX = -1000
-        currentMouseY = -1000
-        setMousePos({ x: -1000, y: -1000 })
-        currentHovered = null
-        setHoveredElement(null)
-      }, 300)
-    }
-
-    const handleScroll = () => {
-      cachedCode = null
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('touchstart', handleTouchStart, { passive: false })
-    document.addEventListener('touchmove', handleTouchMove, { passive: false })
-    document.addEventListener('touchend', handleTouchEnd)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', resizeCanvas)
 
     resizeCanvas()
-
-    let animationId: number
-    const animate = () => {
-      drawCodeLayer()
-      animationId = requestAnimationFrame(animate)
-    }
-    animate()
+    window.addEventListener('resize', resizeCanvas)
+    document.addEventListener('pointermove', handlePointerMove, { passive: true })
+    document.addEventListener('pointerleave', handlePointerLeave)
+    frameRef.current = requestAnimationFrame(draw)
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('touchstart', handleTouchStart)
-      document.removeEventListener('touchmove', handleTouchMove)
-      document.removeEventListener('touchend', handleTouchEnd)
-      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', resizeCanvas)
-      cancelAnimationFrame(animationId)
+      document.removeEventListener('pointermove', handlePointerMove)
+      document.removeEventListener('pointerleave', handlePointerLeave)
+      if (frameRef.current) cancelAnimationFrame(frameRef.current)
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
     }
   }, [isEnabled])
 
-  // Enhanced transparency with spring-based easing
-  useEffect(() => {
-    if (!isEnabled || !hoveredElement || mousePos.x < 0) return
-
-    const rect = hoveredElement.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-    const distance = Math.sqrt(
-      Math.pow(centerX - mousePos.x, 2) + Math.pow(centerY - mousePos.y, 2)
-    )
-
-    if (distance < 110) {
-      const opacityValue = Math.max(0.4, 1 - (distance / 110) * 0.6)
-      hoveredElement.style.opacity = opacityValue.toString()
-      hoveredElement.style.transition = 'opacity 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
-    }
-
-    return () => {
-      if (hoveredElement) {
-        hoveredElement.style.opacity = '1'
-        hoveredElement.style.transition = 'opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
-      }
-    }
-  }, [hoveredElement, mousePos, isEnabled, currentChar])
-
-  if (!isEnabled) {
-    return null
-  }
+  if (!isEnabled) return null
 
   return (
     <canvas
-      ref={codeCanvasRef}
+      ref={canvasRef}
+      data-code-reveal-ignore="true"
+      aria-hidden="true"
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 9998,
+        inset: 0,
+        zIndex: 80,
         pointerEvents: 'none',
       }}
     />

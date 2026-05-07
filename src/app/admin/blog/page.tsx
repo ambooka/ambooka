@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Plus, Trash2, Edit2, Eye, Calendar, FileText, CheckCircle2 } from 'lucide-react'
+import { Plus, Trash2, Edit2, Eye, Calendar, FileText, CheckCircle2, Sparkles, Loader2 } from 'lucide-react'
 
 // CoachPro Design Tokens
 const CARD_RADIUS = 20
@@ -24,13 +24,18 @@ interface BlogPost {
     title: string
     excerpt: string | null
     is_published: boolean
+    ai_generated?: boolean
+    generation_topic?: string | null
     created_at: string
 }
 
 export default function BlogManager() {
     const [posts, setPosts] = useState<BlogPost[]>([])
     const [loading, setLoading] = useState(true)
+    const [generating, setGenerating] = useState(false)
     const [showSuccess, setShowSuccess] = useState(false)
+    const [generationMessage, setGenerationMessage] = useState<string | null>(null)
+    const [generationError, setGenerationError] = useState<string | null>(null)
     const router = useRouter()
 
     useEffect(() => {
@@ -60,6 +65,42 @@ export default function BlogManager() {
         fetchPosts()
     }
 
+    const generateAIDraft = async () => {
+        setGenerating(true)
+        setGenerationMessage(null)
+        setGenerationError(null)
+
+        try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session?.access_token) {
+                throw new Error('Please sign in again before generating AI drafts.')
+            }
+
+            const response = await fetch('/api/blog/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ count: 1, publish: false }),
+            })
+
+            const result = await response.json()
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'AI draft generation failed.')
+            }
+
+            setGenerationMessage(`Generated draft: ${result.posts?.[0]?.title || 'New blog post'}`)
+            setShowSuccess(true)
+            setTimeout(() => setShowSuccess(false), 2000)
+            fetchPosts()
+        } catch (error) {
+            setGenerationError(error instanceof Error ? error.message : 'AI draft generation failed.')
+        } finally {
+            setGenerating(false)
+        }
+    }
+
     if (loading) {
         return (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
@@ -86,11 +127,11 @@ export default function BlogManager() {
             {/* Title Row */}
             <div style={{ marginBottom: GAP + 8 }}>
                 <h1 style={{ fontSize: 32, fontWeight: 700, color: '#1e293b' }}>Blog</h1>
-                <p style={{ fontSize: 14, color: '#64748b', marginTop: 4 }}>Manage blog posts ({posts.length})</p>
+                <p style={{ fontSize: 14, color: '#64748b', marginTop: 4 }}>Manage posts, generate AI drafts, and publish reviewed technical notes ({posts.length})</p>
             </div>
 
             {/* Actions Row */}
-            <div style={{ display: 'flex', gap: 12, marginBottom: GAP }}>
+            <div style={{ display: 'flex', gap: 12, marginBottom: GAP, flexWrap: 'wrap', alignItems: 'center' }}>
                 <Link href="/admin/blog/new" style={{
                     display: 'flex', alignItems: 'center', gap: 8,
                     padding: '12px 20px', borderRadius: 12,
@@ -100,7 +141,41 @@ export default function BlogManager() {
                 }}>
                     <Plus size={16} /> New Post
                 </Link>
+                <button
+                    type="button"
+                    onClick={generateAIDraft}
+                    disabled={generating}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: 8,
+                        padding: '12px 20px', borderRadius: 12,
+                        background: generating ? '#94a3b8' : 'linear-gradient(135deg, #111827, #334155)',
+                        color: 'white', fontSize: 14, fontWeight: 600, border: 'none',
+                        cursor: generating ? 'not-allowed' : 'pointer',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.25)'
+                    }}
+                >
+                    {generating ? <Loader2 size={16} style={{ animation: 'ad-spin 1s linear infinite' }} /> : <Sparkles size={16} />}
+                    {generating ? 'Generating Draft...' : 'Generate AI Draft'}
+                </button>
+                <span style={{ fontSize: 12, color: '#64748b' }}>
+                    Scheduled cadence: Mon, Wed, Fri draft generation.
+                </span>
             </div>
+
+            {(generationMessage || generationError) && (
+                <div style={{
+                    marginBottom: GAP,
+                    padding: '12px 14px',
+                    borderRadius: 12,
+                    background: generationError ? '#fef2f2' : '#f0fdf4',
+                    border: generationError ? '1px solid #fecaca' : '1px solid #bbf7d0',
+                    color: generationError ? '#b91c1c' : '#15803d',
+                    fontSize: 13,
+                    fontWeight: 600
+                }}>
+                    {generationError || generationMessage}
+                </div>
+            )}
 
             {/* Posts List */}
             {posts.length === 0 ? (
@@ -126,9 +201,18 @@ export default function BlogManager() {
                                         }}>
                                             {post.is_published ? 'Published' : 'Draft'}
                                         </span>
+                                        {post.ai_generated && (
+                                            <span style={{
+                                                fontSize: 11, padding: '2px 8px', borderRadius: 20,
+                                                background: '#eff6ff',
+                                                color: '#2563eb'
+                                            }}>
+                                                AI Draft
+                                            </span>
+                                        )}
                                     </div>
                                     <p style={{ fontSize: 13, color: '#64748b' }}>
-                                        {post.excerpt?.slice(0, 100)}...
+                                        {(post.generation_topic || post.excerpt || '').slice(0, 120)}...
                                     </p>
                                     <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
                                         <Calendar size={12} />

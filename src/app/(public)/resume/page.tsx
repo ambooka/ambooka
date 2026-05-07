@@ -23,12 +23,21 @@ interface PersonalInfoMock {
     [key: string]: unknown
 }
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI'
+const LEGACY_TITLE_PATTERN = /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i
+
+const normalizeProfessionalTitle = (title?: string | null) => {
+    const value = title?.trim()
+    if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE
+    return value
+}
+
 // ISR: Revalidate every hour
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'Resume | Msah Ambooka',
-    description: 'Technical expertise, professional experience, and educational background of Msah Ambooka, Software Engineer, Full-Stack Developer, IT Systems practitioner, and AI/ML Engineering learner.',
+    title: 'Resume',
+    description: 'Technical expertise, professional experience, and educational background of Msah Ambooka, Software Engineer working across systems and applied AI.',
 }
 
 export default async function ResumePage() {
@@ -41,12 +50,15 @@ export default async function ResumePage() {
 
     const personalInfo = personalInfoResult.data
     const skills = skillsResult.data || []
+    const normalizedPersonalInfo = personalInfo
+        ? { ...personalInfo, title: normalizeProfessionalTitle(personalInfo.title) }
+        : null
 
     const initialData = {
-        personal_info: personalInfo || ({
+        personal_info: normalizedPersonalInfo || ({
             id: 'mock',
             full_name: 'Msah Ambooka',
-            title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
+            title: PROFESSIONAL_TITLE,
             email: 'abdulrahmanambooka@gmail.com',
             summary: 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.',
             phone: null,
@@ -70,7 +82,7 @@ export default async function ResumePage() {
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: personalInfo?.full_name || 'Msah Ambooka',
-        jobTitle: personalInfo?.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
+        jobTitle: normalizeProfessionalTitle(personalInfo?.title),
         url: 'https://ambooka.dev',
         sameAs: [
             'https://github.com/ambooka',

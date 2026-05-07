@@ -6,12 +6,11 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { useRouter } from 'next/navigation'
-import { Search, Bell, ChevronDown } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 
 // CoachPro Design Tokens
-const SIDEBAR_WIDTH = 200
-const CONTENT_PADDING = 24
-const GAP = 16
+const SIDEBAR_WIDTH = 232
+const CONTENT_PADDING = 28
 
 export default function AdminLayout({
     children,
@@ -25,6 +24,14 @@ export default function AdminLayout({
     const [userInfo, setUserInfo] = useState({ name: 'Admin' })
 
     const isLoginPage = pathname === '/admin/login'
+    const pageTitle = (() => {
+        const segment = pathname.split('/').filter(Boolean)[1]
+        if (!segment) return 'Dashboard'
+        return segment
+            .split('-')
+            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ')
+    })()
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -58,7 +65,7 @@ export default function AdminLayout({
     if (loading) {
         return (
             <div id="admin-portal" style={{
-                background: 'linear-gradient(135deg, #e0f2f1 0%, #e8eaf6 50%, #fce4ec 100%)',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)',
                 minHeight: '100vh',
                 display: 'flex',
                 alignItems: 'center',
@@ -78,7 +85,7 @@ export default function AdminLayout({
     if (isLoginPage) {
         return (
             <div id="admin-portal" style={{
-                background: 'linear-gradient(135deg, #e0f2f1 0%, #e8eaf6 50%, #fce4ec 100%)',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)',
                 minHeight: '100vh'
             }}>
                 {children}
@@ -90,7 +97,7 @@ export default function AdminLayout({
 
     return (
         <div id="admin-portal" style={{
-            background: 'linear-gradient(135deg, #e0f2f1 0%, #e8eaf6 50%, #fce4ec 100%)',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)',
             minHeight: '100vh',
             display: 'flex'
         }}>
@@ -109,57 +116,56 @@ export default function AdminLayout({
                 marginLeft: SIDEBAR_WIDTH,
                 flex: 1,
                 minHeight: '100vh',
-                padding: CONTENT_PADDING
+                padding: CONTENT_PADDING,
+                color: '#0f172a'
             }}>
-                {/* Header Row - Integrated into content (like CoachPro) */}
                 <div style={{
                     display: 'flex',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    gap: 12,
-                    marginBottom: GAP,
-                    position: 'absolute',
-                    top: CONTENT_PADDING,
-                    right: CONTENT_PADDING
+                    gap: 16,
+                    marginBottom: 24,
+                    padding: '14px 16px',
+                    border: '1px solid rgba(203, 213, 225, 0.72)',
+                    borderRadius: 20,
+                    background: 'rgba(255, 255, 255, 0.78)',
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: '0 12px 28px rgba(15, 23, 42, 0.06)'
                 }}>
-                    {/* Search */}
-                    <div style={{ position: 'relative' }}>
-                        <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            style={{
-                                width: 200,
-                                padding: '10px 12px 10px 38px',
-                                background: 'rgba(255, 255, 255, 0.8)',
-                                border: '1px solid rgba(203, 213, 225, 0.6)',
-                                borderRadius: 12,
-                                fontSize: 13,
-                                color: '#1e293b',
-                                outline: 'none'
-                            }}
-                        />
+                    <div>
+                        <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0f766e' }}>
+                            Portfolio CMS
+                        </p>
+                        <h1 style={{ marginTop: 2, fontSize: 22, fontWeight: 850, letterSpacing: '-0.03em', color: '#0f172a' }}>
+                            {pageTitle}
+                        </h1>
                     </div>
 
-                    {/* Bell */}
-                    <button style={{
-                        width: 40, height: 40,
-                        borderRadius: 12,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        border: 'none', cursor: 'pointer',
-                        color: '#475569'
-                    }}>
-                        <Bell size={18} />
-                    </button>
-
-                    {/* User */}
                     <div style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        padding: '6px 12px 6px 6px',
-                        background: 'rgba(255, 255, 255, 0.8)',
-                        borderRadius: 12
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
                     }}>
+                        <a
+                            href="/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                minHeight: 40,
+                                padding: '0 14px',
+                                borderRadius: 12,
+                                background: '#0f172a',
+                                color: 'white',
+                                fontSize: 13,
+                                fontWeight: 800,
+                                textDecoration: 'none',
+                            }}
+                        >
+                            Public Site <ExternalLink size={15} />
+                        </a>
                         <div style={{
                             width: 32, height: 32, borderRadius: 8,
                             background: 'linear-gradient(135deg, #14b8a6, #0f766e)',
@@ -169,12 +175,10 @@ export default function AdminLayout({
                             {userInfo.name.charAt(0)}
                         </div>
                         <span style={{ fontSize: 13, fontWeight: 500, color: '#1e293b' }}>{userInfo.name}</span>
-                        <ChevronDown size={14} style={{ color: '#94a3b8' }} />
                     </div>
                 </div>
 
-                {/* Page Content */}
-                <div style={{ paddingTop: 0 }}>
+                <div>
                     {children}
                 </div>
             </div>

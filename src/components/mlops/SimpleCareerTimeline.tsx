@@ -1,11 +1,10 @@
 'use client'
-import React, { useMemo } from 'react'
-import { motion } from 'framer-motion'
+import React from 'react'
+import { motion, type Variants } from 'framer-motion'
 import { 
     Zap, 
     Trophy, 
     Briefcase, 
-    TrendingUp, 
     Code, 
     Globe, 
     Database, 
@@ -14,7 +13,8 @@ import {
     ArrowRight,
     Calendar,
     Clock,
-    DollarSign
+    DollarSign,
+    type LucideIcon
 } from 'lucide-react'
 import { ROADMAP_DATA } from '@/data/roadmap-data'
 import { cn } from '@/lib/utils'
@@ -29,7 +29,7 @@ const containerVariants = {
             delayChildren: 0.2
         }
     }
-} as any
+} satisfies Variants
 
 const itemVariants = {
     hidden: { opacity: 0, y: 15, scale: 0.98 },
@@ -43,9 +43,9 @@ const itemVariants = {
             damping: 20
         }
     }
-} as any
+} satisfies Variants
 
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
     'phase1': Zap,
     'phase2': Globe,
     'phase3': Database,

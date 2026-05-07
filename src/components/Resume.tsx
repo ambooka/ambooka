@@ -87,9 +87,27 @@ interface ResumeData {
   skills: Skill[]
 }
 
+const PROFESSIONAL_TITLE = 'Software Engineer, Systems & AI'
+const LEGACY_TITLE_PATTERN = /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i
+
+const normalizeProfessionalTitle = (title?: string | null) => {
+  const value = title?.trim()
+  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE
+  return value
+}
+
 export default function Resume({ isActive = false, initialData }: ResumeProps) {
-  const [loading, setLoading] = useState(!initialData)
-  const [resumeData, setResumeData] = useState<ResumeData | null>(initialData || null)
+  const normalizedInitialData = initialData
+    ? {
+      ...initialData,
+      personal_info: {
+        ...initialData.personal_info,
+        title: normalizeProfessionalTitle(initialData.personal_info.title),
+      },
+    }
+    : null
+  const [loading, setLoading] = useState(!normalizedInitialData)
+  const [resumeData, setResumeData] = useState<ResumeData | null>(normalizedInitialData)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -110,7 +128,8 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
       ])
 
-      const pInfo = personalInfoResult.data || { id: 'mock', full_name: 'Msah Ambooka', title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering', email: 'abdulrahmanambooka@gmail.com', summary: 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.' } as PersonalInfo;
+      const pInfoRaw = personalInfoResult.data || { id: 'mock', full_name: 'Msah Ambooka', title: PROFESSIONAL_TITLE, email: 'abdulrahmanambooka@gmail.com', summary: 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.' } as PersonalInfo;
+      const pInfo = { ...pInfoRaw, title: normalizeProfessionalTitle(pInfoRaw.title) } as PersonalInfo
 
       setResumeData({
         personal_info: pInfo,

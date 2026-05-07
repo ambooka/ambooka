@@ -321,6 +321,12 @@ export type Database = {
           image_url: string | null
           category: string
           tags: string[]
+          seo_title: string | null
+          meta_description: string | null
+          source_urls: Json
+          ai_generated: boolean
+          generation_topic: string | null
+          reading_time_minutes: number
           is_published: boolean
           published_at: string | null
           author_id: string | null
@@ -337,6 +343,12 @@ export type Database = {
           image_url?: string | null
           category?: string
           tags?: string[]
+          seo_title?: string | null
+          meta_description?: string | null
+          source_urls?: Json
+          ai_generated?: boolean
+          generation_topic?: string | null
+          reading_time_minutes?: number
           is_published?: boolean
           published_at?: string | null
           author_id?: string | null
@@ -353,6 +365,12 @@ export type Database = {
           image_url?: string | null
           category?: string
           tags?: string[]
+          seo_title?: string | null
+          meta_description?: string | null
+          source_urls?: Json
+          ai_generated?: boolean
+          generation_topic?: string | null
+          reading_time_minutes?: number
           is_published?: boolean
           published_at?: string | null
           author_id?: string | null

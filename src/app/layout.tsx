@@ -15,6 +15,8 @@ const geistMono = Geist_Mono({
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Person, WithContext } from "schema-dts";
 
+const PROFESSIONAL_TITLE = "Software Engineer, Systems & AI";
+
 const personSchema: WithContext<Person> = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -26,7 +28,7 @@ const personSchema: WithContext<Person> = {
     "https://www.linkedin.com/in/abdulrahman-ambooka/",
     "https://twitter.com/ambooka"
   ],
-  "jobTitle": "Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering",
+  "jobTitle": PROFESSIONAL_TITLE,
   "worksFor": {
     "@type": "Organization",
     "name": "Freelance / Open to Work"
@@ -42,58 +44,17 @@ const personSchema: WithContext<Person> = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Msah Ambooka | Software Engineer & Full-Stack Developer",
+    default: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
     template: "%s | Msah Ambooka"
   },
   description: "Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.",
   keywords: [
-    // --- IDENTITY ---
     "Msah Ambooka", "Ambooka", "Abdulrahman",
-    "Software Engineer", "Full Stack Developer", "Backend Engineer", "Frontend Developer",
-    "AI/ML Engineering", "IT Systems", "ERP Implementation", "Backend Engineer",
-    "DevOps Engineer", "Data Engineer",
-    "Tech Lead", "Senior Developer", "Freelance Developer", "Remote Engineer",
-
-    // --- AI & MLOPS STACK ---
-    "Machine Learning", "Artificial Intelligence", "Deep Learning", "Generative AI",
-    "LLMs", "Large Language Models", "RAG", "Retrieval Augmented Generation",
-    "Computer Vision", "NLP", "Natural Language Processing", "Transformers",
-    "PyTorch", "TensorFlow", "Keras", "Scikit-learn", "Pandas", "NumPy",
-    "MLflow", "Kubeflow", "TFX", "Weights & Biases", "DVC", "Feature Store",
-    "Model Serving", "Model Monitoring", "Model Registry", "Prompt Engineering",
-    "LangChain", "LlamaIndex", "HuggingFace", "OpenAI API", "Anthropic", "Mistral",
-    "Vector Databases", "Pinecone", "Milvus", "ChromaDB", "Weaviate", "Qdrant",
-
-    // --- CLOUD & INFRASTRUCTURE ---
-    "Cloud Native", "Kubernetes", "K8s", "Docker", "Containerization", "Microservices",
-    "AWS", "Amazon Web Services", "EC2", "S3", "Lambda", "EKS", "SageMaker",
-    "Azure", "Microsoft Azure", "AKS", "Azure ML", "GCP", "Google Cloud Platform", "GKE",
-    "Terraform", "Infrastructure as Code", "IaC", "Ansible", "Pulumi",
-    "CI/CD", "GitHub Actions", "GitLab CI", "Jenkins", "ArgoCD", "Flux",
-    "Linux", "Bash", "Shell Scripting", "Git", "Version Control", "Networking",
-
-    // --- WEB & APP DEVELOPMENT ---
-    "React", "React.js", "Next.js", "Vue.js", "Angular", "Svelte",
-    "TypeScript", "JavaScript", "ES6+", "HTML5", "CSS3", "Tailwind CSS",
-    "Node.js", "Express.js", "NestJS", "FastAPI", "Flask", "Django",
-    "Python", "Golang", "Go", "C#", ".NET", ".NET Core", "Java", "Spring Boot",
-    "Flutter", "Dart", "Mobile App Development", "Cross-platform Development",
-    "GraphQL", "REST API", "gRPC", "WebSockets", "Serverless",
-    "PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch", "Supabase", "Firebase",
-
-    // --- KENYA & AFRICA CONTEXT ---
-    "Nairobi Tech", "Silicon Savannah", "Kenya Tech Ecosystem",
-    "Software Jobs Kenya", "Tech Jobs Nairobi", "Developer Jobs Kenya",
-    "Best Software Engineers Kenya", "Top Developers Nairobi",
-    "Web Design Kenya", "Mobile App Developers Kenya",
-    "Remote Jobs Africa", "African Tech Talent", "Andela",
-    "Nairobi", "Mombasa", "Kisumu", "Eldoret", "Kenya", "East Africa",
-
-    // --- INTENT & HIRING ---
-    "Hire AI Engineer", "Hire MLOps Engineer", "Hire Full Stack Developer",
-    "Remote MLOps Jobs", "Remote AI Jobs", "Freelance Software Engineer",
-    "Contract Developer", "Consultant", "Technical Co-founder",
-    "Build AI App", "Deploy ML Models", "Scale Web Apps", "MVP Development"
+    "Software Engineer", "Full Stack Developer", "Backend Developer",
+    "Business Systems", "Payment Integrations", "M-Pesa Daraja API",
+    "ERPNext Implementation", "IT Infrastructure", "Applied AI/ML",
+    "Computer Vision", "Python", "TypeScript", "React", "Next.js",
+    "FastAPI", "PostgreSQL", "Docker", "Nairobi", "Kenya"
   ],
   authors: [{ name: "Msah Ambooka", url: "https://github.com/ambooka" }],
   creator: "Msah Ambooka",
@@ -105,7 +66,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://ambooka.dev',
-    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
+    title: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
     description: 'Computer Science graduate building full-stack software, IT systems, business automation, and applied AI/ML solutions.',
     siteName: 'Msah Ambooka Portfolio',
     images: [
@@ -119,7 +80,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
+    title: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
     description: 'Building full-stack software, IT systems, business automation, and applied AI/ML solutions.',
     creator: '@ambooka',
     images: ['/og-image.png'],
