@@ -1,5 +1,5 @@
 /**
- * CS Graduate Profile Migration Script (Schema-Corrected)
+ * Computer Science Graduate Profile Migration Script (Schema-Corrected)
  * Updates all database tables with excellent CS graduate profile
  * Run with: export $(cat .env.local | xargs) && npx tsx scripts/migrate-cs-profile-fixed.ts
  */
@@ -17,7 +17,7 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function migrateProfile() {
-    console.log('🚀 Starting CS Graduate Profile Migration...\n')
+    console.log('🚀 Starting Computer Science Graduate Profile Migration...\n')
 
     // =====================================
     // 1. UPDATE PERSONAL INFO
@@ -371,7 +371,7 @@ async function migrateProfile() {
     const { count: skillsCount } = await supabase.from('skills').select('*', { count: 'exact', head: true })
     console.log(`✅ Skills in database: ${skillsCount}`)
 
-    console.log('\n✨ CS Graduate Profile Migration Complete!\n')
+    console.log('\n✨ Computer Science Graduate Profile Migration Complete!\n')
     console.log('🎓 Profile successfully updated for an excellent Computer Science graduate')
     console.log('📍 Location set to: Nairobi, Kenya\n')
 }

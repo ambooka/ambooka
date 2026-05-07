@@ -14,10 +14,10 @@ export async function generateMetadata(): Promise<Metadata> {
         .limit(1)
         .single()
 
-    const title = 'Blog | Abdulrahman Ambooka'
+    const title = 'Blog | Msah Ambooka'
     const description = latestPost
         ? `Latest Insight: ${latestPost.title}. ${latestPost.excerpt || 'Read insights on MLOps and AI Engineering.'}`
-        : 'Insights on MLOps, AI Engineering, Cloud Architecture, and Software Development by Abdulrahman Ambooka.'
+        : 'Insights on MLOps, AI Engineering, Cloud Architecture, and Software Development by Msah Ambooka.'
 
     return {
         title,

@@ -11,6 +11,6 @@ SET expertise = '[
     {"section_key": "expertise_k8s", "title": "Platform Engineering", "content": "Kubernetes, Helm, Terraform, ArgoCD, GitOps. Operating distributed systems at scale.", "icon": "Box", "badge": "Phase 5", "tags": ["Kubernetes", "Helm", "Terraform", "ArgoCD"], "display_order": 6},
     {"section_key": "expertise_ml", "title": "Machine Learning", "content": "scikit-learn, PyTorch, Hugging Face Transformers. MLflow experiment tracking.", "icon": "BrainCircuit", "badge": "Phase 6", "tags": ["PyTorch", "scikit-learn", "Jupyter", "Python"], "display_order": 7},
     {"section_key": "expertise_llmops", "title": "LLMOps & GenAI", "content": "vLLM, Ollama serving. LangChain, LlamaIndex. Vector DBs. RAG pipelines.", "icon": "Brain", "badge": "Phase 7", "tags": ["Python", "Docker", "PostgreSQL"], "display_order": 8},
-    {"section_key": "expertise_mlops", "title": "MLOps Architecture", "content": "Kubeflow Pipelines, KServe model serving. Feast feature store. Evidently drift detection.", "icon": "Workflow", "badge": "Phase 8", "tags": ["Kubernetes", "Docker", "Python", "Prometheus"], "display_order": 9}
+    {"section_key": "expertise_mlops", "title": "Software Engineerure", "content": "Kubeflow Pipelines, KServe model serving. Feast feature store. Evidently drift detection.", "icon": "Workflow", "badge": "Phase 8", "tags": ["Kubernetes", "Docker", "Python", "Prometheus"], "display_order": 9}
 ]'::jsonb
 WHERE id = (SELECT id FROM public.personal_info LIMIT 1);

@@ -1,7 +1,7 @@
 -- =====================================================================
 -- MASTER SEED: Abdulrahman (Msah) Ambooka — AI/ML Engineer Roadmap
 -- Portfolio: ambooka.dev  |  GitHub: ambooka
--- Roadmap: 5-Phase Roadmap Platform, 26 months, CS Graduate accelerated
+-- Roadmap: 5-Phase Roadmap Platform, ongoing professional development, Computer Science Graduate accelerated
 -- Run this in Supabase SQL Editor to reset all career content
 -- =====================================================================
 
@@ -16,12 +16,12 @@ UPDATE personal_info SET
   email          = 'abdulrahmanambooka@gmail.com',
   phone          = '+254111384390',
   location       = 'Nairobi, Kenya',
-  summary        = 'CS graduate building toward an AI/ML Engineer role through the Roadmap platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Learning in public on ambooka.dev.',
+  summary        = 'CS graduate building toward an AI/ML Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied AI/ML and production engineering practice. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Documenting real professional work on ambooka.dev.',
   linkedin_url   = 'https://www.linkedin.com/in/abdulrahman-ambooka/',
   github_url     = 'https://github.com/ambooka',
   website_url    = 'https://ambooka.dev',
-  about_text     = 'CS graduate from Maseno University, building toward an AI/ML Engineer role through a structured 26-month plan. Every week I ship a project to GitHub. Every phase ships a live deployment to ambooka.dev. The CS degree cuts Phase 1–2 study time by ~40%, letting me focus deeper on the AI/ML stack earlier. Currently deep in Phase 1: Python, Linux, Docker, SQL, and CI/CD — the engineering foundation everything else rests on.',
-  kpi_stats      = '{"role":"Software Engineer (Building)","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3","headline":"Building in Public.","project_count":3,"expertise_breakdown":{"software":40,"cloud_infra":35,"data":10,"ml_ai":15}}'::jsonb,
+  about_text     = 'CS graduate from Maseno University, building toward an AI/ML Engineer role through a structured professional development plan. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 study time by ~40%, letting me focus deeper on the AI/ML stack earlier. Currently deep in Phase 1: Python, Linux, Docker, SQL, and CI/CD — the engineering foundation everything else rests on.',
+  kpi_stats      = '{"role":"Software Engineer","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3","headline":"Production-minded software delivery.","project_count":3,"expertise_breakdown":{"software":40,"cloud_infra":35,"data":10,"ml_ai":15}}'::jsonb,
   expertise      = '[
     {"section_key":"expertise_foundation","title":"Software Engineering","content":"Python (OOP, type hints, pytest, decorators, generators), TypeScript, Node.js REST APIs, PostgreSQL, Docker Compose — shipped to a live Hetzner VPS with GitHub Actions CI/CD.","icon":"Code","badge":"Phase 1–2","display_order":1},
     {"section_key":"expertise_cloud","title":"Cloud & Infrastructure","content":"k3s Kubernetes, Helm charts, Terraform-managed AWS (IAM, EC2, S3, ECS), Prometheus + Grafana + Loki observability stack. Everything infrastructure-as-code, nothing clicked in the console.","icon":"Cloud","badge":"Phase 2","display_order":2},
@@ -39,12 +39,12 @@ SELECT
   'abdulrahmanambooka@gmail.com',
   '+254111384390',
   'Nairobi, Kenya',
-  'CS graduate building toward an AI/ML Engineer role through the Roadmap platform — a single long-running project that ships across 5 phases from a Dockerised Python CLI to a production multi-agent AI system.',
+  'CS graduate building toward an AI/ML Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied AI/ML and production engineering practice.',
   'https://www.linkedin.com/in/abdulrahman-ambooka/',
   'https://github.com/ambooka',
   'https://ambooka.dev',
-  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured 26-month plan. Currently in Phase 1: Foundations & Tooling.',
-  '{"role":"Software Engineer (Building)","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3"}'::jsonb,
+  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured professional development plan. Currently in Phase 1: Foundations & Tooling.',
+  '{"role":"Software Engineer","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3"}'::jsonb,
   '[]'::jsonb
 WHERE NOT EXISTS (SELECT 1 FROM personal_info LIMIT 1);
 
@@ -94,7 +94,7 @@ VALUES
   '2025-01-01',
   NULL,
   true,
-  'Providing IT operations support and digital transformation services for a Nairobi-based enterprise. This role runs in parallel with the Roadmap roadmap — production infrastructure challenges here directly inform Phase 1 Linux and networking study.',
+  'Providing IT operations support and digital transformation services for a Nairobi-based enterprise. This role runs in parallel with the professional focus plan — production infrastructure challenges here directly inform Phase 1 Linux and networking study.',
   ARRAY[
     'Manage and maintain company IT infrastructure: Windows servers, networking, and workstations',
     'Provide Tier-1 and Tier-2 technical support to staff across hardware, software, and connectivity',
@@ -156,7 +156,7 @@ VALUES
 
 
 -- =====================================================================
--- 4. PORTFOLIO PROJECTS  (Roadmap platform phases + real freelance work)
+-- 4. PORTFOLIO PROJECTS  (portfolio platform phases + real freelance work)
 -- =====================================================================
 DELETE FROM portfolio_content;
 
@@ -167,7 +167,7 @@ VALUES
   'devops',
   'Phase 1 milestone: Dockerised Python CLI utility suite with pytest coverage ≥80%, served over HTTPS from a Hetzner VPS behind Nginx, with a GitHub Actions pipeline (lint → test → build → push GHCR → deploy).',
   ARRAY['Python 3.12', 'Docker Compose', 'Nginx', 'PostgreSQL', 'GitHub Actions', 'pytest'],
-  'https://github.com/ambooka/roadmap',
+  'https://github.com/ambooka',
   'https://ambooka.dev',
   '/assets/images/projects/roadmap-v01.png',
   ARRAY['Python', 'Docker', 'CI/CD', 'VPS', 'Roadmap Phase 1'],
@@ -179,7 +179,7 @@ VALUES
   'web_app',
   'Phase 2 milestone (upcoming): Full-stack TypeScript monorepo — React SPA + Node.js REST API + PostgreSQL + Redis on k3s Kubernetes, with Terraform-managed AWS infrastructure and Prometheus/Grafana/Loki observability.',
   ARRAY['TypeScript', 'React', 'Node.js', 'k3s', 'Helm', 'Terraform', 'AWS', 'Prometheus', 'Grafana'],
-  'https://github.com/ambooka/roadmap',
+  'https://github.com/ambooka',
   '#',
   '/assets/images/projects/roadmap-v02.png',
   ARRAY['TypeScript', 'Kubernetes', 'Terraform', 'Observability', 'Roadmap Phase 2'],
@@ -191,7 +191,7 @@ VALUES
   'ai_ml',
   'Phase 3 milestone (planned): FastAPI ML model service exposing a scikit-learn classifier and a fine-tuned HuggingFace transformer with SHAP explanations, DVC data versioning, and a CI quality gate.',
   ARRAY['Python', 'PyTorch', 'HuggingFace', 'scikit-learn', 'FastAPI', 'DVC', 'SHAP', 'Airflow'],
-  'https://github.com/ambooka/roadmap',
+  'https://github.com/ambooka',
   '#',
   '/assets/images/projects/roadmap-v03.png',
   ARRAY['ML', 'HuggingFace', 'FastAPI', 'MLOps', 'Roadmap Phase 3'],
@@ -203,7 +203,7 @@ VALUES
   'ai_ml',
   'Phase 4 milestone (planned): RAG chatbot over a personal knowledge base with hybrid search + re-ranking, QLoRA fine-tuned domain model in MLflow registry, Evidently drift detection, and automated retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API', 'Anthropic API'],
-  'https://github.com/ambooka/roadmap',
+  'https://github.com/ambooka',
   '#',
   '/assets/images/projects/roadmap-v04.png',
   ARRAY['RAG', 'LangChain', 'MLOps', 'Fine-tuning', 'Roadmap Phase 4'],
@@ -215,7 +215,7 @@ VALUES
   'ai_ml',
   'Phase 5 milestone (planned): Autonomous research agent (LangGraph supervisor), multi-agent code review pipeline, long-term vector memory, guardrails safety layer, and a red team report — live at ambooka.dev.',
   ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton', 'LlamaIndex'],
-  'https://github.com/ambooka/roadmap',
+  'https://github.com/ambooka',
   'https://ambooka.dev',
   '/assets/images/projects/roadmap-v10.png',
   ARRAY['Agents', 'LangGraph', 'Safety', 'Multi-agent', 'Roadmap Phase 5'],
@@ -343,7 +343,7 @@ DELETE FROM public.about_content;
 INSERT INTO public.about_content (section_key, title, content, icon, badge, display_order, is_active) VALUES
 (
   'about_text', NULL,
-  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured 26-month plan — the Roadmap platform. Every week I ship a project to GitHub. Every phase ships a live deployment to ambooka.dev. The CS degree cuts Phase 1–2 by ~40%, letting me reach the AI/ML work faster. Currently: Phase 1 — Foundations & Tooling.',
+  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured professional development plan — the portfolio platform. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 by ~40%, letting me reach the AI/ML work faster. Currently: Phase 1 — Foundations & Tooling.',
   NULL, NULL, 0, true
 ),
 (
@@ -504,35 +504,35 @@ VALUES
   'Dockerised Python CLI + static HTTPS site on Hetzner VPS. GitHub Actions pipeline: lint → test → build → push GHCR → deploy.',
   ARRAY['Python 3.12', 'Docker Compose', 'Nginx', 'PostgreSQL', 'pytest', 'GitHub Actions'],
   'In Progress', true, 1,
-  'https://github.com/ambooka/roadmap', 'https://ambooka.dev'
+  'https://github.com/ambooka', 'https://ambooka.dev'
 ),
 (
   'Roadmap v0.2 — The Platform',
   'Full-stack TypeScript monorepo on k3s Kubernetes. React SPA + Node.js API + AWS Terraform + Prometheus/Grafana.',
   ARRAY['TypeScript', 'React', 'Node.js', 'k3s', 'Helm', 'Terraform', 'AWS', 'Prometheus'],
   'Planned', true, 2,
-  'https://github.com/ambooka/roadmap', '#'
+  'https://github.com/ambooka', '#'
 ),
 (
   'Roadmap v0.3 — Intelligence Layer',
   'FastAPI ML service: HuggingFace transformer + scikit-learn classifier + SHAP explanations + DVC + CI quality gate.',
   ARRAY['PyTorch', 'HuggingFace', 'scikit-learn', 'FastAPI', 'DVC', 'SHAP', 'Airflow'],
   'Planned', true, 3,
-  'https://github.com/ambooka/roadmap', '#'
+  'https://github.com/ambooka', '#'
 ),
 (
   'Roadmap v0.4 — AI Platform',
   'RAG chatbot (hybrid search + re-ranking), QLoRA fine-tuned model in MLflow registry, Evidently drift detection, retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API'],
   'Planned', true, 4,
-  'https://github.com/ambooka/roadmap', '#'
+  'https://github.com/ambooka', '#'
 ),
 (
   'Roadmap v1.0 — Complete AI Platform',
   'Autonomous research agent (LangGraph supervisor), multi-agent pipelines, safety layer, red team report. Live at ambooka.dev.',
   ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton Inference Server'],
   'Planned', true, 5,
-  'https://github.com/ambooka/roadmap', 'https://ambooka.dev'
+  'https://github.com/ambooka', 'https://ambooka.dev'
 );
 
 

@@ -250,7 +250,7 @@ export default function CareerTimelineWidget() {
           return (
             <div
               key={phase.id}
-              className="flex flex-col gap-3 shrink-0 w-[280px] sm:w-[320px] snap-center relative"
+              className="flex flex-col gap-3 shrink-0 w-[min(76vw,20rem)] snap-start relative"
             >
               {/* horizontal connector track */}
               <div className="flex items-center relative h-[22px]">
@@ -391,13 +391,13 @@ export default function CareerTimelineWidget() {
       </div>
 
       {/* ── Footer ─────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-[hsl(var(--border))]">
+      <div className="flex flex-col gap-2 pt-2.5 mt-1 border-t border-[hsl(var(--border))] sm:flex-row sm:items-center sm:justify-between">
         <span className="text-[0.62rem] font-[500] text-[hsl(var(--muted-foreground))]">
-          26 months · Software Engineer → AI/ML Engineerr
+          Professional Focus · Software Engineering · IT Systems · AI/ML
         </span>
         <a
           href="https://ambooka.dev"
-          className="text-[0.65rem] font-bold text-[hsl(var(--accent))] no-underline transition-opacity hover:opacity-70"
+          className="inline-flex min-h-10 items-center text-[0.65rem] font-bold text-[hsl(var(--accent))] no-underline transition-opacity hover:opacity-70"
         >
           ambooka.dev →
         </a>

@@ -9,10 +9,10 @@ export const revalidate = 3600
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
-        title: 'Portfolio | Abdulrahman Ambooka',
+        title: 'Portfolio | Msah Ambooka',
         description: 'Explore featured projects in MLOps, AI, and Cloud Engineering. From Kubernetes clusters to LLM agents, view the code behind the systems.',
         openGraph: {
-            title: 'Portfolio | Abdulrahman Ambooka',
+            title: 'Portfolio | Msah Ambooka',
             description: 'Explore featured projects in MLOps, AI, and Cloud Engineering.',
             images: ['/og-image.png'], // Ensure fallback consistency
         }

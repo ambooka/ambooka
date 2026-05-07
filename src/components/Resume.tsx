@@ -110,7 +110,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         supabase.from('skills').select('*').order('proficiency_level', { ascending: false })
       ])
 
-      const pInfo = personalInfoResult.data || { id: 'mock', full_name: 'Abdulrahman Ambooka', title: 'MLOps Architect', email: 'hello@ambooka.dev', summary: 'MLOps Architect & AI Platform Specialist' } as PersonalInfo;
+      const pInfo = personalInfoResult.data || { id: 'mock', full_name: 'Msah Ambooka', title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering', email: 'abdulrahmanambooka@gmail.com', summary: 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.' } as PersonalInfo;
 
       setResumeData({
         personal_info: pInfo,

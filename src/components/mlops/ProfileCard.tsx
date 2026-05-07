@@ -42,11 +42,11 @@ export const ProfileCard = () => {
                     <h2 className="text-xl font-medium tracking-wide">Ambooka</h2>
                     <p className="text-xs text-white/80 font-light mt-0.5 flex items-center gap-1.5">
                         <span className="bg-[#f4c542] text-black px-1.5 rounded text-[10px] font-bold">TARGET</span>
-                        AI / ML Engineer
+                        Software Engineer
                     </p>
                 </div>
                 <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-3 py-1.5 rounded-full text-xs font-medium">
-                    Phase 1 / 5
+                    Professional Focus
                 </div>
             </div>
         </div>

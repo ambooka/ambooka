@@ -5,21 +5,21 @@ import { ChevronDown, ChevronUp, Laptop, DollarSign, Gift, Briefcase } from 'luc
 // Using static data to match the "Crextio" reference image exactly
 export const SkillAccordion = ({ openAccordion, setOpenAccordion }: { openAccordion: string | null, setOpenAccordion: (id: string | null) => void }) => {
 
-    // Exact items from MLOps Roadmap
+    // Professional focus items
     const items = [
         {
             id: 'foundations',
-            label: "Phase 1: Foundations",
+            label: "Software Engineering",
             icon: Briefcase,
             content: (
                 <div className="flex flex-col gap-2 text-sm text-gray-500 px-1">
                     <div className="flex justify-between items-center">
-                        <span>Python (Async, Type hints)</span>
-                        <span className="text-[#f4c542] font-bold">In Progress</span>
+                        <span>Python · TypeScript · APIs</span>
+                        <span className="text-[#f4c542] font-bold">Strong</span>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span>Data Engineering (SQL, dbt)</span>
-                        <span className="text-gray-400">Queue</span>
+                        <span>PostgreSQL · Docker · CI/CD</span>
+                        <span className="text-gray-400">Strengthening</span>
                     </div>
                 </div>
             )
@@ -36,7 +36,7 @@ export const SkillAccordion = ({ openAccordion, setOpenAccordion }: { openAccord
                         </div>
                         <div className="flex flex-col">
                             <span className="text-gray-900 font-medium text-xs">AWS Solutions Arch.</span>
-                            <span className="text-[10px] text-gray-500">Certification Target</span>
+                            <span className="text-[10px] text-gray-500">Strengthening</span>
                         </div>
                     </div>
                 </div>
@@ -44,17 +44,17 @@ export const SkillAccordion = ({ openAccordion, setOpenAccordion }: { openAccord
         },
         {
             id: 'ml_eng',
-            label: "ML Engineering",
+            label: "Applied AI/ML",
             icon: DollarSign, // Reusing icon prop but implies "High Value"
             content: (
                 <div className="flex flex-col gap-2 text-sm text-gray-500 px-1">
                     <div className="flex justify-between">
-                        <span>PyTorch / Deep Learning</span>
-                        <span className="text-gray-900">Phase 2</span>
+                        <span>PyTorch · OpenCV · YOLO</span>
+                        <span className="text-gray-900">Strengthening</span>
                     </div>
                     <div className="flex justify-between">
-                        <span>LLMs / RAG</span>
-                        <span className="text-gray-900">Phase 2</span>
+                        <span>Hugging Face · LangChain · pgvector</span>
+                        <span className="text-gray-900">Strengthening</span>
                     </div>
                 </div>
             )

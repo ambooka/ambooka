@@ -33,12 +33,12 @@ export async function GET() {
         : '*(No published posts yet)*';
 
     const content = `
-# ${personalInfo?.full_name || 'Abdulrahman Ambooka'} - ${personalInfo?.title || 'MLOps Architect & Software Engineer'}
+# ${personalInfo?.full_name || 'Msah Ambooka'} - ${personalInfo?.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering'}
 
 ## Identity & Core Focus
-${personalInfo?.summary || 'MLOps Architect and Full-Stack Software Engineer based in Nairobi, Kenya. Specializes in building scalable AI platforms, designing cloud-native infrastructure, and deploying machine learning models to production.'}
+${personalInfo?.summary || 'Software Engineer and Full-Stack Developer based in Nairobi, Kenya with experience in IT systems, ERP implementation, payment integrations, business automation, and applied AI/ML.'}
 
-- **Role**: ${personalInfo?.title || 'MLOps Architect, Platform Engineer, Full-Stack Developer'}
+- **Role**: ${personalInfo?.title || 'Software Engineer, Full-Stack Developer, IT Systems, AI/ML Engineering'}
 - **Location**: Nairobi, Kenya
 - **Availability**: Open for freelance, contract, and high-impact full-time roles.
 - **Website**: https://ambooka.dev

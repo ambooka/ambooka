@@ -31,7 +31,7 @@ serve(async (req) => {
 
         // System prompt for Gemini
         const systemPrompt = `
-      You are an expert technical blog writer and MLOps Architect. 
+      You are an expert technical blog writer and Software Engineer. 
       Write a high-quality, professional blog post in Markdown format for a research-oriented portfolio website.
       
       Topic: ${topic || "A relevant trend in AI, MLOps, or Cloud Computing for 2026"}

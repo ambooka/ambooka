@@ -1,5 +1,5 @@
 /**
- * CS Graduate Profile Update Script (Update Existing Records Only)
+ * Computer Science Graduate Profile Update Script (Update Existing Records Only)
  * Updates existing database records with excellent CS graduate profile
  * Works around RLS by updating, not inserting
  * Run with: export $(cat .env.local | xargs) && npx tsx scripts/update-cs-profile.ts
@@ -18,7 +18,7 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function updateProfile() {
-    console.log('🚀 Starting CS Graduate Profile Update...\n')
+    console.log('🚀 Starting Computer Science Graduate Profile Update...\n')
 
     // =====================================
     // 1. UPDATE PERSONAL INFO
@@ -329,7 +329,7 @@ async function updateProfile() {
     const { count: skillsCount } = await supabase.from('skills').select('*', { count: 'exact', head: true })
     console.log(`✅ Skills in database: ${skillsCount}`)
 
-    console.log('\n✨ CS Graduate Profile Update Complete!\n')
+    console.log('\n✨ Computer Science Graduate Profile Update Complete!\n')
     console.log('🎓 Profile successfully updated for an excellent Computer Science graduate')
     console.log('📍 Location confirmed: Nairobi, Kenya')
     console.log('🚀 Portfolio now showcases impressive CS projects and skills\n')

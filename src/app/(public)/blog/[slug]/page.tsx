@@ -61,14 +61,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const publishedTime = post.published_at || new Date().toISOString()
 
     return {
-        title: `${post.title} | Abdulrahman Ambooka`,
+        title: `${post.title} | Msah Ambooka`,
         description: post.excerpt || post.content.slice(0, 160),
         openGraph: {
             title: post.title,
             description: post.excerpt || post.content.slice(0, 160),
             type: 'article',
             publishedTime,
-            authors: ['Abdulrahman Ambooka'],
+            authors: ['Msah Ambooka'],
             images: post.image_url ? [{ url: post.image_url }] : [],
         },
         twitter: {
@@ -100,7 +100,7 @@ export default async function BlogPostPage({ params }: Props) {
         dateModified: post.updated_at || post.published_at || undefined,
         author: {
             '@type': 'Person',
-            name: 'Abdulrahman Ambooka',
+            name: 'Msah Ambooka',
             url: 'https://ambooka.dev'
         },
         description: post.excerpt || post.content.slice(0, 160),

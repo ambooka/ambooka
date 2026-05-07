@@ -1,8 +1,8 @@
-# Case Study: Building a Production-Grade Portfolio Platform
+# Case Study: Building a Production-Style Portfolio Platform
 
 ## Overview
 
-**Role**: Full-Stack Engineer / MLOps Architect  
+**Role**: Full-Stack Software Engineer  
 **Duration**: 6 months (ongoing)  
 **Tech Stack**: Next.js 16, TypeScript, Supabase, Vercel, Tailwind CSS
 

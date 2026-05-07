@@ -77,10 +77,10 @@ const LANGUAGES = [
 
 export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWidgetProps = {}) {
     const profile = personalInfo || {
-        full_name: 'Abdulrahman Ambooka',
-        title: 'MLOps Architect & Software Engineer',
+        full_name: 'Msah Ambooka',
+        title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
         avatar_url: '/assets/images/my-avatar.jpg',
-        about_text: 'Building production-ready ML systems. Focused on bridging the gap between data science and reliable infrastructure.',
+        about_text: 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.',
         location: 'Nairobi, Kenya',
         social_links: []
     } as PersonalInfo;
@@ -118,7 +118,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
     }
 
     return (
-        <article className="relative overflow-hidden rounded-2xl p-4 sm:p-5 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md transition-all hover:border-[hsl(var(--border))] hover:shadow-lg">
+        <article className="relative overflow-hidden rounded-2xl p-4 sm:p-5 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md transition-all hover:border-[hsl(var(--border))] hover:shadow-lg min-w-0">
             <div className="flex items-center gap-3 mb-3.5 text-xs font-extrabold tracking-widest uppercase text-[hsl(var(--foreground))]">
                 <div className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent))/0.12] text-[hsl(var(--accent))] shrink-0">
                     <Rocket size={16} />
@@ -126,10 +126,10 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                 <span>Build Profile & Education</span>
             </div>
 
-            <div className="grid lg:grid-cols-[1.3fr_1fr] gap-6 xl:gap-8">
+            <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(15rem,0.85fr)] xl:gap-8">
                 {/* Left Column: Bio and CTAs */}
-                <div className="flex flex-col">
-                    <div className="flex items-start gap-4 mb-4">
+                <div className="flex min-w-0 flex-col">
+                    <div className="flex min-w-0 items-start gap-4 mb-4">
                         <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[14px] overflow-hidden shrink-0 border border-[hsl(var(--border))] shadow-md bg-[hsl(var(--card))]">
                             <Image
                                 src={profile.avatar_url || '/assets/images/my-avatar.jpg'}
@@ -141,22 +141,22 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                             />
                         </div>
                         <div className="flex flex-col flex-1 min-w-0 pt-0.5">
-                            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                            <div className="flex min-w-0 flex-wrap items-center gap-2 mb-1.5">
                                 <span className="inline-flex items-center px-2.5 py-1 rounded-[6px] bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] text-[10px] sm:text-xs font-bold uppercase tracking-wider">
-                                    CS Graduate
+                                    Computer Science Graduate
                                 </span>
                             </div>
                             <h3 className="m-0 text-[1.1rem] sm:text-xl font-extrabold leading-tight tracking-tight text-[hsl(var(--foreground))] truncate">
-                                {profile.full_name || 'Abdulrahman Ambooka'}
+                                {profile.full_name || 'Msah Ambooka'}
                             </h3>
                             <div className="text-[0.78rem] sm:text-[0.85rem] text-[hsl(var(--muted-foreground))] font-medium mt-0.5 truncate">
-                                {profile.title || 'MLOps Architect & Software Engineer'}
+                                {profile.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering'}
                             </div>
                         </div>
                     </div>
 
                     <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
-                        {profile.about_text || 'I am a computer science graduate building my career roadmap in public as a practical route from full-stack delivery into AI/ML engineering.'}
+                        {profile.about_text || 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.'}
                     </p>
 
                     <p className="m-0 mt-3 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
@@ -167,7 +167,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                         {onOpenResume && (
                             <button
                                 onClick={onOpenResume}
-                                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent)/0.9)] text-white text-xs font-bold shadow-sm transition-colors cursor-pointer"
+                                className="inline-flex min-h-10 items-center gap-1.5 px-3 rounded-[8px] bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent)/0.9)] text-white text-xs font-bold shadow-sm transition-colors cursor-pointer"
                             >
                                 <Download size={14} /> Resume
                             </button>
@@ -175,7 +175,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                         {profile.email && (
                             <a
                                 href={`mailto:${profile.email}`}
-                                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-[8px] bg-[hsl(var(--accent))/0.1] hover:bg-[hsl(var(--accent))/0.18] text-[hsl(var(--accent))] border border-[hsl(var(--accent))/0.2] text-xs font-bold transition-colors"
+                                className="inline-flex min-h-10 items-center gap-1.5 px-3 rounded-[8px] bg-[hsl(var(--accent))/0.1] hover:bg-[hsl(var(--accent))/0.18] text-[hsl(var(--accent))] border border-[hsl(var(--accent))/0.2] text-xs font-bold transition-colors"
                             >
                                 <Mail size={14} /> Email Me
                             </a>
@@ -186,7 +186,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                                 href={social.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-8 h-8 rounded-[8px] border border-[hsl(var(--border))] bg-white/40 dark:bg-black/20 text-[hsl(var(--muted-foreground))] shadow-sm hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--muted-foreground))/0.5] transition-all"
+                                className="inline-flex items-center justify-center w-10 h-10 rounded-[8px] border border-[hsl(var(--border))] bg-white/40 dark:bg-black/20 text-[hsl(var(--muted-foreground))] shadow-sm hover:text-[hsl(var(--foreground))] hover:border-[hsl(var(--muted-foreground))/0.5] transition-all"
                                 title={social.platform}
                             >
                                 {renderSocialIcon(social)}
@@ -219,14 +219,14 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                 </div>
 
                 {/* Right Column: Education & Focus Together */}
-                <div className="flex flex-col gap-6">
-                    <aside className="flex flex-col gap-3">
+                <div className="flex min-w-0 flex-col gap-6">
+                    <aside className="flex min-w-0 flex-col gap-3">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
                             <GraduationCap size={14} /> Education Context
                         </span>
                         <div className="flex flex-col gap-2.5">
                             {EDUCATION.map((item) => (
-                                <div key={item.school} className="flex items-center gap-3 p-2.5 rounded-xl border border-[hsl(var(--border))] bg-white/40 dark:bg-black/20 shadow-sm transition-colors hover:bg-white/60 dark:hover:bg-black/40 cursor-default">
+                                <div key={item.school} className="flex min-w-0 items-center gap-3 p-2.5 rounded-xl border border-[hsl(var(--border))] bg-white/40 dark:bg-black/20 shadow-sm transition-colors hover:bg-white/60 dark:hover:bg-black/40 cursor-default">
                                     <div className="w-10 h-10 rounded-lg bg-white dark:bg-white/5 border border-[hsl(var(--border))] flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
                                         <Image
                                             src={item.logo}
@@ -239,7 +239,7 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                                     </div>
                                     <div className="flex flex-col flex-1 min-w-0">
                                         <strong className="text-sm font-extrabold text-[hsl(var(--foreground))] leading-tight truncate">{item.school}</strong>
-                                        <div className="flex items-center justify-between gap-2 mt-0.5">
+                                        <div className="flex flex-col gap-0.5 mt-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
                                             <span className="text-xs text-[hsl(var(--muted-foreground))] font-medium truncate">{item.degree}</span>
                                             <span className="text-[10px] text-[hsl(var(--muted-foreground))/70] font-bold tracking-wider whitespace-nowrap">{item.year}</span>
                                         </div>
@@ -249,8 +249,8 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                         </div>
                     </aside>
 
-                    <aside className="flex flex-col gap-3">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] ml-1">Current Foundation</span>
+                    <aside className="flex min-w-0 flex-col gap-3">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] ml-1">Current Focus</span>
                         <div className="flex flex-wrap gap-2">
                             {CURRENT_FOCUS.map((item) => (
                                 <span key={item} className="inline-flex items-center px-3 py-2 rounded-full bg-slate-900/5 dark:bg-white/5 text-[hsl(var(--muted-foreground))] text-xs font-semibold">
@@ -259,16 +259,16 @@ export default function ProfileWidget({ personalInfo, onOpenResume }: ProfileWid
                             ))}
                         </div>
                         <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))] ml-1">
-                            Phase 1 is all about making the fundamentals boring, reliable, and repeatable before the platform grows more ambitious.
+                            Focused on practical software delivery, reliable systems, business automation, IT operations, and applied AI/ML foundations.
                         </p>
                     </aside>
 
                     {experiences.length > 0 && (
-                        <aside className="flex flex-col gap-3">
+                        <aside className="flex min-w-0 flex-col gap-3">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
                                 <BriefcaseBusiness size={14} /> Work Experience
                             </span>
-                            <div className="flex flex-wrap gap-2.5 pt-1">
+                            <div className="flex min-w-0 flex-wrap gap-2.5 pt-1">
                                 {experiences.map((exp) => {
                                     const startYear = new Date(exp.start_date).getFullYear();
                                     const endYear = exp.is_current ? 'Present' : (exp.end_date ? new Date(exp.end_date).getFullYear() : '');

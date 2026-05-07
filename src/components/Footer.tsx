@@ -50,7 +50,7 @@ export default function Footer() {
               ambooka
             </Link>
             <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed max-w-[32ch]">
-              Software Engineer & MLOps Architect building production-ready ML systems and beautiful web experiences.
+              Software Engineer and full-stack developer building production-minded web applications, business systems, IT infrastructure, and applied AI/ML solutions.
             </p>
             {/* Social row */}
             <div className="flex items-center gap-2 pt-1">
@@ -126,7 +126,7 @@ export default function Footer() {
         {/* Divider + bottom row */}
         <div className="h-px w-full bg-[hsl(var(--border))] mb-5" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[hsl(var(--muted-foreground))]">
-          <span>&copy; {currentYear} Abdulrahman Ambooka. All rights reserved.</span>
+          <span>&copy; {currentYear} Msah Ambooka. All rights reserved.</span>
           <span className="flex items-center gap-1">
             Built with
             <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">Next.js</span>

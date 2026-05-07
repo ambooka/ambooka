@@ -29,11 +29,11 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
 
     return (
         <div className={cn(
-            "fixed bottom-0 left-0 right-0 z-[1000] w-full md:hidden p-4 pb-[max(1rem,env(safe-area-inset-bottom))]",
+            "fixed bottom-0 left-0 right-0 z-[1000] w-full md:hidden p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]",
             className
         )}>
             <nav className={cn(
-                "flex h-16 items-center justify-around px-2 rounded-2xl",
+                "glass-nav flex h-14 items-center justify-around px-1 rounded-2xl",
                 "bg-card/85 backdrop-blur-xl border border-border pb-0 shadow-xl shadow-black/5"
             )}>
                 {NAV_ITEMS.map((item) => {
@@ -50,7 +50,7 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
                             )}
                             aria-label={item.label}
                         >
-                            <div className="relative flex h-8 w-12 items-center justify-center transition-all duration-300">
+                            <div className="relative flex h-7 w-11 items-center justify-center transition-all duration-300">
                                 {active && (
                                     <motion.span
                                         layoutId="mobile-nav-indicator"

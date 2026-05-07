@@ -27,8 +27,8 @@ interface PersonalInfoMock {
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'Resume | Abdulrahman Ambooka',
-    description: 'Technical expertise, professional experience, and educational background of Abdulrahman Ambooka, MLOps Architect & Software Engineer.',
+    title: 'Resume | Msah Ambooka',
+    description: 'Technical expertise, professional experience, and educational background of Msah Ambooka, Software Engineer, Full-Stack Developer, IT Systems practitioner, and AI/ML Engineering learner.',
 }
 
 export default async function ResumePage() {
@@ -45,12 +45,12 @@ export default async function ResumePage() {
     const initialData = {
         personal_info: personalInfo || ({
             id: 'mock',
-            full_name: 'Abdulrahman Ambooka',
-            title: 'MLOps Architect',
-            email: 'hello@ambooka.dev',
-            summary: 'MLOps Architect & AI Platform Specialist',
+            full_name: 'Msah Ambooka',
+            title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
+            email: 'abdulrahmanambooka@gmail.com',
+            summary: 'Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.',
             phone: null,
-            location: 'Remote',
+            location: 'Nairobi, Kenya',
             about_text: null,
             linkedin_url: null,
             github_url: 'https://github.com/ambooka',
@@ -69,8 +69,8 @@ export default async function ResumePage() {
     const personSchema: WithContext<Person> = {
         '@context': 'https://schema.org',
         '@type': 'Person',
-        name: personalInfo?.full_name || 'Abdulrahman Ambooka',
-        jobTitle: personalInfo?.title || 'MLOps Architect & Software Engineer',
+        name: personalInfo?.full_name || 'Msah Ambooka',
+        jobTitle: personalInfo?.title || 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
         url: 'https://ambooka.dev',
         sameAs: [
             'https://github.com/ambooka',

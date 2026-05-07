@@ -121,7 +121,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     </div>
 
                     {/* Social links — hidden on mobile */}
-                    <div className="hidden md:flex items-center gap-1.5">
+                    <div className="hidden lg:flex items-center gap-1.5">
                         <motion.a
                             href="https://github.com/ambooka"
                             target="_blank"
@@ -161,7 +161,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     </div>
 
                     {/* Contact CTA */}
-                    <motion.div whileTap={buttonTap} whileHover={{ scale: 1.03 }} className="hidden md:block">
+                    <motion.div whileTap={buttonTap} whileHover={{ scale: 1.03 }} className="hidden lg:block">
                         <Link
                             href="/contact"
                             className={cn(

@@ -1,5 +1,5 @@
 -- Migration: 007_seed_career_roadmap.sql
--- Description: Seed the database with best-in-class MLOps Architect Career Roadmap data
+-- Description: Seed the database with best-in-class Software Engineer Career Roadmap data
 -- This script fixes schema drift AND sanitizes existing data before applying constraints.
 
 BEGIN;

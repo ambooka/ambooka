@@ -242,7 +242,7 @@ export default function GitHubStatsWidget({ fullWidth = false, compact = false, 
                     href={`https://github.com/${GITHUB_USERNAME}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex flex-col sm:flex-row items-center justify-center w-full sm:w-auto gap-1.5 px-3.5 py-2 rounded-full border border-[hsl(var(--border))] bg-white/60 dark:bg-white/10 text-[0.82rem] font-bold text-[hsl(var(--foreground))] no-underline shadow-sm transition-all hover:-translate-y-px hover:border-[hsl(var(--accent))/0.28] hover:text-[hsl(var(--accent))]"
+                    className="inline-flex min-h-10 flex-col sm:flex-row items-center justify-center w-full sm:w-auto gap-1.5 px-3.5 py-2 rounded-full border border-[hsl(var(--border))] bg-white/60 dark:bg-white/10 text-[0.82rem] font-bold text-[hsl(var(--foreground))] no-underline shadow-sm transition-all hover:-translate-y-px hover:border-[hsl(var(--accent))/0.28] hover:text-[hsl(var(--accent))]"
                 >
                     <span>@{GITHUB_USERNAME}</span>
                     <ArrowUpRight size={14} className="hidden sm:block" />

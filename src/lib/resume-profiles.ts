@@ -97,7 +97,7 @@ export const ROLE_PROFILES: Record<RoleVariant, RoleProfile> = {
         excludeSkillNames: [...ML_TOOLS, ...DEVOPS_TOOLS, ...CLOUD_TOOLS],
         summaryFocus: 'building robust software systems with clean architecture',
         experienceEmphasis: ['software', 'development', 'engineering', 'design', 'architecture'],
-        professionalSummary: 'CS graduate (Maseno University) with 3+ years delivering production software in Python and TypeScript. Transitioning into AI/ML Engineering through a structured 26-month, 5-phase career roadmap — building from a Dockerised CLI to production multi-agent AI systems. Delivered M-Pesa payment integrations, custom dashboards, and REST APIs for Kenyan SME clients. Currently in Phase 1: Python, Docker, SQL, and CI/CD foundations.'
+        professionalSummary: 'Computer Science graduate with 3+ years of hands-on experience across software engineering, IT infrastructure, and production systems. Delivered full-stack applications, REST APIs, payment integrations, business automation tools, ERP implementation support, and applied AI/ML research with Python, TypeScript, PostgreSQL, Docker, OpenCV, and YOLO.'
     },
 
     'full-stack': {
@@ -114,7 +114,7 @@ export const ROLE_PROFILES: Record<RoleVariant, RoleProfile> = {
         excludeSkillNames: [...ML_TOOLS, ...DEVOPS_TOOLS, ...CLOUD_TOOLS],
         summaryFocus: 'building end-to-end web applications',
         experienceEmphasis: ['full-stack', 'web', 'frontend', 'backend', 'api', 'database'],
-        professionalSummary: 'Full-Stack Developer with 3+ years building React, Next.js, and Node.js applications for Kenyan and international clients. Specialised in M-Pesa Daraja API integrations, custom business dashboards, and OpenAPI-documented REST services. Delivered 12+ projects on time with 100% client satisfaction. CS graduate transitioning into AI/ML Engineering through a dedicated career roadmap.'
+        professionalSummary: 'Full-Stack Developer with 3+ years building React, Next.js, and Node.js applications for Kenyan and international clients. Specialised in M-Pesa Daraja API integrations, custom business dashboards, and OpenAPI-documented REST services. Delivered 12+ projects on time with 100% client satisfaction. CS graduate transitioning into AI/ML Engineering through a dedicated professional development plan.'
     },
 
     'frontend': {
@@ -168,7 +168,7 @@ export const ROLE_PROFILES: Record<RoleVariant, RoleProfile> = {
         excludeSkillNames: [...FRONTEND_TOOLS],
         summaryFocus: 'building ML infrastructure and cloud-native platforms',
         experienceEmphasis: ['cloud', 'infrastructure', 'kubernetes', 'docker', 'ml', 'pipeline', 'automation'],
-        professionalSummary: 'Software Engineer transitioning into AI/ML through a 26-month career roadmap. Phase 1 (current): Python, Docker Compose, GitHub Actions CI/CD, PostgreSQL, Nginx on Hetzner VPS. Phase 2 (upcoming): TypeScript, k3s Kubernetes, Terraform AWS, Prometheus/Grafana. Phase 3+: PyTorch, HuggingFace, RAG, LangChain, MLflow. CS graduate with 3+ years full-stack production experience.'
+        professionalSummary: 'Software Engineer and Full-Stack Developer with 3+ years of production-oriented experience across Python, TypeScript, REST APIs, PostgreSQL, Docker, Nginx, GitHub Actions, ERPNext, Windows Server, and applied AI/ML. Strengthening cloud, Kubernetes, Terraform, MLflow, LangChain, pgvector, and AWS through production-grade project work.'
     },
 
     'it-assistant': {
@@ -305,7 +305,7 @@ export function languageMatchesRole(language: string | null | undefined, role: R
  */
 export const PROJECT_FALLBACK_DESCRIPTIONS: Record<string, string> = {
     'ambooka': 'Personal portfolio site built with Next.js 16 and Supabase — features admin CMS, AI-generated resume variants, GitHub sync, and Playwright e2e tests.',
-    'roadmap': 'A 26-month, 5-phase AI/ML engineering roadmap building from a Dockerised Python CLI to a production multi-agent AI system.',
+    'roadmap': 'A professional AI/ML engineering development plan building from full-stack delivery into applied AI/ML and production engineering practice.',
     'storyline': 'Interactive storytelling platform built with TypeScript — exploring narrative structure and real-time collaborative writing.',
     'GenAI': 'Generative AI experiments: RAG prototypes, prompt engineering studies, and LLM API integrations documented as learning artefacts.',
     'Teleboard': 'Java-based telecommunications dashboard for managing and visualising network operations data.',

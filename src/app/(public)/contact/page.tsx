@@ -2,8 +2,8 @@ import Contact from '@/components/Contact'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Contact | Abdulrahman Ambooka',
-    description: 'Get in touch with Abdulrahman Ambooka for MLOps, AI Engineering, or Software Development collaborations.',
+    title: 'Contact | Msah Ambooka',
+    description: 'Get in touch with Msah Ambooka for MLOps, AI Engineering, or Software Development collaborations.',
 }
 
 export default function ContactPage() {

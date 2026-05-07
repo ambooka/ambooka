@@ -1,5 +1,5 @@
 -- Migration: 007_seed_career_roadmap.sql
--- Description: Seed the database with best-in-class MLOps Architect Career Roadmap data
+-- Description: Seed the database with best-in-class Software Engineer Career Roadmap data
 -- This script fixes schema drift AND sanitizes existing data before applying constraints.
 
 BEGIN;
@@ -163,7 +163,7 @@ INSERT INTO public.kpi_stats (label, value, color, type, section, display_order)
 ('Certifications', '6-8', '', 'solid', 'header', 2),
 ('Top Salary', '$350K+', '', 'solid', 'header', 3),
 ('Current Phase', 'Phase 1', 'bg-[#2a2a2a] text-white', 'solid', 'hero', 1),
-('Target Role', 'MLOps Architect', 'bg-[#facc15] text-[#2a2a2a]', 'solid', 'hero', 2),
+('Target Role', 'Software Engineer', 'bg-[#facc15] text-[#2a2a2a]', 'solid', 'hero', 2),
 ('Timeline Goal', '30-36 Months', 'bg-blue-600 text-white', 'solid', 'hero', 3),
 ('Projects Built', '3 / 8', 'border-gray-300', 'outline', 'hero', 4);
 
@@ -181,7 +181,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 (
     'about_text', 
     NULL,
-    'Recent Computer Science graduate building toward MLOps Architect. Focused on gaining production experience through hands-on projects in ML deployment, Kubernetes, and cloud infrastructure. Learning in public and documenting my journey from theory to production systems.',
+    'Recent Computer Science graduate building toward Software Engineer. Focused on gaining production experience through hands-on projects in ML deployment, Kubernetes, and cloud infrastructure. Documenting real professional work and documenting my journey from theory to production systems.',
     NULL,
     NULL,
     0,
@@ -279,7 +279,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 ),
 (
     'expertise_arch',
-    'MLOps Architecture',
+    'Software Engineerure',
     'Career Objective. Aspiring to design end-to-end multi-cloud AI platforms, optimize cloud costs (FinOps), and lead high-level system architecture.',
     'Cloud',
     'Developing',

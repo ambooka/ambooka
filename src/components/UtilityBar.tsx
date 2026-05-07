@@ -29,11 +29,11 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
     <>
       {/* Floating pill — trigger buttons inside backdrop-blur container */}
       <div className={cn(
-        "fixed z-50",
+        "fixed z-50 hidden md:flex",
         "md:right-5 md:top-1/2 md:-translate-y-1/2 md:bottom-auto",
-        "right-4 bottom-24 md:bottom-auto",
-        "flex flex-col items-center gap-3",
-        "scale-90 md:scale-100 origin-bottom-right md:origin-center",
+        "right-3 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] md:bottom-auto",
+        "flex-col items-center gap-3",
+        "origin-bottom-right md:origin-center",
         "p-2.5 rounded-2xl",
         "bg-[hsl(var(--card)/0.85)] backdrop-blur-xl",
         "border border-[hsl(var(--border))]",

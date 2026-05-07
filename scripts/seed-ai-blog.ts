@@ -127,7 +127,7 @@ For those finishing their Computer Science degrees, MLOps offers a unique blend 
 
 ## Conclusion
 
-The "shiniest" part of AI might be the architecture of the transformers themselves, but the "strongest" part is the infrastructure that supports them. As an aspiring MLOps Architect, I'm focused on building systems that don't just work, but *scale*.
+The "shiniest" part of AI might be the architecture of the transformers themselves, but the "strongest" part is the infrastructure that supports them. As an aspiring Software Engineer, I'm focused on building systems that don't just work, but *scale*.
         `,
         is_published: true,
         published_at: new Date(Date.now() - 172800000).toISOString()

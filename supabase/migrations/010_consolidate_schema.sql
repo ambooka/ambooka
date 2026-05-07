@@ -234,8 +234,8 @@ INSERT INTO public.skills (name, category, proficiency, display_order, is_featur
 -- Update personal_info with roadmap-aligned data
 UPDATE public.personal_info
 SET 
-    title = 'Software Engineer → MLOps Architect',
-    about_text = 'I am a Software Engineer on a structured 44-month journey to MLOps Architect. Currently mastering full-stack development with React/Next.js, FastAPI, and Flutter. My methodology: master software engineering first, then scale it with cloud infrastructure, Kubernetes, data pipelines, and ML systems. The best MLOps engineers are software engineers who understand the entire stack from UI to GPU.',
+    title = 'Software Engineer → Software Engineer',
+    about_text = 'I am a Software Engineer on a structured 44-month journey to Software Engineer. Currently mastering full-stack development with React/Next.js, FastAPI, and Flutter. My methodology: master software engineering first, then scale it with cloud infrastructure, Kubernetes, data pipelines, and ML systems. The best MLOps engineers are software engineers who understand the entire stack from UI to GPU.',
     expertise = '[
         {"section_key": "expertise_swe", "title": "Software Engineering", "content": "Production-grade applications with clean code, proper testing, and CI/CD. Python, TypeScript, FastAPI, pytest. The foundation everything builds upon.", "icon": "Code", "badge": "Mastered", "display_order": 1},
         {"section_key": "expertise_fullstack", "title": "Full-Stack Development", "content": "End-to-end web development: React, Next.js 14+, TypeScript, FastAPI. Complete products from pixel to database.", "icon": "Layers", "badge": "Mastered", "display_order": 2},
@@ -245,13 +245,13 @@ SET
         {"section_key": "expertise_k8s", "title": "Platform Engineering", "content": "Kubernetes, Helm, Terraform, ArgoCD, GitOps. Operating distributed systems at scale.", "icon": "Box", "badge": "Phase 5", "display_order": 6},
         {"section_key": "expertise_ml", "title": "Machine Learning", "content": "scikit-learn, PyTorch, Hugging Face Transformers. MLflow experiment tracking.", "icon": "BrainCircuit", "badge": "Phase 6", "display_order": 7},
         {"section_key": "expertise_llmops", "title": "LLMOps & GenAI", "content": "vLLM, Ollama serving. LangChain, LlamaIndex. Vector DBs. RAG pipelines.", "icon": "Brain", "badge": "Phase 7", "display_order": 8},
-        {"section_key": "expertise_mlops", "title": "MLOps Architecture", "content": "Kubeflow Pipelines, KServe model serving. Feast feature store. Evidently drift detection.", "icon": "Workflow", "badge": "Phase 8", "display_order": 9}
+        {"section_key": "expertise_mlops", "title": "Software Engineerure", "content": "Kubeflow Pipelines, KServe model serving. Feast feature store. Evidently drift detection.", "icon": "Workflow", "badge": "Phase 8", "display_order": 9}
     ]'::jsonb,
     kpi_stats = '[
         {"label": "Roadmap Phase", "value": "2 of 9", "color": "bg-gradient-to-r from-blue-600 to-purple-600 text-white", "type": "solid", "section": "hero", "display_order": 1},
         {"label": "Timeline", "value": "44 Months", "color": "bg-[#2a2a2a] text-white", "type": "solid", "section": "hero", "display_order": 2},
         {"label": "Stack Mastery", "value": "Full-Stack + Mobile", "color": "bg-[#facc15] text-[#2a2a2a]", "type": "solid", "section": "hero", "display_order": 3},
-        {"label": "Target Role", "value": "MLOps Architect", "color": "border-gray-300", "type": "outline", "section": "hero", "display_order": 4},
+        {"label": "Target Role", "value": "Software Engineer", "color": "border-gray-300", "type": "outline", "section": "hero", "display_order": 4},
         {"label": "Skills Tracked", "value": "37+", "type": "solid", "section": "header", "display_order": 1},
         {"label": "Projects", "value": "18 Planned", "type": "solid", "section": "header", "display_order": 2},
         {"label": "Next Phase", "value": "Cloud & DevOps", "type": "solid", "section": "header", "display_order": 3}

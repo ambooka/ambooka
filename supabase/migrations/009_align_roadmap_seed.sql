@@ -13,13 +13,13 @@ BEGIN;
 -- ============================================
 UPDATE public.personal_info
 SET 
-    title = 'Software Engineer → MLOps Architect',
+    title = 'Software Engineer → Software Engineer',
     updated_at = NOW()
 WHERE id = (SELECT id FROM public.personal_info LIMIT 1);
 
 -- If no row exists, insert one
 INSERT INTO public.personal_info (full_name, title, email, location)
-SELECT 'Ambooka', 'Software Engineer → MLOps Architect', 'contact@ambooka.dev', 'Kenya'
+SELECT 'Ambooka', 'Software Engineer → Software Engineer', 'contact@ambooka.dev', 'Kenya'
 WHERE NOT EXISTS (SELECT 1 FROM public.personal_info);
 
 -- ============================================
@@ -251,7 +251,7 @@ INSERT INTO public.kpi_stats (label, value, color, type, section, display_order)
 ('Roadmap Phase', '2 of 9', 'bg-gradient-to-r from-blue-600 to-purple-600 text-white', 'solid', 'hero', 1),
 ('Timeline', '44 Months', 'bg-[#2a2a2a] text-white', 'solid', 'hero', 2),
 ('Stack Mastery', 'Full-Stack + Mobile', 'bg-[#facc15] text-[#2a2a2a]', 'solid', 'hero', 3),
-('Target Role', 'MLOps Architect', 'border-gray-300', 'outline', 'hero', 4),
+('Target Role', 'Software Engineer', 'border-gray-300', 'outline', 'hero', 4),
 
 -- Header section stats
 ('Skills Tracked', '85+', '', 'solid', 'header', 1),
@@ -268,7 +268,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 (
     'about_text',
     NULL,
-    'I am a Software Engineer on a structured 44-month journey to MLOps Architect. Currently mastering full-stack development with React/Next.js, FastAPI, and Flutter. My methodology: master software engineering first, then scale it with cloud infrastructure, Kubernetes, data pipelines, and ML systems. The best MLOps engineers are software engineers who understand the entire stack from UI to GPU.',
+    'I am a Software Engineer on a structured 44-month journey to Software Engineer. Currently mastering full-stack development with React/Next.js, FastAPI, and Flutter. My methodology: master software engineering first, then scale it with cloud infrastructure, Kubernetes, data pipelines, and ML systems. The best MLOps engineers are software engineers who understand the entire stack from UI to GPU.',
     NULL,
     NULL,
     0,
@@ -352,7 +352,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 ),
 (
     'expertise_mlops',
-    'MLOps Architecture',
+    'Software Engineerure',
     'Kubeflow Pipelines, Argo Workflows. KServe, BentoML model serving. Feast feature store. Evidently drift detection. End-to-end ML platforms.',
     'Workflow',
     'Phase 8',

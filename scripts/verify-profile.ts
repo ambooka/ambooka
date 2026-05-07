@@ -10,7 +10,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 async function verify() {
-    console.log('🔍 Verifying CS Graduate Profile Updates...\n')
+    console.log('🔍 Verifying Computer Science Graduate Profile Updates...\n')
 
     // Personal Info
     console.log('=== PERSONAL INFO ===')

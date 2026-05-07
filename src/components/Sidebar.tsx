@@ -48,10 +48,10 @@ interface PersonalInfo {
 }
 
 const DEFAULT_PERSONAL_INFO: PersonalInfo = {
-  full_name: 'Abdulrahman Ambooka',
-  title: 'MLOps Architect & Software Engineer',
+  full_name: 'Msah Ambooka',
+  title: 'Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering',
   avatar_url: null,
-  about_text: 'Building production-ready ML systems. Focused on bridging the gap between data science and reliable infrastructure.',
+  about_text: 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.',
   email: 'hello@ambooka.dev',
   phone: undefined,
   location: 'Nairobi, Kenya',
@@ -228,7 +228,7 @@ export default function Sidebar({ isModal = false, isOpen = false, onClose, onOp
             I am {profile.title ? <span>a <strong className="text-[hsl(var(--foreground))]">{profile.title.split(' ')[0]}</strong> {profile.title.split(' ').slice(1).join(' ')}</span> : 'a Software Engineer'} based in {profile.location || 'Nairobi, Kenya'} with experience through projects and subjects in university.
           </p>
           <p className={cn("italic text-[hsl(var(--muted-foreground))] leading-relaxed mt-2.5", isModal ? "text-[0.78rem]" : "text-xs line-clamp-2")}>
-            {profile.about_text || 'Building production-ready ML systems. Focused on bridging the gap between data science and reliable infrastructure.'}
+            {profile.about_text || 'Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.'}
           </p>
         </div>
         <div className="shrink-0 max-sm:-order-1 max-sm:justify-self-center">

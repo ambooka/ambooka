@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { GitHubService } from "@/services/github";
@@ -25,13 +25,11 @@ import AnimatedPage from "@/components/AnimatedPage";
 import { getCardPattern } from "@/lib/design-patterns";
 import {
   fadeUp,
-  fadeScale,
   staggerContainer,
   staggerChild,
   staggerChildScale,
   scrollRevealTransition,
   defaultViewport,
-  instantTransition,
 } from "@/lib/motion";
 
 const GITHUB_USERNAME = "ambooka";
@@ -223,7 +221,6 @@ export default function About({
     if (!initialData) {
       fetchAboutData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
   const fetchAboutData = async () => {
@@ -287,7 +284,14 @@ export default function About({
       interface RoadmapPhase {
         status: string;
       }
-      const { data: phasesData } = await (supabase as any)
+      type RoadmapPhaseClient = {
+        from: (table: "roadmap_phases") => {
+          select: (columns: string) => {
+            order: (column: string) => Promise<{ data: RoadmapPhase[] | null }>;
+          };
+        };
+      };
+      const { data: phasesData } = await (supabase as unknown as RoadmapPhaseClient)
         .from("roadmap_phases")
         .select("*")
         .order("phase_number");
@@ -354,7 +358,7 @@ export default function About({
               "border border-[hsl(var(--border))]",
               "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
               "shadow-md",
-              "lg:grid lg:grid-cols-[1fr_auto] lg:gap-5 lg:items-center max-sm:p-4",
+              "lg:grid lg:grid-cols-[1fr_auto] lg:gap-5 lg:items-center max-sm:p-4 max-sm:mb-8",
             )}
           >
             {/* Decorative background glow */}
@@ -362,38 +366,38 @@ export default function About({
 
             <motion.div
               variants={staggerChild}
-              className="min-w-0 mb-6 lg:mb-0"
+              className="min-w-0 mb-3 sm:mb-6 lg:mb-0"
             >
               <motion.h1
                 variants={staggerChild}
-                className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-3 leading-tight tracking-tight text-[hsl(var(--foreground))]"
+                className="!text-[1.75rem] sm:!text-3xl lg:!text-4xl font-extrabold mb-3 leading-tight tracking-tight text-[hsl(var(--foreground))]"
               >
                 {kpiStats.headline || (
                   <>
                     <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
                       Software Engineer
                     </span>{" "}
-                    → AI/ML Engineer
+                    | Full-Stack Developer
                   </>
                 )}
               </motion.h1>
 
-              <div className="flex flex-wrap items-center gap-3 mt-2">
-                <p className="text-sm md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
+                <p className="text-[0.8rem] md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed">
                   {kpiStats.role || "Software Engineer"} •
                   <span className="text-[hsl(var(--accent))] font-semibold ml-1">
                     {kpiStats.focus ||
-                      "Python · TypeScript · React · Docker · Linux → AI/ML Engineer in 26 months"}
+                      "Python · TypeScript · React · Next.js · FastAPI · PostgreSQL · Docker"}
                   </span>
                 </p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))]/10 to-[hsl(var(--secondary))]/10 border border-[hsl(var(--accent))]/20 text-[9px] font-bold text-[hsl(var(--accent))] uppercase tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] animate-pulse" />
-                  Phase {kpiStats.current_phase || "1 - Foundations"}
+                  Focus {kpiStats.current_phase || "Software · IT Systems · AI/ML"}
                 </div>
               </div>
 
               {/* Segmented Progress Bar */}
-              <div className="flex gap-2 mt-5">
+              <div className="flex gap-2 mt-4 sm:mt-5">
                 {segments.map((seg, i) => (
                   <div
                     key={i}
@@ -420,7 +424,7 @@ export default function About({
 
             <motion.div
               variants={staggerChild}
-              className="flex flex-wrap gap-2.5 max-sm:grid max-sm:grid-cols-2"
+              className="flex flex-wrap gap-2.5 max-sm:grid max-sm:grid-cols-3"
             >
               {[
                 {
@@ -436,7 +440,6 @@ export default function About({
                     "flex-1 min-w-[80px] p-3 rounded-2xl border border-[hsl(var(--border))]",
                     "bg-[hsl(var(--card))/0.6] backdrop-blur-md",
                     "shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
-                    i === 2 && "max-sm:col-span-2",
                   )}
                 >
                   <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
@@ -525,7 +528,7 @@ export default function About({
                     "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
                   )}
                 >
-                  <h3 className="text-xs tracking-widest uppercase font-extrabold text-[hsl(var(--muted-foreground))] mb-3">
+                  <h3 className="text-[0.62rem] tracking-[0.08em] sm:text-xs sm:tracking-widest uppercase font-extrabold text-[hsl(var(--muted-foreground))] mb-3">
                     Recommendations
                   </h3>
                   <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[hsl(var(--border))] scrollbar-track-transparent snap-x">
@@ -641,8 +644,7 @@ export default function About({
               What I Build
             </h2>
             <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
-              Building an AI/ML Engineering roadmap across 5 phases — from
-              Dockerised CLI to production multi-agent systems
+              Full-stack software, IT systems, business automation, ERP implementation and applied AI/ML work from real client, company and academic projects
             </p>
 
             <motion.div
@@ -654,9 +656,9 @@ export default function About({
             >
               {[
                 {
-                  phase: "Phase 1–2",
+                  phase: "Software",
                   title: "Software Engineering",
-                  desc: "Python, TypeScript, Node.js REST APIs, React frontends, PostgreSQL, and Docker Compose — shipped to a live Hetzner VPS.",
+                  desc: "Python, TypeScript, Node.js REST APIs, React frontends, PostgreSQL, Docker, Nginx, and GitHub Actions used in client and portfolio systems.",
                   tags: ["Python", "TypeScript", "Docker"],
                   iconBase:
                     "text-[hsl(var(--accent))] bg-[hsl(var(--accent))/0.1]",
@@ -677,9 +679,9 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "Phase 2",
-                  title: "Cloud & Infrastructure",
-                  desc: "k3s Kubernetes, Helm, Terraform-managed AWS, Prometheus + Grafana observability — all GitOps-deployed.",
+                  phase: "Infrastructure",
+                  title: "IT Systems & Infrastructure",
+                  desc: "Windows Server, Active Directory, TCP/IP networking, VoIP, CCTV, biometric systems, Linux, Docker, and VPS deployment practice.",
                   tags: ["Kubernetes", "Terraform", "AWS"],
                   iconBase:
                     "text-[hsl(var(--secondary))] bg-[hsl(var(--secondary))/0.1]",
@@ -699,9 +701,9 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "Phase 3",
+                  phase: "AI/ML",
                   title: "Machine Learning",
-                  desc: "PyTorch models, HuggingFace fine-tuning, scikit-learn pipelines, FastAPI model serving with SHAP explanations.",
+                  desc: "Applied computer vision research with YOLO, OpenCV, PyTorch, Flask inference APIs, real-time video processing, and model evaluation.",
                   tags: ["PyTorch", "HuggingFace", "FastAPI"],
                   iconBase: "text-[hsl(192_82%_37%)] bg-[hsl(192_82%_37%)/0.1]",
                   iconSvg: (
@@ -839,16 +841,16 @@ export default function About({
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2.5 shrink-0">
+            <div className="flex w-full flex-wrap gap-2.5 shrink-0 lg:w-auto">
               <Button
-                className="rounded-xl px-5 h-10 font-extrabold tracking-widest uppercase text-[0.74rem] shadow-sm"
+                className="w-full rounded-xl px-5 h-10 font-extrabold tracking-widest uppercase text-[0.74rem] shadow-sm bg-[hsl(var(--accent))] text-white hover:bg-[hsl(var(--accent))/0.9] sm:w-auto"
                 onClick={openResumeFromCta}
               >
                 Open Resume
               </Button>
               <Button
                 variant="outline"
-                className="rounded-xl px-5 h-10 font-extrabold tracking-widest uppercase text-[0.74rem] bg-[hsl(var(--muted))/0.5]"
+                className="w-full rounded-xl px-5 h-10 font-extrabold tracking-widest uppercase text-[0.74rem] bg-[hsl(var(--muted))/0.5] sm:w-auto"
                 asChild
               >
                 <a href="/contact">Contact Me</a>

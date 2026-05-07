@@ -7,8 +7,8 @@ import { Metadata } from 'next'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-    title: 'Abdulrahman Ambooka | MLOps Architect & Software Engineer',
-    description: 'Portfolio of Abdulrahman Ambooka, an MLOps Architect and Software Engineer specializing in AI deployment, Kubernetes, and cloud infrastructure.',
+    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
+    description: 'Portfolio of Msah Ambooka, a software engineer and full-stack developer with IT systems, ERP implementation, payment integration, and applied AI/ML experience.',
 }
 
 const GITHUB_USERNAME = 'ambooka'

@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proper TypeScript types (PageId, Theme)
 
 ### Changed
-- Updated page title from generic to "Abdulrahman Ambooka | AI & Software Engineer"
+- Updated page title from generic to "Msah Ambooka | AI & Software Engineer"
 - Enhanced viewport configuration for better mobile display
 - Improved component type safety across Navbar and UtilityBar
 

@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "db:reset": "node scripts/reset-db.mjs",
+    "db:reset:local": "node scripts/reset-db.mjs --local",
+    "db:reset:prompt": "node scripts/reset-db.mjs --prompt",
+    "db:reset:supabase-direct": "node scripts/reset-db.mjs --supabase-direct"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

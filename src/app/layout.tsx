@@ -18,7 +18,7 @@ import { Person, WithContext } from "schema-dts";
 const personSchema: WithContext<Person> = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Abdulrahman Ambooka",
+  "name": "Msah Ambooka",
   "url": "https://ambooka.dev",
   "image": "https://ambooka.dev/og-image.png",
   "sameAs": [
@@ -26,32 +26,32 @@ const personSchema: WithContext<Person> = {
     "https://www.linkedin.com/in/abdulrahman-ambooka/",
     "https://twitter.com/ambooka"
   ],
-  "jobTitle": "MLOps Architect & Software Engineer",
+  "jobTitle": "Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering",
   "worksFor": {
     "@type": "Organization",
     "name": "Freelance / Open to Work"
   },
-  "description": "Full-stack software engineer and MLOps Architect building scalable AI platforms and cloud-native solutions.",
+  "description": "Computer Science graduate with hands-on experience across full-stack software, IT systems, ERP implementation, payment integrations, and applied AI/ML.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Nairobi",
     "addressCountry": "Kenya"
   },
-  "knowsAbout": ["Machine Learning", "MLOps", "Software Engineering", "Cloud Computing", "Kubernetes", "React", "Python"]
+  "knowsAbout": ["Software Engineering", "Full-Stack Development", "IT Systems", "ERPNext", "Payment Integrations", "Computer Vision", "Python", "TypeScript", "React", "PostgreSQL"]
 };
 
 export const metadata: Metadata = {
   title: {
-    default: "Abdulrahman Ambooka | MLOps Architect & AI Engineer",
-    template: "%s | Abdulrahman Ambooka"
+    default: "Msah Ambooka | Software Engineer & Full-Stack Developer",
+    template: "%s | Msah Ambooka"
   },
-  description: "Computer Science Graduate specializing in MLOps, AI Platform Engineering, and Cloud Architecture. Building end-to-end machine learning systems with Kubernetes, Python, and AWS.",
+  description: "Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and applied AI/ML.",
   keywords: [
     // --- IDENTITY ---
-    "Abdulrahman Ambooka", "Ambooka", "Abdulrahman",
+    "Msah Ambooka", "Ambooka", "Abdulrahman",
     "Software Engineer", "Full Stack Developer", "Backend Engineer", "Frontend Developer",
-    "MLOps Architect", "AI Engineer", "Cloud Solutions Architect", "Platform Engineer",
-    "DevOps Engineer", "Site Reliability Engineer", "SRE", "Data Engineer",
+    "AI/ML Engineering", "IT Systems", "ERP Implementation", "Backend Engineer",
+    "DevOps Engineer", "Data Engineer",
     "Tech Lead", "Senior Developer", "Freelance Developer", "Remote Engineer",
 
     // --- AI & MLOPS STACK ---
@@ -95,8 +95,8 @@ export const metadata: Metadata = {
     "Contract Developer", "Consultant", "Technical Co-founder",
     "Build AI App", "Deploy ML Models", "Scale Web Apps", "MVP Development"
   ],
-  authors: [{ name: "Abdulrahman Ambooka", url: "https://github.com/ambooka" }],
-  creator: "Abdulrahman Ambooka",
+  authors: [{ name: "Msah Ambooka", url: "https://github.com/ambooka" }],
+  creator: "Msah Ambooka",
   metadataBase: new URL('https://ambooka.dev'),
   alternates: {
     canonical: '/',
@@ -105,22 +105,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://ambooka.dev',
-    title: 'Abdulrahman Ambooka | MLOps Architect & AI Engineer',
-    description: 'Computer Science Graduate building end-to-end MLOps platforms and cloud-native AI systems.',
-    siteName: 'Abdulrahman Ambooka Portfolio',
+    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
+    description: 'Computer Science graduate building full-stack software, IT systems, business automation, and applied AI/ML solutions.',
+    siteName: 'Msah Ambooka Portfolio',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Abdulrahman Ambooka - MLOps Architect',
+        alt: 'Msah Ambooka - Software Engineer',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Abdulrahman Ambooka | MLOps Architect & AI Engineer',
-    description: 'Building scalable MLOps platforms and cloud-native AI infrastructures.',
+    title: 'Msah Ambooka | Software Engineer & Full-Stack Developer',
+    description: 'Building full-stack software, IT systems, business automation, and applied AI/ML solutions.',
     creator: '@ambooka',
     images: ['/og-image.png'],
   },

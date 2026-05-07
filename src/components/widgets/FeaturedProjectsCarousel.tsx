@@ -98,34 +98,34 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
-            <div className={cn("flex justify-between items-center", compact ? "mb-3" : "mb-5")}>
-                <div className="flex items-center gap-3">
+            <div className={cn("flex justify-between items-center gap-3", compact ? "mb-3" : "mb-5")}>
+                <div className="flex min-w-0 items-center gap-3">
                     <div className={cn(
                         "rounded-xl bg-[hsl(var(--accent))/0.1] flex items-center justify-center text-[hsl(var(--accent))] border border-[hsl(var(--accent))/0.2] shadow-sm",
                         embeddedCompact ? "h-8 w-8" : compact ? "h-7 w-7" : "h-10 w-10"
                     )}>
                         <Sparkles size={embeddedCompact || compact ? 14 : 18} />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                         <h2 className={cn(
-                            "font-black text-[hsl(var(--foreground))] tracking-tight",
-                            embeddedCompact || compact ? "text-sm uppercase tracking-widest" : "text-base sm:text-lg"
+                            "font-black text-[hsl(var(--foreground))] tracking-tight truncate",
+                            embeddedCompact || compact ? "text-xs uppercase tracking-[0.08em]" : "text-base sm:text-lg"
                         )}>
                             {embeddedCompact || compact ? 'Featured' : 'Featured Projects'}
                         </h2>
                         {!compact && <p className="text-[11px] font-[900] uppercase tracking-[0.18em] text-[hsl(var(--muted-foreground))] mt-0.5">Production-ready work</p>}
                     </div>
                 </div>
-                <div className="flex gap-1.5">
+                <div className="flex shrink-0 gap-1.5">
                     <button onClick={goPrev} className={cn(
                         "rounded-full bg-[hsl(var(--card))] border border-[hsl(var(--border))] flex items-center justify-center text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] hover:text-white hover:border-[hsl(var(--accent))] transition-all active:scale-95 shadow-sm",
-                        embeddedCompact || compact ? "w-7 h-7" : "w-9 h-9"
+                        "w-10 h-10"
                     )}>
                         <ChevronLeft size={embeddedCompact || compact ? 14 : 18} />
                     </button>
                     <button onClick={goNext} className={cn(
                         "rounded-full bg-[hsl(var(--card))] border border-[hsl(var(--border))] flex items-center justify-center text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] hover:text-white hover:border-[hsl(var(--accent))] transition-all active:scale-95 shadow-sm",
-                        embeddedCompact || compact ? "w-7 h-7" : "w-9 h-9"
+                        "w-10 h-10"
                     )}>
                         <ChevronRight size={embeddedCompact || compact ? 14 : 18} />
                     </button>
@@ -187,7 +187,7 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
                                     <div className="flex gap-2">
                                         <a href={project.url} target="_blank" rel="noopener noreferrer"
                                             className={cn(
-                                                "rounded-full  text-[hsl(var(--background))] font-black uppercase tracking-widest flex items-center gap-2 transition-all hover:bg-[hsl(var(--accent))] hover:scale-[1.02] shadow-md",
+                                                "rounded-full bg-[hsl(var(--foreground))] text-white font-black uppercase tracking-widest flex min-h-10 items-center gap-2 transition-all hover:bg-[hsl(var(--accent))] hover:scale-[1.02] shadow-md",
                                                 embeddedCompact || compact ? "px-3 py-2 text-[9px]" : "px-4 py-2.5 text-[10px]"
                                             )}>
                                             <Github size={embeddedCompact || compact ? 13 : 15} /> Repository
@@ -196,7 +196,7 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
                                             <a href={project.homepage} target="_blank" rel="noopener noreferrer"
                                                 className={cn(
                                                     "rounded-full border border-[hsl(var(--border))] flex items-center justify-center text-[hsl(var(--foreground))] hover:text-white hover:bg-[hsl(var(--accent))] hover:border-[hsl(var(--accent))] shadow-sm transition-all hover:scale-[1.02] bg-white/50 dark:bg-black/20",
-                                                    embeddedCompact || compact ? "w-8 h-8" : "w-9 h-9"
+                                                    embeddedCompact || compact ? "w-10 h-10" : "w-10 h-10"
                                                 )}>
                                                 <ExternalLink size={embeddedCompact || compact ? 14 : 15} />
                                             </a>
@@ -213,12 +213,22 @@ export default function FeaturedProjectsCarousel({ compact = false, embedded = f
                 {projects.map((_, i) => (
                     <button
                         key={i}
+                        aria-label={`Show featured project ${i + 1}`}
                         className={cn(
-                            "transition-all duration-500 rounded-full h-1.5",
-                            i === currentIndex ? "w-6 bg-[hsl(var(--accent))]" : "w-1.5 bg-[hsl(var(--border))] hover:bg-[hsl(var(--muted-foreground))]/50"
+                            "flex h-8 w-8 items-center justify-center rounded-full transition-all duration-500",
+                            "hover:bg-[hsl(var(--muted))/0.5]"
                         )}
                         onClick={() => goToSlide(i)}
-                    />
+                    >
+                        <span
+                            className={cn(
+                                "h-1.5 rounded-full transition-all duration-500",
+                                i === currentIndex
+                                    ? "w-6 bg-[hsl(var(--accent))]"
+                                    : "w-1.5 bg-[hsl(var(--border))]"
+                            )}
+                        />
+                    </button>
                 ))}
             </div>
         </div>

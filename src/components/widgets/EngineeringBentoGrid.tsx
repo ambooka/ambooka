@@ -119,7 +119,7 @@ export default function EngineeringBentoGrid() {
                     <div className="absolute -top-10 -right-10 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
                 </motion.article>
 
-                {/* Building In Public Card */}
+                {/* Professional Proof Card */}
                 <motion.article 
                     whileHover={{ scale: 1.02, y: -2 }}
                     className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md col-span-1 md:col-span-2 flex flex-col justify-center"
@@ -128,10 +128,10 @@ export default function EngineeringBentoGrid() {
                         <div className="p-2.5 rounded-xl bg-[hsl(var(--secondary))]/10 text-[hsl(var(--secondary))]">
                             <Users size={20} />
                         </div>
-                        <h3 className="font-extrabold text-[hsl(var(--foreground))]">Building In Public</h3>
+                        <h3 className="font-extrabold text-[hsl(var(--foreground))]">Professional Proof</h3>
                     </div>
                     <p className="text-sm font-medium leading-relaxed text-[hsl(var(--muted-foreground))] mb-6 max-w-sm">
-                        Proof of motion through public repos, system case-studies, and transparent roadmaps.
+                        Real client work, company IT systems, business automation, payment integrations, ERP implementation, and applied AI/ML research.
                     </p>
                     <div className="flex items-center gap-3">
                         <span className="relative flex h-3 w-3">

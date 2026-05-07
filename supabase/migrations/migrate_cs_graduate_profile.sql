@@ -1,5 +1,5 @@
 -- =====================================================
--- CS Graduate Profile Migration Script
+-- Computer Science Graduate Profile Migration Script
 -- Updates portfolio database with excellent CS graduate profile
 -- Location: Nairobi, Kenya
 -- =====================================================

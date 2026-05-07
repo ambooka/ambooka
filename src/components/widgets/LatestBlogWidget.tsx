@@ -117,7 +117,7 @@ export default function LatestBlogWidget() {
 
                 <Link
                     href="/blog"
-                    className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-[hsl(var(--accent))] transition-all hover:translate-x-1"
+                    className="inline-flex min-h-10 items-center gap-2 rounded-full px-1 text-[11px] font-black uppercase tracking-[0.18em] text-[hsl(var(--accent))] transition-all hover:translate-x-1"
                 >
                     Browse Blog
                     <ArrowRight size={14} />
