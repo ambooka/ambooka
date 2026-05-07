@@ -291,7 +291,9 @@ export default function About({
           };
         };
       };
-      const { data: phasesData } = await (supabase as unknown as RoadmapPhaseClient)
+      const { data: phasesData } = await (
+        supabase as unknown as RoadmapPhaseClient
+      )
         .from("roadmap_phases")
         .select("*")
         .order("phase_number");
@@ -392,7 +394,8 @@ export default function About({
                 </p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))]/10 to-[hsl(var(--secondary))]/10 border border-[hsl(var(--accent))]/20 text-[9px] font-bold text-[hsl(var(--accent))] uppercase tracking-wider">
                   <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] animate-pulse" />
-                  Focus {kpiStats.current_phase || "Software · IT Systems · AI/ML"}
+                  Focus{" "}
+                  {kpiStats.current_phase || "Software · IT Systems · AI/ML"}
                 </div>
               </div>
 
@@ -519,73 +522,6 @@ export default function About({
                 personalInfo={personalInfo}
                 onOpenResume={onOpenResume}
               />
-
-              {/* Testimonials */}
-              {testimonials.length > 0 && (
-                <section
-                  className={cn(
-                    "p-5 rounded-2xl border border-[hsl(var(--border))] shadow-md overflow-hidden",
-                    "bg-[hsl(var(--card))/0.8] backdrop-blur-xl",
-                  )}
-                >
-                  <h3 className="text-[0.62rem] tracking-[0.08em] sm:text-xs sm:tracking-widest uppercase font-extrabold text-[hsl(var(--muted-foreground))] mb-3">
-                    Recommendations
-                  </h3>
-                  <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[hsl(var(--border))] scrollbar-track-transparent snap-x">
-                    {testimonials.map((testimonial, index) => {
-                      const pattern = getCardPattern(index);
-                      return (
-                        <div
-                          key={testimonial.id}
-                          onClick={() => openTestimonialModal(testimonial)}
-                          className={cn(
-                            "group relative shrink-0 w-[min(84vw,340px)] snap-center cursor-pointer",
-                            "p-5 pt-10 rounded-2xl border border-[hsl(var(--border))]",
-                            pattern.bgClass,
-                            "shadow-sm hover:shadow-md hover:border-[hsl(var(--accent))/0.2] transition-all duration-300",
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              pattern.blobClass,
-                              "z-0 pointer-events-none",
-                            )}
-                          />
-                          <div className="absolute top-0 left-5 -translate-y-1/2 w-14 h-14 rounded-xl overflow-hidden border-2 border-[hsl(var(--card))] shadow-md group-hover:scale-105 group-hover:border-[hsl(var(--accent))] transition-all duration-300">
-                            <Image
-                              src={
-                                testimonial.avatar_url ||
-                                "/assets/images/avatar-placeholder.png"
-                              }
-                              alt={testimonial.name}
-                              width={56}
-                              height={56}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <h4 className="text-[0.96rem] font-bold text-[hsl(var(--foreground))] mb-1.5 group-hover:text-[hsl(var(--accent))] transition-colors">
-                            {testimonial.name}
-                          </h4>
-                          <p className="text-[0.82rem] text-[hsl(var(--muted-foreground))] leading-relaxed line-clamp-4 italic">
-                            &quot;{testimonial.text}&quot;
-                          </p>
-                          <div className="mt-4 pt-4 border-t border-[hsl(var(--border))] flex justify-between items-center">
-                            <time className="text-xs text-[hsl(var(--muted-foreground))] font-medium">
-                              {new Date(testimonial.date).toLocaleDateString(
-                                "en-US",
-                                { month: "short", year: "numeric" },
-                              )}
-                            </time>
-                            <span className="text-xs text-[hsl(var(--accent))] font-medium opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-                              Read more →
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              )}
             </motion.div>
 
             {/* Right Column */}
@@ -644,7 +580,9 @@ export default function About({
               What I Build
             </h2>
             <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
-              Full-stack software, IT systems, business automation, ERP implementation and applied AI/ML work from real client, company and academic projects
+              Full-stack software, IT systems, business automation, ERP
+              implementation and applied AI/ML work from real client, company
+              and academic projects
             </p>
 
             <motion.div
