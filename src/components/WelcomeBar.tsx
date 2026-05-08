@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/integrations/supabase/client'
 import { GitHubService } from '@/services/github'
+import { caseStudies } from '@/data/case-studies'
 
 const GITHUB_USERNAME = 'ambooka'
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || ''
@@ -36,15 +37,12 @@ interface KpiStats {
 export default function WelcomeBar() {
     const [expertise, setExpertise] = useState<Expertise>(DEFAULT_EXPERTISE)
     const [kpiStats, setKpiStats] = useState<KpiStats>(DEFAULT_KPI_STATS)
-    const [skillCount, setSkillCount] = useState(40)
+    const [caseStudyCount] = useState(caseStudies.length)
     const [projectCount, setProjectCount] = useState(25)
-    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         (async () => {
             try {
-                setIsLoading(true)
-
                 // Fetch personal_info including expertise and kpi_stats
                 const { data: personalInfo, error: personalError } = await supabase
                     .from('personal_info')
@@ -72,15 +70,6 @@ export default function WelcomeBar() {
                     }
                 }
 
-                // Fetch skills count from DB
-                const { count: skillsCount } = await supabase
-                    .from('skills')
-                    .select('id', { count: 'exact', head: true })
-
-                if (skillsCount !== null && skillsCount > 0) {
-                    setSkillCount(skillsCount)
-                }
-
                 // Fetch project count from GitHub directly (including private repos)
                 const githubService = new GitHubService(GITHUB_TOKEN)
                 const repos = await githubService.getRepositories(GITHUB_USERNAME, {
@@ -94,8 +83,6 @@ export default function WelcomeBar() {
                 }
             } catch (e) {
                 console.error('Error fetching stats:', e)
-            } finally {
-                setIsLoading(false)
             }
         })()
     }, [])
@@ -137,14 +124,14 @@ export default function WelcomeBar() {
                 <div className="welcome-stat">
                     <div className="stat-row">
                         <svg className="stat-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <path d="M14 2v6h6" />
+                            <path d="M8 13h8" />
+                            <path d="M8 17h6" />
                         </svg>
-                        <span className="welcome-stat-value">{skillCount}</span>
+                        <span className="welcome-stat-value">{caseStudyCount}</span>
                     </div>
-                    <span className="welcome-stat-label">Skills</span>
+                    <span className="welcome-stat-label">Case Studies</span>
                 </div>
                 <div className="welcome-stat">
                     <div className="stat-row">

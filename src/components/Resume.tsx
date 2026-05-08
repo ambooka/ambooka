@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Book, BriefcaseBusiness, Loader2, Award, Download } from 'lucide-react'
+import { Book, BriefcaseBusiness, Loader2, Award } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
@@ -9,9 +9,6 @@ import AnimatedPage from '@/components/AnimatedPage'
 import { getCardPattern } from '@/lib/design-patterns'
 import {
   fadeUp,
-  staggerContainer,
-  staggerChild,
-  staggerChildScale,
   scrollRevealTransition,
   defaultViewport,
 } from '@/lib/motion'
@@ -74,6 +71,7 @@ interface Skill {
   category: string
   proficiency_level?: number | null
   proficiency?: number | null
+  icon_url?: string | null
   is_featured: boolean
   display_order: number | null
   created_at: string
@@ -95,6 +93,173 @@ const normalizeProfessionalTitle = (title?: string | null) => {
   if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE
   return value
 }
+
+const DEVICON_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons'
+const SIMPLE_ICON_BASE = 'https://cdn.simpleicons.org'
+
+const devicon = (path: string) => `${DEVICON_BASE}/${path}`
+const simpleIcon = (slug: string, color: string) => `${SIMPLE_ICON_BASE}/${slug}/${color}`
+
+const SKILL_LOGOS: Record<string, string[]> = {
+  python: [devicon('python/python-original.svg')],
+  typescript: [devicon('typescript/typescript-original.svg')],
+  javascript: [devicon('javascript/javascript-original.svg')],
+  sql: [devicon('microsoftsqlserver/microsoftsqlserver-original.svg')],
+  bash: [devicon('bash/bash-original.svg')],
+  go: [devicon('go/go-original-wordmark.svg')],
+  java: [devicon('java/java-original.svg')],
+  'c#': [devicon('csharp/csharp-original.svg')],
+  'c++': [devicon('cplusplus/cplusplus-original.svg')],
+  kotlin: [devicon('kotlin/kotlin-original.svg')],
+
+  react: [devicon('react/react-original.svg')],
+  'react native': [devicon('react/react-original.svg')],
+  'next.js': [devicon('nextjs/nextjs-original.svg')],
+  vue: [devicon('vuejs/vuejs-original.svg')],
+  angular: [devicon('angularjs/angularjs-original.svg')],
+  html: [devicon('html5/html5-original.svg')],
+  html5: [devicon('html5/html5-original.svg')],
+  css: [devicon('css3/css3-original.svg')],
+  css3: [devicon('css3/css3-original.svg')],
+  tailwind: [devicon('tailwindcss/tailwindcss-original.svg')],
+  'tailwind css': [devicon('tailwindcss/tailwindcss-original.svg')],
+  zustand: [devicon('react/react-original.svg')],
+
+  'node.js': [devicon('nodejs/nodejs-original.svg')],
+  nodejs: [devicon('nodejs/nodejs-original.svg')],
+  express: [devicon('express/express-original.svg')],
+  'express.js': [devicon('express/express-original.svg')],
+  fastapi: [devicon('fastapi/fastapi-original.svg')],
+  django: [devicon('django/django-plain.svg')],
+  flask: [devicon('flask/flask-original.svg')],
+  'spring boot': [devicon('spring/spring-original.svg')],
+  'rest apis': [devicon('openapi/openapi-original.svg')],
+  'rest api': [devicon('openapi/openapi-original.svg')],
+  openapi: [devicon('openapi/openapi-original.svg')],
+  'openapi / swagger': [devicon('openapi/openapi-original.svg'), simpleIcon('swagger', '85EA2D')],
+  swagger: [simpleIcon('swagger', '85EA2D')],
+  graphql: [devicon('graphql/graphql-plain.svg')],
+
+  postgresql: [devicon('postgresql/postgresql-original.svg')],
+  mysql: [devicon('mysql/mysql-original.svg')],
+  mongodb: [devicon('mongodb/mongodb-original.svg')],
+  redis: [devicon('redis/redis-original.svg')],
+  supabase: [devicon('supabase/supabase-original.svg')],
+  firebase: [devicon('firebase/firebase-plain.svg')],
+  sqlite: [devicon('sqlite/sqlite-original.svg')],
+  pgvector: [devicon('postgresql/postgresql-original.svg')],
+
+  docker: [devicon('docker/docker-original.svg')],
+  'docker compose': [devicon('docker/docker-original.svg')],
+  kubernetes: [devicon('kubernetes/kubernetes-original.svg')],
+  git: [devicon('git/git-original.svg')],
+  github: [devicon('github/github-original.svg')],
+  'github actions': [devicon('githubactions/githubactions-original.svg')],
+  'git & github actions': [devicon('git/git-original.svg'), devicon('githubactions/githubactions-original.svg')],
+  gitlab: [devicon('gitlab/gitlab-original.svg')],
+  jenkins: [devicon('jenkins/jenkins-original.svg')],
+  terraform: [devicon('terraform/terraform-original.svg')],
+  ansible: [devicon('ansible/ansible-original.svg')],
+  nginx: [devicon('nginx/nginx-original.svg')],
+  apache: [devicon('apache/apache-original.svg')],
+  aws: [devicon('amazonwebservices/amazonwebservices-original-wordmark.svg')],
+  azure: [devicon('azure/azure-original.svg')],
+  'google cloud': [devicon('googlecloud/googlecloud-original.svg')],
+  linux: [devicon('linux/linux-original.svg')],
+  'linux ubuntu': [devicon('ubuntu/ubuntu-original.svg')],
+  ubuntu: [devicon('ubuntu/ubuntu-original.svg')],
+  'hetzner vps': [simpleIcon('hetzner', 'D50C2D')],
+  grafana: [devicon('grafana/grafana-original.svg')],
+  prometheus: [devicon('prometheus/prometheus-original.svg')],
+  'prometheus + grafana': [devicon('prometheus/prometheus-original.svg'), devicon('grafana/grafana-original.svg')],
+
+  'windows server': [devicon('windows11/windows11-original.svg')],
+  'active directory': [devicon('azure/azure-original.svg')],
+  erpnext: [simpleIcon('erpnext', '0089FF')],
+  voip: [simpleIcon('cisco', '1BA0D7')],
+  'tcp/ip networking': [simpleIcon('cisco', '1BA0D7')],
+
+  tensorflow: [devicon('tensorflow/tensorflow-original.svg')],
+  pytorch: [devicon('pytorch/pytorch-original.svg')],
+  keras: [devicon('keras/keras-original.svg')],
+  opencv: [devicon('opencv/opencv-original.svg')],
+  yolo: [simpleIcon('yolo', '00FFFF')],
+  'scikit-learn': [devicon('scikitlearn/scikitlearn-original.svg')],
+  scikitlearn: [devicon('scikitlearn/scikitlearn-original.svg')],
+  'hugging face': [simpleIcon('huggingface', 'FFD21E')],
+  huggingface: [simpleIcon('huggingface', 'FFD21E')],
+  jupyter: [devicon('jupyter/jupyter-original.svg')],
+  langchain: [simpleIcon('langchain', '1C3C3C')],
+  mlflow: [simpleIcon('mlflow', '0194E2')],
+
+  figma: [devicon('figma/figma-original.svg')],
+  postman: [simpleIcon('postman', 'FF6C37')],
+  'vs code': [devicon('vscode/vscode-original.svg')],
+  vscode: [devicon('vscode/vscode-original.svg')],
+  powershell: [devicon('powershell/powershell-original.svg')],
+  pytest: [simpleIcon('pytest', '0A9EDC')],
+  dvc: [simpleIcon('dvc', '13ADC7')],
+  airflow: [simpleIcon('apacheairflow', '017CEE')],
+}
+
+const CORE_COMPETENCY_GROUPS = [
+  {
+    title: 'Product Interfaces',
+    summary: 'Frontend systems for polished, responsive web products.',
+    skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+  },
+  {
+    title: 'Backend APIs',
+    summary: 'Service layers, integrations, and documented HTTP APIs.',
+    skills: ['Python', 'FastAPI', 'Node.js', 'REST APIs'],
+  },
+  {
+    title: 'Data Platforms',
+    summary: 'Relational data modeling, managed backends, and caching.',
+    skills: ['PostgreSQL', 'SQL', 'Supabase', 'Redis'],
+  },
+  {
+    title: 'Deployment',
+    summary: 'Containerized apps, Linux servers, reverse proxies, and CI.',
+    skills: ['Docker', 'GitHub Actions', 'Linux Ubuntu', 'Nginx'],
+  },
+  {
+    title: 'Business Systems',
+    summary: 'Operational IT, ERP support, and production environments.',
+    skills: ['ERPNext', 'Windows Server', 'Active Directory', 'TCP/IP Networking'],
+  },
+  {
+    title: 'Applied AI / CV',
+    summary: 'Computer vision workflows and practical ML model work.',
+    skills: ['PyTorch', 'OpenCV', 'YOLO', 'scikit-learn'],
+  },
+]
+
+const normalizeSkillKey = (skillName: string) =>
+  skillName
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+
+const isGenericDeviconLogo = (url?: string | null) =>
+  Boolean(url?.includes('/devicon/devicon-original.svg'))
+
+const getSkillLogos = (skillName: string, iconUrl?: string | null): string[] => {
+  const mappedLogos = SKILL_LOGOS[normalizeSkillKey(skillName)]
+  if (mappedLogos) return mappedLogos
+  if (iconUrl && !isGenericDeviconLogo(iconUrl)) return [iconUrl]
+  return []
+}
+
+const getSkillInitials = (skillName: string) =>
+  skillName
+    .replace(/[^a-zA-Z0-9+#. ]/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part[0])
+    .join('')
+    .toUpperCase() || 'SK'
 
 export default function Resume({ isActive = false, initialData }: ResumeProps) {
   const normalizedInitialData = initialData
@@ -150,63 +315,6 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
     }
   }
 
-  const getSkillLogo = (skillName: string): string => {
-    const logoMap: Record<string, string> = {
-      'Python': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg',
-      'TypeScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
-      'JavaScript': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg',
-      'Java': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg',
-      'C#': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg',
-      'C++': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg',
-      'React': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
-      'Next.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
-      'Vue': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg',
-      'Angular': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg',
-      'HTML': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg',
-      'CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg',
-      'Tailwind CSS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg',
-      'Node.js': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
-      '.NET Core': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg',
-      'Spring Boot': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg',
-      'Express': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg',
-      'Django': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg',
-      'Flask': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg',
-      'TensorFlow': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg',
-      'PyTorch': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg',
-      'Keras': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/keras/keras-original.svg',
-      'Azure': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg',
-      'AWS': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
-      'Google Cloud': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg',
-      'Docker': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg',
-      'Kubernetes': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg',
-      'Git': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg',
-      'GitHub': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg',
-      'GitLab': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg',
-      'Jenkins': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg',
-      'PostgreSQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
-      'MongoDB': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
-      'MySQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
-      'Redis': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg',
-      'Flutter': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg',
-      'React Native': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
-      'Linux': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg',
-      'Figma': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
-      'GraphQL': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg',
-      'Supabase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg',
-      'Firebase': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg',
-      'Bash': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg',
-      'PowerShell': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/powershell/powershell-original.svg',
-      'Ansible': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ansible/ansible-original.svg',
-      'Terraform': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg',
-      'Nginx': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg',
-      'Apache': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg',
-      'Grafana': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg',
-      'Prometheus': 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg',
-    }
-
-    return logoMap[skillName] || 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/devicon/devicon-original.svg'
-  }
-
   const formatDate = (date: string | null, isCurrent: boolean): string => {
     if (isCurrent) return 'Present'
     if (!date) return ''
@@ -257,6 +365,11 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
       </article>
     )
   }
+
+  const skillsByKey = new Map(resumeData.skills.map(skill => [normalizeSkillKey(skill.name), skill]))
+  const competencyGroups = CORE_COMPETENCY_GROUPS.filter(group =>
+    group.skills.some(skillName => skillsByKey.has(normalizeSkillKey(skillName)))
+  )
 
   return (
     <AnimatedPage>
@@ -410,7 +523,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
       )}
 
       {/* Skills Section */}
-      {resumeData.skills && resumeData.skills.length > 0 && (
+      {competencyGroups.length > 0 && (
         <motion.section
           className="mt-4"
           variants={fadeUp}
@@ -424,37 +537,73 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
           </div>
 
           <div className="mb-8">
-            <h4 className="text-sm font-bold text-[hsl(var(--muted-foreground))] uppercase tracking-wider mb-6">Core Competencies</h4>
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-4">
-              {resumeData.skills
-                .filter(skill => skill.is_featured)
-                .map((skill, index) => {
+            <h4 className="text-sm font-bold text-[hsl(var(--muted-foreground))] uppercase tracking-wider mb-6">Competency Areas</h4>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {competencyGroups.map((group, index) => {
                   const pattern = getCardPattern(index);
                   return (
                   <div
-                    key={skill.id}
+                    key={group.title}
                     className={cn(
-                      "group relative flex flex-col items-center gap-3 p-5 border border-[hsl(var(--border))] rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[hsl(var(--accent))/0.5] overflow-hidden",
+                      "group relative min-h-[168px] p-5 border border-[hsl(var(--border))] rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-[hsl(var(--accent))/0.5] overflow-hidden",
                       pattern.bgClass
                     )}
                   >
                     <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))] opacity-0 group-hover:opacity-100 transition-opacity z-10" />
                     <div className={cn(pattern.blobClass, "z-0 pointer-events-none")} />
                     
-                    <div className="relative w-12 h-12 rounded-xl flex items-center justify-center bg-[hsl(var(--card))] border border-[hsl(var(--border))] group-hover:border-[hsl(var(--accent))/0.3] transition-colors z-10">
-                      <Image
-                        src={getSkillLogo(skill.name)}
-                        alt={skill.name}
-                        fill
-                        className="object-contain"
-                        loading="lazy"
-                        unoptimized
-                      />
+                    <div className="relative z-10 flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <h5 className="text-base font-black text-[hsl(var(--foreground))] tracking-tight">
+                          {group.title}
+                        </h5>
+                        <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted-foreground))]">
+                          {group.summary}
+                        </p>
+                      </div>
+
+                      <div className="flex shrink-0 -space-x-2">
+                        {group.skills.slice(0, 4).map(skillName => {
+                          const skill = skillsByKey.get(normalizeSkillKey(skillName))
+                          const skillLogo = getSkillLogos(skillName, skill?.icon_url)[0]
+
+                          return (
+                            <div
+                              key={skillName}
+                              className="grid h-9 w-9 place-items-center rounded-xl border border-[hsl(var(--border))] bg-white p-1.5 shadow-sm"
+                              title={skillName}
+                            >
+                              {skillLogo ? (
+                                <Image
+                                  src={skillLogo}
+                                  alt={`${skillName} logo`}
+                                  width={24}
+                                  height={24}
+                                  className="object-contain"
+                                  loading="lazy"
+                                  unoptimized
+                                />
+                              ) : (
+                                <span className="text-[10px] font-black text-slate-700">
+                                  {getSkillInitials(skillName)}
+                                </span>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
                     
-                    <span className="text-[13px] font-bold text-[hsl(var(--foreground))] text-center leading-tight">
-                      {skill.name}
-                    </span>
+                    <div className="relative z-10 mt-5 flex flex-wrap gap-2">
+                      {group.skills.map(skillName => (
+                        <span
+                          key={skillName}
+                          className="px-2.5 py-1 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card)/0.72)] text-[11px] font-bold text-[hsl(var(--foreground))]"
+                        >
+                          {skillName}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 );
               })}

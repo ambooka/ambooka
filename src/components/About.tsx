@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,16 +10,10 @@ import LatestBlogWidget from "@/components/widgets/LatestBlogWidget";
 import EngineeringBentoGrid from "@/components/widgets/EngineeringBentoGrid";
 import ProfileWidget from "@/components/widgets/ProfileWidget";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui";
 import { Button } from "@/components/ui";
 import AnimatedPage from "@/components/AnimatedPage";
 import { getCardPattern } from "@/lib/design-patterns";
+import { caseStudies } from "@/data/case-studies";
 import {
   fadeUp,
   staggerContainer,
@@ -162,16 +155,9 @@ export default function About({
   onOpenResume,
   initialData,
 }: AboutProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTestimonial, setSelectedTestimonial] =
-    useState<Testimonial | null>(null);
-
   const [loading, setLoading] = useState(!initialData);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(
-    initialData?.testimonials || [],
-  );
 
-  const [skillCount, setSkillCount] = useState(40);
+  const [caseStudyCount] = useState(caseStudies.length);
   const [projectCount, setProjectCount] = useState(25);
   const [kpiStats, setKpiStats] = useState<KpiStats>({
     years_experience:
@@ -200,12 +186,10 @@ export default function About({
     try {
       setLoading(true);
 
-      const [personalInfoResult, skillsResult, testimonialsResult] =
-        await Promise.all([
-          supabase.from("personal_info").select("*").single(),
-          supabase.from("skills").select("*").order("display_order"),
-          supabase.from("testimonials").select("*").order("display_order"),
-        ]);
+      const personalInfoResult = await supabase
+        .from("personal_info")
+        .select("*")
+        .single();
 
       if (personalInfoResult.data) {
         const info = personalInfoResult.data as unknown as PersonalInfo;
@@ -216,10 +200,6 @@ export default function About({
             ...(info.kpi_stats as unknown as KpiStats),
           }));
         }
-      }
-
-      if (testimonialsResult.data && testimonialsResult.data.length > 0) {
-        setTestimonials(testimonialsResult.data);
       }
 
       try {
@@ -250,20 +230,11 @@ export default function About({
         }
       }
 
-      if (skillsResult.data) {
-        setSkillCount(skillsResult.data.length);
-      }
-
     } catch (error) {
       console.error("Error fetching about data:", error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const openTestimonialModal = (testimonial: Testimonial) => {
-    setSelectedTestimonial(testimonial);
-    setIsModalOpen(true);
   };
 
   const openResumeFromCta = () => {
@@ -362,7 +333,7 @@ export default function About({
                   label: "Years Exp",
                   value: `${kpiStats.years_experience || "3"}+`,
                 },
-                { label: "Skills", value: skillCount, counter: true },
+                { label: "Case Studies", value: caseStudyCount, counter: true },
                 { label: "Projects", value: projectCount, counter: true },
               ].map((stat, i) => (
                 <div
@@ -396,9 +367,10 @@ export default function About({
                         stroke="currentColor"
                         strokeWidth="1.5"
                       >
-                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                        <path d="M2 17l10 5 10-5" />
-                        <path d="M2 12l10 5 10-5" />
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 2v6h6" />
+                        <path d="M8 13h8" />
+                        <path d="M8 17h6" />
                       </svg>
                     )}
                     {i === 2 && (
@@ -728,54 +700,6 @@ export default function About({
           </motion.section>
         </div>
 
-        {/* Testimonial Modal via shadcn/ui Dialog */}
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogContent className="sm:max-w-md bg-[hsl(var(--card))] border-[hsl(var(--border))]">
-            <DialogHeader>
-              <DialogTitle className="sr-only">
-                Testimonial from {selectedTestimonial?.name}
-              </DialogTitle>
-            </DialogHeader>
-            {selectedTestimonial && (
-              <div className="flex flex-col items-center text-center mt-2">
-                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border-2 border-[hsl(var(--card))] shadow-lg mb-4">
-                  <Image
-                    src={
-                      selectedTestimonial.avatar_url ||
-                      "/assets/images/avatar-placeholder.png"
-                    }
-                    alt={selectedTestimonial.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <Image
-                  src="/assets/images/icon-quote.svg"
-                  alt="quote icon"
-                  width={32}
-                  height={32}
-                  className="mb-3 opacity-20"
-                />
-                <h4 className="text-xl font-bold text-[hsl(var(--foreground))] mb-1">
-                  {selectedTestimonial.name}
-                </h4>
-                <DialogDescription className="text-xs font-medium mb-4">
-                  {new Date(selectedTestimonial.date).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    },
-                  )}
-                </DialogDescription>
-                <p className="text-[0.9rem] leading-relaxed text-[hsl(var(--muted-foreground))] italic">
-                  &quot;{selectedTestimonial.text}&quot;
-                </p>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
       </article>
     </AnimatedPage>
   );
