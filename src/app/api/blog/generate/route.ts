@@ -2,12 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/integrations/supabase/types'
 import {
-  BLOG_AUTOMATION_MODEL,
-  blogPostJsonSchema,
+  GEMINI_BLOG_MODEL,
   buildBlogGenerationPrompt,
   getBlogInsertPayload,
   slugify,
-  type BlogSource,
   type GeneratedBlogPost,
 } from '@/lib/blog-automation'
 
@@ -16,14 +14,34 @@ export const maxDuration = 60
 
 type BlogClient = SupabaseClient<Database>
 
-interface OpenAIResponseShape {
-  output_text?: string
-  output?: Array<{
-    type?: string
-    content?: Array<{ type?: string; text?: string; annotations?: unknown[] }>
-    action?: { sources?: Array<{ title?: string; url?: string }> }
+type AuthContext = {
+  mode: 'automation' | 'admin' | 'local'
+  userToken: string | null
+}
+
+interface GenerationOptions {
+  count: number
+  publish: boolean
+  topic?: string
+}
+
+interface GeminiResponseShape {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text?: string }>
+    }
+    finishReason?: string
   }>
   error?: { message?: string }
+}
+
+interface BlogFunctionResponse {
+  success?: boolean
+  error?: string
+  post?: unknown
+  posts?: unknown[]
+  publish?: boolean
+  count?: number
 }
 
 const getSupabaseConfig = () => {
@@ -37,6 +55,12 @@ const getSupabaseConfig = () => {
 
   return { url, anonKey, serviceRoleKey }
 }
+
+const getGeminiApiKey = () =>
+  process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || null
+
+const shouldUseSupabaseFunction = () =>
+  process.env.BLOG_GENERATION_PROVIDER !== 'next'
 
 const getBearerToken = (request: NextRequest) => {
   const header = request.headers.get('authorization') || ''
@@ -93,26 +117,21 @@ const getSupabaseClient = (mode: 'automation' | 'admin' | 'local', userToken: st
   throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for scheduled blog generation.')
 }
 
-const extractOutputText = (response: OpenAIResponseShape) => {
-  if (typeof response.output_text === 'string' && response.output_text.trim()) {
-    return response.output_text
-  }
-
-  const message = response.output?.find((item) => item.type === 'message')
-  const text = message?.content?.find((item) => item.type === 'output_text')?.text
+const extractGeminiText = (response: GeminiResponseShape) => {
+  const text = response.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text || '')
+    .join('')
+    .trim()
   if (text?.trim()) return text
 
-  throw new Error(response.error?.message || 'OpenAI did not return blog content.')
+  throw new Error(response.error?.message || 'Gemini did not return blog content.')
 }
 
-const extractResponseSources = (response: OpenAIResponseShape): BlogSource[] =>
-  (response.output || [])
-    .flatMap((item) => item.action?.sources || [])
-    .map((source) => ({
-      title: source.title?.trim() || source.url?.trim() || 'Source',
-      url: source.url?.trim() || '',
-    }))
-    .filter((source) => /^https?:\/\//.test(source.url))
+const parseJsonText = (text: string) => {
+  const trimmed = text.trim()
+  const fencedMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i)
+  return JSON.parse(fencedMatch?.[1] || trimmed)
+}
 
 const normalizeGeneratedPost = (value: unknown): GeneratedBlogPost => {
   const post = value as Partial<GeneratedBlogPost>
@@ -131,72 +150,60 @@ const normalizeGeneratedPost = (value: unknown): GeneratedBlogPost => {
     tags: Array.isArray(post.tags) ? post.tags : ['Software Engineering', 'AI'],
     seo_title: post.seo_title || post.title,
     meta_description: post.meta_description || post.excerpt,
-    sources: Array.isArray(post.sources) ? post.sources : [],
+    sources: Array.isArray(post.sources)
+      ? post.sources
+        .filter((source) => source.url && /^https?:\/\//.test(source.url))
+        .map((source) => ({
+          title: source.title?.trim() || source.url,
+          url: source.url,
+        }))
+      : [],
   }
 }
 
-const generatePostWithOpenAI = async (topic?: string) => {
-  const apiKey = process.env.OPENAI_API_KEY
+const getGeminiModelPath = () =>
+  GEMINI_BLOG_MODEL.startsWith('models/') ? GEMINI_BLOG_MODEL : `models/${GEMINI_BLOG_MODEL}`
+
+const generatePostWithGemini = async (topic?: string) => {
+  const apiKey = getGeminiApiKey()
   if (!apiKey) {
-    throw new Error('OPENAI_API_KEY is required for AI blog generation.')
+    throw new Error('GEMINI_API_KEY is required for AI blog generation.')
   }
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${getGeminiModelPath()}:generateContent?key=${encodeURIComponent(apiKey)}`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: BLOG_AUTOMATION_MODEL,
-      reasoning: { effort: 'low' },
-      tools: [
-        {
-          type: 'web_search',
-          user_location: {
-            type: 'approximate',
-            country: 'KE',
-            city: 'Nairobi',
-            region: 'Nairobi',
-            timezone: 'Africa/Nairobi',
+      systemInstruction: {
+        parts: [
+          {
+            text:
+              'You are a senior technical editor. Produce credible portfolio writing for a software engineer. Return valid JSON only.',
           },
-        },
-      ],
-      tool_choice: 'auto',
-      include: ['web_search_call.action.sources'],
-      max_output_tokens: 5200,
-      input: [
+        ],
+      },
+      contents: [
         {
-          role: 'system',
-          content:
-            'You are a senior technical editor. Produce credible, source-backed portfolio writing. Return valid JSON only.',
+          role: 'user',
+          parts: [{ text: buildBlogGenerationPrompt(topic) }],
         },
-        { role: 'user', content: buildBlogGenerationPrompt(topic) },
       ],
-      text: {
-        format: {
-          type: 'json_schema',
-          name: 'portfolio_blog_post',
-          strict: true,
-          schema: blogPostJsonSchema,
-        },
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 5200,
+        response_mime_type: 'application/json',
       },
     }),
   })
 
-  const responseJson = (await response.json()) as OpenAIResponseShape
+  const responseJson = (await response.json()) as GeminiResponseShape
   if (!response.ok) {
-    throw new Error(responseJson.error?.message || 'OpenAI blog generation failed.')
+    throw new Error(responseJson.error?.message || 'Gemini blog generation failed.')
   }
 
-  const generated = normalizeGeneratedPost(JSON.parse(extractOutputText(responseJson)))
-  const responseSources = extractResponseSources(responseJson)
-
-  if (generated.sources.length === 0 && responseSources.length > 0) {
-    generated.sources = responseSources.slice(0, 6)
-  }
-
-  return generated
+  return normalizeGeneratedPost(parseJsonText(extractGeminiText(responseJson)))
 }
 
 const ensureUniqueSlug = async (supabase: BlogClient, preferredSlug: string) => {
@@ -219,7 +226,7 @@ const ensureUniqueSlug = async (supabase: BlogClient, preferredSlug: string) => 
   return `${baseSlug}-${Date.now()}`
 }
 
-const parseGenerationOptions = async (request: NextRequest) => {
+const parseGenerationOptions = async (request: NextRequest): Promise<GenerationOptions> => {
   const searchParams = request.nextUrl.searchParams
   const body = request.method === 'POST' ? await request.json().catch(() => ({})) : {}
   const rawCount = Number(body.count || searchParams.get('count') || 1)
@@ -231,11 +238,60 @@ const parseGenerationOptions = async (request: NextRequest) => {
   }
 }
 
+const invokeSupabaseBlogFunction = async (
+  auth: AuthContext,
+  options: GenerationOptions,
+) => {
+  const { url, anonKey, serviceRoleKey } = getSupabaseConfig()
+  const authorizationToken = auth.userToken || serviceRoleKey || anonKey
+  const functionClient = createClient<Database>(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${authorizationToken}` } },
+  })
+
+  const { data, error } = await functionClient.functions.invoke<BlogFunctionResponse>('generate-blog-post', {
+    body: {
+      count: options.count,
+      publish: options.publish,
+      topic: options.topic,
+    },
+  })
+
+  if (error) {
+    throw new Error(`${error.message}. Set GEMINI_API_KEY in the Next.js environment or deploy the Supabase generate-blog-post function with GEMINI_API_KEY configured.`)
+  }
+
+  if (!data?.success) {
+    throw new Error(data?.error || 'Supabase blog generation function failed.')
+  }
+
+  const posts = Array.isArray(data.posts) ? data.posts : data.post ? [data.post] : []
+
+  return NextResponse.json({
+    success: true,
+    mode: auth.mode,
+    provider: 'supabase-function',
+    publish: options.publish,
+    count: data.count || posts.length,
+    posts,
+  })
+}
+
 const handleGeneration = async (request: NextRequest) => {
   try {
     const auth = await verifyRequest(request)
-    const supabase = getSupabaseClient(auth.mode, auth.userToken)
     const options = await parseGenerationOptions(request)
+
+    if (shouldUseSupabaseFunction()) {
+      try {
+        return await invokeSupabaseBlogFunction(auth, options)
+      } catch (functionError) {
+        if (!getGeminiApiKey()) throw functionError
+        console.warn('Supabase blog function failed; falling back to direct Gemini generation.', functionError)
+      }
+    }
+
+    const supabase = getSupabaseClient(auth.mode, auth.userToken)
 
     const { data: authorData } = await supabase
       .from('personal_info')
@@ -245,7 +301,7 @@ const handleGeneration = async (request: NextRequest) => {
     const posts = []
 
     for (let index = 0; index < options.count; index += 1) {
-      const generated = await generatePostWithOpenAI(options.topic)
+      const generated = await generatePostWithGemini(options.topic)
       const slug = await ensureUniqueSlug(supabase, generated.slug || generated.title)
       const payload = getBlogInsertPayload(generated, {
         publish: options.publish,
@@ -266,6 +322,7 @@ const handleGeneration = async (request: NextRequest) => {
     return NextResponse.json({
       success: true,
       mode: auth.mode,
+      provider: 'gemini',
       publish: options.publish,
       count: posts.length,
       posts,

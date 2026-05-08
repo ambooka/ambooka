@@ -1,21 +1,41 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { supabase } from '@/integrations/supabase/client'
+import type { CSSProperties } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Briefcase, Code, FileText, Target } from 'lucide-react'
+import { supabase } from '@/integrations/supabase/client'
+import {
+    Activity,
+    BookOpen,
+    Briefcase,
+    CheckCircle2,
+    Code,
+    Database,
+    FileText,
+    PenTool,
+    ShieldCheck,
+    Star,
+    Target,
+    Users,
+    type LucideIcon,
+} from 'lucide-react'
 
-// CoachPro Design Tokens
-const CARD_RADIUS = 20
-const CARD_PADDING = 24
+const CARD_RADIUS = 8
+const CARD_PADDING = 20
 const GAP = 16
 
-const cardStyle = {
-    background: 'rgba(255, 255, 255, 0.85)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(226, 232, 240, 0.6)',
+const cardStyle: CSSProperties = {
+    background: 'rgba(255, 255, 255, 0.86)',
+    backdropFilter: 'blur(12px)',
+    border: '1px solid rgba(203, 213, 225, 0.72)',
     borderRadius: CARD_RADIUS,
-    boxShadow: '8px 8px 16px rgba(166, 180, 200, 0.2), -8px -8px 16px rgba(255, 255, 255, 0.9)'
+    boxShadow: '0 12px 28px rgba(15, 23, 42, 0.07)',
+}
+
+const subtleCardStyle: CSSProperties = {
+    border: '1px solid rgba(226, 232, 240, 0.9)',
+    borderRadius: CARD_RADIUS,
+    background: 'rgba(248, 250, 252, 0.78)',
 }
 
 interface DashboardStats {
@@ -40,6 +60,36 @@ interface PersonalInfo {
     title: string
 }
 
+interface StatCard {
+    label: string
+    value: string
+    detail: string
+    icon: LucideIcon
+    bg: string
+    color: string
+    href: string
+}
+
+const typedSupabase = supabase as unknown as {
+    from: (table: string) => {
+        select: (columns: string, options?: { count?: 'exact'; head?: boolean }) => Promise<{ count: number | null }>
+    }
+}
+
+const getStatusStyle = (status: string): CSSProperties => {
+    const normalized = status.toLowerCase()
+
+    if (normalized.includes('complete')) {
+        return { background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0' }
+    }
+
+    if (normalized.includes('progress') || normalized.includes('active')) {
+        return { background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }
+    }
+
+    return { background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0' }
+}
+
 export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats>({
         totalProjects: 0,
@@ -47,11 +97,12 @@ export default function AdminDashboard() {
         testimonials: 0,
         blogPosts: 0,
         roadmapPhases: 0,
-        certifications: 0
+        certifications: 0,
     })
     const [projects, setProjects] = useState<Project[]>([])
-    const [, setPersonalInfo] = useState<PersonalInfo | null>(null)
+    const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
         fetchDashboardData()
@@ -59,6 +110,8 @@ export default function AdminDashboard() {
 
     const fetchDashboardData = async () => {
         setLoading(true)
+        setError(null)
+
         try {
             const [
                 projectsResult,
@@ -68,7 +121,7 @@ export default function AdminDashboard() {
                 recentProjectsResult,
                 personalResult,
                 phasesResult,
-                certsResult
+                certsResult,
             ] = await Promise.all([
                 supabase.from('projects').select('*', { count: 'exact', head: true }),
                 supabase.from('skills').select('*', { count: 'exact', head: true }),
@@ -76,8 +129,8 @@ export default function AdminDashboard() {
                 supabase.from('blog_posts').select('*', { count: 'exact', head: true }).eq('is_published', true),
                 supabase.from('projects').select('id, title, status, stack, is_featured').order('updated_at', { ascending: false }).limit(6),
                 supabase.from('personal_info').select('full_name, title').single(),
-                (supabase as unknown as { from: (table: string) => { select: (cols: string, opts?: { count?: string; head?: boolean }) => Promise<{ count: number | null }> } }).from('roadmap_phases').select('*', { count: 'exact', head: true }),
-                (supabase as unknown as { from: (table: string) => { select: (cols: string, opts?: { count?: string; head?: boolean }) => Promise<{ count: number | null }> } }).from('certifications').select('*', { count: 'exact', head: true })
+                typedSupabase.from('roadmap_phases').select('*', { count: 'exact', head: true }),
+                typedSupabase.from('certifications').select('*', { count: 'exact', head: true }),
             ])
 
             setStats({
@@ -86,16 +139,73 @@ export default function AdminDashboard() {
                 testimonials: testimonialsResult.count || 0,
                 blogPosts: blogResult.count || 0,
                 roadmapPhases: phasesResult?.count || 0,
-                certifications: certsResult?.count || 0
+                certifications: certsResult?.count || 0,
             })
+
             if (recentProjectsResult.data) setProjects(recentProjectsResult.data)
             if (personalResult.data) setPersonalInfo(personalResult.data)
-        } catch (error) {
-            console.error('Error:', error)
+        } catch (caughtError) {
+            setError(caughtError instanceof Error ? caughtError.message : 'Dashboard data could not be loaded.')
         } finally {
             setLoading(false)
         }
     }
+
+    const statCards = useMemo<StatCard[]>(
+        () => [
+            {
+                label: 'Projects',
+                value: `${stats.totalProjects}`,
+                detail: 'Portfolio records',
+                icon: Briefcase,
+                bg: '#f0fdfa',
+                color: '#0f766e',
+                href: '/admin/projects',
+            },
+            {
+                label: 'Skills',
+                value: `${stats.totalSkills}`,
+                detail: 'Structured capabilities',
+                icon: Code,
+                bg: '#eff6ff',
+                color: '#1d4ed8',
+                href: '/admin/skills',
+            },
+            {
+                label: 'Published Posts',
+                value: `${stats.blogPosts}`,
+                detail: 'Live writing pieces',
+                icon: PenTool,
+                bg: '#f5f3ff',
+                color: '#6d28d9',
+                href: '/admin/blog',
+            },
+            {
+                label: 'Testimonials',
+                value: `${stats.testimonials}`,
+                detail: 'Visible social proof',
+                icon: Users,
+                bg: '#fffbeb',
+                color: '#b45309',
+                href: '/admin/testimonials',
+            },
+        ],
+        [stats],
+    )
+
+    const readiness = Math.min(
+        100,
+        Math.round(
+            ((stats.totalProjects > 0 ? 1 : 0) +
+                (stats.totalSkills > 0 ? 1 : 0) +
+                (stats.blogPosts > 0 ? 1 : 0) +
+                (stats.certifications > 0 ? 1 : 0)) *
+            25,
+        ),
+    )
+
+    const displayName = personalInfo?.full_name || 'Admin'
+    const displayTitle = personalInfo?.title || 'Portfolio CMS'
 
     if (loading) {
         return (
@@ -106,166 +216,231 @@ export default function AdminDashboard() {
     }
 
     return (
-        <div>
-            {/* Title Row */}
-            <div style={{ marginBottom: GAP + 8 }}>
-                <p style={{ fontSize: 14, color: '#64748b', marginBottom: 4 }}>Welcome back, Andrea✌️</p>
-                <h1 style={{ fontSize: 32, fontWeight: 700, color: '#1e293b', letterSpacing: '-0.02em' }}>Dashboard</h1>
-            </div>
-
-            {/* Main Grid - 60/40 split like CoachPro */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: GAP }}>
-
-                {/* LEFT COLUMN */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: GAP }}>
-
-                    {/* Next Game Card (Quick Stats for us) */}
-                    <div style={{ ...cardStyle, padding: CARD_PADDING }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                            <h2 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b' }}>Next game</h2>
-                            <Link href="/admin/projects" style={{ fontSize: 14, color: '#0d9488', textDecoration: 'none', fontWeight: 500 }}>View calendar</Link>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '16px 0' }}>
-                            <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, fontWeight: 700, color: '#1e293b' }}>{stats.totalProjects}</div>
-                                <div style={{ fontSize: 13, color: '#64748b' }}>Projects</div>
-                            </div>
-                            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#0d9488', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600 }}>VS</div>
-                            <div style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 32, fontWeight: 700, color: '#1e293b' }}>{stats.totalSkills}</div>
-                                <div style={{ fontSize: 13, color: '#64748b' }}>Skills</div>
-                            </div>
-                        </div>
+        <div style={{ display: 'grid', gap: GAP + 4 }}>
+            <section style={{ ...cardStyle, padding: CARD_PADDING }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div>
+                        <p style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#0f766e' }}>
+                            Portfolio command center
+                        </p>
+                        <h1 style={{ marginTop: 6, fontSize: 30, fontWeight: 850, color: '#0f172a', letterSpacing: '-0.03em' }}>
+                            Welcome back, {displayName}
+                        </h1>
+                        <p style={{ marginTop: 6, color: '#64748b', fontSize: 14, lineHeight: 1.6 }}>
+                            {displayTitle}
+                        </p>
                     </div>
 
-                    {/* Standings Card (Projects Table for us) */}
-                    <div style={{ ...cardStyle, padding: CARD_PADDING }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                            <h2 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b' }}>Standings</h2>
-                            <Link href="/admin/projects" style={{ fontSize: 14, color: '#0d9488', textDecoration: 'none', fontWeight: 500 }}>View all</Link>
-                        </div>
-
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>#</th>
-                                    <th style={{ textAlign: 'left', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>Team</th>
-                                    <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>MP</th>
-                                    <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>W</th>
-                                    <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>D</th>
-                                    <th style={{ textAlign: 'center', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>L</th>
-                                    <th style={{ textAlign: 'right', padding: '10px 0', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8' }}>PTS</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {projects.map((project, i) => (
-                                    <tr key={project.id}>
-                                        <td style={{ padding: '14px 0', fontSize: 14, color: '#64748b' }}>{i + 1}</td>
-                                        <td style={{ padding: '14px 0' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                                <div style={{ width: 28, height: 28, borderRadius: 6, background: '#ccfbf1', color: '#0f766e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 600 }}>
-                                                    {project.title.charAt(0)}
-                                                </div>
-                                                <span style={{ fontWeight: 500, color: '#1e293b', fontSize: 14 }}>{project.title}</span>
-                                            </div>
-                                        </td>
-                                        <td style={{ padding: '14px 0', textAlign: 'center', fontSize: 14, color: '#64748b' }}>{project.stack?.length || 0}</td>
-                                        <td style={{ padding: '14px 0', textAlign: 'center', fontSize: 14, color: '#64748b' }}>{project.is_featured ? 1 : 0}</td>
-                                        <td style={{ padding: '14px 0', textAlign: 'center', fontSize: 14, color: '#64748b' }}>0</td>
-                                        <td style={{ padding: '14px 0', textAlign: 'center', fontSize: 14, color: '#64748b' }}>0</td>
-                                        <td style={{ padding: '14px 0', textAlign: 'right', fontSize: 14, fontWeight: 600, color: '#1e293b' }}>{(project.stack?.length || 0) * 3}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* RIGHT COLUMN */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: GAP }}>
-
-                    {/* Games Statistic Card */}
-                    <div style={{ ...cardStyle, padding: CARD_PADDING }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                            <h2 style={{ fontSize: 18, fontWeight: 600, color: '#1e293b' }}>Games statistic</h2>
-                            <span style={{ fontSize: 14, color: '#0d9488', fontWeight: 500 }}>View all statistic</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-around', textAlign: 'center', marginBottom: 16 }}>
-                            <div>
-                                <div style={{ fontSize: 28, fontWeight: 700, color: '#1e293b' }}>{stats.totalProjects}</div>
-                                <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>Projects</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: 28, fontWeight: 700, color: '#1e293b' }}>{stats.totalSkills}</div>
-                                <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>Skills</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: 28, fontWeight: 700, color: '#1e293b' }}>{stats.testimonials}</div>
-                                <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>Reviews</div>
-                            </div>
-                            <div>
-                                <div style={{ fontSize: 28, fontWeight: 700, color: '#1e293b' }}>{stats.blogPosts}</div>
-                                <div style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>Posts</div>
-                            </div>
-                        </div>
-                        {/* Progress bar */}
-                        <div style={{ height: 6, borderRadius: 3, background: '#e2e8f0', overflow: 'hidden' }}>
-                            <div style={{ height: '100%', width: '65%', background: 'linear-gradient(90deg, #0d9488, #14b8a6)', borderRadius: 3 }} />
-                        </div>
-                    </div>
-
-                    {/* 2x2 Stat Cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                        {[
-                            { label: 'Possession', value: `${stats.totalProjects}`, icon: Briefcase, bg: '#f0fdfa', color: '#0d9488' },
-                            { label: 'Overall Price', value: `$${stats.totalSkills * 10}k`, icon: Code, bg: '#eff6ff', color: '#3b82f6' },
-                            { label: 'Transfer Budget', value: `$${stats.roadmapPhases}`, icon: Target, bg: '#fffbeb', color: '#f59e0b' },
-                            { label: 'Average Score', value: `${stats.certifications}`, icon: FileText, bg: '#f0f4ff', color: '#6366f1' },
-                        ].map((stat) => {
-                            const Icon = stat.icon
-                            return (
-                                <div key={stat.label} style={{ ...cardStyle, padding: 18 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: stat.bg, color: stat.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Icon size={18} />
-                                        </div>
-                                        <span style={{ fontSize: 11, color: '#94a3b8', textTransform: 'uppercase' }}>{stat.label}</span>
-                                    </div>
-                                    <div style={{ fontSize: 26, fontWeight: 700, color: '#1e293b' }}>{stat.value}</div>
-                                </div>
-                            )
-                        })}
-                    </div>
-
-                    {/* CTA Card */}
-                    <div style={{
-                        background: 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)',
-                        borderRadius: CARD_RADIUS,
-                        padding: CARD_PADDING,
-                        boxShadow: '0 12px 32px rgba(13, 148, 136, 0.35)',
-                        position: 'relative',
-                        overflow: 'hidden'
-                    }}>
-                        {/* Decorative elements */}
-                        <div style={{ position: 'absolute', top: 20, right: 20, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
-                        <div style={{ position: 'absolute', bottom: -20, right: 60, width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
-
-                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', marginBottom: 8 }}>Don&apos;t Forget</p>
-                        <h3 style={{ fontSize: 22, fontWeight: 700, color: 'white', marginBottom: 16, lineHeight: 1.3 }}>
-                            Setup training<br />for next week
-                        </h3>
-                        <Link href="/admin/profile" style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 8,
-                            padding: '10px 18px', borderRadius: 10,
-                            background: 'rgba(255,255,255,0.2)', color: 'white',
-                            fontSize: 13, fontWeight: 500, textDecoration: 'none',
-                            backdropFilter: 'blur(4px)'
-                        }}>
-                            Go to training center
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                        <Link
+                            href="/admin/blog/new"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                minHeight: 40,
+                                padding: '0 14px',
+                                borderRadius: 8,
+                                background: '#0f766e',
+                                color: 'white',
+                                fontSize: 13,
+                                fontWeight: 800,
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <PenTool size={15} />
+                            New Post
+                        </Link>
+                        <Link
+                            href="/admin/projects"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 8,
+                                minHeight: 40,
+                                padding: '0 14px',
+                                borderRadius: 8,
+                                background: '#0f172a',
+                                color: 'white',
+                                fontSize: 13,
+                                fontWeight: 800,
+                                textDecoration: 'none',
+                            }}
+                        >
+                            <Briefcase size={15} />
+                            Projects
                         </Link>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            {error && (
+                <section style={{ ...subtleCardStyle, padding: 14, color: '#b91c1c', background: '#fef2f2', borderColor: '#fecaca' }}>
+                    {error}
+                </section>
+            )}
+
+            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 15rem), 1fr))', gap: GAP }}>
+                {statCards.map((stat) => {
+                    const Icon = stat.icon
+
+                    return (
+                        <Link key={stat.label} href={stat.href} style={{ ...cardStyle, padding: CARD_PADDING, textDecoration: 'none' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                                <div>
+                                    <p style={{ color: '#64748b', fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                                        {stat.label}
+                                    </p>
+                                    <p style={{ marginTop: 8, color: '#0f172a', fontSize: 30, fontWeight: 850, letterSpacing: '-0.03em' }}>
+                                        {stat.value}
+                                    </p>
+                                    <p style={{ marginTop: 4, color: '#64748b', fontSize: 13 }}>
+                                        {stat.detail}
+                                    </p>
+                                </div>
+                                <div style={{ display: 'grid', placeItems: 'center', width: 44, height: 44, borderRadius: 8, background: stat.bg, color: stat.color }}>
+                                    <Icon size={22} />
+                                </div>
+                            </div>
+                        </Link>
+                    )
+                })}
+            </section>
+
+            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 28rem), 1fr))', gap: GAP, alignItems: 'start' }}>
+                <div style={{ ...cardStyle, padding: CARD_PADDING }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center', marginBottom: 14 }}>
+                        <div>
+                            <h2 style={{ fontSize: 18, fontWeight: 850, color: '#0f172a' }}>Recent Projects</h2>
+                            <p style={{ marginTop: 4, fontSize: 13, color: '#64748b' }}>Latest project records in the CMS</p>
+                        </div>
+                        <Link href="/admin/projects" style={{ color: '#0f766e', fontSize: 13, fontWeight: 800, textDecoration: 'none' }}>
+                            View all
+                        </Link>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: 10 }}>
+                        {projects.length === 0 ? (
+                            <div style={{ ...subtleCardStyle, padding: 18, color: '#64748b', fontSize: 14 }}>
+                                No projects have been added yet.
+                            </div>
+                        ) : (
+                            projects.map((project) => (
+                                <div key={project.id} style={{ ...subtleCardStyle, padding: 14 }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: 12, alignItems: 'center' }}>
+                                        <div style={{ minWidth: 0 }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                                                <span style={{ display: 'grid', placeItems: 'center', width: 30, height: 30, borderRadius: 8, background: '#ccfbf1', color: '#0f766e', fontWeight: 850, flex: '0 0 auto' }}>
+                                                    {project.title.charAt(0)}
+                                                </span>
+                                                <div style={{ minWidth: 0 }}>
+                                                    <h3 style={{ color: '#0f172a', fontSize: 14, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {project.title}
+                                                    </h3>
+                                                    <p style={{ marginTop: 3, color: '#64748b', fontSize: 12, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {(project.stack || []).slice(0, 4).join(' / ') || 'Stack not set'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end' }}>
+                                            {project.is_featured && (
+                                                <span title="Featured" style={{ color: '#d97706', display: 'inline-flex' }}>
+                                                    <Star size={16} fill="currentColor" />
+                                                </span>
+                                            )}
+                                            <span style={{ ...getStatusStyle(project.status), borderRadius: 999, padding: '4px 9px', fontSize: 11, fontWeight: 800, textTransform: 'capitalize' }}>
+                                                {project.status.replace(/_/g, ' ')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+
+                <aside style={{ display: 'grid', gap: GAP }}>
+                    <div style={{ ...cardStyle, padding: CARD_PADDING }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                            <div style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 8, background: '#ecfeff', color: '#0e7490' }}>
+                                <Activity size={19} />
+                            </div>
+                            <div>
+                                <h2 style={{ color: '#0f172a', fontSize: 17, fontWeight: 850 }}>Content Health</h2>
+                                <p style={{ marginTop: 2, color: '#64748b', fontSize: 12 }}>Portfolio readiness</p>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 12 }}>
+                            <span style={{ color: '#0f172a', fontSize: 34, fontWeight: 850, letterSpacing: '-0.04em' }}>{readiness}%</span>
+                            <span style={{ color: '#64748b', fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                                Ready
+                            </span>
+                        </div>
+                        <div style={{ marginTop: 12, height: 8, borderRadius: 999, background: '#e2e8f0', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${readiness}%`, borderRadius: 999, background: '#0f766e' }} />
+                        </div>
+
+                        <div style={{ marginTop: 14, display: 'grid', gap: 8 }}>
+                            {[
+                                { label: 'Roadmap phases', value: stats.roadmapPhases, icon: Target },
+                                { label: 'Certifications', value: stats.certifications, icon: FileText },
+                                { label: 'Published posts', value: stats.blogPosts, icon: BookOpen },
+                            ].map((item) => {
+                                const Icon = item.icon
+
+                                return (
+                                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, color: '#475569', fontSize: 13 }}>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                                            <Icon size={15} />
+                                            {item.label}
+                                        </span>
+                                        <strong style={{ color: '#0f172a' }}>{item.value}</strong>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+
+                    <div style={{ ...cardStyle, padding: CARD_PADDING }}>
+                        <h2 style={{ color: '#0f172a', fontSize: 17, fontWeight: 850 }}>Quick Actions</h2>
+                        <div style={{ marginTop: 14, display: 'grid', gap: 8 }}>
+                            {[
+                                { label: 'Generate or edit blog posts', href: '/admin/blog', icon: PenTool },
+                                { label: 'Review profile details', href: '/admin/profile', icon: CheckCircle2 },
+                                { label: 'Open focus plan', href: '/admin/roadmap', icon: ShieldCheck },
+                                { label: 'Database reset notes', href: '/admin/schema', icon: Database },
+                            ].map((action) => {
+                                const Icon = action.icon
+
+                                return (
+                                    <Link
+                                        key={action.href}
+                                        href={action.href}
+                                        style={{
+                                            ...subtleCardStyle,
+                                            minHeight: 42,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            gap: 10,
+                                            padding: '10px 12px',
+                                            color: '#0f172a',
+                                            fontSize: 13,
+                                            fontWeight: 750,
+                                            textDecoration: 'none',
+                                        }}
+                                    >
+                                        <span>{action.label}</span>
+                                        <Icon size={16} color="#0f766e" />
+                                    </Link>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </aside>
+            </section>
         </div>
     )
 }

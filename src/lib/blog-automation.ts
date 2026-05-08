@@ -19,7 +19,10 @@ export interface GeneratedBlogPost {
   sources: BlogSource[]
 }
 
-export const BLOG_AUTOMATION_MODEL = process.env.OPENAI_BLOG_MODEL || 'gpt-5.4-mini'
+export const GEMINI_BLOG_MODEL =
+  process.env.GEMINI_BLOG_MODEL ||
+  process.env.GOOGLE_BLOG_MODEL ||
+  'gemini-1.5-flash'
 
 export const BLOG_TOPIC_LANES = [
   'applied AI for real business workflows',
@@ -125,7 +128,7 @@ Portfolio positioning:
 - Location context: Nairobi, Kenya, with relevance to African tech when the topic naturally fits.
 
 Task:
-Use current web results to choose a timely, credible topic that can boost this portfolio through useful technical judgment.
+Choose a timely, credible topic that can boost this portfolio through useful technical judgment.
 ${topic ? `Preferred topic direction: ${topic}` : `Pick one topic from these lanes: ${BLOG_TOPIC_LANES.join('; ')}.`}
 
 Write one original blog post in Markdown. It must:
@@ -133,7 +136,7 @@ Write one original blog post in Markdown. It must:
 - Explain why the trend matters to practical software engineering.
 - Include a "Portfolio angle" section that connects the topic to systems, AI, integrations, infrastructure, or product delivery.
 - Include a "What I would build" section with a small credible project idea.
-- Include concrete sources you used, as title and URL pairs.
+- Include concrete sources as title and URL pairs only when you are confident they are real and relevant; otherwise return an empty sources array.
 - Avoid claiming direct production experience that is not in the portfolio context.
 - Avoid fake benchmarks, fake quotes, and unsupported claims.
 - Be 900 to 1,200 words.

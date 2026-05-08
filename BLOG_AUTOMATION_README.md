@@ -1,13 +1,13 @@
 
 # AI Blog Automation Guide
 
-This project now includes a mechanism to automatically generate and publish one high-quality, research-oriented technical blog post per week using Google Gemini 1.5 Flash.
+This project includes a mechanism to automatically generate research-oriented technical blog drafts using Google Gemini 1.5 Flash.
 
 ## Overview
 
-1.  **Generation**: A Supabase Edge Function (`generate-blog-post`) handles the AI logic.
-2.  **Storage**: Posts are saved directly to your `blog_posts` table in Supabase.
-3.  **Scheduling**: A `pg_cron` job triggers the function every Monday morning.
+1.  **Generation**: The Next.js route (`/api/blog/generate`) invokes the Supabase Edge Function (`generate-blog-post`) by default. Set `BLOG_GENERATION_PROVIDER=next` only if you want the Next.js route to call Gemini directly.
+2.  **Storage**: Posts are saved directly to your `blog_posts` table in Supabase as drafts by default.
+3.  **Scheduling**: `pg_cron` or Vercel cron can trigger the Next.js route on a cadence.
 
 ## Setup Instructions
 
@@ -16,6 +16,13 @@ You must add your Gemini API key to your Supabase project secrets so the functio
 Run this command in your local terminal (ensure you have Supabase CLI installed and logged in):
 ```bash
 supabase secrets set GEMINI_API_KEY=your_actual_key_here
+```
+
+For local Next.js generation, set the same key in `.env.local`:
+```bash
+GEMINI_API_KEY=your_actual_key_here
+GEMINI_BLOG_MODEL=gemini-1.5-flash
+BLOG_GENERATION_PROVIDER=next
 ```
 
 ### 2. Seed Initial Posts (5 Posts)
@@ -42,7 +49,7 @@ To automate the process, you need to schedule it:
 
 ## Customization
 
--   **Prompt Tuning**: You can adjust the writing style or default topics in `supabase/functions/generate-blog-post/index.ts`.
+-   **Prompt Tuning**: You can adjust the shared app prompt in `src/lib/blog-automation.ts` and the Edge Function prompt in `supabase/functions/generate-blog-post/index.ts`.
 -   **Schedule**: Change the cron expression in `scripts/schedule-blog.sql` (e.g., `0 9 * * 5` for Friday mornings).
 
 ## Files Created
