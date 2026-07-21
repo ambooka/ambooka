@@ -73,7 +73,7 @@ INSERT INTO experience (
   'Remote / Nairobi',
   '2022-01-01',
   true,
-  'Delivering high-impact custom software solutions for diverse global clients, ranging from FinTech and E-commerce to AI/ML and IoT systems. Specializing in architecting scalable, cloud-native applications that solve complex business problems.',
+  'Delivering high-impact custom software solutions for diverse global clients, ranging from FinTech and E-commerce to platform/MLOps and IoT systems. Specializing in architecting scalable, cloud-native applications that solve complex business problems.',
   ARRAY[
     'Architect and develop enterprise-grade web applications using modern stacks (React, Next.js, Node.js) with a focus on scalability and performance',
     'Design and implement complex backend systems, microservices, and RESTful/GraphQL APIs to support high-load environments',

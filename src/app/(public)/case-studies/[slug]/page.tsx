@@ -14,7 +14,11 @@ import {
   Sparkles,
 } from "lucide-react";
 import { caseStudies } from "@/data/case-studies";
-import { categoryLabels, getProject, statusLegend } from "@/data/war-mode-projects";
+import {
+  categoryLabels,
+  getProject,
+  statusLegend,
+} from "@/data/war-mode-projects";
 
 export async function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));
@@ -31,7 +35,9 @@ export async function generateMetadata({
   return {
     title: study ? `${study.title} | Case Study` : "Case Study",
     description: study?.summary ?? "Technical case study.",
-    alternates: study ? { canonical: `/case-studies/${study.slug}` } : undefined,
+    alternates: study
+      ? { canonical: `/case-studies/${study.slug}` }
+      : undefined,
     openGraph: {
       title: study ? `${study.title} | Case Study` : "Case Study",
       description: study?.summary ?? "Technical case study.",
@@ -55,9 +61,13 @@ export default async function CaseStudyPage({
 
   const project = getProject(study.projectSlug);
   const evidence = project
-    ? Object.entries(project.engineeringEvidence).filter(([, enabled]) => enabled)
+    ? Object.entries(project.engineeringEvidence).filter(
+        ([, enabled]) => enabled,
+      )
     : [];
-  const metrics = project?.metrics ? Object.entries(project.metrics).filter(([, value]) => value) : [];
+  const metrics = project?.metrics
+    ? Object.entries(project.metrics).filter(([, value]) => value)
+    : [];
 
   return (
     <main className="space-y-7">
@@ -106,9 +116,21 @@ export default async function CaseStudyPage({
 
         {project && (
           <aside className="mt-7 grid gap-3 lg:mt-0">
-            <InfoCard label="Category" value={categoryLabels[project.category]} icon={<Layers3 size={16} />} />
-            <InfoCard label="Impact" value={project.businessValue} icon={<Activity size={16} />} />
-            <InfoCard label="Evidence" value={`${evidence.length} proof points`} icon={<Sparkles size={16} />} />
+            <InfoCard
+              label="Category"
+              value={categoryLabels[project.category]}
+              icon={<Layers3 size={16} />}
+            />
+            <InfoCard
+              label="Impact"
+              value={project.businessValue}
+              icon={<Activity size={16} />}
+            />
+            <InfoCard
+              label="Evidence"
+              value={`${evidence.length} proof points`}
+              icon={<Sparkles size={16} />}
+            />
           </aside>
         )}
       </section>
@@ -116,15 +138,19 @@ export default async function CaseStudyPage({
       {project && (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,0.72fr)_minmax(18rem,0.28fr)]">
           <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-6 shadow-sm">
-            <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--accent))]">Project summary</p>
-            <p className="mt-3 text-sm leading-7 text-[hsl(var(--muted-foreground))]">{project.oneLine}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--accent))]">
+              Project summary
+            </p>
+            <p className="mt-3 text-sm leading-7 text-[hsl(var(--muted-foreground))]">
+              {project.oneLine}
+            </p>
             <div className="mt-5 flex flex-wrap gap-2.5">
               {project.proof.github && (
                 <a
                   href={project.proof.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-[hsl(var(--accent))/0.25] bg-[hsl(var(--accent))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.9]"
+                  className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--accent))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.9] focus-visible:outline-none focus-visible:ring-0"
                 >
                   Source code <Github size={14} />
                 </a>
@@ -145,16 +171,24 @@ export default async function CaseStudyPage({
           <div className="grid gap-3">
             {metrics.length > 0 ? (
               metrics.slice(0, 4).map(([label, value]) => (
-                <div key={label} className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-4 shadow-sm">
+                <div
+                  key={label}
+                  className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-4 shadow-sm"
+                >
                   <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
                     {formatEvidenceLabel(label)}
                   </p>
-                  <p className="mt-2 text-lg font-black text-[hsl(var(--foreground))]">{value}</p>
+                  <p className="mt-2 text-lg font-black text-[hsl(var(--foreground))]">
+                    {value}
+                  </p>
                 </div>
               ))
             ) : (
               <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-4 shadow-sm">
-                <p className="text-sm font-semibold text-[hsl(var(--muted-foreground))]">Metrics are described in the results section where public disclosure is safe.</p>
+                <p className="text-sm font-semibold text-[hsl(var(--muted-foreground))]">
+                  Metrics are described in the results section where public
+                  disclosure is safe.
+                </p>
               </div>
             )}
           </div>
@@ -168,7 +202,10 @@ export default async function CaseStudyPage({
         <CaseBlock title="Implementation" items={study.implementation} />
         <CaseBlock title="Quality Gates" items={study.quality} />
         <CaseBlock title="Results" items={study.results} emphasis />
-        <CaseBlock title="Future Improvements" items={study.futureImprovements} />
+        <CaseBlock
+          title="Future Improvements"
+          items={study.futureImprovements}
+        />
         {evidence.length > 0 && (
           <CaseBlock
             title="Public Evidence"
@@ -193,9 +230,13 @@ function InfoCard({
     <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--background))/0.72] p-4">
       <div className="flex items-center gap-2 text-[hsl(var(--accent))]">
         {icon}
-        <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest">
+          {label}
+        </span>
       </div>
-      <p className="mt-2 text-sm font-semibold leading-6 text-[hsl(var(--foreground))]">{value}</p>
+      <p className="mt-2 text-sm font-semibold leading-6 text-[hsl(var(--foreground))]">
+        {value}
+      </p>
     </div>
   );
 }
@@ -211,10 +252,15 @@ function CaseBlock({
 }) {
   return (
     <section className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-6 shadow-sm">
-      <h2 className="text-xl font-black tracking-tight text-[hsl(var(--foreground))]">{title}</h2>
+      <h2 className="text-xl font-black tracking-tight text-[hsl(var(--foreground))]">
+        {title}
+      </h2>
       <ul className="mt-4 grid gap-3">
         {items.map((item) => (
-          <li key={item} className="flex gap-3 text-sm leading-7 text-[hsl(var(--muted-foreground))]">
+          <li
+            key={item}
+            className="flex gap-3 text-sm leading-7 text-[hsl(var(--muted-foreground))]"
+          >
             <CheckCircle2
               className={`mt-1 h-4 w-4 shrink-0 ${emphasis ? "text-[hsl(var(--accent))]" : "text-emerald-500"}`}
             />

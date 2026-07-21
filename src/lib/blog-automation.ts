@@ -1,45 +1,45 @@
-import { getReadingTimeMinutes } from '@/lib/blog-markdown'
-import type { Json } from '@/integrations/supabase/types'
+import { getReadingTimeMinutes } from "@/lib/blog-markdown";
+import type { Json } from "@/integrations/supabase/types";
 
 export interface BlogSource {
-  title: string
-  url: string
+  title: string;
+  url: string;
 }
 
 export interface GeneratedBlogPost {
-  topic: string
-  title: string
-  slug: string
-  excerpt: string
-  content: string
-  category: string
-  tags: string[]
-  seo_title: string
-  meta_description: string
-  sources: BlogSource[]
+  topic: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  tags: string[];
+  seo_title: string;
+  meta_description: string;
+  sources: BlogSource[];
 }
 
 export const GEMINI_BLOG_MODEL =
   process.env.GEMINI_BLOG_MODEL ||
   process.env.GOOGLE_BLOG_MODEL ||
-  'gemini-1.5-flash'
+  "gemini-1.5-flash";
 
 export const BLOG_TOPIC_LANES = [
-  'applied AI for real business workflows',
-  'software engineering with AI-assisted development',
-  'payment integrations and fintech infrastructure in Africa',
-  'production web systems with Next.js, FastAPI, PostgreSQL, Docker, and Supabase',
-  'computer vision and practical machine learning systems',
-  'IT systems, ERP implementation, Linux, networking, and automation',
-]
+  "applied MLOps for real business workflows",
+  "software engineering with assistant-assisted development",
+  "payment integrations and fintech infrastructure in Africa",
+  "production web systems with Next.js, FastAPI, PostgreSQL, Docker, and Supabase",
+  "computer vision and practical machine learning systems",
+  "IT systems, ERP implementation, Linux, networking, and automation",
+];
 
 export const slugify = (value: string) =>
   value
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 export const normalizeTags = (tags: string[]) =>
   Array.from(
@@ -49,7 +49,7 @@ export const normalizeTags = (tags: string[]) =>
         .filter(Boolean)
         .slice(0, 6),
     ),
-  )
+  );
 
 export const getBlogInsertPayload = (
   post: GeneratedBlogPost,
@@ -60,7 +60,7 @@ export const getBlogInsertPayload = (
   excerpt: post.excerpt.trim(),
   content: post.content.trim(),
   image_url: null,
-  category: post.category.trim() || 'Engineering',
+  category: post.category.trim() || "Engineering",
   tags: normalizeTags(post.tags),
   is_published: options.publish,
   published_at: options.publish ? new Date().toISOString() : null,
@@ -73,63 +73,63 @@ export const getBlogInsertPayload = (
   generation_topic: post.topic.trim(),
   reading_time_minutes: getReadingTimeMinutes(post.content),
   updated_at: new Date().toISOString(),
-})
+});
 
 export const blogPostJsonSchema = {
-  type: 'object',
+  type: "object",
   additionalProperties: false,
   required: [
-    'topic',
-    'title',
-    'slug',
-    'excerpt',
-    'content',
-    'category',
-    'tags',
-    'seo_title',
-    'meta_description',
-    'sources',
+    "topic",
+    "title",
+    "slug",
+    "excerpt",
+    "content",
+    "category",
+    "tags",
+    "seo_title",
+    "meta_description",
+    "sources",
   ],
   properties: {
-    topic: { type: 'string' },
-    title: { type: 'string' },
-    slug: { type: 'string' },
-    excerpt: { type: 'string' },
-    content: { type: 'string' },
-    category: { type: 'string' },
+    topic: { type: "string" },
+    title: { type: "string" },
+    slug: { type: "string" },
+    excerpt: { type: "string" },
+    content: { type: "string" },
+    category: { type: "string" },
     tags: {
-      type: 'array',
-      items: { type: 'string' },
+      type: "array",
+      items: { type: "string" },
     },
-    seo_title: { type: 'string' },
-    meta_description: { type: 'string' },
+    seo_title: { type: "string" },
+    meta_description: { type: "string" },
     sources: {
-      type: 'array',
+      type: "array",
       items: {
-        type: 'object',
+        type: "object",
         additionalProperties: false,
-        required: ['title', 'url'],
+        required: ["title", "url"],
         properties: {
-          title: { type: 'string' },
-          url: { type: 'string' },
+          title: { type: "string" },
+          url: { type: "string" },
         },
       },
     },
   },
-}
+};
 
 export const buildBlogGenerationPrompt = (topic?: string) => `
 You are writing for Msah Ambooka's professional portfolio.
 
 Portfolio positioning:
-- Title: Software Engineer, Systems & AI.
-- Strengths: full-stack products, payment integrations, business systems, ERP/IT systems, infrastructure, and applied AI/ML.
+- Title: Cloud-native Software Engineer — Platform & MLOps.
+- Strengths: full-stack products, payment integrations, business systems, ERP/IT systems, infrastructure, and platform/MLOps.
 - Audience: hiring managers, technical founders, engineering leads, and clients who need practical software delivery.
 - Location context: Nairobi, Kenya, with relevance to African tech when the topic naturally fits.
 
 Task:
 Choose a timely, credible topic that can boost this portfolio through useful technical judgment.
-${topic ? `Preferred topic direction: ${topic}` : `Pick one topic from these lanes: ${BLOG_TOPIC_LANES.join('; ')}.`}
+${topic ? `Preferred topic direction: ${topic}` : `Pick one topic from these lanes: ${BLOG_TOPIC_LANES.join("; ")}.`}
 
 Write one original blog post in Markdown. It must:
 - Be specific and current, not generic AI filler.
@@ -142,4 +142,4 @@ Write one original blog post in Markdown. It must:
 - Be 900 to 1,200 words.
 
 Return only JSON that matches the schema. The content field must contain Markdown.
-`
+`;

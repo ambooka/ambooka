@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=28&pause=1200&color=14B8A6&center=true&vCenter=true&width=560&height=50&lines=Msah+Ambooka;Full-Stack+%C2%B7+Cloud+%C2%B7+MLOps" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=28&pause=1200&color=14B8A6&center=true&vCenter=true&width=560&height=50&lines=Msah+Ambooka;Cloud+%C2%B7+Platform+%C2%B7+Security+%C2%B7+MLOps+(NEXUS)" alt="Typing SVG" />
 
 <img src="https://raw.githubusercontent.com/ambooka/ambooka/main/public/profile-pic.png" width="100" style="border-radius:50%"/><br/>
 
@@ -17,16 +17,18 @@
 <table width="100%"><tr><td width="60%" valign="top">
 
 ### About Me
-IT Assistant @ **Hebatullah Brothers Limited** — Nairobi, Kenya 🇰🇪
 
-- 🔭 Building [`ambooka.dev`](https://ambooka.dev) — Next.js 16 + React 19
-- 📦 **15+ projects** across FinTech, E-Commerce, Smart City
+Cloud-native software & platform engineer (NEXUS program) — building secure, deployable systems and MLOps pipelines.
+
+- 🔭 Building `Nexus` platform and the public portfolio at [`ambooka.dev`](https://ambooka.dev) — Next.js 16 + React 19
+- 📦 15+ practical projects: full-stack systems, cloud deployments, infrastructure as code, and MLOps artifacts
 - 🎓 BSc Computer Science · **Maseno University**
 - 🏫 Alumnus · **Starehe Boys' Centre**
 
 </td><td width="40%" valign="top">
 
 ### Stats
+
 <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=ambooka&theme=algolia" width="100%"/>
 
 </td></tr></table>
@@ -92,14 +94,14 @@ IT Assistant @ **Hebatullah Brothers Limited** — Nairobi, Kenya 🇰🇪
 <tr>
 <td width="50%" valign="top">
 
-**☁️ CloudCommerce** &nbsp;[![Repo](https://img.shields.io/badge/repo-555?style=flat-square&logo=github&logoColor=white)](https://github.com/ambooka)  
+**☁️ CloudCommerce** &nbsp;[![Repo](https://img.shields.io/badge/repo-555?style=flat-square&logo=github&logoColor=white)](https://github.com/ambooka/cloudcommerce)  
 Enterprise e-commerce at scale — **100K+ concurrent users**  
 `Next.js` `PostgreSQL` `Redis` `AWS`
 
 </td>
 <td width="50%" valign="top">
 
-**💳 AfriPay** &nbsp;[![Repo](https://img.shields.io/badge/repo-555?style=flat-square&logo=github&logoColor=white)](https://github.com/ambooka)  
+**💳 AfriPay** &nbsp;[![Repo](https://img.shields.io/badge/repo-555?style=flat-square&logo=github&logoColor=white)](https://github.com/ambooka/afripay)  
 Unified East African payments API — M-Pesa & Airtel Money  
 `Node.js` `TypeScript` `PostgreSQL`
 
@@ -115,7 +117,7 @@ MLOps portfolio platform — production-grade
 </td>
 <td width="50%" valign="top">
 
-**🚦 SmartCity Traffic**  
+**🚦 SmartCity Traffic** &nbsp;[![Repo](https://img.shields.io/badge/repo-555?style=flat-square&logo=github&logoColor=white)](https://github.com/ambooka/smartcity-traffic)  
 ML congestion prediction for Nairobi  
 `Python` `PyTorch` `FastAPI` `React`
 

@@ -1,33 +1,50 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
-import { fadeUp, scrollRevealTransition, defaultViewport, buttonTap } from '@/lib/motion'
+import Link from "next/link";
+import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import {
+  fadeUp,
+  scrollRevealTransition,
+  defaultViewport,
+  buttonTap,
+} from "@/lib/motion";
 
 const NAV_LINKS = [
-  { label: 'Dashboard', href: '/' },
-  { label: 'Resume', href: '/resume' },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
-] as const
+  { label: "Dashboard", href: "/" },
+  { label: "Resume", href: "/resume" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+] as const;
 
 const SOCIAL_LINKS = [
-  { label: 'GitHub', href: 'https://github.com/ambooka', icon: <Github size={18} /> },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/abdulrahman-ambooka/', icon: <Linkedin size={18} /> },
-  { label: 'Email', href: 'mailto:abdulrahmanambooka@gmail.com', icon: <Mail size={18} /> },
-] as const
+  {
+    label: "GitHub",
+    href: "https://github.com/ambooka",
+    icon: <Github size={18} />,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/abdulrahman-ambooka/",
+    icon: <Linkedin size={18} />,
+  },
+  {
+    label: "Email",
+    href: "mailto:abdulrahmanambooka@gmail.com",
+    icon: <Mail size={18} />,
+  },
+] as const;
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   return (
     <motion.footer
       className={cn(
         "hidden md:block w-full border-t border-[hsl(var(--border))]",
-        "bg-[hsl(var(--card)/0.5)] backdrop-blur-md"
+        "bg-[hsl(var(--card)/0.5)] backdrop-blur-md",
       )}
       variants={fadeUp}
       initial="hidden"
@@ -44,13 +61,15 @@ export default function Footer() {
               href="/"
               className={cn(
                 "inline-block text-xl font-extrabold tracking-tighter",
-                "text-[hsl(var(--foreground))]"
+                "text-[hsl(var(--foreground))]",
               )}
             >
               ambooka
             </Link>
             <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed max-w-[32ch]">
-              Software Engineer and full-stack developer building production-minded web applications, business systems, IT infrastructure, and applied AI/ML solutions.
+              Software Engineer and full-stack developer building
+              production-minded web applications, business systems, IT
+              infrastructure, and platform/MLOps solutions.
             </p>
             {/* Social row */}
             <div className="flex items-center gap-2 pt-1">
@@ -58,8 +77,12 @@ export default function Footer() {
                 <motion.a
                   key={social.label}
                   href={social.href}
-                  target={social.href.startsWith('http') ? '_blank' : undefined}
-                  rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    social.href.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
                   whileHover={{ y: -2 }}
                   whileTap={buttonTap}
                   className={cn(
@@ -67,7 +90,7 @@ export default function Footer() {
                     "border border-[hsl(var(--border))] bg-[hsl(var(--foreground)/0.04)]",
                     "text-[hsl(var(--muted-foreground))]",
                     "hover:text-[hsl(var(--accent))] hover:bg-[hsl(var(--accent)/0.08)] hover:border-[hsl(var(--accent)/0.16)]",
-                    "transition-colors duration-200"
+                    "transition-colors duration-200",
                   )}
                   aria-label={social.label}
                 >
@@ -90,7 +113,7 @@ export default function Footer() {
                     className={cn(
                       "inline-flex items-center gap-1 text-sm font-medium",
                       "text-[hsl(var(--foreground)/0.8)]",
-                      "hover:text-[hsl(var(--accent))] transition-colors duration-200"
+                      "hover:text-[hsl(var(--accent))] transition-colors duration-200",
                     )}
                   >
                     {link.label}
@@ -108,13 +131,15 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] shadow-[0_0_0_0.2rem_hsl(var(--accent)/0.15)]" />
-                <span className="text-sm font-medium text-[hsl(var(--foreground)/0.8)]">Available for Hire</span>
+                <span className="text-sm font-medium text-[hsl(var(--foreground)/0.8)]">
+                  Available for Hire
+                </span>
               </div>
               <Link
                 href="/contact"
                 className={cn(
                   "inline-flex items-center gap-1.5 text-sm font-semibold",
-                  "text-[hsl(var(--accent))] hover:underline transition-colors"
+                  "text-[hsl(var(--accent))] hover:underline transition-colors",
                 )}
               >
                 Get in touch <ArrowUpRight size={14} />
@@ -129,12 +154,16 @@ export default function Footer() {
           <span>&copy; {currentYear} Msah Ambooka. All rights reserved.</span>
           <span className="flex items-center gap-1">
             Built with
-            <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">Next.js</span>
+            <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">
+              Next.js
+            </span>
             &
-            <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">Framer Motion</span>
+            <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">
+              Framer Motion
+            </span>
           </span>
         </div>
       </div>
     </motion.footer>
-  )
+  );
 }

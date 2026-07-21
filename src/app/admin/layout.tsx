@@ -1,5 +1,6 @@
 "use client";
 
+// @ts-ignore: allow side-effect CSS import for admin theme
 import "./admin-theme.css";
 import { usePathname } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -83,7 +84,7 @@ export default function AdminLayout({
         id="admin-portal"
         style={{
           background:
-            "linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)",
+            "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 52%, hsl(var(--muted)) 100%)",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -94,7 +95,7 @@ export default function AdminLayout({
           style={{
             width: 48,
             height: 48,
-            border: "4px solid #0d9488",
+            border: "4px solid hsl(var(--accent))",
             borderTopColor: "transparent",
             borderRadius: "50%",
             animation: "ad-spin 1s linear infinite",
@@ -110,7 +111,7 @@ export default function AdminLayout({
         id="admin-portal"
         style={{
           background:
-            "linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)",
+            "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 52%, hsl(var(--muted)) 100%)",
           minHeight: "100vh",
         }}
       >
@@ -126,7 +127,7 @@ export default function AdminLayout({
       id="admin-portal"
       style={{
         background:
-          "linear-gradient(135deg, #f8fafc 0%, #eef2ff 52%, #ecfeff 100%)",
+          "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 52%, hsl(var(--muted)) 100%)",
         minHeight: "100vh",
         display: "flex",
       }}
@@ -152,7 +153,7 @@ export default function AdminLayout({
           flex: 1,
           minHeight: "100vh",
           padding: CONTENT_PADDING,
-          color: "#0f172a",
+          color: "var(--ad-text-primary)",
         }}
       >
         <div
@@ -163,11 +164,11 @@ export default function AdminLayout({
             gap: 16,
             marginBottom: 24,
             padding: "14px 16px",
-            border: "1px solid rgba(203, 213, 225, 0.72)",
+            border: "1px solid var(--ad-border-subtle)",
             borderRadius: 20,
-            background: "rgba(255, 255, 255, 0.78)",
+            background: "var(--ad-bg-card)",
             backdropFilter: "blur(16px)",
-            boxShadow: "0 12px 28px rgba(15, 23, 42, 0.06)",
+            boxShadow: "0 8px 20px rgba(15, 23, 42, 0.04)",
           }}
         >
           <div>
@@ -177,7 +178,7 @@ export default function AdminLayout({
                 fontWeight: 800,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "#0f766e",
+                color: "hsl(var(--accent))",
               }}
             >
               Portfolio CMS
@@ -188,7 +189,7 @@ export default function AdminLayout({
                 fontSize: 22,
                 fontWeight: 850,
                 letterSpacing: "-0.03em",
-                color: "#0f172a",
+                color: "hsl(var(--foreground))",
               }}
             >
               {pageTitle}
@@ -213,8 +214,8 @@ export default function AdminLayout({
                 minHeight: 40,
                 padding: "0 14px",
                 borderRadius: 12,
-                background: "#0f172a",
-                color: "white",
+                background: "var(--ad-text-primary)",
+                color: "var(--ad-bg-card)",
                 fontSize: 13,
                 fontWeight: 800,
                 textDecoration: "none",
@@ -227,7 +228,7 @@ export default function AdminLayout({
                 width: 32,
                 height: 32,
                 borderRadius: 8,
-                background: "linear-gradient(135deg, #14b8a6, #0f766e)",
+                background: "hsl(var(--accent))",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -238,7 +239,13 @@ export default function AdminLayout({
             >
               {userInfo.name.charAt(0)}
             </div>
-            <span style={{ fontSize: 13, fontWeight: 500, color: "#1e293b" }}>
+            <span
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--ad-text-primary)",
+              }}
+            >
               {userInfo.name}
             </span>
           </div>

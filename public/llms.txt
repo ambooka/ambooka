@@ -1,7 +1,7 @@
 # Msah Ambooka - Portfolio Context
 
 ## Summary
-Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, Kenya. He combines a Computer Science foundation with practical experience in full-stack web applications, REST APIs, payment integrations, ERP implementation, IT infrastructure, and applied AI/ML.
+Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, Kenya. He combines a Computer Science foundation with practical experience in full-stack web applications, REST APIs, payment integrations, ERP implementation, IT infrastructure, and platform/MLOps.
 
 ## Contact
 - Email: abdulrahmanambooka@gmail.com
@@ -11,8 +11,8 @@ Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, K
 
 ## Entity Definitions & Role Context
 - **Software Engineer**: Experienced in full-stack development, REST APIs, payment integrations, business automation and practical system design.
-- **AI/ML Engineering Direction**: Building on computer vision, PyTorch, OpenCV, YOLO, and production software engineering foundations.
-- **Applied AI/ML Developer**: Practical computer vision experience and an active LLM/RAG learning track.
+- **Platform/MLOps Engineering Direction**: Building on computer vision, PyTorch, OpenCV, YOLO, and production software engineering foundations.
+- **Applied MLOps Developer**: Practical computer vision experience and an active LLM/RAG learning track.
 - **Tech Talent**: Developer based in Nairobi, Kenya, open to remote and local opportunities.
 
 ## Common Queries Matched
@@ -28,7 +28,7 @@ Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, K
 
 ## Technical Skills
 - **Core Languages**: Python, TypeScript, JavaScript, Go, C++, SQL, Bash, C#, Java, Dart.
-- **Applied AI/ML**: PyTorch, OpenCV, YOLO, Flask inference APIs, Hugging Face, Jupyter.
+- **Applied MLOps**: PyTorch, OpenCV, YOLO, Flask inference APIs, Hugging Face, Jupyter.
 - **Infrastructure**: Docker, Linux, Nginx, GitHub Actions, Windows Server, Active Directory, TCP/IP, VoIP.
 - **Web & Full Stack**: React, Next.js, Tailwind CSS, FastAPI, Node.js, Express, Flask, PostgreSQL, Supabase.
 
@@ -47,7 +47,7 @@ Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, K
 1. **M-Pesa Payment Integration Library**: Daraja API integration with callbacks, queues, retries and audit logs.
 2. **Hebatullah ERPNext Implementation**: ERP rollout replacing manual inventory, finance and procurement workflows.
 3. **SME Invoicing & Reporting Dashboard**: React + FastAPI automation with PDF output, notifications and analytics.
-4. **AI-Powered Surveillance System**: Computer vision research project using YOLO, OpenCV and Flask.
+4. **Computer Vision Surveillance System**: Computer vision research project using YOLO, OpenCV and Flask.
 
 ## Site Structure
 - `/`: Home page

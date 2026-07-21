@@ -25,10 +25,10 @@ import {
 
 const GITHUB_USERNAME = "ambooka";
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
-const PROFESSIONAL_TITLE = "Software Engineer, Systems & AI";
+const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
 const PROFESSIONAL_SCOPE =
-  "Full-stack products, payment integrations, business systems, infrastructure, and applied AI/ML.";
-const PROFESSIONAL_FOCUS = "Software · Systems · Applied AI";
+  "Full-stack products, payment integrations, business systems, infrastructure, and platform/MLOps.";
+const PROFESSIONAL_FOCUS = "Software · Systems · Platform/MLOps";
 
 // --- Interfaces (from original file) ---
 interface Testimonial {
@@ -174,7 +174,11 @@ export default function About({
     initialData?.personalInfo || null,
   );
 
-  const focusAreas = ["Software Engineering", "Business Systems", "Applied AI/ML"];
+  const focusAreas = [
+    "Software Engineering",
+    "Business Systems",
+    "Platform/MLOps",
+  ];
 
   useEffect(() => {
     if (!initialData) {
@@ -229,7 +233,6 @@ export default function About({
           }
         }
       }
-
     } catch (error) {
       console.error("Error fetching about data:", error);
     } finally {
@@ -296,7 +299,7 @@ export default function About({
                 <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
                   Software Engineer
                 </span>
-                , Systems & AI
+                , Systems & MLOps
               </motion.h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
@@ -469,7 +472,7 @@ export default function About({
             </h2>
             <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
               Full-stack software, IT systems, business automation, ERP
-              implementation and applied AI/ML work from real client, company
+              implementation and platform/MLOps work from real client, company
               and academic projects
             </p>
 
@@ -527,7 +530,7 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "AI/ML",
+                  phase: "MLOps",
                   title: "Machine Learning",
                   desc: "Applied computer vision research with YOLO, OpenCV, PyTorch, Flask inference APIs, real-time video processing, and model evaluation.",
                   tags: ["PyTorch", "HuggingFace", "FastAPI"],
@@ -551,8 +554,8 @@ export default function About({
                 },
                 {
                   phase: "Phase 4–5",
-                  title: "AI / LLM Systems",
-                  desc: "RAG pipelines, LangChain LCEL, QLoRA fine-tuning, MLOps with drift detection, and multi-agent systems via LangGraph.",
+                  title: "MLOps / LLM Systems",
+                  desc: "RAG pipelines, LangChain LCEL, QLoRA tuning, production monitoring, and multi-agent tooling via LangGraph.",
                   tags: ["LangChain", "RAG", "LangGraph"],
                   iconBase:
                     "text-[hsl(var(--accent))] bg-[hsl(var(--accent))/0.15]",
@@ -699,7 +702,6 @@ export default function About({
             />
           </motion.section>
         </div>
-
       </article>
     </AnimatedPage>
   );

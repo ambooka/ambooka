@@ -203,14 +203,14 @@ INSERT INTO about_content (section_key, title, content, display_order)
 VALUES (
     'about_text',
     'About Me',
-    'I''m an experienced software engineer specializing in Artificial Intelligence, full-stack development, and network infrastructure. With a strong foundation in Computer Science from Maseno University, I build intelligent, scalable systems that transform complex challenges into elegant, efficient solutions. My expertise spans machine learning, cloud architecture, and enterprise software development.',
+    'I''m an experienced software engineer specializing in intelligent systems, full-stack development, and network infrastructure. With a strong foundation in Computer Science from Maseno University, I build scalable systems that transform complex challenges into elegant, efficient solutions. My expertise spans machine learning, cloud architecture, and enterprise software development.',
     0
 ) ON CONFLICT (section_key) DO NOTHING;
 
 -- Insert expertise areas
 INSERT INTO about_content (section_key, title, content, icon, badge, display_order)
 VALUES
-    ('expertise_1', 'AI & Machine Learning', 'Developing intelligent systems using neural networks, computer vision, and natural language processing.', 'Brain', 'expert', 1),
+    ('expertise_1', 'ML & Intelligent Systems', 'Developing intelligent systems using neural networks, computer vision, and natural language processing.', 'Brain', 'expert', 1),
     ('expertise_2', 'Software Engineering', 'Building scalable applications with modern frameworks, clean architecture, and best practices.', 'Code', 'expert', 2),
     ('expertise_3', 'Robotics & Automation', 'Programming autonomous systems, sensor integration, and motion planning algorithms.', 'Bot', 'advanced', 3),
     ('expertise_4', 'Cloud Computing & DevOps', 'Building and automating scalable cloud environments to streamline deployment, improve reliability, and optimize performance.', 'Cloud', 'advanced', 4)

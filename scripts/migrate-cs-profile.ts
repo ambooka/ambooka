@@ -30,7 +30,7 @@ async function migrateProfile() {
     phone: "+254111384390",
     location: "Nairobi, Kenya",
     summary:
-      "Innovative Full-Stack Developer and Cloud Solutions Architect with expertise in building scalable web applications and cloud infrastructure. Specialized in React, Node.js, TypeScript, and cloud platforms (AWS/Azure). Passionate about leveraging AI/ML technologies to solve real-world problems. Strong foundation in computer science with hands-on experience in modern DevOps practices, microservices architecture, and agile development.",
+      "Innovative Full-Stack Developer and Cloud Solutions Architect with expertise in building scalable web applications and cloud infrastructure. Specialized in React, Node.js, TypeScript, and cloud platforms (AWS/Azure). Passionate about platform/MLOps technologies to solve real-world problems. Strong foundation in computer science with hands-on experience in modern DevOps practices, microservices architecture, and agile development.",
     linkedin_url: "https://www.linkedin.com/in/abdulrahman-ambooka/",
     github_url: "https://github.com/ambooka",
     website_url: "https://ambooka.dev",
@@ -67,7 +67,7 @@ async function migrateProfile() {
       is_current: false,
       grade: "First Class Honours (GPA: 3.85/4.0)",
       description:
-        "Comprehensive computer science education covering algorithms, data structures, software engineering, database systems, computer networks, artificial intelligence, and cloud computing. Notable achievements include Dean's List for 6 consecutive semesters, Best Final Year Project Award for developing an AI-powered medical diagnosis system, and active participation in the Computer Science Students Association.",
+        "Comprehensive computer science education covering algorithms, data structures, software engineering, database systems, computer networks, intelligent systems, and cloud computing. Notable achievements include Dean's List for 6 consecutive semesters, Best Final Year Project Award for developing a computer vision medical diagnosis system, and active participation in the Computer Science Students Association.",
       display_order: 1,
     },
     {
@@ -249,7 +249,7 @@ async function migrateProfile() {
 
   const projects = [
     {
-      title: "AI-Powered Medical Diagnosis System",
+      title: "Computer Vision Medical Diagnosis System",
       category: "ai_ml",
       description:
         "Machine learning system that assists healthcare providers with preliminary disease diagnosis using patient symptoms and medical history. Utilizes deep learning models trained on medical datasets with 94% accuracy. Features include symptom analysis, disease prediction with confidence scores, treatment recommendations, and medical imaging analysis using computer vision.",
@@ -271,7 +271,7 @@ async function migrateProfile() {
         "Healthcare",
         "Deep Learning",
         "Computer Vision",
-        "AI",
+        "Computer Vision",
       ],
       is_featured: true,
       display_order: 1,

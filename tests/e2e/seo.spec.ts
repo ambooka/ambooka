@@ -1,49 +1,61 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('SEO & Metadata Tests', () => {
+test.describe("SEO & Metadata Tests", () => {
+  test("Home Page SEO", async ({ page }) => {
+    await page.goto("/");
 
-    test('Home Page SEO', async ({ page }) => {
-        await page.goto('/');
+    // 1. Title
+    await expect(page).toHaveTitle(
+      /Msah Ambooka | Cloud-native Software Engineer — Platform & MLOps/,
+    );
 
-        // 1. Title
-        await expect(page).toHaveTitle(/Msah Ambooka | Software Engineer & Full-Stack Developer/);
+    // 2. Meta Description
+    const description = page.locator('meta[name="description"]');
+    await expect(description).toHaveAttribute(
+      "content",
+      /Computer Science Graduate/,
+    );
+    await expect(description).toHaveAttribute("content", /MLOps/);
 
-        // 2. Meta Description
-        const description = page.locator('meta[name="description"]');
-        await expect(description).toHaveAttribute('content', /Computer Science Graduate/);
-        await expect(description).toHaveAttribute('content', /MLOps/);
+    // 3. Canonical URL
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute("href", "https://ambooka.dev/");
 
-        // 3. Canonical URL
-        const canonical = page.locator('link[rel="canonical"]');
-        await expect(canonical).toHaveAttribute('href', 'https://ambooka.dev/');
+    // 4. JSON-LD Person Schema
+    const jsonLd = page.locator('script[type="application/ld+json"]');
+    await expect(jsonLd).toHaveCount(1);
 
-        // 4. JSON-LD Person Schema
-        const jsonLd = page.locator('script[type="application/ld+json"]');
-        await expect(jsonLd).toHaveCount(1);
+    const jsonContent = await jsonLd.innerText();
+    const schema = JSON.parse(jsonContent);
 
-        const jsonContent = await jsonLd.innerText();
-        const schema = JSON.parse(jsonContent);
+    expect(schema["@context"]).toBe("https://schema.org");
+    expect(schema["@type"]).toBe("Person");
+    expect(schema.name).toBe("Msah Ambooka");
+    expect(schema.jobTitle).toBe(
+      "Cloud-native Software Engineer — Platform & MLOps",
+    );
+    expect(schema.url).toBe("https://ambooka.dev");
+    expect(schema.sameAs).toContain("https://github.com/ambooka");
 
-        expect(schema['@context']).toBe('https://schema.org');
-        expect(schema['@type']).toBe('Person');
-        expect(schema.name).toBe('Msah Ambooka');
-        expect(schema.jobTitle).toBe('Software Engineer | Full-Stack Developer | IT Systems | AI/ML Engineering');
-        expect(schema.url).toBe('https://ambooka.dev');
-        expect(schema.sameAs).toContain('https://github.com/ambooka');
+    // 5. Open Graph
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      "content",
+      "Msah Ambooka | Cloud-native Software Engineer — Platform & MLOps",
+    );
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+      "content",
+      "website",
+    );
+  });
 
-        // 5. Open Graph
-        await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Msah Ambooka | Software Engineer & Full-Stack Developer');
-        await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
-    });
+  test("Contact Page SEO", async ({ page }) => {
+    await page.goto("/contact");
+    await expect(page).toHaveTitle(/Contact/);
+    // Note: Assuming "Contact | Msah Ambooka" or similar template
+  });
 
-    test('Contact Page SEO', async ({ page }) => {
-        await page.goto('/contact');
-        await expect(page).toHaveTitle(/Contact/);
-        // Note: Assuming "Contact | Msah Ambooka" or similar template
-    });
-
-    test('Resume Page SEO', async ({ page }) => {
-        await page.goto('/resume');
-        await expect(page).toHaveTitle(/Resume/);
-    });
+  test("Resume Page SEO", async ({ page }) => {
+    await page.goto("/resume");
+    await expect(page).toHaveTitle(/Resume/);
+  });
 });

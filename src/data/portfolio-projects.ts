@@ -246,8 +246,8 @@ export const projects: Project[] = [
       "Delivered a business automation dashboard that replaced manual invoicing with API-backed workflows, PDF output, notifications and analytics.",
   },
   {
-    slug: "ai-powered-surveillance-system",
-    title: "AI-Powered Surveillance System",
+    slug: "computer-vision-surveillance-system",
+    title: "Computer Vision Surveillance System",
     oneLine:
       "Final-year research project using YOLO, OpenCV and Flask for real-time object detection, threat classification and alerting.",
     category: "ml",
@@ -278,7 +278,7 @@ export const projects: Project[] = [
       "API backend",
       "alerting pipeline",
     ],
-    proof: { caseStudy: "/case-studies/ai-powered-surveillance-system" },
+    proof: { caseStudy: "/case-studies/computer-vision-surveillance-system" },
     engineeringEvidence: evidence({
       tests: false,
       ci: false,

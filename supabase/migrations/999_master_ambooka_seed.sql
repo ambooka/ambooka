@@ -1,5 +1,5 @@
 -- =====================================================================
--- MASTER SEED: Abdulrahman (Msah) Ambooka — AI/ML Engineer Roadmap
+-- MASTER SEED: Abdulrahman (Msah) Ambooka — MLOps Engineer Roadmap
 -- Portfolio: ambooka.dev  |  GitHub: ambooka
 -- Roadmap: 5-Phase Roadmap Platform, ongoing professional development, Computer Science Graduate accelerated
 -- Run this in Supabase SQL Editor to reset all career content
@@ -12,21 +12,21 @@ BEGIN;
 -- =====================================================================
 UPDATE personal_info SET
   full_name      = 'Msah Ambooka',
-  title          = 'Software Engineer → AI/ML Engineer',
+  title          = 'Software Engineer → MLOps Engineer',
   email          = 'abdulrahmanambooka@gmail.com',
   phone          = '+254111384390',
   location       = 'Nairobi, Kenya',
-  summary        = 'CS graduate building toward an AI/ML Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied AI/ML and production engineering practice. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Documenting real professional work on ambooka.dev.',
+  summary        = 'CS graduate building toward an MLOps Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied MLOps and production engineering practice. Currently in Phase 1 (Foundations & Tooling). Background in full-stack web development and IT infrastructure. Documenting real professional work on ambooka.dev.',
   linkedin_url   = 'https://www.linkedin.com/in/abdulrahman-ambooka/',
   github_url     = 'https://github.com/ambooka',
   website_url    = 'https://ambooka.dev',
-  about_text     = 'CS graduate from Maseno University, building toward an AI/ML Engineer role through a structured professional development plan. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 study time by ~40%, letting me focus deeper on the AI/ML stack earlier. Currently deep in Phase 1: Python, Linux, Docker, SQL, and CI/CD — the engineering foundation everything else rests on.',
-  kpi_stats      = '{"role":"Software Engineer","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3","headline":"Production-minded software delivery.","project_count":3,"expertise_breakdown":{"software":40,"cloud_infra":35,"data":10,"ml_ai":15}}'::jsonb,
+  about_text     = 'CS graduate from Maseno University, building toward an MLOps Engineer role through a structured professional development plan. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 study time by ~40%, letting me focus deeper on the MLOps stack earlier. Currently deep in Phase 1: Python, Linux, Docker, SQL, and CI/CD — the engineering foundation everything else rests on.',
+  kpi_stats      = '{"role":"Software Engineer","focus":"Python · Docker · Linux → MLOps Engineer","current_phase":"1/5","years_experience":"3","headline":"Production-minded software delivery.","project_count":3,"expertise_breakdown":{"software":40,"cloud_infra":35,"data":10,"ml_ai":15}}'::jsonb,
   expertise      = '[
     {"section_key":"expertise_foundation","title":"Software Engineering","content":"Python (OOP, type hints, pytest, decorators, generators), TypeScript, Node.js REST APIs, PostgreSQL, Docker Compose — shipped to a live Hetzner VPS with GitHub Actions CI/CD.","icon":"Code","badge":"Phase 1–2","display_order":1},
     {"section_key":"expertise_cloud","title":"Cloud & Infrastructure","content":"k3s Kubernetes, Helm charts, Terraform-managed AWS (IAM, EC2, S3, ECS), Prometheus + Grafana + Loki observability stack. Everything infrastructure-as-code, nothing clicked in the console.","icon":"Cloud","badge":"Phase 2","display_order":2},
     {"section_key":"expertise_ml","title":"Machine Learning","content":"PyTorch deep learning (CNNs, RNNs, Transformers from scratch), HuggingFace fine-tuning, scikit-learn pipelines, FastAPI model serving with SHAP explanations and DVC data versioning.","icon":"Brain","badge":"Phase 3","display_order":3},
-    {"section_key":"expertise_ai","title":"AI / LLM Engineering","content":"RAG architectures (naive → advanced hybrid search + re-ranking), LangChain LCEL, QLoRA fine-tuning, MLflow model registry, Evidently drift detection, automated retraining pipelines.","icon":"Bot","badge":"Phase 4","display_order":4},
+    {"section_key":"expertise_ai","title":"LLM Engineering","content":"RAG architectures (naive → advanced hybrid search + re-ranking), LangChain LCEL, QLoRA fine-tuning, MLflow model registry, Evidently drift detection, automated retraining pipelines.","icon":"Bot","badge":"Phase 4","display_order":4},
     {"section_key":"expertise_agents","title":"Agentic Systems","content":"LangGraph state machines, multi-agent supervisor patterns (CrewAI, AutoGen), tool use and function calling, human-in-the-loop approval gates, adversarial red teaming and safety layers.","icon":"Zap","badge":"Phase 5","display_order":5}
   ]'::jsonb,
   updated_at     = NOW()
@@ -35,16 +35,16 @@ WHERE id = (SELECT id FROM personal_info LIMIT 1);
 INSERT INTO personal_info (full_name, title, email, phone, location, summary, linkedin_url, github_url, website_url, about_text, kpi_stats, expertise)
 SELECT
   'Msah Ambooka',
-  'Software Engineer → AI/ML Engineer',
+  'Software Engineer → MLOps Engineer',
   'abdulrahmanambooka@gmail.com',
   '+254111384390',
   'Nairobi, Kenya',
-  'CS graduate building toward an AI/ML Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied AI/ML and production engineering practice.',
+  'CS graduate building toward an MLOps Engineer role through the portfolio platform — a single long-running project that ships across 5 phases from full-stack delivery into applied MLOps and production engineering practice.',
   'https://www.linkedin.com/in/abdulrahman-ambooka/',
   'https://github.com/ambooka',
   'https://ambooka.dev',
-  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured professional development plan. Currently in Phase 1: Foundations & Tooling.',
-  '{"role":"Software Engineer","focus":"Python · Docker · Linux → AI/ML Engineer","current_phase":"1/5","years_experience":"3"}'::jsonb,
+  'CS graduate from Maseno University building toward an MLOps Engineer role through a structured professional development plan. Currently in Phase 1: Foundations & Tooling.',
+  '{"role":"Software Engineer","focus":"Python · Docker · Linux → MLOps Engineer","current_phase":"1/5","years_experience":"3"}'::jsonb,
   '[]'::jsonb
 WHERE NOT EXISTS (SELECT 1 FROM personal_info LIMIT 1);
 
@@ -199,7 +199,7 @@ VALUES
   3
 ),
 (
-  'Roadmap v0.4 — AI Platform',
+  'Roadmap v0.4 — Model Platform',
   'ai_ml',
   'Phase 4 milestone (planned): RAG chatbot over a personal knowledge base with hybrid search + re-ranking, QLoRA fine-tuned domain model in MLflow registry, Evidently drift detection, and automated retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API', 'Anthropic API'],
@@ -211,10 +211,10 @@ VALUES
   4
 ),
 (
-  'Roadmap v1.0 — Complete AI Platform',
+  'Roadmap v1.0 — Complete Model Platform',
   'ai_ml',
   'Phase 5 milestone (planned): Autonomous research agent (LangGraph supervisor), multi-agent code review pipeline, long-term vector memory, guardrails safety layer, and a red team report — live at ambooka.dev.',
-  ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton', 'LlamaIndex'],
+  ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails', 'Triton', 'LlamaIndex'],
   'https://github.com/ambooka',
   'https://ambooka.dev',
   '/assets/images/projects/roadmap-v10.png',
@@ -249,7 +249,7 @@ VALUES
 (
   'ambooka.dev — Portfolio Platform',
   'web_app',
-  'This portfolio site itself — a Next.js 16 + Supabase application with an admin CMS, AI-generated resume variants, GitHub sync, Playwright e2e tests, and a 3D robot FAB. Serves as both a portfolio and a Phase 1–2 V4 reference architecture.',
+  'This portfolio site itself — a Next.js 16 + Supabase application with an admin CMS, intelligent resume variants, GitHub sync, Playwright e2e tests, and a 3D robot FAB. Serves as both a portfolio and a Phase 1–2 V4 reference architecture.',
   ARRAY['Next.js', 'TypeScript', 'React', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Playwright', 'Framer Motion'],
   'https://github.com/ambooka/ambooka',
   'https://ambooka.dev',
@@ -330,7 +330,7 @@ INSERT INTO public.kpi_stats (label, value, color, type, section, display_order)
 ('Weekly Projs', '104',         '',                                 'solid',   'header', 2),
 ('Timeline',     '26 Months',   '',                                 'solid',   'header', 3),
 ('Current Phase','Phase 1 / 5', 'bg-[#2a2a2a] text-white',         'solid',   'hero',   1),
-('Target Role',  'AI/ML Eng.',  'bg-[#facc15] text-[#2a2a2a]',     'solid',   'hero',   2),
+('Target Role',  'MLOps Eng.',  'bg-[#facc15] text-[#2a2a2a]',     'solid',   'hero',   2),
 ('Timeline Goal','26 Months',   'bg-blue-600 text-white',           'solid',   'hero',   3),
 ('Projects Done','3 / 104',     'border-gray-300',                  'outline', 'hero',   4);
 
@@ -343,7 +343,7 @@ DELETE FROM public.about_content;
 INSERT INTO public.about_content (section_key, title, content, icon, badge, display_order, is_active) VALUES
 (
   'about_text', NULL,
-  'CS graduate from Maseno University building toward an AI/ML Engineer role through a structured professional development plan — the portfolio platform. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 by ~40%, letting me reach the AI/ML work faster. Currently: Phase 1 — Foundations & Tooling.',
+  'CS graduate from Maseno University building toward an MLOps Engineer role through a structured professional development plan — the portfolio platform. I maintain a public portfolio with real project evidence, client work, academic research and production-oriented documentation. The CS degree cuts Phase 1–2 by ~40%, letting me reach the MLOps work faster. Currently: Phase 1 — Foundations & Tooling.',
   NULL, NULL, 0, true
 ),
 (
@@ -372,7 +372,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 ),
 (
   'expertise_ai',
-  'AI / LLM Engineering',
+  'LLM Engineering',
   'RAG architectures — naive through advanced (hybrid BM25 + vector, cross-encoder re-ranking, HyDE). LangChain LCEL chains. QLoRA fine-tuning on domain datasets. MLflow model registry with automated quality gates. Evidently drift detection.',
   'Bot', 'Phase 4', 5, true
 ),
@@ -415,8 +415,8 @@ VALUES
   (1, 'Foundations & Tooling',            4,  '3 Yrs Exp', 'Started 2025', 'Software Engineer',      'in_progress'),
   (2, 'Web Engineering & Cloud',          7,  '3 Yrs Exp', 'Starting M5',  'Full-Stack Engineer',    'upcoming'),
   (3, 'Data Science & Classical ML',      6,  '0 Yrs ML',  'Starting M12', 'ML Engineer I',          'upcoming'),
-  (4, 'AI Engineering & MLOps',           6,  '0 Yrs AI',  'Starting M18', 'AI/ML Engineer',         'upcoming'),
-  (5, 'Agentic AI & Production Hardening',3,  '0 Yrs Ag',  'Starting M24', 'Senior AI/ML Engineer',  'upcoming')
+  (4, 'Model Engineering & MLOps',           6,  '0 Yrs MLOps',  'Starting M18', 'MLOps Engineer',         'upcoming'),
+  (5, 'Agentic Systems & Production Hardening',3,  '0 Yrs Agents',  'Starting M24', 'Senior MLOps Engineer',  'upcoming')
 ON CONFLICT (phase_number) DO UPDATE SET
   title            = EXCLUDED.title,
   duration_months  = EXCLUDED.duration_months,
@@ -481,9 +481,9 @@ INSERT INTO public.certifications (name, phase_number, is_obtained, icon_url) VA
  'https://images.credly.com/size/340x340/images/3d07d90b-84b5-41fe-aef2-9a1af71a8498/image.png'),
 
 -- ── Phase 5  (Months 24–26) ─────────────────────────────────────────────
-('AI Safety Fundamentals — BlueDot Impact',      5, false,
- '/assets/badges/ai-safety.png'),
-('DeepLearning.AI LLMOps',                       5, false,
+('Safety Fundamentals — BlueDot Impact',      5, false,
+ '/assets/badges/safety.png'),
+('LLMOps',                       5, false,
  'https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-university-assets.s3.amazonaws.com/da/66e340f5654baf1651e6339bda77ae/DeepLearningAI-Logo-Square.png')
 
 ON CONFLICT (name) DO UPDATE SET
@@ -521,16 +521,16 @@ VALUES
   'https://github.com/ambooka', '#'
 ),
 (
-  'Roadmap v0.4 — AI Platform',
+  'Roadmap v0.4 — Model Platform',
   'RAG chatbot (hybrid search + re-ranking), QLoRA fine-tuned model in MLflow registry, Evidently drift detection, retraining pipeline.',
   ARRAY['LangChain', 'LlamaIndex', 'pgvector', 'MLflow', 'TorchServe', 'Evidently', 'OpenAI API'],
   'Planned', true, 4,
   'https://github.com/ambooka', '#'
 ),
 (
-  'Roadmap v1.0 — Complete AI Platform',
+  'Roadmap v1.0 — Complete Model Platform',
   'Autonomous research agent (LangGraph supervisor), multi-agent pipelines, safety layer, red team report. Live at ambooka.dev.',
-  ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails AI', 'Triton Inference Server'],
+  ARRAY['LangGraph', 'CrewAI', 'AutoGen', 'Guardrails', 'Triton Inference Server'],
   'Planned', true, 5,
   'https://github.com/ambooka', 'https://ambooka.dev'
 );

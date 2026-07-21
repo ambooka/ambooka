@@ -193,7 +193,7 @@ INSERT INTO public.skills (name, category, proficiency, display_order, is_featur
 
 -- ═══════════════════════════════════════════
 -- PHASE 7: LLMOps FOUNDATIONS
--- The GenAI Future
+-- The Future of Intelligent Platforms
 -- ═══════════════════════════════════════════
 
 -- LLM Serving
@@ -343,8 +343,8 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 ),
 (
     'expertise_llmops',
-    'LLMOps & GenAI',
-    'vLLM, Ollama serving. LangChain, LlamaIndex frameworks. Qdrant, Weaviate vector DBs. RAG pipelines. The future of AI infrastructure.',
+    'LLMOps',
+    'vLLM, Ollama serving. LangChain, LlamaIndex frameworks. Qdrant, Weaviate vector DBs. RAG pipelines. The future of intelligent infrastructure.',
     'Brain',
     'Phase 7',
     8,

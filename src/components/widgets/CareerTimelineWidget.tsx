@@ -30,11 +30,11 @@ const PHASE_COLORS: Record<
   number,
   { accent: string; dim: string; text: string }
 > = {
-  1: { accent: "#14b8a6", dim: "rgba(20,184,166,0.12)", text: "#0d9488" },
-  2: { accent: "#3b82f6", dim: "rgba(59,130,246,0.12)", text: "#2563eb" },
-  3: { accent: "#8b5cf6", dim: "rgba(139,92,246,0.12)", text: "#7c3aed" },
-  4: { accent: "#f59e0b", dim: "rgba(245,158,11,0.12)", text: "#d97706" },
-  5: { accent: "#ec4899", dim: "rgba(236,72,153,0.12)", text: "#db2777" },
+  1: { accent: "#4A5D45", dim: "rgba(74,93,69,0.12)", text: "#4A5D45" },
+  2: { accent: "#8C7C58", dim: "rgba(140,124,88,0.12)", text: "#8C7C58" },
+  3: { accent: "#A86B3B", dim: "rgba(168,107,59,0.12)", text: "#A86B3B" },
+  4: { accent: "#6D7A4A", dim: "rgba(109,122,74,0.12)", text: "#6D7A4A" },
+  5: { accent: "#7B5E3B", dim: "rgba(123,94,59,0.12)", text: "#7B5E3B" },
 };
 
 // Roadmap milestone label per phase
@@ -93,22 +93,22 @@ const FALLBACK_PHASES: RoadmapPhase[] = [
   {
     id: "4",
     phase_number: 4,
-    title: "AI Engineering & MLOps",
+    title: "MLOps Engineering",
     duration_months: 6,
     experience_label: "",
     start_date_label: "Month 18–23",
-    target_role: "AI/ML Engineer",
+    target_role: "MLOps Engineer",
     status: "upcoming",
     icons: [],
   },
   {
     id: "5",
     phase_number: 5,
-    title: "Agentic AI",
+    title: "ML Platform Design",
     duration_months: 3,
     experience_label: "",
     start_date_label: "Month 24–26",
-    target_role: "Senior AI Engineer",
+    target_role: "Platform Engineer",
     status: "upcoming",
     icons: [],
   },
@@ -370,12 +370,12 @@ export default function CareerTimelineWidget() {
                   <div className="flex flex-wrap items-center gap-1 pt-1.5 mt-1 border-t border-[hsl(var(--border))]">
                     <Award
                       size={10}
-                      className="text-green-600 dark:text-green-500 shrink-0"
+                      className="text-[hsl(var(--primary))] shrink-0"
                     />
                     {obtainedCerts.map((c) => (
                       <span
                         key={c.id}
-                        className="px-1.5 py-[1px] rounded-full border border-green-600/20 bg-green-600/10 text-green-600 dark:text-green-500 text-[0.6rem] font-bold whitespace-nowrap"
+                        className="px-1.5 py-[1px] rounded-full border border-[hsl(var(--primary)/0.2)] bg-[hsl(var(--primary)/0.1)] text-[hsl(var(--primary))] text-[0.6rem] font-bold whitespace-nowrap"
                       >
                         {c.name.length > 28
                           ? c.name.slice(0, 26) + "…"
@@ -393,7 +393,8 @@ export default function CareerTimelineWidget() {
       {/* ── Footer ─────────────────────────────────────────────── */}
       <div className="flex flex-col gap-2 pt-2.5 mt-1 border-t border-[hsl(var(--border))] sm:flex-row sm:items-center sm:justify-between">
         <span className="text-[0.62rem] font-[500] text-[hsl(var(--muted-foreground))]">
-          Professional Focus · Software Engineering · IT Systems · AI/ML
+          Professional Focus · Software Engineering · IT Systems ·
+          Platform/MLOps
         </span>
         <a
           href="https://ambooka.dev"

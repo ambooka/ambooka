@@ -41,7 +41,7 @@ async function migrateProfile() {
         phone: "+254 111 384 390",
         location: "Nairobi, Kenya",
         summary:
-          "Innovative Full-Stack Developer and Cloud Solutions Architect with expertise in building scalable web applications and cloud infrastructure. Specialized in React, Node.js, TypeScript, and cloud platforms (AWS/Azure). Passionate about leveraging AI/ML technologies to solve real-world problems. Strong foundation in computer science with hands-on experience in modern DevOps practices, microservices architecture, and agile development.",
+          "Innovative Full-Stack Developer and Cloud Solutions Architect with expertise in building scalable web applications and cloud infrastructure. Specialized in React, Node.js, TypeScript, and cloud platforms (AWS/Azure). Passionate about platform/MLOps technologies to solve real-world problems. Strong foundation in computer science with hands-on experience in modern DevOps practices, microservices architecture, and agile development.",
         linkedin_url: "https://www.linkedin.com/in/abdulrahman-ambooka/",
         github_url: "https://github.com/ambooka",
         portfolio_url: "https://ambooka.dev",
@@ -576,7 +576,7 @@ async function migrateProfile() {
       is_featured: false,
     },
 
-    // AI/ML - Featured
+    // MLOps - Featured
     {
       name: "TensorFlow",
       category: "ai_ml",

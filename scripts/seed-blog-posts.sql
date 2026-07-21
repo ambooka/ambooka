@@ -37,11 +37,11 @@ VALUES
     NULL
 ),
 (
-    'Building an AI-Powered Surveillance System with YOLO and OpenCV',
+    'Building a Computer Vision Surveillance System with YOLO and OpenCV',
     'computer-vision-final-year-project',
     'Technical lessons from my final-year computer vision research project using YOLO, OpenCV, Flask, and real-time video processing.',
-    '# Building an AI-Powered Surveillance System with YOLO and OpenCV\n\nThis article covers problem framing, YOLO model selection, OpenCV stream processing, Flask inference APIs, alert generation, and accuracy-latency tradeoffs from my final-year research project.',
-    'AI / ML',
+    '# Building a Computer Vision Surveillance System with YOLO and OpenCV\n\nThis article covers problem framing, YOLO model selection, OpenCV stream processing, Flask inference APIs, alert generation, and accuracy-latency tradeoffs from my final-year research project.',
+    'Computer Vision',
     ARRAY['YOLO', 'OpenCV', 'PyTorch', 'Flask', 'Computer Vision'],
     true,
     NOW() - INTERVAL '3 days',

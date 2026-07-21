@@ -1,20 +1,31 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowUpRight, CheckCircle2, ExternalLink, Github, Layers3, ShieldCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  ExternalLink,
+  Github,
+  Layers3,
+  ShieldCheck,
+} from "lucide-react";
 import { caseStudies } from "@/data/case-studies";
-import { categoryLabels, getProject, statusLegend } from "@/data/war-mode-projects";
+import {
+  categoryLabels,
+  getProject,
+  statusLegend,
+} from "@/data/war-mode-projects";
 
 export const metadata: Metadata = {
   title: "Case Studies",
   description:
-    "Technical case studies for software engineering, IT systems, business automation, payment integrations, and applied AI/ML projects.",
+    "Technical case studies for software engineering, IT systems, business automation, payment integrations, and platform/MLOps projects.",
   alternates: {
     canonical: "/case-studies",
   },
   openGraph: {
     title: "Case Studies | Msah Ambooka",
     description:
-      "Proof-focused technical case studies across software systems, business automation, infrastructure, and applied AI.",
+      "Proof-focused technical case studies across software systems, business automation, infrastructure, and MLOps.",
     type: "website",
     url: "https://ambooka.dev/case-studies",
     images: [{ url: "/og-image.png", alt: "Msah Ambooka case studies" }],
@@ -23,7 +34,7 @@ export const metadata: Metadata = {
 
 const proofStats = [
   { label: "Case studies", value: caseStudies.length.toString() },
-  { label: "Focus", value: "SE + AI" },
+  { label: "Focus", value: "Platform + MLOps" },
   { label: "Proof style", value: "Outcome-led" },
 ];
 
@@ -40,15 +51,23 @@ export default function CaseStudiesPage() {
             Case studies that show decisions, tradeoffs, and business value.
           </h1>
           <p className="mt-4 max-w-3xl text-sm leading-7 text-[hsl(var(--muted-foreground))] sm:text-base">
-            Each write-up keeps the focus on the problem, architecture, implementation choices, quality evidence, and measurable impact.
+            Each write-up keeps the focus on the problem, architecture,
+            implementation choices, quality evidence, and measurable impact.
           </p>
         </div>
 
         <div className="mt-6 grid grid-cols-3 gap-2 lg:mt-0 lg:grid-cols-1">
           {proofStats.map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--background))/0.72] p-3">
-              <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--muted-foreground))]">{stat.label}</p>
-              <p className="mt-1 text-lg font-black text-[hsl(var(--foreground))]">{stat.value}</p>
+            <div
+              key={stat.label}
+              className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--background))/0.72] p-3"
+            >
+              <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+                {stat.label}
+              </p>
+              <p className="mt-1 text-lg font-black text-[hsl(var(--foreground))]">
+                {stat.value}
+              </p>
             </div>
           ))}
         </div>
@@ -58,7 +77,9 @@ export default function CaseStudiesPage() {
         {caseStudies.map((study) => {
           const project = getProject(study.projectSlug);
           const evidence = project
-            ? Object.entries(project.engineeringEvidence).filter(([, enabled]) => enabled)
+            ? Object.entries(project.engineeringEvidence).filter(
+                ([, enabled]) => enabled,
+              )
             : [];
 
           return (
@@ -88,7 +109,10 @@ export default function CaseStudiesPage() {
               {project && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {project.stack.slice(0, 5).map((tech) => (
-                    <span key={tech} className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.42] px-2.5 py-1 text-[0.68rem] font-semibold text-[hsl(var(--muted-foreground))]">
+                    <span
+                      key={tech}
+                      className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.42] px-2.5 py-1 text-[0.68rem] font-semibold text-[hsl(var(--muted-foreground))]"
+                    >
                       {tech}
                     </span>
                   ))}

@@ -174,7 +174,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 (
     'about_text', 
     NULL,
-    'I am an ambitious MLOps Engineer & Full Stack Developer building the next generation of AI platforms. leveraging my background in DevOps and scalable web systems, I bridge the gap between software engineering and machine learning. I am currently focused on mastering Kubernetes, LLMOps, and cloud-native architectures to deliver enterprise value.',
+    'I am an ambitious MLOps Engineer & Full Stack Developer building the next generation of intelligent platforms. Leveraging my background in DevOps and scalable web systems, I bridge the gap between software engineering and machine learning. I am currently focused on mastering Kubernetes, LLMOps, and cloud-native architectures to deliver enterprise value.',
     NULL,
     NULL,
     0,
@@ -192,7 +192,7 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 (
     'expertise_cloud',
     'Cloud Infrastructure',
-    'Architecting reliable environments on AWS and GCP. I use Terraform for Infrastructure as Code to provision adaptable, scalable resources for both apps and AI models.',
+    'Architecting reliable environments on AWS and GCP. I use Terraform for Infrastructure as Code to provision adaptable, scalable resources for both apps and machine learning models.',
     'Cloud',
     'Expert',
     2,
@@ -209,8 +209,8 @@ INSERT INTO public.about_content (section_key, title, content, icon, badge, disp
 ),
 (
     'expertise_platform',
-    'AI Platform Tools',
-    'Building the tools that power AI. I create developer-friendly dashboards and internal platforms that abstract infrastructure complexity for data science teams.',
+    'Model Platform Tools',
+    'Building the tools that power model-driven systems. I create developer-friendly dashboards and internal platforms that abstract infrastructure complexity for data science teams.',
     'Bot',
     'Growth',
     4,
