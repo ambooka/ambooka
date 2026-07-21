@@ -1,6 +1,5 @@
 "use client";
 
-// @ts-ignore: allow side-effect CSS import for admin theme
 import "./admin-theme.css";
 import { usePathname } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";

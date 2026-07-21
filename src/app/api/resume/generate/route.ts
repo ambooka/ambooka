@@ -86,10 +86,11 @@ function transformSupabaseData(data: {
         frontend: skillsByCategory['Frontend'] || [],
         backend: skillsByCategory['Backend'] || [],
         databases: skillsByCategory['Databases'] || [],
-        cloud: skillsByCategory['Cloud'] || [],
-        devops: skillsByCategory['DevOps'] || [],
+        cloud: [],
+        devops: skillsByCategory['DevOps & Infrastructure'] || [],
         tools: skillsByCategory['Tools'] || [],
-        concepts: skillsByCategory['ML'] || skillsByCategory['Frameworks'] || [],
+        it_support: skillsByCategory['IT Systems'] || [],
+        concepts: skillsByCategory['AI / ML'] || [],
     };
 
     return {
@@ -141,50 +142,6 @@ export async function POST(request: NextRequest) {
 
         // Generate formatted resume
         const formattedResume = generateAllFormats(inputData);
-
-        // [RESUME ENHANCEMENT]: Force-inject hardcoded IT skills from Hebatullah experience & JD
-        // The user specifically requested hardcoded technical skills for this role.
-        const isITRole = (inputData.personalInfo.title || '').toLowerCase().includes('it assistant') ||
-            (targetJobDescription || '').toLowerCase().includes('it assistant') ||
-            (customData?.personalInfo?.title || '').toLowerCase().includes('it assistant');
-
-        if (isITRole) {
-            // Clear other categories to avoid clutter (as requested: "hard code skills")
-            inputData.skills.languages = [];
-            inputData.skills.frontend = [];
-            inputData.skills.backend = [];
-            inputData.skills.devops = [];
-            inputData.skills.tools = [];
-            inputData.skills.databases = [];
-            inputData.skills.cloud = [];
-            inputData.skills.concepts = [];
-
-            // Hardcoded skills from Hebatullah Experience + Job Description
-            inputData.skills.it_support = [
-                // From Hebatullah Experience
-                'Windows Server',
-                'Active Directory',
-                'Network Administration',
-                'Cybersecurity',
-                'Microsoft 365',
-                'Hardware Troubleshooting',
-                'IT Support',
-
-                // From Job Description / Standard IT Assistant
-                'Office 365 Administration',
-                'Remote Desktop Support',
-                'Printer Management',
-                'System Maintenance',
-                'User Training',
-                'Ticketing Systems'
-            ];
-
-            // Re-generate formats with these hardcoded skills
-            const updatedFormats = generateAllFormats(inputData);
-            formattedResume.html = updatedFormats.html;
-            formattedResume.markdown = updatedFormats.markdown;
-            formattedResume.plainText = updatedFormats.plainText;
-        }
 
         // Analyze resume quality
         const analysis = analyzeResume(inputData, targetJobDescription);

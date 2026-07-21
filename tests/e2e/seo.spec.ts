@@ -6,16 +6,16 @@ test.describe("SEO & Metadata Tests", () => {
 
     // 1. Title
     await expect(page).toHaveTitle(
-      /Msah Ambooka | Cloud-native Software Engineer — Platform & MLOps/,
+      "Abdulrahman Ambooka Msah | Software Engineer | Backend, Payments & IT Infrastructure",
     );
 
     // 2. Meta Description
     const description = page.locator('meta[name="description"]');
     await expect(description).toHaveAttribute(
       "content",
-      /Computer Science Graduate/,
+      /Computer Science graduate/,
     );
-    await expect(description).toHaveAttribute("content", /MLOps/);
+    await expect(description).toHaveAttribute("content", /payment integrations/);
 
     // 3. Canonical URL
     const canonical = page.locator('link[rel="canonical"]');
@@ -30,9 +30,9 @@ test.describe("SEO & Metadata Tests", () => {
 
     expect(schema["@context"]).toBe("https://schema.org");
     expect(schema["@type"]).toBe("Person");
-    expect(schema.name).toBe("Msah Ambooka");
+    expect(schema.name).toBe("Abdulrahman Ambooka Msah");
     expect(schema.jobTitle).toBe(
-      "Cloud-native Software Engineer — Platform & MLOps",
+      "Software Engineer | Backend, Payments & IT Infrastructure",
     );
     expect(schema.url).toBe("https://ambooka.dev");
     expect(schema.sameAs).toContain("https://github.com/ambooka");
@@ -40,7 +40,7 @@ test.describe("SEO & Metadata Tests", () => {
     // 5. Open Graph
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
-      "Msah Ambooka | Cloud-native Software Engineer — Platform & MLOps",
+      "Abdulrahman Ambooka Msah | Software Engineer | Backend, Payments & IT Infrastructure",
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
       "content",
@@ -51,7 +51,7 @@ test.describe("SEO & Metadata Tests", () => {
   test("Contact Page SEO", async ({ page }) => {
     await page.goto("/contact");
     await expect(page).toHaveTitle(/Contact/);
-    // Note: Assuming "Contact | Msah Ambooka" or similar template
+    // Note: Assuming "Contact | Abdulrahman Ambooka Msah" or similar template
   });
 
   test("Resume Page SEO", async ({ page }) => {

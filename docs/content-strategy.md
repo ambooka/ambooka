@@ -10,12 +10,14 @@ The portfolio is evidence-first.
 - deployed systems
 - case studies
 - technical writing
-- current skill set and target skill growth
+- current skills supported by the résumé or completed project evidence
 
 ## Public content must not include
 
 - private learning plans framed as completed achievements
 - unfinished projects presented as delivered systems
+- certifications presented as earned without résumé evidence
+- unrelated legacy applications or unsupported future-role positioning
 - playful visual gimmicks that weaken professional credibility
 - raw GitHub repository dumps without curation
 

@@ -67,7 +67,7 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
       supabase.from('education').select('*').order('start_date', { ascending: false }),
       supabase.from('experience').select('*').order('start_date', { ascending: false }),
       supabase.from('skills').select('*').order('proficiency_level', { ascending: false }),
-      supabase.from('projects').select('*').eq('is_featured', true).order('display_order', { ascending: true })
+      supabase.from('projects').select('*').eq('is_featured', true).eq('status', 'completed').order('display_order', { ascending: true })
     ])
 
     let filteredGitHubProjects: ProjectItem[] = []
@@ -81,13 +81,9 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
     if (personal.error) throw personal.error
     if (!personal.data) throw new Error('No personal information found.')
 
-    let combinedProjects: ProjectItem[] = filteredGitHubProjects.length > 0
+    const combinedProjects: ProjectItem[] = filteredGitHubProjects.length > 0
       ? filteredGitHubProjects
       : (projects.data || []).map(p => ({ id: p.id, title: p.title, description: p.description, stack: p.stack, github_url: p.github_url, live_url: p.live_url, is_featured: true as const }))
-
-    if (role === 'it-assistant') {
-      combinedProjects = [{ id: 'erp-system', title: 'ERP System Implementation & Support', description: 'Assisted in the successful rollout and ongoing support of a company-wide ERP system.', stack: ['SQL', 'Windows Server', 'Excel Reporting', 'System Administration'], is_featured: true }] as ProjectItem[]
-    }
 
     const allSkills = (skills.data || []) as Array<{ id: string; name: string; category: string; proficiency_level?: string; [key: string]: unknown }>
     const roleFilteredSkills = filterSkillsByRole(allSkills, role)

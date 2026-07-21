@@ -2,18 +2,19 @@ import About from "@/components/About";
 import { supabase } from "@/integrations/supabase/client";
 import { GitHubService } from "@/services/github";
 import { Metadata } from "next";
-
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
+import {
+  PROFESSIONAL_SCOPE,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 
 // ISR: Revalidate every hour
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: {
-    absolute: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
+    absolute: `Abdulrahman Ambooka Msah | ${PROFESSIONAL_TITLE}`,
   },
-  description:
-    "Portfolio of Msah Ambooka, a software engineer working across full-stack products, business systems, payment integrations, and platform/MLOps.",
+  description: `Portfolio of Abdulrahman Ambooka Msah. ${PROFESSIONAL_SCOPE}`,
 };
 
 const GITHUB_USERNAME = "ambooka";

@@ -147,7 +147,7 @@ const normalizeGeneratedPost = (value: unknown): GeneratedBlogPost => {
     excerpt: post.excerpt,
     content: post.content,
     category: post.category || 'Engineering',
-    tags: Array.isArray(post.tags) ? post.tags : ['Software Engineering', 'AI'],
+    tags: Array.isArray(post.tags) ? post.tags : ['Software Engineering', 'IT Infrastructure'],
     seo_title: post.seo_title || post.title,
     meta_description: post.meta_description || post.excerpt,
     sources: Array.isArray(post.sources)

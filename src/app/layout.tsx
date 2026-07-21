@@ -14,13 +14,15 @@ const geistMono = Geist_Mono({
 });
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Person, WithContext } from "schema-dts";
-
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
+import {
+  PROFESSIONAL_SUMMARY,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 
 const personSchema: WithContext<Person> = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Msah Ambooka",
+  name: "Abdulrahman Ambooka Msah",
   url: "https://ambooka.dev",
   image: "https://ambooka.dev/og-image.png",
   sameAs: [
@@ -31,10 +33,9 @@ const personSchema: WithContext<Person> = {
   jobTitle: PROFESSIONAL_TITLE,
   worksFor: {
     "@type": "Organization",
-    name: "Freelance / Open to Work",
+    name: "Bayina Academy",
   },
-  description:
-    "Computer Science graduate with hands-on experience across full-stack software, IT systems, ERP implementation, payment integrations, and platform/MLOps.",
+  description: PROFESSIONAL_SUMMARY,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Nairobi",
@@ -42,10 +43,12 @@ const personSchema: WithContext<Person> = {
   },
   knowsAbout: [
     "Software Engineering",
-    "Full-Stack Development",
-    "IT Systems",
-    "ERPNext",
+    "Backend Engineering",
     "Payment Integrations",
+    "ERPNext",
+    "Windows Server",
+    "Active Directory",
+    "IT Infrastructure",
     "Computer Vision",
     "Python",
     "TypeScript",
@@ -56,24 +59,25 @@ const personSchema: WithContext<Person> = {
 
 export const metadata: Metadata = {
   title: {
-    default: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
-    template: "%s | Msah Ambooka",
+    default: `Abdulrahman Ambooka Msah | ${PROFESSIONAL_TITLE}`,
+    template: "%s | Abdulrahman Ambooka Msah",
   },
-  description:
-    "Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and platform/MLOps.",
+  description: PROFESSIONAL_SUMMARY,
   keywords: [
-    "Msah Ambooka",
+    "Abdulrahman Ambooka Msah",
     "Ambooka",
     "Abdulrahman",
     "Software Engineer",
-    "Full Stack Developer",
     "Backend Developer",
-    "Business Systems",
+    "Full-Stack Engineer",
+    "IT Systems Administrator",
+    "Infrastructure Engineer",
     "Payment Integrations",
     "M-Pesa Daraja API",
     "ERPNext Implementation",
+    "Windows Server",
+    "Active Directory",
     "IT Infrastructure",
-    "Platform MLOps",
     "Computer Vision",
     "Python",
     "TypeScript",
@@ -85,8 +89,8 @@ export const metadata: Metadata = {
     "Nairobi",
     "Kenya",
   ],
-  authors: [{ name: "Msah Ambooka", url: "https://github.com/ambooka" }],
-  creator: "Msah Ambooka",
+  authors: [{ name: "Abdulrahman Ambooka Msah", url: "https://github.com/ambooka" }],
+  creator: "Abdulrahman Ambooka Msah",
   metadataBase: new URL("https://ambooka.dev"),
   alternates: {
     canonical: "/",
@@ -95,24 +99,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://ambooka.dev",
-    title: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
-    description:
-      "Computer Science graduate building full-stack software, IT systems, business automation, and platform/MLOps solutions.",
-    siteName: "Msah Ambooka Portfolio",
+    title: `Abdulrahman Ambooka Msah | ${PROFESSIONAL_TITLE}`,
+    description: PROFESSIONAL_SUMMARY,
+    siteName: "Abdulrahman Ambooka Msah Portfolio",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Msah Ambooka - Software Engineer",
+        alt: "Abdulrahman Ambooka Msah - Software Engineer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `Msah Ambooka | ${PROFESSIONAL_TITLE}`,
-    description:
-      "Building full-stack software, IT systems, business automation, and platform/MLOps solutions.",
+    title: `Abdulrahman Ambooka Msah | ${PROFESSIONAL_TITLE}`,
+    description: PROFESSIONAL_SUMMARY,
     creator: "@ambooka",
     images: ["/og-image.png"],
   },

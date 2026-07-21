@@ -13,23 +13,16 @@ const focusAreas = [
     ],
   },
   {
-    title: "IT Systems & Infrastructure",
+    title: "Backend & Payment Integrations",
     description:
-      "Windows Server, Active Directory, networking, CCTV, biometrics, VoIP and user support.",
-    stack: [
-      "Windows Server",
-      "Active Directory",
-      "TCP/IP",
-      "VoIP",
-      "CCTV",
-      "ERPNext",
-    ],
+      "REST APIs, typed integrations, webhooks, retry handling, queues, and transactional data.",
+    stack: ["Node.js", "TypeScript", "FastAPI", "PostgreSQL", "Redis", "BullMQ"],
   },
   {
-    title: "AI / ML Engineering Direction",
+    title: "Business Systems & IT Infrastructure",
     description:
-      "Computer vision, ML APIs, applied model inference, data pipelines and production AI fundamentals.",
-    stack: ["Python", "PyTorch", "OpenCV", "YOLO", "scikit-learn", "FastAPI"],
+      "ERP implementation, Windows Server, Active Directory, networking, VoIP, CCTV, and user support.",
+    stack: ["ERPNext", "Windows Server", "Active Directory", "TCP/IP", "VoIP", "Linux"],
   },
 ];
 
@@ -45,9 +38,8 @@ export default function CareerFocusPage() {
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
           This private admin page keeps the public portfolio aligned around real
-          evidence: software engineering, IT systems, business automation and
-          platform/MLOps engineering. It does not present personal study plans
-          as public achievements.
+          evidence across software delivery, payment integrations, business
+          systems, infrastructure, and applied computer vision.
         </p>
       </section>
 

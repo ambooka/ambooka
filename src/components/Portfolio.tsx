@@ -296,8 +296,8 @@ export default function Portfolio({
             <div className="absolute bottom-0 left-0 w-10 h-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))]" />
           </h2>
           <p className="mt-4 text-[0.94rem] leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[600px]">
-            Selected proof-first projects first, followed by a live GitHub
-            archive for experiments, source work, and ongoing builds.
+            Selected completed projects with clear business context,
+            implementation details, and verifiable outcomes.
           </p>
         </motion.header>
 
@@ -453,6 +453,7 @@ export default function Portfolio({
           </section>
         )}
 
+        {projects.length > 0 && (
         <section aria-labelledby="repo-archive-title">
           <div className="flex flex-col gap-2 mb-6">
             <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[hsl(var(--accent))]">
@@ -720,6 +721,7 @@ export default function Portfolio({
             </>
           )}
         </section>
+        )}
 
         {/* README Preview Modal */}
         {popupRepo && (

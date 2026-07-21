@@ -1,5 +1,9 @@
 import Resume from "@/components/Resume";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  PROFESSIONAL_SUMMARY,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Person, WithContext } from "schema-dts";
@@ -23,27 +27,17 @@ interface PersonalInfoMock {
   [key: string]: unknown;
 }
 
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
-const LEGACY_TITLE_PATTERN =
-  /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack|AI Engineer/i;
-
-const normalizeProfessionalTitle = (title?: string | null) => {
-  const value = title?.trim();
-  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
-  return value;
-};
-
 // ISR: Revalidate every hour
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Resume",
   description:
-    "Technical expertise, professional experience, and educational background of Msah Ambooka, Cloud-native software and platform engineer with MLOps experience.",
+    "Résumé of Abdulrahman Ambooka Msah: software delivery, payment integrations, IT infrastructure, ERP implementation, and applied computer vision.",
 };
 
 export default async function ResumePage() {
-  const [personalInfoResult, educationResult, experienceResult, skillsResult] =
+  const [personalInfoResult, educationResult, experienceResult, skillsResult, projectsResult] =
     await Promise.all([
       supabase.from("personal_info").select("*").single(),
       supabase
@@ -58,12 +52,21 @@ export default async function ResumePage() {
         .from("skills")
         .select("*")
         .order("proficiency_level", { ascending: false }),
+      supabase
+        .from("projects")
+        .select("id, title, description, stack, status")
+        .in("slug", [
+          "computer-vision-surveillance-system",
+          "mpesa-payment-integration-library",
+        ])
+        .eq("status", "completed")
+        .order("display_order", { ascending: true }),
     ]);
 
   const personalInfo = personalInfoResult.data;
   const skills = skillsResult.data || [];
   const normalizedPersonalInfo = personalInfo
-    ? { ...personalInfo, title: normalizeProfessionalTitle(personalInfo.title) }
+    ? { ...personalInfo, title: PROFESSIONAL_TITLE }
     : null;
 
   const initialData = {
@@ -71,11 +74,10 @@ export default async function ResumePage() {
       normalizedPersonalInfo ||
       ({
         id: "mock",
-        full_name: "Msah Ambooka",
+        full_name: "Abdulrahman Ambooka Msah",
         title: PROFESSIONAL_TITLE,
         email: "abdulrahmanambooka@gmail.com",
-        summary:
-          "Computer Science graduate transitioning into cloud-native platform and security engineering with MLOps experience; practical experience in full-stack software, IT infrastructure, ERP implementation, payment integrations.",
+        summary: PROFESSIONAL_SUMMARY,
         phone: null,
         location: "Nairobi, Kenya",
         about_text: null,
@@ -90,14 +92,15 @@ export default async function ResumePage() {
     education: educationResult.data || [],
     experience: experienceResult.data || [],
     skills: skills,
+    projects: projectsResult.data || [],
   };
 
   // JSON-LD Person schema for SEO/LLM discoverability
   const personSchema: WithContext<Person> = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: personalInfo?.full_name || "Msah Ambooka",
-    jobTitle: normalizeProfessionalTitle(personalInfo?.title),
+    name: personalInfo?.full_name || "Abdulrahman Ambooka Msah",
+    jobTitle: PROFESSIONAL_TITLE,
     url: "https://ambooka.dev",
     sameAs: [
       "https://github.com/ambooka",
@@ -107,7 +110,7 @@ export default async function ResumePage() {
     knowsAbout: skills.slice(0, 10).map((s) => s.name),
     worksFor: {
       "@type": "Organization",
-      name: "Freelance / Open to Work",
+      name: "Bayina Academy",
     },
   };
 

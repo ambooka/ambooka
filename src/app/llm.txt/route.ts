@@ -1,20 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  PROFESSIONAL_SCOPE,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 
 // ISR: Revalidate every hour
 export const revalidate = 3600;
-
-const PROFESSIONAL_TITLE = "Software Engineer, Systems & MLOps";
-const PROFESSIONAL_SCOPE =
-  "Software engineer based in Nairobi, Kenya working across full-stack products, business systems, payment integrations, infrastructure, and platform/MLOps.";
-const LEGACY_TITLE_PATTERN =
-  /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i;
-
-const normalizeProfessionalTitle = (title?: string | null) => {
-  const value = title?.trim();
-  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
-  return value;
-};
 
 export async function GET() {
   // Fetch dynamic content from Supabase
@@ -41,7 +33,7 @@ export async function GET() {
   const personalInfo = personalInfoResult.data;
   const blogPosts = blogPostsResult.data || [];
   const skills = skillsResult.data || [];
-  const title = normalizeProfessionalTitle(personalInfo?.title);
+  const title = PROFESSIONAL_TITLE;
 
   // Group skills by category
   const skillsByCategory: Record<string, string[]> = {};
@@ -68,14 +60,13 @@ export async function GET() {
       : "*(No published posts yet)*";
 
   const content = `
-# ${personalInfo?.full_name || "Msah Ambooka"} - ${title}
+# ${personalInfo?.full_name || "Abdulrahman Ambooka Msah"} - ${title}
 
 ## Identity & Core Focus
 ${personalInfo?.summary || PROFESSIONAL_SCOPE}
 
 - **Role**: ${title}
 - **Location**: Nairobi, Kenya
-- **Availability**: Open for freelance, contract, and high-impact full-time roles.
 - **Website**: https://ambooka.dev
 - **GitHub**: https://github.com/ambooka
 - **LinkedIn**: https://www.linkedin.com/in/abdulrahman-ambooka/
@@ -85,8 +76,8 @@ ${personalInfo?.summary || PROFESSIONAL_SCOPE}
 ${
   skillsSection ||
   `
-- **Languages**: Python, TypeScript, Go, SQL.
-- **Frontend**: Next.js (React), Tailwind CSS, Framer Motion.
+- **Languages**: Python, TypeScript, JavaScript, SQL, Bash.
+- **Frontend**: React, Next.js, Tailwind CSS.
 - **Backend**: FastAPI, Node.js, PostgreSQL, Redis, Supabase.
     - **Infrastructure**: Docker, Linux, Nginx, GitHub Actions, Windows Server, Active Directory, TCP/IP networking.
 `
@@ -96,23 +87,17 @@ ${
 
 ${blogSection}
 
-## Platform / MLOps Direction
-- **Computer Vision**: YOLO, OpenCV, PyTorch, Flask inference APIs, real-time stream processing.
-- **Production Software Base**: TypeScript, Python, FastAPI, PostgreSQL, Docker, and GitHub Actions.
-- **LLM/RAG Learning Track**: LangChain, retrieval patterns, vector search, and model evaluation foundations.
-- **Current Positioning**: Software engineering and business systems first, with platform/MLOps as a growing technical direction.
+## Professional Focus
+- **Focus**: Backend and full-stack software, payment integrations, ERP implementation, and IT infrastructure.
+- **Production Base**: TypeScript, Python, Node.js, PostgreSQL, Redis, Docker, Linux, Nginx, and GitHub Actions.
+- **Evidence Policy**: Portfolio claims are limited to completed, résumé-backed work and public project evidence.
 
 ## Contact
 - **Email**: abdulrahmanambooka@gmail.com
 - **Twitter**: @ambooka
 
-## Context & Region
-- **Ecosystem**: Silicon Savannah, Nairobi Tech, African Tech Talent.
-- **Remote Work**: Experienced in remote collaboration, asynchronous communication, and distributed teams.
-
 ## Hiring & Collaboration
-- **Keywords**: Hire Software Engineer Kenya, Full-Stack Developer Nairobi, Backend Developer, Payment Integration Developer, IT Systems Engineer, MLOps Developer.
-- **Engagement Models**: Full-time, contract, freelance, and project-based collaboration.
+- **Keywords**: Hire Software Engineer Kenya, Backend Developer Nairobi, Full-Stack Engineer, IT Systems Administrator, Payment Integration Developer.
 
 ---
 *This file is auto-generated from the Ambooka.dev database. Last updated: ${new Date().toISOString()}*

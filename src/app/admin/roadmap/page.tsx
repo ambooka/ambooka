@@ -525,7 +525,7 @@ export default function RoadmapManager() {
                         e.target.value,
                       )
                     }
-                    placeholder="e.g. Senior MLOps"
+                    placeholder="e.g. Backend Engineer"
                   />
                 </div>
                 <div>

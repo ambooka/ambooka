@@ -15,6 +15,10 @@ import AnimatedPage from "@/components/AnimatedPage";
 import { getCardPattern } from "@/lib/design-patterns";
 import { caseStudies } from "@/data/case-studies";
 import {
+  PROFESSIONAL_SCOPE,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
+import {
   fadeUp,
   staggerContainer,
   staggerChild,
@@ -25,10 +29,7 @@ import {
 
 const GITHUB_USERNAME = "ambooka";
 const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
-const PROFESSIONAL_SCOPE =
-  "Full-stack products, payment integrations, business systems, infrastructure, and platform/MLOps.";
-const PROFESSIONAL_FOCUS = "Software · Systems · Platform/MLOps";
+const PROFESSIONAL_FOCUS = "Software · Payments · Infrastructure";
 
 // --- Interfaces (from original file) ---
 interface Testimonial {
@@ -74,7 +75,7 @@ interface KpiStats {
   project_count?: number;
   expertise_breakdown?: {
     software?: number;
-    cloud_infra?: number;
+    infrastructure?: number;
     data?: number;
     ml_ai?: number;
   };
@@ -165,7 +166,7 @@ export default function About({
     expertise_breakdown: initialData?.personalInfo?.kpi_stats
       ?.expertise_breakdown || {
       software: 40,
-      cloud_infra: 35,
+      infrastructure: 35,
       data: 10,
       ml_ai: 15,
     },
@@ -175,9 +176,9 @@ export default function About({
   );
 
   const focusAreas = [
-    "Software Engineering",
-    "Business Systems",
-    "Platform/MLOps",
+    "Backend & Full-Stack Engineering",
+    "Payment Integrations",
+    "IT Infrastructure & ERP",
   ];
 
   useEffect(() => {
@@ -299,7 +300,7 @@ export default function About({
                 <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
                   Software Engineer
                 </span>
-                , Systems & MLOps
+                — Backend, Payments & Infrastructure
               </motion.h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
@@ -471,9 +472,8 @@ export default function About({
               What I Build
             </h2>
             <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
-              Full-stack software, IT systems, business automation, ERP
-              implementation and platform/MLOps work from real client, company
-              and academic projects
+              Delivered software, payment integrations, business systems,
+              infrastructure, and applied computer-vision work.
             </p>
 
             <motion.div
@@ -508,10 +508,10 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "Infrastructure",
-                  title: "IT Systems & Infrastructure",
-                  desc: "Windows Server, Active Directory, TCP/IP networking, VoIP, CCTV, biometric systems, Linux, Docker, and VPS deployment practice.",
-                  tags: ["Kubernetes", "Terraform", "AWS"],
+                  phase: "Professional experience",
+                  title: "Business Systems & ERP",
+                  desc: "ERPNext implementation, business-process design, procurement workflows, accounting setup, inventory operations, and CMS enablement.",
+                  tags: ["ERPNext", "Process Design", "CMS"],
                   iconBase:
                     "text-[hsl(var(--secondary))] bg-[hsl(var(--secondary))/0.1]",
                   iconSvg: (
@@ -530,8 +530,8 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "MLOps",
-                  title: "Machine Learning",
+                  phase: "Resume evidence",
+                  title: "Applied Computer Vision",
                   desc: "Applied computer vision research with YOLO, OpenCV, PyTorch, Flask inference APIs, real-time video processing, and model evaluation.",
                   tags: ["PyTorch", "HuggingFace", "FastAPI"],
                   iconBase: "text-[hsl(192_82%_37%)] bg-[hsl(192_82%_37%)/0.1]",
@@ -553,10 +553,10 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "Phase 4–5",
-                  title: "MLOps / LLM Systems",
-                  desc: "RAG pipelines, LangChain LCEL, QLoRA tuning, production monitoring, and multi-agent tooling via LangGraph.",
-                  tags: ["LangChain", "RAG", "LangGraph"],
+                  phase: "Professional experience",
+                  title: "IT Infrastructure & Support",
+                  desc: "Windows Server, Active Directory, networking, VoIP, CCTV, biometric systems, workstation deployment, and end-user support.",
+                  tags: ["Windows Server", "Networking", "Active Directory"],
                   iconBase:
                     "text-[hsl(var(--accent))] bg-[hsl(var(--accent))/0.15]",
                   iconSvg: (
@@ -661,7 +661,7 @@ export default function About({
                 Open for opportunities
               </span>
               <h3 className="mt-2.5 mb-1.5 text-[clamp(1rem,2.2vw,1.3rem)] font-extrabold tracking-[-0.025em] text-[hsl(var(--foreground))] leading-tight">
-                Let&apos;s build production-grade software and AI systems.
+                Let&apos;s build reliable software and business systems.
               </h3>
               <p className="text-[0.86rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
                 If you need practical engineering with strong ownership,

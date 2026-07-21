@@ -48,10 +48,11 @@ interface BlogPost {
 }
 
 const focusTracks = [
-  "Platform/MLOps",
-  "Software Systems",
-  "Business Automation",
-  "Infrastructure",
+  "Software Engineering",
+  "Backend Engineering",
+  "Business Systems",
+  "IT Infrastructure",
+  "Computer Vision",
 ];
 
 const formatDate = (dateString: string | null) => {

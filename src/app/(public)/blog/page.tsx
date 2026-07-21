@@ -16,33 +16,34 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const title = "Blog";
   const description = latestPost
-    ? `Latest note: ${latestPost.title}. ${latestPost.excerpt || "Read practical engineering notes on software systems and platform/MLOps engineering."}`
-    : "Practical engineering notes on software systems, business automation, infrastructure, and platform/MLOps engineering by Msah Ambooka.";
+    ? `Latest note: ${latestPost.title}. ${latestPost.excerpt || "Read practical notes on software, backend APIs, payments, infrastructure, and computer vision."}`
+    : "Practical engineering notes on software delivery, payment integrations, ERP systems, IT infrastructure, and computer vision by Abdulrahman Ambooka Msah.";
 
   return {
     title,
     description,
     keywords: [
       "Software Engineering Blog",
-      "Platform & MLOps",
-      "Business Systems",
+      "Backend Engineering",
+      "IT Infrastructure",
+      "ERP Implementation",
       "Payment Integrations",
-      "Full Stack Engineering",
+      "Computer Vision",
       "Nairobi Software Engineer",
     ],
     alternates: {
       canonical: "/blog",
     },
     openGraph: {
-      title: "Blog | Msah Ambooka",
+      title: "Blog | Abdulrahman Ambooka Msah",
       description,
       type: "website",
       url: "https://ambooka.dev/blog",
-      images: [{ url: "/og-image.png", alt: "Msah Ambooka Blog" }],
+      images: [{ url: "/og-image.png", alt: "Abdulrahman Ambooka Msah Blog" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Blog | Msah Ambooka",
+      title: "Blog | Abdulrahman Ambooka Msah",
       description,
       images: ["/og-image.png"],
     },

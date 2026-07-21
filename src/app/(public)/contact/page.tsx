@@ -4,7 +4,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Msah Ambooka for software engineering, business systems, payment integration, IT infrastructure, or platform/MLOps collaborations.",
+    "Contact Abdulrahman Ambooka Msah about software, backend, payment-integration, ERP, or IT-infrastructure opportunities.",
 };
 
 export default function ContactPage() {

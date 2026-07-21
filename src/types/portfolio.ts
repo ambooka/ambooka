@@ -1,19 +1,11 @@
-export type ProjectStatus = "completed" | "in_progress" | "planned" | "archived";
+export type ProjectStatus = "completed" | "archived";
 
 export type ProjectCategory =
   | "backend"
   | "frontend"
-  | "data"
   | "ml"
-  | "mlops"
-  | "rag"
   | "devops"
-  | "security"
-  | "iot"
-  | "mobile"
-  | "systems"
-  | "enterprise"
-  | "writing";
+  | "enterprise";
 
 export type EngineeringEvidence = {
   tests: boolean;

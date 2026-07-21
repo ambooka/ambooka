@@ -51,11 +51,12 @@ interface Skill {
 
 const CATEGORIES = [
   "Languages",
-  "Frameworks",
-  "Tools",
-  "Cloud",
+  "Frontend",
+  "Backend",
   "Databases",
-  "Certifications",
+  "DevOps & Infrastructure",
+  "IT Systems",
+  "AI / ML",
   "Other",
 ];
 const PHASES = [1, 2, 3, 4, 5, 6, 7, 8, 9];

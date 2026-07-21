@@ -74,7 +74,7 @@ const parseSources = (value: unknown): BlogSource[] => {
 };
 
 const getDescription = (post: Awaited<ReturnType<typeof getBlogPost>>) => {
-  if (!post) return "Technical article by Msah Ambooka.";
+  if (!post) return "Technical article by Abdulrahman Ambooka Msah.";
   return (
     post.meta_description ||
     post.excerpt ||
@@ -107,7 +107,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime,
       modifiedTime: post.updated_at || publishedTime,
-      authors: ["Msah Ambooka"],
+      authors: ["Abdulrahman Ambooka Msah"],
       images: post.image_url
         ? [{ url: post.image_url, alt: post.title }]
         : [{ url: "/og-image.png", alt: title }],
@@ -180,12 +180,12 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: post.updated_at || post.published_at || undefined,
     author: {
       "@type": "Person",
-      name: "Msah Ambooka",
+      name: "Abdulrahman Ambooka Msah",
       url: "https://ambooka.dev",
     },
     publisher: {
       "@type": "Person",
-      name: "Msah Ambooka",
+      name: "Abdulrahman Ambooka Msah",
     },
     mainEntityOfPage: `https://ambooka.dev/blog/${post.slug}`,
     description: getDescription(post),

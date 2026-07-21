@@ -1,8 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Book, BriefcaseBusiness, Loader2, Award } from "lucide-react";
+import {
+  Book,
+  BriefcaseBusiness,
+  FolderKanban,
+  Loader2,
+  Award,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  PROFESSIONAL_SUMMARY,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import AnimatedPage from "@/components/AnimatedPage";
@@ -74,22 +84,21 @@ interface Skill {
   updated_at: string;
 }
 
+interface Project {
+  id: string;
+  title: string;
+  description: string | null;
+  stack: string[] | null;
+  status: string;
+}
+
 interface ResumeData {
   personal_info: PersonalInfo;
   education: Education[];
   experience: Experience[];
   skills: Skill[];
+  projects: Project[];
 }
-
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
-const LEGACY_TITLE_PATTERN =
-  /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack|AI Engineer/i;
-
-const normalizeProfessionalTitle = (title?: string | null) => {
-  const value = title?.trim();
-  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
-  return value;
-};
 
 const DEVICON_BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons";
 const SIMPLE_ICON_BASE = "https://cdn.simpleicons.org";
@@ -279,7 +288,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         ...initialData,
         personal_info: {
           ...initialData.personal_info,
-          title: normalizeProfessionalTitle(initialData.personal_info.title),
+          title: PROFESSIONAL_TITLE,
         },
       }
     : null;
@@ -305,6 +314,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         educationResult,
         experienceResult,
         skillsResult,
+        projectsResult,
       ] = await Promise.all([
         supabase.from("personal_info").select("*").single(),
         supabase
@@ -319,21 +329,29 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
           .from("skills")
           .select("*")
           .order("proficiency_level", { ascending: false }),
+        supabase
+          .from("projects")
+          .select("id, title, description, stack, status")
+          .in("slug", [
+            "computer-vision-surveillance-system",
+            "mpesa-payment-integration-library",
+          ])
+          .eq("status", "completed")
+          .order("display_order", { ascending: true }),
       ]);
 
       const pInfoRaw =
         personalInfoResult.data ||
         ({
           id: "mock",
-          full_name: "Msah Ambooka",
+          full_name: "Abdulrahman Ambooka Msah",
           title: PROFESSIONAL_TITLE,
           email: "abdulrahmanambooka@gmail.com",
-          summary:
-            "Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and platform/MLOps.",
+          summary: PROFESSIONAL_SUMMARY,
         } as PersonalInfo);
       const pInfo = {
         ...pInfoRaw,
-        title: normalizeProfessionalTitle(pInfoRaw.title),
+        title: PROFESSIONAL_TITLE,
       } as PersonalInfo;
 
       setResumeData({
@@ -341,6 +359,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         education: educationResult.data || [],
         experience: experienceResult.data || [],
         skills: skillsResult.data || [],
+        projects: projectsResult.data || [],
       });
     } catch (err: unknown) {
       console.error("Error fetching resume data:", err);
@@ -349,6 +368,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         education: [],
         experience: [],
         skills: [],
+        projects: [],
       });
     } finally {
       setLoading(false);
@@ -457,6 +477,27 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
             <div className="absolute bottom-0 left-0 w-10 h-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))]" />
           </h2>
         </motion.header>
+
+        <motion.section
+          className="mb-12 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] p-6"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          transition={scrollRevealTransition}
+        >
+          <p className="text-sm leading-7 text-[hsl(var(--muted-foreground))]">
+            {resumeData.personal_info.summary || PROFESSIONAL_SUMMARY}
+          </p>
+          <p className="mt-4 text-xs font-bold text-[hsl(var(--foreground))]">
+            {[
+              resumeData.personal_info.email,
+              resumeData.personal_info.phone,
+              resumeData.personal_info.location,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        </motion.section>
 
         {/* Education Section */}
         {resumeData.education && resumeData.education.length > 0 && (
@@ -619,6 +660,46 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
                     </div>
                   )}
                 </div>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {resumeData.projects.length > 0 && (
+          <motion.section
+            className="mb-14"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={defaultViewport}
+            transition={scrollRevealTransition}
+          >
+            <div className="mb-8 flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[hsl(var(--accent))/0.2] bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))]">
+                <FolderKanban size={24} />
+              </div>
+              <h3 className="text-xl font-black uppercase tracking-tight text-[hsl(var(--foreground))]">
+                Selected Projects
+              </h3>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {resumeData.projects.map((project) => (
+                <article
+                  key={project.id}
+                  className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] p-5"
+                >
+                  <h4 className="font-bold text-[hsl(var(--foreground))]">
+                    {project.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-6 text-[hsl(var(--muted-foreground))]">
+                    {project.description}
+                  </p>
+                  {project.stack && (
+                    <p className="mt-3 text-xs font-semibold text-[hsl(var(--accent))]">
+                      {project.stack.join(" · ")}
+                    </p>
+                  )}
+                </article>
               ))}
             </div>
           </motion.section>

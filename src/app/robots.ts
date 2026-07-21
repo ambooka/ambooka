@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/admin/', '/api/auth/', '/private/', '/nexus-log/'],
+                disallow: ['/admin/', '/api/auth/', '/private/'],
             },
             // AI/LLM Crawlers - Allow for discoverability
             {

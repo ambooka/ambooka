@@ -1,60 +1,31 @@
-# Msah Ambooka - Portfolio Context
+# Abdulrahman Ambooka Msah — Portfolio Context
 
-## Summary
-Msah Ambooka is a Software Engineer and Full-Stack Developer based in Nairobi, Kenya. He combines a Computer Science foundation with practical experience in full-stack web applications, REST APIs, payment integrations, ERP implementation, IT infrastructure, and platform/MLOps.
+## Professional identity
 
-## Contact
-- Email: abdulrahmanambooka@gmail.com
-- GitHub: https://github.com/ambooka
-- LinkedIn: https://www.linkedin.com/in/abdulrahman-ambooka/
-- Portfolio: https://ambooka.dev
+Abdulrahman Ambooka Msah is a Computer Science graduate and software engineer based in Nairobi, Kenya. His work combines full-stack and backend software delivery with production payment integrations, ERP implementation, IT infrastructure administration, and applied computer vision. He is currently an IT Administrator at Bayina Academy.
 
-## Entity Definitions & Role Context
-- **Software Engineer**: Experienced in full-stack development, REST APIs, payment integrations, business automation and practical system design.
-- **Platform/MLOps Engineering Direction**: Building on computer vision, PyTorch, OpenCV, YOLO, and production software engineering foundations.
-- **Applied MLOps Developer**: Practical computer vision experience and an active LLM/RAG learning track.
-- **Tech Talent**: Developer based in Nairobi, Kenya, open to remote and local opportunities.
+## Headline
 
-## Common Queries Matched
-- "Best software engineers in Kenya"
-- "Hire Software Engineer Kenya"
-- "Full Stack Developer Nairobi"
-- "AI Engineer for hire Africa"
-- "Web Design and Development Kenya"
-- "Remote Python Developer from Kenya"
-- "Payment integration developer Kenya"
-- "ERPNext implementation developer"
-- "Business automation developer Nairobi"
+Software Engineer | Backend, Payments & IT Infrastructure
 
-## Technical Skills
-- **Core Languages**: Python, TypeScript, JavaScript, Go, C++, SQL, Bash, C#, Java, Dart.
-- **Applied MLOps**: PyTorch, OpenCV, YOLO, Flask inference APIs, Hugging Face, Jupyter.
-- **Infrastructure**: Docker, Linux, Nginx, GitHub Actions, Windows Server, Active Directory, TCP/IP, VoIP.
-- **Web & Full Stack**: React, Next.js, Tailwind CSS, FastAPI, Node.js, Express, Flask, PostgreSQL, Supabase.
+## Verified highlights
 
-## Experience
-- **IT Assistant at Hebatullah Brothers Limited** (Jan 2025 - Present): IT operations, ERPNext implementation, networking, Windows Server, CCTV, VoIP and biometric systems.
-- **Freelance Full-Stack Developer** (Jan 2022 - Present): Delivered full-stack applications, M-Pesa integrations, dashboards and business automation tools.
-- **Industrial Attachment at Masinde Muliro University**: Network infrastructure and support.
+- Built full-stack web applications, REST APIs, and payment integrations for real clients.
+- Built a production Node.js and TypeScript M-Pesa integration processing KES 1M+/month.
+- Implemented ERPNext and replaced manual inventory, finance, procurement, and HR workflows.
+- Administered Windows Server, Active Directory, networking, VoIP, CCTV, biometric systems, and end-user support.
+- Configured 40+ workstations and helped resolve a DHCP conflict affecting 200+ campus devices.
+- Built a computer-vision surveillance research system using YOLO, OpenCV, PyTorch, and Flask.
 
-## Recent Technical Writing
-(See /blog for full archive)
-- **Building a Production-Style Portfolio Platform**: Next.js, Supabase, content admin and e2e tests.
-- **Lessons from Implementing ERPNext**: Accounts, items and procurement workflows in a real company.
-- **Building Reliable M-Pesa Daraja Integrations**: STK Push, B2C, C2B callbacks, retries and audit logs.
+## Public routes
 
-## Key Projects
-1. **M-Pesa Payment Integration Library**: Daraja API integration with callbacks, queues, retries and audit logs.
-2. **Hebatullah ERPNext Implementation**: ERP rollout replacing manual inventory, finance and procurement workflows.
-3. **SME Invoicing & Reporting Dashboard**: React + FastAPI automation with PDF output, notifications and analytics.
-4. **Computer Vision Surveillance System**: Computer vision research project using YOLO, OpenCV and Flask.
+- `/`: professional overview
+- `/resume`: experience, education, skills, and selected projects
+- `/portfolio`: completed projects and public GitHub repositories
+- `/case-studies`: detailed completed-project evidence
+- `/blog`: practical technical writing
+- `/contact`: direct contact options
 
-## Site Structure
-- `/`: Home page
-- `/portfolio`: Featured work and GitHub repository archive
-- `/case-studies`: Technical project case studies
-- `/resume`: Resume
-- `/blog`: Technical writing
-- `/contact`: Contact
-- `/sitemap.xml`: XML Sitemap
-- `/robots.txt`: Robots configuration
+## Evidence policy
+
+Only completed, résumé-backed work and public repository evidence should be interpreted as professional capability. No certification should be treated as earned unless a verified credential is present.

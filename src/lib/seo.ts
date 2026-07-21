@@ -62,5 +62,5 @@ export function getCanonicalUrl(path: string = '', baseUrl: string = 'https://am
  */
 export function generatePageTitle(title: string, includeBase: boolean = true): string {
     if (!includeBase) return title
-    return `${title} | Msah Ambooka`
+    return `${title} | Abdulrahman Ambooka Msah`
 }

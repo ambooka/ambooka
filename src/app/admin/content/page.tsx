@@ -24,10 +24,9 @@ export default function AdminContentPage() {
           Proof over spectacle
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-          The public portfolio must make you look like a focused software
-          engineer with full-stack, IT systems and platform/MLOps engineering
-          strength. Anything that feels like a toy, gimmick or unfocused
-          experiment belongs outside the main conversion path.
+          The public portfolio must present completed, verifiable work in
+          software, payments, ERP, infrastructure, and computer vision. Résumé
+          evidence stays factual and unsupported future capability stays out.
         </p>
       </section>
       <section className="grid gap-4 lg:grid-cols-2">

@@ -1,64 +1,14 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## 2026-07 — Recruiter-focused portfolio alignment
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+- Standardized the professional headline around backend software, payments, and IT infrastructure.
+- Rebuilt résumé content from the supplied source document.
+- Limited public projects and case studies to completed résumé-backed or repository-backed work.
+- Removed internal study-plan language, future-role claims, planned certifications, and uncompleted project entries from recruiter-facing content.
+- Aligned UI copy, SEO, generated résumés, blog topics, documentation, database seeds, and the configured database.
+- Removed obsolete career-application material and stale migration scripts.
 
-## [Unreleased]
+## Evidence policy
 
-### Added
-
-- Supabase keep-alive system to prevent project pausing
-  - API endpoint at `/api/keep-alive`
-  - GitHub Actions workflow for automated pinging
-  - Alternative external cron service options documented
-
-## [1.1.0] - 2025-11-28
-
-### Added
-
-- Professional SEO metadata with Open Graph and Twitter Cards
-- JSON-LD structured data for Person schema
-- Comprehensive robots.txt and sitemap.xml
-- PWA manifest.json for app-like experience
-- ErrorBoundary component for graceful error handling
-- SkeletonLoader components for improved loading states
-- ScrollToTop button for better navigation UX
-- SEO utility library (`lib/seo.ts`)
-- Professional README with complete setup instructions
-- Proper TypeScript types (PageId, Theme)
-
-### Changed
-
-- Updated page title from generic to "Msah Ambooka | AI & Software Engineer"
-- Enhanced viewport configuration for better mobile display
-- Improved component type safety across Navbar and UtilityBar
-
-### Fixed
-
-- TypeScript compilation errors in component props
-- Duplicate Button.tsx file (casing conflict)
-- Console.log debug statements removed from production code
-
-### Removed
-
-- Generic "Create Next App" branding
-- Duplicate `src/components/ui/Button.tsx` file
-
-## [1.0.0] - 2025-11-XX
-
-### Added
-
-- Initial portfolio website with Next.js 15.5
-- About, Resume, Portfolio, Blog, and Contact sections
-- GitHub integration for automatic project display
-- Supabase backend integration
-- Assistant chatbot
-- Theme toggle (Dark/Light modes)
-- Responsive mobile design
-- Dynamic resume with PDF download
-
-[Unreleased]: https://github.com/ambooka/ambooka/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/ambooka/ambooka/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/ambooka/ambooka/releases/tag/v1.0.0
+All public claims must be supported by the supplied résumé or public project evidence. Planned skills, certifications, and projects are not candidate evidence.

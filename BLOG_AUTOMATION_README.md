@@ -25,8 +25,8 @@ GEMINI_BLOG_MODEL=gemini-1.5-flash
 BLOG_GENERATION_PROVIDER=next
 ```
 
-### 2. Seed Initial Posts (5 Posts)
-To get your blog started immediately, I have generated 5 high-quality articles tailored to your MLOps and AI expertise.
+### 2. Seed résumé-backed posts
+The seed file contains four posts based only on completed portfolio, payment, ERP, and final-year research evidence.
 1.  Go to your **Supabase Dashboard**.
 2.  Open the **SQL Editor**.
 3.  Copy and paste the contents of `scripts/seed-blog-posts.sql`.
@@ -56,4 +56,3 @@ To automate the process, you need to schedule it:
 - `supabase/functions/generate-blog-post/index.ts`: The core AI logic.
 - `scripts/seed-blog-posts.sql`: Initial 5 posts seed.
 - `scripts/schedule-blog.sql`: Automation schedule script.
-- `scripts/seed-ai-blog.ts`: Local TS version of the seed script (requires environment setup).

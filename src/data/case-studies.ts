@@ -1,8 +1,8 @@
 import type { CaseStudy } from "@/types/portfolio";
-import { projects } from "@/data/war-mode-projects";
+import { projects } from "@/data/professional-projects";
 
 export const caseStudies: CaseStudy[] = projects
-  .filter((project) => project.featured)
+  .filter((project) => project.featured && project.status === "completed")
   .map((project) => ({
     slug: project.slug,
     projectSlug: project.slug,
@@ -18,7 +18,7 @@ export const caseStudies: CaseStudy[] = projects
     ],
     keyDecisions: [
       "Use real resume evidence only: client work, company work, academic research and completed portfolio platform work.",
-      "Keep private learning plans out of the public portfolio.",
+      "Use only completed work supported by the résumé or public repository evidence.",
       "Avoid overclaiming: status, proof and metrics must reflect actual evidence.",
       "Prioritize readable business value and implementation decisions over decorative presentation.",
     ],
@@ -43,7 +43,7 @@ export const caseStudies: CaseStudy[] = projects
     results: [
       project.businessValue,
       "Strengthens the portfolio through real-world experience instead of tutorial-style claims.",
-      "Supports positioning across software engineering, IT systems, business automation and platform/MLOps engineering.",
+      "Demonstrates practical delivery across software, payments, business systems, infrastructure, and computer vision.",
     ],
     futureImprovements: [
       "Add screenshots or diagrams where safe to publish.",

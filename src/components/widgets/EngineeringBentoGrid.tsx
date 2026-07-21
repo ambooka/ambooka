@@ -163,8 +163,8 @@ export default function EngineeringBentoGrid() {
             </h3>
           </div>
           <p className="text-sm font-medium leading-relaxed text-[hsl(var(--muted-foreground))] mb-6 max-w-sm">
-            Real client work, company IT systems, business automation, payment
-            integrations, ERP implementation, and production-focused MLOps.
+            Résumé-backed software, payment, ERP, infrastructure, and computer
+            vision work with measurable operational impact.
           </p>
           <div className="flex items-center gap-3">
             <span className="relative flex h-3 w-3">

@@ -203,15 +203,15 @@ INSERT INTO about_content (section_key, title, content, display_order)
 VALUES (
     'about_text',
     'About Me',
-    'I''m an experienced software engineer specializing in intelligent systems, full-stack development, and network infrastructure. With a strong foundation in Computer Science from Maseno University, I build scalable systems that transform complex challenges into elegant, efficient solutions. My expertise spans machine learning, cloud architecture, and enterprise software development.',
+    'I build full-stack and backend software, production payment integrations, and business systems, backed by hands-on experience in ERP implementation, Windows Server, Active Directory, networking, and applied computer vision.',
     0
 ) ON CONFLICT (section_key) DO NOTHING;
 
 -- Insert expertise areas
 INSERT INTO about_content (section_key, title, content, icon, badge, display_order)
 VALUES
-    ('expertise_1', 'ML & Intelligent Systems', 'Developing intelligent systems using neural networks, computer vision, and natural language processing.', 'Brain', 'expert', 1),
-    ('expertise_2', 'Software Engineering', 'Building scalable applications with modern frameworks, clean architecture, and best practices.', 'Code', 'expert', 2),
-    ('expertise_3', 'Robotics & Automation', 'Programming autonomous systems, sensor integration, and motion planning algorithms.', 'Bot', 'advanced', 3),
-    ('expertise_4', 'Cloud Computing & DevOps', 'Building and automating scalable cloud environments to streamline deployment, improve reliability, and optimize performance.', 'Cloud', 'advanced', 4)
+    ('expertise_1', 'Backend & Payment Integrations', 'Building REST APIs and production payment integrations with typed contracts, retries, and webhook validation.', 'Code', 'expert', 1),
+    ('expertise_2', 'Full-Stack Software', 'Building web applications with TypeScript, React, Next.js, Node.js, Python, and PostgreSQL.', 'Layers', 'expert', 2),
+    ('expertise_3', 'ERP & Business Systems', 'Implementing ERPNext, CMS platforms, and operational workflows for real organizations.', 'Database', 'advanced', 3),
+    ('expertise_4', 'IT Infrastructure', 'Administering Windows Server, Active Directory, networks, VoIP, CCTV, biometric systems, and user support.', 'Server', 'advanced', 4)
 ON CONFLICT (section_key) DO NOTHING;

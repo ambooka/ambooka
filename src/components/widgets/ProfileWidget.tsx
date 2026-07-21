@@ -18,6 +18,10 @@ import {
   BriefcaseBusiness,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  PROFESSIONAL_SUMMARY,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 
 export interface SocialLink {
   id?: string;
@@ -45,43 +49,32 @@ export interface ProfileWidgetProps {
 
 const PROFILE_FACTS = [{ label: "Base", value: "Nairobi, Kenya" }];
 
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
-const LEGACY_TITLE_PATTERN =
-  /Full-Stack Developer|MLOps Engineering|Software Engineer & Full-Stack|Systems & MLOps/i;
-
 const CURRENT_FOCUS = [
-  "Software products",
-  "Business systems",
-  "Platform/MLOps",
+  "Software Engineering",
+  "Backend & Payments",
+  "ERP & Infrastructure",
 ];
 
 const EDUCATION = [
   {
     degree: "BSc Computer Science",
     school: "Maseno University",
-    year: "2019 - 2024",
+    year: "2020 - 2024",
     logo: "/assets/badges/maseno-university.png",
   },
   {
     degree: "KCSE",
     school: "Starehe Boys' Centre",
-    year: "2015 - 2018",
+    year: "2016 - 2019",
     logo: "/images/starehe-logo.png",
   },
 ];
 
 const LANGUAGES = [
-  { name: "English", flag: "🇺🇸" },
+  { name: "English", flag: "🇬🇧" },
   { name: "Swahili", flag: "🇰🇪" },
-  { name: "German", flag: "🇩🇪" },
-  { name: "Arabic", flag: "🇸🇦" },
 ];
 
-const normalizeProfessionalTitle = (title?: string | null) => {
-  const value = title?.trim();
-  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
-  return value;
-};
 
 export default function ProfileWidget({
   personalInfo,
@@ -90,11 +83,10 @@ export default function ProfileWidget({
   const profile =
     personalInfo ||
     ({
-      full_name: "Msah Ambooka",
+      full_name: "Abdulrahman Ambooka Msah",
       title: PROFESSIONAL_TITLE,
       avatar_url: "/assets/images/my-avatar.jpg",
-      about_text:
-        "Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and platform/MLOps.",
+      about_text: PROFESSIONAL_SUMMARY,
       location: "Nairobi, Kenya",
       social_links: [],
     } as PersonalInfo);
@@ -108,7 +100,7 @@ export default function ProfileWidget({
       is_current: boolean;
     }[]
   >([]);
-  const displayTitle = normalizeProfessionalTitle(profile.title);
+  const displayTitle = PROFESSIONAL_TITLE;
 
   useEffect(() => {
     const fetchExperience = async () => {
@@ -191,7 +183,7 @@ export default function ProfileWidget({
                 </span>
               </div>
               <h3 className="m-0 text-[1.1rem] sm:text-xl font-extrabold leading-tight tracking-tight text-[hsl(var(--foreground))] truncate">
-                {profile.full_name || "Msah Ambooka"}
+                {profile.full_name || "Abdulrahman Ambooka Msah"}
               </h3>
               <div className="text-[0.78rem] sm:text-[0.85rem] text-[hsl(var(--muted-foreground))] font-medium mt-0.5 truncate">
                 {displayTitle}
@@ -200,8 +192,7 @@ export default function ProfileWidget({
           </div>
 
           <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
-            {profile.about_text ||
-              "Computer Science graduate with hands-on experience across full-stack software, IT infrastructure, ERP implementation, payment integrations, and platform/MLOps."}
+            {profile.about_text || PROFESSIONAL_SUMMARY}
           </p>
 
           <p className="m-0 mt-3 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
@@ -334,8 +325,8 @@ export default function ProfileWidget({
               ))}
             </div>
             <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))] ml-1">
-              Focused on practical software delivery, reliable systems, business
-              automation, and platform/MLOps.
+              Focused on production software, backend APIs, payment
+              integrations, ERP implementation, and IT infrastructure.
             </p>
           </aside>
 

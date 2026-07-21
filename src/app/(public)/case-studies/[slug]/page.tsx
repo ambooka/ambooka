@@ -18,7 +18,7 @@ import {
   categoryLabels,
   getProject,
   statusLegend,
-} from "@/data/war-mode-projects";
+} from "@/data/professional-projects";
 
 export async function generateStaticParams() {
   return caseStudies.map((study) => ({ slug: study.slug }));

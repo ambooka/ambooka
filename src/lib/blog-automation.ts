@@ -1,5 +1,6 @@
 import { getReadingTimeMinutes } from "@/lib/blog-markdown";
 import type { Json } from "@/integrations/supabase/types";
+import { PROFESSIONAL_TITLE } from "@/data/professional-profile";
 
 export interface BlogSource {
   title: string;
@@ -25,12 +26,12 @@ export const GEMINI_BLOG_MODEL =
   "gemini-1.5-flash";
 
 export const BLOG_TOPIC_LANES = [
-  "applied MLOps for real business workflows",
-  "software engineering with assistant-assisted development",
+  "backend and full-stack software engineering",
+  "reliable REST API design with Node.js, FastAPI, and PostgreSQL",
   "payment integrations and fintech infrastructure in Africa",
-  "production web systems with Next.js, FastAPI, PostgreSQL, Docker, and Supabase",
-  "computer vision and practical machine learning systems",
-  "IT systems, ERP implementation, Linux, networking, and automation",
+  "ERP implementation and business-process automation",
+  "IT infrastructure, Windows Server, Active Directory, and networking",
+  "practical computer vision with YOLO, OpenCV, and Flask",
 ];
 
 export const slugify = (value: string) =>
@@ -119,11 +120,11 @@ export const blogPostJsonSchema = {
 };
 
 export const buildBlogGenerationPrompt = (topic?: string) => `
-You are writing for Msah Ambooka's professional portfolio.
+You are writing for Abdulrahman Ambooka Msah's professional portfolio.
 
 Portfolio positioning:
-- Title: Cloud-native Software Engineer — Platform & MLOps.
-- Strengths: full-stack products, payment integrations, business systems, ERP/IT systems, infrastructure, and platform/MLOps.
+- Title: ${PROFESSIONAL_TITLE}.
+- Strengths: software delivery, backend APIs, payment integrations, ERP implementation, IT infrastructure, and applied computer vision.
 - Audience: hiring managers, technical founders, engineering leads, and clients who need practical software delivery.
 - Location context: Nairobi, Kenya, with relevance to African tech when the topic naturally fits.
 
@@ -134,7 +135,7 @@ ${topic ? `Preferred topic direction: ${topic}` : `Pick one topic from these lan
 Write one original blog post in Markdown. It must:
 - Be specific and current, not generic AI filler.
 - Explain why the trend matters to practical software engineering.
-- Include a "Portfolio angle" section that connects the topic to systems, AI, integrations, infrastructure, or product delivery.
+- Include a "Portfolio angle" section that connects the topic to delivered software, integrations, infrastructure, ERP, or computer vision.
 - Include a "What I would build" section with a small credible project idea.
 - Include concrete sources as title and URL pairs only when you are confident they are real and relevant; otherwise return an empty sources array.
 - Avoid claiming direct production experience that is not in the portfolio context.

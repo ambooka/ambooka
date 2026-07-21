@@ -20,6 +20,10 @@ import {
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  PROFESSIONAL_SUMMARY,
+  PROFESSIONAL_TITLE,
+} from "@/data/professional-profile";
 import { cn } from "@/lib/utils";
 import {
   backdropVariants,
@@ -47,23 +51,12 @@ interface PersonalInfo {
   social_links?: SocialLink[] | null;
 }
 
-const PROFESSIONAL_TITLE = "Cloud-native Software Engineer — Platform & MLOps";
-const LEGACY_TITLE_PATTERN =
-  /Full-Stack Developer|AI\/ML Engineering|Software Engineer & Full-Stack/i;
-
-const normalizeProfessionalTitle = (title?: string | null) => {
-  const value = title?.trim();
-  if (!value || LEGACY_TITLE_PATTERN.test(value)) return PROFESSIONAL_TITLE;
-  return value;
-};
-
 const DEFAULT_PERSONAL_INFO: PersonalInfo = {
-  full_name: "Msah Ambooka",
+  full_name: "Abdulrahman Ambooka Msah",
   title: PROFESSIONAL_TITLE,
   avatar_url: null,
-  about_text:
-    "Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and platform/MLOps.",
-  email: "hello@ambooka.dev",
+  about_text: PROFESSIONAL_SUMMARY,
+  email: "abdulrahmanambooka@gmail.com",
   phone: undefined,
   location: "Nairobi, Kenya",
   social_links: [],
@@ -85,11 +78,11 @@ interface SidebarProps {
 
 const PROFILE_SNAPSHOT = [
   { label: "Experience", value: "3+ years" },
-  { label: "Direction", value: "CS -> MLOps" },
-  { label: "Build style", value: "Public + iterative" },
+  { label: "Specialty", value: "Backend + payments" },
+  { label: "Operations", value: "ERP + infrastructure" },
 ];
 
-const CURRENT_STACK = ["Python", "Docker", "PostgreSQL", "GitHub Actions"];
+const CURRENT_STACK = ["Python", "TypeScript", "Node.js", "PostgreSQL"];
 
 export default function Sidebar({
   isModal = false,
@@ -102,7 +95,7 @@ export default function Sidebar({
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [obtainedCerts, setObtainedCerts] = useState<ObtainedCert[]>([]);
   const profile = personalInfo ?? DEFAULT_PERSONAL_INFO;
-  const displayTitle = normalizeProfessionalTitle(profile.title);
+  const displayTitle = PROFESSIONAL_TITLE;
   const isStandardSidebar = !isModal;
 
   useEffect(() => {
@@ -336,7 +329,7 @@ export default function Sidebar({
               {displayTitle}
             </strong>{" "}
             based in {profile.location || "Nairobi, Kenya"}, with experience
-            across shipped products, business systems, and platform/MLOps work.
+            across shipped software, payment integrations, ERP systems, and IT infrastructure.
           </p>
           <p
             className={cn(
@@ -344,8 +337,7 @@ export default function Sidebar({
               isModal ? "text-[0.78rem]" : "text-xs line-clamp-2",
             )}
           >
-            {profile.about_text ||
-              "Computer Science graduate with experience across full-stack software, IT systems, ERP implementation, payment integrations, and platform/MLOps."}
+            {profile.about_text || PROFESSIONAL_SUMMARY}
           </p>
         </div>
         <div className="shrink-0 max-sm:-order-1 max-sm:justify-self-center">
@@ -588,11 +580,11 @@ export default function Sidebar({
                 isModal ? "gap-2.5 text-sm" : "gap-1.5 text-xs",
               )}
             >
-              <span>MLOps</span>
+              <span>Backend</span>
               <span className="text-[hsl(var(--muted-foreground))/0.5]">|</span>
-              <span>Cloud</span>
+              <span>Payments</span>
               <span className="text-[hsl(var(--muted-foreground))/0.5]">|</span>
-              <span>DevOps</span>
+              <span>Infrastructure</span>
             </div>
           </div>
         </div>
@@ -649,10 +641,10 @@ export default function Sidebar({
                 isModal ? "gap-2 text-sm" : "gap-1.5 text-xs",
               )}
             >
-              <span>ML Pipelines</span>
-              <span>Web Design</span>
-              <span>System Architecture</span>
-              <span>Cloud Infra</span>
+              <span>Software Engineering</span>
+              <span>Backend APIs & Payments</span>
+              <span>ERP & Business Systems</span>
+              <span>IT Infrastructure</span>
             </div>
           </div>
 
@@ -700,7 +692,7 @@ export default function Sidebar({
         className={cn("grid gap-3", isModal ? "grid-cols-2" : "grid-cols-2")}
       >
         <a
-          href={`mailto:${profile.email || "hello@ambooka.dev"}`}
+          href={`mailto:${profile.email || "abdulrahmanambooka@gmail.com"}`}
           className={cn(
             "inline-flex items-center justify-center gap-2 border-0 text-[0.78rem] font-extrabold no-underline cursor-pointer transition-all hover:-translate-y-0.5",
             "bg-gradient-to-br from-[hsl(var(--primary)/0.96)] to-[hsl(var(--accent)/0.92)] text-white shadow-[0_12px_24px_hsl(var(--primary)/0.16)] hover:shadow-[0_16px_32px_hsl(var(--accent)/0.2)]",

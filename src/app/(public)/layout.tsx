@@ -9,7 +9,7 @@ import { WebSite, WithContext } from "schema-dts";
 const websiteSchema: WithContext<WebSite> = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Msah Ambooka",
+    name: "Abdulrahman Ambooka Msah",
     url: "https://ambooka.dev",
     potentialAction: {
         "@type": "SearchAction",

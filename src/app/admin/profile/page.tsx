@@ -71,7 +71,7 @@ interface KpiStatsData {
   years_exp?: string;
   project_count?: number;
   expertise_breakdown?: {
-    cloud_infra?: number;
+    infrastructure?: number;
     software?: number;
     ml_ai?: number;
     data?: number;
@@ -200,10 +200,10 @@ export default function ProfileManager() {
     role: "",
     focus: "",
     current_phase: "",
-    years_experience: "5",
-    years_exp: "5+",
+    years_experience: "3",
+    years_exp: "3+",
     project_count: 0,
-    expertise_breakdown: { cloud_infra: 30, software: 35, ml_ai: 35, data: 0 },
+    expertise_breakdown: { infrastructure: 35, software: 40, ml_ai: 15, data: 10 },
   });
 
   useEffect(() => {
@@ -251,11 +251,11 @@ export default function ProfileManager() {
           role: stats.role || "",
           focus: stats.focus || "",
           current_phase: stats.current_phase || "",
-          years_experience: stats.years_experience || "5",
-          years_exp: stats.years_exp || "5+",
+          years_experience: stats.years_experience || "3",
+          years_exp: stats.years_exp || "3+",
           project_count: stats.project_count || 0,
           expertise_breakdown: {
-            cloud_infra: stats.expertise_breakdown?.cloud_infra ?? 30,
+            infrastructure: stats.expertise_breakdown?.infrastructure ?? 30,
             software: stats.expertise_breakdown?.software ?? 35,
             ml_ai: stats.expertise_breakdown?.ml_ai ?? 35,
             data: stats.expertise_breakdown?.data ?? 0,
@@ -395,7 +395,7 @@ export default function ProfileManager() {
   const updateExpertiseBreakdown = (field: string, value: number) => {
     // Ensure expertise_breakdown exists
     const currentBreakdown = kpiData.expertise_breakdown || {
-      cloud_infra: 0,
+      infrastructure: 0,
       software: 0,
       ml_ai: 0,
       data: 0,
@@ -1277,7 +1277,7 @@ export default function ProfileManager() {
                       type="text"
                       value={kpiData.role}
                       onChange={(e) => updateKpiData("role", e.target.value)}
-                      placeholder="MLOps Engineer I"
+                      placeholder="Software Engineer | Backend, Payments & IT Infrastructure"
                       style={inputStyle}
                     />
                   </div>
@@ -1287,7 +1287,7 @@ export default function ProfileManager() {
                       type="text"
                       value={kpiData.focus}
                       onChange={(e) => updateKpiData("focus", e.target.value)}
-                      placeholder="Cloud + Data + ML basics"
+                      placeholder="Backend + Payments + IT Infrastructure"
                       style={inputStyle}
                     />
                   </div>
@@ -1350,7 +1350,7 @@ export default function ProfileManager() {
                     type="text"
                     value={kpiData.years_exp}
                     onChange={(e) => updateKpiData("years_exp", e.target.value)}
-                    placeholder="5+"
+                    placeholder="3+"
                     style={inputStyle}
                   />
                 </div>
@@ -1422,13 +1422,13 @@ export default function ProfileManager() {
                 }}
               >
                 <div>
-                  <label style={labelStyle}>Cloud Infra</label>
+                  <label style={labelStyle}>IT Infrastructure</label>
                   <input
                     type="number"
-                    value={kpiData.expertise_breakdown?.cloud_infra ?? 30}
+                    value={kpiData.expertise_breakdown?.infrastructure ?? 30}
                     onChange={(e) =>
                       updateExpertiseBreakdown(
-                        "cloud_infra",
+                        "infrastructure",
                         parseInt(e.target.value) || 0,
                       )
                     }
@@ -1436,10 +1436,10 @@ export default function ProfileManager() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Software / DevOps</label>
+                  <label style={labelStyle}>Software Engineering</label>
                   <input
                     type="number"
-                    value={kpiData.expertise_breakdown?.software ?? 35}
+                    value={kpiData.expertise_breakdown?.software ?? 40}
                     onChange={(e) =>
                       updateExpertiseBreakdown(
                         "software",
@@ -1450,10 +1450,10 @@ export default function ProfileManager() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>ML & AI</label>
+                  <label style={labelStyle}>Computer Vision</label>
                   <input
                     type="number"
-                    value={kpiData.expertise_breakdown?.ml_ai ?? 35}
+                    value={kpiData.expertise_breakdown?.ml_ai ?? 15}
                     onChange={(e) =>
                       updateExpertiseBreakdown(
                         "ml_ai",
@@ -1464,10 +1464,10 @@ export default function ProfileManager() {
                   />
                 </div>
                 <div>
-                  <label style={labelStyle}>Data (Hidden?)</label>
+                  <label style={labelStyle}>Databases & Data</label>
                   <input
                     type="number"
-                    value={kpiData.expertise_breakdown?.data ?? 0}
+                    value={kpiData.expertise_breakdown?.data ?? 10}
                     onChange={(e) =>
                       updateExpertiseBreakdown(
                         "data",
@@ -1480,7 +1480,7 @@ export default function ProfileManager() {
               </div>
               <p style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
                 Total:{" "}
-                {(kpiData.expertise_breakdown?.cloud_infra || 0) +
+                {(kpiData.expertise_breakdown?.infrastructure || 0) +
                   (kpiData.expertise_breakdown?.software || 0) +
                   (kpiData.expertise_breakdown?.ml_ai || 0) +
                   (kpiData.expertise_breakdown?.data || 0)}

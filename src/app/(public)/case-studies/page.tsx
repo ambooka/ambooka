@@ -13,28 +13,28 @@ import {
   categoryLabels,
   getProject,
   statusLegend,
-} from "@/data/war-mode-projects";
+} from "@/data/professional-projects";
 
 export const metadata: Metadata = {
   title: "Case Studies",
   description:
-    "Technical case studies for software engineering, IT systems, business automation, payment integrations, and platform/MLOps projects.",
+    "Résumé-backed case studies for software engineering, payment integrations, infrastructure, ERP systems, and applied computer vision.",
   alternates: {
     canonical: "/case-studies",
   },
   openGraph: {
-    title: "Case Studies | Msah Ambooka",
+    title: "Case Studies | Abdulrahman Ambooka Msah",
     description:
-      "Proof-focused technical case studies across software systems, business automation, infrastructure, and MLOps.",
+      "Proof-focused case studies covering delivered software, payment integrations, business systems, infrastructure, and computer vision.",
     type: "website",
     url: "https://ambooka.dev/case-studies",
-    images: [{ url: "/og-image.png", alt: "Msah Ambooka case studies" }],
+    images: [{ url: "/og-image.png", alt: "Abdulrahman Ambooka Msah case studies" }],
   },
 };
 
 const proofStats = [
   { label: "Case studies", value: caseStudies.length.toString() },
-  { label: "Focus", value: "Platform + MLOps" },
+  { label: "Focus", value: "Verified delivery" },
   { label: "Proof style", value: "Outcome-led" },
 ];
 

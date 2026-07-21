@@ -440,47 +440,6 @@ export type Database = {
         }
         Relationships: []
       }
-      // Added manually for the Nexus Field Log feature — regenerate with
-      // `supabase gen types typescript` once convenient to replace this block.
-      nexus_log_entries: {
-        Row: {
-          id: string
-          kind: string
-          days: Json
-          deliverables: Json
-          dod: Json
-          tasks: Json
-          custom: Json
-          notes: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          kind: string
-          days?: Json
-          deliverables?: Json
-          dod?: Json
-          tasks?: Json
-          custom?: Json
-          notes?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          kind?: string
-          days?: Json
-          deliverables?: Json
-          dod?: Json
-          tasks?: Json
-          custom?: Json
-          notes?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never
