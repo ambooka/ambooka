@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Metadata } from "next";
 
 // ISR: Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data: latestPost } = await supabase

@@ -1,5 +1,5 @@
 export const PROFESSIONAL_TITLE =
-  "Software Engineer | Backend, Payments & IT Infrastructure";
+  "Software Engineer | Backend Systems & Infrastructure";
 
 export const CURRENT_ROLE = "IT Administrator";
 

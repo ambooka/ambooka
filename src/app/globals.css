@@ -451,6 +451,102 @@ textarea {
   color: inherit;
 }
 
+.chat-markdown {
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.chat-markdown p,
+.chat-markdown ul,
+.chat-markdown ol,
+.chat-markdown blockquote,
+.chat-markdown pre,
+.chat-markdown h1,
+.chat-markdown h2,
+.chat-markdown h3,
+.chat-markdown h4 {
+  margin: 0;
+}
+
+.chat-markdown h1,
+.chat-markdown h2,
+.chat-markdown h3,
+.chat-markdown h4 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: hsl(var(--foreground));
+}
+
+.chat-markdown ul,
+.chat-markdown ol {
+  display: grid;
+  gap: 0.3rem;
+  padding-left: 1.15rem;
+}
+
+.chat-markdown ul li {
+  list-style: disc;
+}
+
+.chat-markdown ol li {
+  list-style: decimal;
+}
+
+.chat-markdown li::marker {
+  color: hsl(var(--accent));
+  font-weight: 800;
+}
+
+.chat-markdown strong {
+  font-weight: 800;
+  color: hsl(var(--foreground));
+}
+
+.chat-markdown em {
+  font-style: italic;
+}
+
+.chat-markdown a {
+  color: hsl(var(--accent));
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.chat-markdown code {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.35rem;
+  background: hsl(var(--background) / 0.75);
+  padding: 0.08rem 0.28rem;
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+}
+
+.chat-markdown pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 0.6rem;
+  background: hsl(var(--foreground));
+  padding: 0.75rem;
+  color: hsl(var(--background));
+}
+
+.chat-markdown pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.chat-markdown blockquote {
+  border-left: 3px solid hsl(var(--accent));
+  padding-left: 0.7rem;
+  color: hsl(var(--muted-foreground));
+}
+
 /* ===== ANIMATION KEYFRAMES ===== */
 @keyframes fadeIn {
   from {

@@ -283,18 +283,9 @@ const getSkillInitials = (skillName: string) =>
     .toUpperCase() || "SK";
 
 export default function Resume({ isActive = false, initialData }: ResumeProps) {
-  const normalizedInitialData = initialData
-    ? {
-        ...initialData,
-        personal_info: {
-          ...initialData.personal_info,
-          title: PROFESSIONAL_TITLE,
-        },
-      }
-    : null;
-  const [loading, setLoading] = useState(!normalizedInitialData);
+  const [loading, setLoading] = useState(!initialData);
   const [resumeData, setResumeData] = useState<ResumeData | null>(
-    normalizedInitialData,
+    initialData || null,
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -332,10 +323,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
         supabase
           .from("projects")
           .select("id, title, description, stack, status")
-          .in("slug", [
-            "computer-vision-surveillance-system",
-            "mpesa-payment-integration-library",
-          ])
+          .eq("is_featured", true)
           .eq("status", "completed")
           .order("display_order", { ascending: true }),
       ]);
@@ -349,10 +337,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
           email: "abdulrahmanambooka@gmail.com",
           summary: PROFESSIONAL_SUMMARY,
         } as PersonalInfo);
-      const pInfo = {
-        ...pInfoRaw,
-        title: PROFESSIONAL_TITLE,
-      } as PersonalInfo;
+      const pInfo = pInfoRaw as PersonalInfo;
 
       setResumeData({
         personal_info: pInfo,

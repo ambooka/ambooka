@@ -24,7 +24,7 @@ export const projects: Project[] = [
     slug: "ambooka-dev-portfolio-platform",
     title: "ambooka.dev Portfolio Platform",
     oneLine:
-      "Full-stack Next.js portfolio platform with Supabase content, admin CMS, resume variants, GitHub sync and Playwright e2e tests.",
+      "Full-stack Next.js portfolio platform with Supabase content, admin CMS, a canonical resume, GitHub sync and Playwright e2e tests.",
     category: "frontend" as ProjectCategory,
     displayOrder: 1,
     status: "completed" as ProjectStatus,
@@ -32,7 +32,7 @@ export const projects: Project[] = [
     featured: true,
     anchor: false,
     problem:
-      "A static portfolio could not present real project evidence, resume variants, case studies and evolving technical positioning.",
+      "A static portfolio could not present real project evidence, case studies and evolving technical positioning.",
     solution:
       "Built a database-backed Next.js portfolio platform with admin-managed content, structured project data, resume views, GitHub sync and tests.",
     businessValue:
@@ -71,7 +71,7 @@ export const projects: Project[] = [
       status: "Live portfolio platform",
     },
     recruiterSummary:
-      "Built a full-stack Next.js portfolio platform with Supabase backend, admin CMS, GitHub sync, resume variants and Playwright e2e tests.",
+      "Built a full-stack Next.js portfolio platform with Supabase backend, admin CMS, a canonical resume, GitHub sync and Playwright e2e tests.",
   },
   {
     slug: "hebatullah-erpnext-implementation",

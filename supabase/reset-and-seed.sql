@@ -203,6 +203,18 @@ create table public.blog_posts (
   updated_at timestamptz default now()
 );
 
+create table public.blog_topics (
+  id uuid primary key default extensions.gen_random_uuid(),
+  title text unique not null,
+  context text not null,
+  category text not null,
+  keywords text[] default '{}',
+  is_active boolean default true,
+  display_order int default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
 create table public.contact_messages (
   id uuid primary key default extensions.gen_random_uuid(),
   name text not null,
@@ -293,6 +305,7 @@ begin
     'case_studies',
     'testimonials',
     'blog_posts',
+    'blog_topics',
     'contact_messages',
     'kpi_stats',
     'portfolio_content',
@@ -332,7 +345,7 @@ insert into public.personal_info (
 )
 values (
   'Abdulrahman Ambooka Msah',
-  'Software Engineer | Backend, Payments & IT Infrastructure',
+  'Software Engineer | Backend Systems & Infrastructure',
   'abdulrahmanambooka@gmail.com',
   '+254 111 384 390',
   'Nairobi, Kenya',
@@ -694,17 +707,17 @@ values
   (
     'ambooka-dev-portfolio-platform',
     'ambooka.dev Portfolio Platform',
-    'Full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, role-specific resume variants, GitHub activity sync and Playwright e2e test suite.',
+    'Full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, a canonical database-backed resume, GitHub activity sync and Playwright e2e test suite.',
     'Full-stack portfolio platform with Supabase backend and admin CMS.',
-    'Built ambooka.dev — a full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, role-specific resume variants, GitHub activity sync, and Playwright e2e test suite.',
+    'Built ambooka.dev — a full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, a canonical database-backed resume, GitHub activity sync, and Playwright e2e test suite.',
     'Full-Stack',
     array['Next.js 16', 'TypeScript', 'Supabase', 'GitHub Activity Sync', 'Playwright'],
     array['Full-Stack Engineering', 'Frontend Architecture', 'Database-Backed Content', 'Testing'],
     'completed',
     100,
     2,
-    'A static resume could not represent evolving project evidence, portfolio content, resume variants and GitHub activity.',
-    'Built a database-backed portfolio platform with admin-managed content, resume variants, GitHub sync and e2e tests.',
+    'A static resume could not represent evolving project evidence, portfolio content and GitHub activity.',
+    'Built a database-backed portfolio platform with admin-managed content, a single canonical resume, GitHub sync and e2e tests.',
     'Turns professional evidence into a structured software product rather than a static page.',
     'Built ambooka.dev as a full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, GitHub activity sync and Playwright e2e testing.',
     '{"github":"https://github.com/ambooka/ambooka","liveDemo":"https://ambooka.dev","caseStudy":"/case-studies/ambooka-dev-portfolio-platform","apiDocs":null,"video":null}'::jsonb,
@@ -932,14 +945,64 @@ values
     null
   ),
   (
-    'computer-vision-final-year-project',
-    'Building a Computer Vision Surveillance System with YOLO and OpenCV',
-    'Technical lessons from my final-year computer vision research project.',
-    'Draft: This article discusses problem framing, YOLO model selection, OpenCV stream processing, Flask inference APIs and accuracy-latency tradeoffs.',
-    'AI / ML',
-    array['YOLO', 'OpenCV', 'PyTorch', 'Computer Vision'],
+    'reliable-it-infrastructure-for-growing-teams',
+    'Reliable IT Infrastructure for Growing Teams',
+    'Practical lessons from identity administration, networking, device rollout and end-user support.',
+    'Draft: This article covers Active Directory administration, network reliability, workstation deployment, support workflows and technical documentation for growing teams.',
+    'IT Infrastructure',
+    array['Windows Server', 'Active Directory', 'Networking', 'IT Operations'],
     false,
     null
+  );
+
+insert into public.blog_topics (
+  title,
+  context,
+  category,
+  keywords,
+  is_active,
+  display_order
+)
+values
+  (
+    'Reliable backend integrations',
+    'Lessons from building REST APIs, M-Pesa Daraja payment flows, callback handling, retries, validation and PostgreSQL-backed services.',
+    'Backend Engineering',
+    array['REST APIs', 'Node.js', 'TypeScript', 'PostgreSQL', 'M-Pesa'],
+    true,
+    1
+  ),
+  (
+    'ERP and business-process implementation',
+    'Day-to-day lessons from mapping manual workflows into ERPNext accounts, items, inventory and procurement processes.',
+    'Business Systems',
+    array['ERPNext', 'Process Design', 'Procurement', 'Inventory'],
+    true,
+    2
+  ),
+  (
+    'Practical IT operations',
+    'Identity administration, staff onboarding, troubleshooting, documentation and maintaining dependable workplace technology.',
+    'IT Infrastructure',
+    array['Windows Server', 'Active Directory', 'Support', 'Documentation'],
+    true,
+    3
+  ),
+  (
+    'Network and endpoint reliability',
+    'Practical observations from workstation deployment, DHCP troubleshooting, wireless networks, VoIP and preventative maintenance.',
+    'IT Infrastructure',
+    array['Networking', 'DHCP', 'Workstations', 'VoIP', 'Troubleshooting'],
+    true,
+    4
+  ),
+  (
+    'Building database-backed web products',
+    'Engineering lessons from Next.js, TypeScript, Supabase, admin-managed content, deployment and end-to-end testing.',
+    'Software Engineering',
+    array['Next.js', 'TypeScript', 'Supabase', 'Playwright'],
+    true,
+    5
   );
 
 -- ============================================================
@@ -977,7 +1040,7 @@ insert into public.portfolio_content (
 values
   (
     'hero',
-    'Software Engineer | Backend, Payments & IT Infrastructure',
+    'Software Engineer | Backend Systems & Infrastructure',
     'Python · TypeScript · Node.js · FastAPI · PostgreSQL · Docker · ERPNext · Windows Server',
     'Computer Science graduate with 3+ years of hands-on experience delivering software, payment integrations, business systems, and IT infrastructure.',
     '{"ctaPrimary":"View Projects","ctaSecondary":"View Resume"}'::jsonb,
@@ -987,10 +1050,46 @@ values
   (
     'positioning',
     'Software delivery backed by real operational experience',
-    'Backend APIs, payments, ERP systems, infrastructure, and computer vision.',
+    'Backend services, systems integrations, ERP delivery, and IT infrastructure.',
     'Every public claim is supported by the supplied résumé or public project evidence.',
     '{}'::jsonb,
     2,
+    true
+  ),
+  (
+    'build_area',
+    'Full-Stack Product Engineering',
+    'Software delivery',
+    'Next.js and React interfaces, TypeScript application logic, Supabase-backed content, admin workflows, and end-to-end testing.',
+    '{"tags":["Next.js","TypeScript","Playwright"]}'::jsonb,
+    10,
+    true
+  ),
+  (
+    'build_area',
+    'Business Systems & ERP',
+    'Professional experience',
+    'ERPNext implementation, business-process design, procurement workflows, accounting setup, inventory operations, and CMS enablement.',
+    '{"tags":["ERPNext","Process Design","CMS"]}'::jsonb,
+    11,
+    true
+  ),
+  (
+    'build_area',
+    'Backend APIs & Integrations',
+    'Production delivery',
+    'REST API development, PostgreSQL-backed services, M-Pesa Daraja payment flows, webhook validation, retries, and asynchronous processing.',
+    '{"tags":["Node.js","REST APIs","PostgreSQL"]}'::jsonb,
+    12,
+    true
+  ),
+  (
+    'build_area',
+    'IT Infrastructure & Support',
+    'Professional experience',
+    'Windows Server, Active Directory, networking, VoIP, CCTV, biometric systems, workstation deployment, and end-user support.',
+    '{"tags":["Windows Server","Networking","Active Directory"]}'::jsonb,
+    13,
     true
   );
 
@@ -1033,6 +1132,7 @@ alter table public.projects            enable row level security;
 alter table public.case_studies        enable row level security;
 alter table public.testimonials        enable row level security;
 alter table public.blog_posts          enable row level security;
+alter table public.blog_topics         enable row level security;
 alter table public.contact_messages    enable row level security;
 alter table public.page_views          enable row level security;
 alter table public.kpi_stats           enable row level security;
@@ -1053,6 +1153,7 @@ begin
     'case_studies',
     'testimonials',
     'blog_posts',
+    'blog_topics',
     'kpi_stats',
     'portfolio_content',
     'roadmap_phases',

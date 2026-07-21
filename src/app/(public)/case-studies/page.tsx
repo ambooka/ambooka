@@ -8,12 +8,13 @@ import {
   Layers3,
   ShieldCheck,
 } from "lucide-react";
-import { caseStudies } from "@/data/case-studies";
 import {
   categoryLabels,
-  getProject,
   statusLegend,
 } from "@/data/professional-projects";
+import { fetchCaseStudies, fetchCompletedProjects } from "@/lib/portfolio-db";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Case Studies",
@@ -32,13 +33,16 @@ export const metadata: Metadata = {
   },
 };
 
-const proofStats = [
-  { label: "Case studies", value: caseStudies.length.toString() },
-  { label: "Focus", value: "Verified delivery" },
-  { label: "Proof style", value: "Outcome-led" },
-];
-
-export default function CaseStudiesPage() {
+export default async function CaseStudiesPage() {
+  const [caseStudies, projects] = await Promise.all([
+    fetchCaseStudies(),
+    fetchCompletedProjects(),
+  ]);
+  const proofStats = [
+    { label: "Case studies", value: caseStudies.length.toString() },
+    { label: "Focus", value: "Verified delivery" },
+    { label: "Proof style", value: "Outcome-led" },
+  ];
   return (
     <main className="space-y-8">
       <section className="overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-6 shadow-md sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.38fr)] lg:gap-8">
@@ -75,7 +79,7 @@ export default function CaseStudiesPage() {
 
       <section className="grid gap-5 lg:grid-cols-2">
         {caseStudies.map((study) => {
-          const project = getProject(study.projectSlug);
+          const project = projects.find((item) => item.slug === study.projectSlug);
           const evidence = project
             ? Object.entries(project.engineeringEvidence).filter(
                 ([, enabled]) => enabled,

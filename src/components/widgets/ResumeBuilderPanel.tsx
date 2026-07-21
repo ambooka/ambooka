@@ -1,11 +1,9 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
-import { Printer, X, Loader2, ChevronDown } from 'lucide-react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Download, Printer, X, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
-import { generateVariantResumeHTML, filterGitHubProjects, type ResumeData as ATSResumeData, type GitHubProject } from '@/lib/resume-generator'
-import { ROLE_PROFILES, getRoleOptions, filterSkillsByRole, type RoleVariant } from '@/lib/resume-profiles'
-import { GitHubService } from '@/services/github'
+import { generateVariantResumeHTML, type ResumeData as ATSResumeData } from '@/lib/resume-generator'
 import { cn } from '@/lib/utils'
 
 interface PersonalInfo {
@@ -36,32 +34,12 @@ interface ResumeBuilderPanelProps {
 export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = false }: ResumeBuilderPanelProps) {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [selectedRole, setSelectedRole] = useState<RoleVariant>('software-engineer')
   const [resumeHTML, setResumeHTML] = useState<string | null>(null)
   const [resumeBlobUrl, setResumeBlobUrl] = useState<string | null>(null)
   const resumeIframeRef = useRef<HTMLIFrameElement | null>(null)
-  const roleOptions = getRoleOptions()
+  const resumeBlobUrlRef = useRef<string | null>(null)
 
-  useEffect(() => {
-    if (resumeTrigger > 0) openResumeModal()
-  }, [resumeTrigger])
-
-  useEffect(() => {
-    const handler = () => openResumeModal()
-    window.addEventListener('open-resume-modal', handler)
-    return () => window.removeEventListener('open-resume-modal', handler)
-  }, [])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isResumeModalOpen) setIsResumeModalOpen(false)
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [isResumeModalOpen])
-
-  const fetchAndGenerateResume = async (role: RoleVariant = selectedRole) => {
-    const profile = ROLE_PROFILES[role]
+  const fetchAndGenerateResume = useCallback(async () => {
     const [personal, edu, exp, skills, projects] = await Promise.all([
       supabase.from('personal_info').select('*').single(),
       supabase.from('education').select('*').order('start_date', { ascending: false }),
@@ -70,58 +48,75 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
       supabase.from('projects').select('*').eq('is_featured', true).eq('status', 'completed').order('display_order', { ascending: true })
     ])
 
-    let filteredGitHubProjects: ProjectItem[] = []
-    try {
-      const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN
-      const githubService = new GitHubService(GITHUB_TOKEN)
-      const repos = await githubService.getRepositories('ambooka', { maxRepos: 30 })
-      filteredGitHubProjects = filterGitHubProjects(repos as GitHubProject[], profile.languages, 4) as unknown as ProjectItem[]
-    } catch { /* fallback to Supabase projects */ }
-
     if (personal.error) throw personal.error
     if (!personal.data) throw new Error('No personal information found.')
 
-    const combinedProjects: ProjectItem[] = filteredGitHubProjects.length > 0
-      ? filteredGitHubProjects
-      : (projects.data || []).map(p => ({ id: p.id, title: p.title, description: p.description, stack: p.stack, github_url: p.github_url, live_url: p.live_url, is_featured: true as const }))
-
-    const allSkills = (skills.data || []) as Array<{ id: string; name: string; category: string; proficiency_level?: string; [key: string]: unknown }>
-    const roleFilteredSkills = filterSkillsByRole(allSkills, role)
+    const combinedProjects: ProjectItem[] = (projects.data || []).map(p => ({ id: p.id, title: p.title, description: p.description, stack: p.stack, github_url: p.github_url, live_url: p.live_url, is_featured: true as const }))
 
     const resumeData: ResumeData = {
       personal_info: personal.data as unknown as ResumeData['personal_info'],
       education: edu.data || [],
       experience: exp.data || [],
-      skills: roleFilteredSkills as SkillItem[],
+      skills: (skills.data || []) as SkillItem[],
       projects: combinedProjects
     }
 
     return generateVariantResumeHTML(resumeData as unknown as ATSResumeData, {
-      roleTitle: profile.title,
-      roleSummary: profile.professionalSummary,
+      roleTitle: personal.data.title,
+      roleSummary: personal.data.summary || undefined,
       portfolioUrl: 'ambooka.dev',
     })
-  }
+  }, [])
 
-  const openResumeModal = async () => {
+  const revokeResumeUrl = useCallback(() => {
+    if (resumeBlobUrlRef.current) URL.revokeObjectURL(resumeBlobUrlRef.current)
+    resumeBlobUrlRef.current = null
+    setResumeBlobUrl(null)
+  }, [])
+
+  const openResumeModal = useCallback(async () => {
     setIsResumeModalOpen(true)
     setResumeHTML(null)
-    if (resumeBlobUrl) { URL.revokeObjectURL(resumeBlobUrl); setResumeBlobUrl(null) }
+    revokeResumeUrl()
     try {
       const html = await fetchAndGenerateResume()
       setResumeHTML(html)
       const blob = new Blob([html], { type: 'text/html' })
-      setResumeBlobUrl(URL.createObjectURL(blob))
+      const url = URL.createObjectURL(blob)
+      resumeBlobUrlRef.current = url
+      setResumeBlobUrl(url)
     } catch {
       setResumeHTML('<div style="padding:20px;color:#ef4444;">Failed to load resume data. Please try again.</div>')
     }
-  }
+  }, [fetchAndGenerateResume, revokeResumeUrl])
 
-  const closeResumeModal = () => {
+  const closeResumeModal = useCallback(() => {
     setIsResumeModalOpen(false)
-    if (resumeBlobUrl) { URL.revokeObjectURL(resumeBlobUrl); setResumeBlobUrl(null) }
+    revokeResumeUrl()
     setResumeHTML(null)
-  }
+  }, [revokeResumeUrl])
+
+  useEffect(() => {
+    if (resumeTrigger > 0) void openResumeModal()
+  }, [resumeTrigger, openResumeModal])
+
+  useEffect(() => {
+    const handler = () => { void openResumeModal() }
+    window.addEventListener('open-resume-modal', handler)
+    return () => window.removeEventListener('open-resume-modal', handler)
+  }, [openResumeModal])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isResumeModalOpen) closeResumeModal()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [closeResumeModal, isResumeModalOpen])
+
+  useEffect(() => () => {
+    if (resumeBlobUrlRef.current) URL.revokeObjectURL(resumeBlobUrlRef.current)
+  }, [])
 
   const printResumeAsPDF = async () => {
     setIsDownloading(true)
@@ -187,35 +182,6 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
               </button>
             </div>
 
-            {/* Role Selector */}
-            <div className="px-6 py-3 border-b border-[hsl(var(--border))] bg-[hsl(var(--muted))] flex items-center gap-3">
-              <label htmlFor="role-select" className="text-sm font-semibold text-[hsl(var(--muted-foreground))]">Resume Focus:</label>
-              <div className="relative">
-                <select
-                  id="role-select"
-                  value={selectedRole}
-                  onChange={async (e) => {
-                    const newRole = e.target.value as RoleVariant
-                    setSelectedRole(newRole)
-                    setResumeHTML(null)
-                    try {
-                      const html = await fetchAndGenerateResume(newRole)
-                      setResumeHTML(html)
-                      if (resumeBlobUrl) URL.revokeObjectURL(resumeBlobUrl)
-                      const blob = new Blob([html], { type: 'text/html' })
-                      setResumeBlobUrl(URL.createObjectURL(blob))
-                    } catch {
-                      setResumeHTML('<div style="padding:20px;color:#ef4444;">Failed to generate resume.</div>')
-                    }
-                  }}
-                  className="appearance-none bg-[hsl(var(--background))] border border-[hsl(var(--border))] text-[hsl(var(--foreground))] text-sm rounded-lg px-4 py-2 pr-10 cursor-pointer min-w-[220px] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--accent))]"
-                >
-                  {roleOptions.map(opt => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
-                </select>
-                <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[hsl(var(--muted-foreground))]" />
-              </div>
-            </div>
-
             {/* Body */}
             <div className="flex-1 overflow-hidden bg-[hsl(var(--muted))/20] relative">
               {resumeHTML ? (
@@ -223,7 +189,7 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
               ) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-[hsl(var(--muted-foreground))]">
                   <Loader2 size={32} className="animate-spin mb-4 text-[hsl(var(--accent))]" />
-                  <p className="font-medium text-sm">Compiling ATS-Optimized Resume...</p>
+                  <p className="font-medium text-sm">Loading canonical resume...</p>
                 </div>
               )}
             </div>
@@ -236,7 +202,7 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
                 onClick={printResumeAsPDF}
                 disabled={isDownloading || !resumeHTML}
               >
-                {isDownloading ? (<><Loader2 size={18} className="animate-spin" />Preparing PDF...</>) : (<><Printer size={18} />Print / Save as PDF</>)}
+                {isDownloading ? (<><Loader2 size={18} className="animate-spin" />Preparing Resume...</>) : (<><Download size={18} />Download / Save as PDF</>)}
               </button>
             </div>
           </div>

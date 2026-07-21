@@ -2,7 +2,7 @@
 
 Professional portfolio for Abdulrahman Ambooka Msah.
 
-> Software Engineer | Backend, Payments & IT Infrastructure
+> Software Engineer | Backend Systems & Infrastructure
 
 The portfolio is built around completed, verifiable experience: full-stack applications, REST APIs, payment integrations, ERP implementation, IT infrastructure, and applied computer vision. Internal study plans and uncompleted future capabilities are intentionally excluded from recruiter-facing content.
 

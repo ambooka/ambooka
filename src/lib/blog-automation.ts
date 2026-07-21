@@ -23,7 +23,7 @@ export interface GeneratedBlogPost {
 export const GEMINI_BLOG_MODEL =
   process.env.GEMINI_BLOG_MODEL ||
   process.env.GOOGLE_BLOG_MODEL ||
-  "gemini-1.5-flash";
+  "gemini-2.5-flash";
 
 export const BLOG_TOPIC_LANES = [
   "backend and full-stack software engineering",
@@ -31,7 +31,7 @@ export const BLOG_TOPIC_LANES = [
   "payment integrations and fintech infrastructure in Africa",
   "ERP implementation and business-process automation",
   "IT infrastructure, Windows Server, Active Directory, and networking",
-  "practical computer vision with YOLO, OpenCV, and Flask",
+  "systems integration and workflow automation",
 ];
 
 export const slugify = (value: string) =>
@@ -124,7 +124,7 @@ You are writing for Abdulrahman Ambooka Msah's professional portfolio.
 
 Portfolio positioning:
 - Title: ${PROFESSIONAL_TITLE}.
-- Strengths: software delivery, backend APIs, payment integrations, ERP implementation, IT infrastructure, and applied computer vision.
+- Strengths: software delivery, backend APIs, systems integration, ERP implementation, and IT infrastructure.
 - Audience: hiring managers, technical founders, engineering leads, and clients who need practical software delivery.
 - Location context: Nairobi, Kenya, with relevance to African tech when the topic naturally fits.
 
@@ -134,8 +134,10 @@ ${topic ? `Preferred topic direction: ${topic}` : `Pick one topic from these lan
 
 Write one original blog post in Markdown. It must:
 - Be specific and current, not generic AI filler.
+- Use the supplied career activity as the practical starting point, while anonymizing employer, user, client, and operationally sensitive details.
+- Never invent a workplace incident, metric, implementation, or outcome. When the supplied activity lacks a specific result, present the article as practical guidance rather than a personal case study.
 - Explain why the trend matters to practical software engineering.
-- Include a "Portfolio angle" section that connects the topic to delivered software, integrations, infrastructure, ERP, or computer vision.
+- Include a "Portfolio angle" section that connects the topic to delivered software, integrations, infrastructure, or ERP.
 - Include a "What I would build" section with a small credible project idea.
 - Include concrete sources as title and URL pairs only when you are confident they are real and relevant; otherwise return an empty sources array.
 - Avoid claiming direct production experience that is not in the portfolio context.

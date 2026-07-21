@@ -12,7 +12,7 @@ const renderInlineMarkdown = (value: string) => {
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>')
   html = html.replace(
-    /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+    /\[([^\]]+)\]\(((?:https?:\/\/|\/)[^)\s]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
   )
   return html
@@ -35,14 +35,21 @@ export const getReadingTimeMinutes = (value: string) => {
 export const markdownToHtml = (markdown: string) => {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n')
   const html: string[] = []
-  let inList = false
+  let listType: 'ul' | 'ol' | null = null
   let inCode = false
   let codeBuffer: string[] = []
 
   const closeList = () => {
-    if (!inList) return
-    html.push('</ul>')
-    inList = false
+    if (!listType) return
+    html.push(`</${listType}>`)
+    listType = null
+  }
+
+  const openList = (nextType: 'ul' | 'ol') => {
+    if (listType === nextType) return
+    closeList()
+    html.push(`<${nextType}>`)
+    listType = nextType
   }
 
   for (const rawLine of lines) {
@@ -70,7 +77,7 @@ export const markdownToHtml = (markdown: string) => {
       continue
     }
 
-    const heading = line.match(/^(#{2,4})\s+(.+)$/)
+    const heading = line.match(/^(#{1,4})\s+(.+)$/)
     if (heading) {
       closeList()
       const level = heading[1].length
@@ -80,11 +87,28 @@ export const markdownToHtml = (markdown: string) => {
 
     const listItem = line.match(/^[-*]\s+(.+)$/)
     if (listItem) {
-      if (!inList) {
-        html.push('<ul>')
-        inList = true
-      }
+      openList('ul')
       html.push(`<li>${renderInlineMarkdown(listItem[1])}</li>`)
+      continue
+    }
+
+    const orderedListItem = line.match(/^\d+[.)]\s+(.+)$/)
+    if (orderedListItem) {
+      openList('ol')
+      html.push(`<li>${renderInlineMarkdown(orderedListItem[1])}</li>`)
+      continue
+    }
+
+    const blockquote = line.match(/^>\s+(.+)$/)
+    if (blockquote) {
+      closeList()
+      html.push(`<blockquote>${renderInlineMarkdown(blockquote[1])}</blockquote>`)
+      continue
+    }
+
+    if (/^(-{3,}|\*{3,})$/.test(line.trim())) {
+      closeList()
+      html.push('<hr>')
       continue
     }
 

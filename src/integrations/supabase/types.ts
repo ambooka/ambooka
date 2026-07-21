@@ -380,6 +380,42 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_topics: {
+        Row: {
+          id: string
+          title: string
+          context: string
+          category: string
+          keywords: string[]
+          is_active: boolean
+          display_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          context: string
+          category: string
+          keywords?: string[]
+          is_active?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          context?: string
+          category?: string
+          keywords?: string[]
+          is_active?: boolean
+          display_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           id: string

@@ -238,6 +238,33 @@ const parseGenerationOptions = async (request: NextRequest): Promise<GenerationO
   }
 }
 
+const resolveCareerTopic = async (
+  supabase: BlogClient,
+  preferredTopic?: string,
+) => {
+  if (preferredTopic?.trim()) return preferredTopic.trim()
+
+  const { data, error } = await supabase
+    .from('blog_topics')
+    .select('title, context, category, keywords, display_order')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+  if (error) throw error
+  if (!data?.length) {
+    return 'Backend systems, software delivery, ERP implementation, or IT infrastructure based on documented professional work.'
+  }
+
+  const dayNumber = Math.floor(Date.now() / 86_400_000)
+  const topic = data[dayNumber % data.length]
+  return [
+    `Career activity: ${topic.title}.`,
+    `Day-to-day context: ${topic.context}`,
+    `Category: ${topic.category}.`,
+    `Relevant keywords: ${(topic.keywords || []).join(', ')}.`,
+  ].join(' ')
+}
+
 const invokeSupabaseBlogFunction = async (
   auth: AuthContext,
   options: GenerationOptions,
@@ -281,6 +308,8 @@ const handleGeneration = async (request: NextRequest) => {
   try {
     const auth = await verifyRequest(request)
     const options = await parseGenerationOptions(request)
+    const supabase = getSupabaseClient(auth.mode, auth.userToken)
+    options.topic = await resolveCareerTopic(supabase, options.topic)
 
     if (shouldUseSupabaseFunction()) {
       try {
@@ -290,8 +319,6 @@ const handleGeneration = async (request: NextRequest) => {
         console.warn('Supabase blog function failed; falling back to direct Gemini generation.', functionError)
       }
     }
-
-    const supabase = getSupabaseClient(auth.mode, auth.userToken)
 
     const { data: authorData } = await supabase
       .from('personal_info')

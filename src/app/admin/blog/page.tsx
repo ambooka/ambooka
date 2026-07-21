@@ -40,8 +40,21 @@ interface BlogPost {
   created_at: string;
 }
 
+interface BlogTopic {
+  id: string;
+  title: string;
+  context: string;
+  category: string;
+  is_active: boolean;
+  display_order: number;
+}
+
 export default function BlogManager() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [topics, setTopics] = useState<BlogTopic[]>([]);
+  const [newTopicTitle, setNewTopicTitle] = useState("");
+  const [newTopicContext, setNewTopicContext] = useState("");
+  const [newTopicCategory, setNewTopicCategory] = useState("Software Engineering");
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -53,6 +66,7 @@ export default function BlogManager() {
 
   useEffect(() => {
     fetchPosts();
+    fetchTopics();
   }, []);
 
   const fetchPosts = async () => {
@@ -63,6 +77,47 @@ export default function BlogManager() {
       .order("created_at", { ascending: false });
     if (data) setPosts(data);
     setLoading(false);
+  };
+
+  const fetchTopics = async () => {
+    const { data } = await supabase
+      .from("blog_topics")
+      .select("*")
+      .order("display_order", { ascending: true });
+    if (data) setTopics(data);
+  };
+
+  const addTopic = async () => {
+    if (!newTopicTitle.trim() || !newTopicContext.trim()) return;
+    const { error } = await supabase.from("blog_topics").insert({
+      title: newTopicTitle.trim(),
+      context: newTopicContext.trim(),
+      category: newTopicCategory,
+      keywords: [],
+      is_active: true,
+      display_order: topics.length + 1,
+    });
+    if (error) {
+      setGenerationError(error.message);
+      return;
+    }
+    setNewTopicTitle("");
+    setNewTopicContext("");
+    await fetchTopics();
+  };
+
+  const toggleTopic = async (topic: BlogTopic) => {
+    await supabase
+      .from("blog_topics")
+      .update({ is_active: !topic.is_active, updated_at: new Date().toISOString() })
+      .eq("id", topic.id);
+    await fetchTopics();
+  };
+
+  const deleteTopic = async (id: string) => {
+    if (!confirm("Delete this generation topic?")) return;
+    await supabase.from("blog_topics").delete().eq("id", id);
+    await fetchTopics();
   };
 
   const deletePost = async (id: string) => {
@@ -283,6 +338,74 @@ export default function BlogManager() {
           {generationError || generationMessage}
         </div>
       )}
+
+      <section style={{ ...cardStyle, padding: CARD_PADDING, marginBottom: GAP }}>
+        <div style={{ marginBottom: 16 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: "var(--ad-text-primary)" }}>
+            Career Activity Topics
+          </h2>
+          <p style={{ marginTop: 4, fontSize: 13, color: "var(--ad-text-secondary)" }}>
+            Scheduled drafts rotate through active topics. Add only work and
+            learning activities relevant to your target career.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gap: 10, marginBottom: 16 }}>
+          <input
+            value={newTopicTitle}
+            onChange={(event) => setNewTopicTitle(event.target.value)}
+            placeholder="Topic title"
+            style={{ padding: 12, borderRadius: 10, border: "1px solid var(--ad-border-subtle)", background: "var(--ad-bg-muted)", color: "var(--ad-text-primary)" }}
+          />
+          <textarea
+            value={newTopicContext}
+            onChange={(event) => setNewTopicContext(event.target.value)}
+            placeholder="Describe the day-to-day activity, problem, or lesson without sensitive details"
+            rows={3}
+            style={{ padding: 12, borderRadius: 10, border: "1px solid var(--ad-border-subtle)", background: "var(--ad-bg-muted)", color: "var(--ad-text-primary)", resize: "vertical" }}
+          />
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <select
+              value={newTopicCategory}
+              onChange={(event) => setNewTopicCategory(event.target.value)}
+              style={{ flex: 1, minWidth: 180, padding: 12, borderRadius: 10, border: "1px solid var(--ad-border-subtle)", background: "var(--ad-bg-muted)", color: "var(--ad-text-primary)" }}
+            >
+              <option>Software Engineering</option>
+              <option>Backend Engineering</option>
+              <option>Business Systems</option>
+              <option>IT Infrastructure</option>
+            </select>
+            <button
+              type="button"
+              onClick={addTopic}
+              disabled={!newTopicTitle.trim() || !newTopicContext.trim()}
+              style={{ padding: "11px 18px", borderRadius: 10, background: "var(--ad-primary)", color: "var(--ad-bg-card)", fontWeight: 700, opacity: !newTopicTitle.trim() || !newTopicContext.trim() ? 0.5 : 1 }}
+            >
+              Add Topic
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gap: 8 }}>
+          {topics.map((topic) => (
+            <div key={topic.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: 12, borderRadius: 10, background: "var(--ad-bg-muted)", opacity: topic.is_active ? 1 : 0.55 }}>
+              <button
+                type="button"
+                onClick={() => toggleTopic(topic)}
+                aria-label={topic.is_active ? "Disable topic" : "Enable topic"}
+                style={{ width: 12, height: 12, borderRadius: 999, background: topic.is_active ? "#16a34a" : "#94a3b8", flexShrink: 0 }}
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <strong style={{ display: "block", color: "var(--ad-text-primary)", fontSize: 14 }}>{topic.title}</strong>
+                <span style={{ display: "block", color: "var(--ad-text-secondary)", fontSize: 12 }}>{topic.category} · {topic.context}</span>
+              </div>
+              <button type="button" onClick={() => deleteTopic(topic.id)} aria-label="Delete topic" style={{ padding: 8, color: "hsl(var(--destructive))" }}>
+                <Trash2 size={15} />
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Posts List */}
       {posts.length === 0 ? (

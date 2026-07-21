@@ -8,7 +8,7 @@ import {
 } from "@/data/professional-profile";
 
 // ISR: Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: {
@@ -22,11 +22,37 @@ const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
 
 export default async function DashboardPage() {
   // Fetch initial data for About component
-  const [personalInfoResult, skillsResult, testimonialsResult] =
+  const [
+    personalInfoResult,
+    skillsResult,
+    testimonialsResult,
+    projectsCountResult,
+    caseStudiesCountResult,
+    buildAreasResult,
+    proofStatsResult,
+  ] =
     await Promise.all([
       supabase.from("personal_info").select("*").single(),
       supabase.from("skills").select("*").order("display_order"),
       supabase.from("testimonials").select("*").order("display_order"),
+      supabase
+        .from("projects")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "completed"),
+      supabase
+        .from("case_studies")
+        .select("id", { count: "exact", head: true }),
+      supabase
+        .from("portfolio_content")
+        .select("id, section, title, subtitle, content, metadata, display_order")
+        .eq("section", "build_area")
+        .eq("is_active", true)
+        .order("display_order"),
+      supabase
+        .from("kpi_stats")
+        .select("label, value, display_order")
+        .eq("section", "hero")
+        .order("display_order"),
     ]);
 
   const personalInfo = personalInfoResult.data;
@@ -193,6 +219,10 @@ export default async function DashboardPage() {
     testimonials: testimonials ?? [],
     technologies,
     githubStats: githubStats ?? undefined,
+    projectCount: projectsCountResult.count || 0,
+    caseStudyCount: caseStudiesCountResult.count || 0,
+    buildAreas: buildAreasResult.data || [],
+    proofStats: proofStatsResult.data || [],
   };
 
   return <About isActive={true} initialData={initialData} />;

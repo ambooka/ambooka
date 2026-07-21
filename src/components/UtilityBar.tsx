@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Printer, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import AiChatPanel from "@/components/widgets/AiChatPanel";
 import ResumeBuilderPanel from "@/components/widgets/ResumeBuilderPanel";
 import { cn } from "@/lib/utils";
@@ -14,28 +13,17 @@ interface UtilityBarProps {
 export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchPersonalInfo = async () => {
-      try {
-        await supabase.from("personal_info").select("*").single();
-      } catch (err) {
-        console.warn("Could not fetch personal info:", err);
-      }
-    };
-    fetchPersonalInfo();
-  }, []);
-
   return (
     <>
       {/* Floating pill — trigger buttons inside backdrop-blur container */}
       <div
         className={cn(
-          "fixed z-50 hidden md:flex",
+          "fixed z-[1050] flex",
           "md:right-5 md:top-1/2 md:-translate-y-1/2 md:bottom-auto",
-          "right-3 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] md:bottom-auto",
-          "flex-col items-center gap-3",
+          "right-4 bottom-[calc(5.6rem+env(safe-area-inset-bottom))] md:bottom-auto",
+          "flex-row items-center gap-1.5 md:flex-col md:gap-3",
           "origin-bottom-right md:origin-center",
-          "p-2.5 rounded-2xl",
+          "p-1.5 rounded-2xl md:p-2.5",
           "bg-[hsl(var(--card)/0.85)] backdrop-blur-xl",
           "border border-[hsl(var(--border))]",
           "shadow-xl",
@@ -47,7 +35,7 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
             onClick={() => window.dispatchEvent(new Event("open-resume-modal"))}
             aria-label="View and Print Resume"
             className={cn(
-              "flex items-center justify-center w-11 h-11 rounded-full",
+              "flex h-10 w-10 items-center justify-center rounded-xl md:h-11 md:w-11 md:rounded-full",
               "bg-transparent border-none text-[hsl(var(--muted-foreground))]",
               "hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--accent))]",
               "transition-all focus-visible:outline-none focus-visible:ring-2",
@@ -63,14 +51,14 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
         </div>
 
         {/* Separator */}
-        <div className="h-px w-6 bg-[hsl(var(--border))]" />
+        <div className="h-6 w-px bg-[hsl(var(--border))] md:h-px md:w-6" />
 
         {/* Assistant Chat trigger */}
         <div className="relative group">
           <button
             onClick={() => setIsChatOpen((prev) => !prev)}
             aria-label="Assistant"
-            className="flex items-center justify-center w-12 h-12 rounded-full border-none text-white shadow-[0_4px_12px_hsl(var(--accent)/0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_16px_hsl(var(--accent)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] focus-visible:ring-offset-2"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border-none text-white shadow-[0_4px_12px_hsl(var(--accent)/0.3)] transition-all hover:scale-105 hover:shadow-[0_6px_16px_hsl(var(--accent)/0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--accent))] focus-visible:ring-offset-2 md:h-12 md:w-12 md:rounded-full"
             style={{
               background:
                 "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))",

@@ -1277,7 +1277,7 @@ export default function ProfileManager() {
                       type="text"
                       value={kpiData.role}
                       onChange={(e) => updateKpiData("role", e.target.value)}
-                      placeholder="Software Engineer | Backend, Payments & IT Infrastructure"
+                      placeholder="Software Engineer | Backend Systems & Infrastructure"
                       style={inputStyle}
                     />
                   </div>
@@ -1287,7 +1287,7 @@ export default function ProfileManager() {
                       type="text"
                       value={kpiData.focus}
                       onChange={(e) => updateKpiData("focus", e.target.value)}
-                      placeholder="Backend + Payments + IT Infrastructure"
+                      placeholder="Backend Systems + IT Infrastructure"
                       style={inputStyle}
                     />
                   </div>

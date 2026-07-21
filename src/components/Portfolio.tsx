@@ -126,6 +126,7 @@ interface PortfolioProps {
   };
   initialProjects?: Project[];
   featuredProjects?: FeaturedProject[];
+  allProjects?: FeaturedProject[];
 }
 
 const FEATURED_LIMIT = 6;
@@ -147,6 +148,7 @@ export default function Portfolio({
   github = defaultGithubConfig,
   initialProjects,
   featuredProjects = [],
+  allProjects = [],
 }: PortfolioProps) {
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(!initialProjects);
@@ -449,6 +451,116 @@ export default function Portfolio({
                   </motion.article>
                 );
               })}
+            </motion.div>
+          </section>
+        )}
+
+        {allProjects.length > 0 && (
+          <section className="mb-14" aria-labelledby="projects-title">
+            <div className="mb-6 flex flex-col gap-2">
+              <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[hsl(var(--accent))]">
+                Completed Work
+              </span>
+              <h3
+                id="projects-title"
+                className="text-2xl font-black tracking-tight text-[hsl(var(--foreground))]"
+              >
+                Projects
+              </h3>
+              <p className="max-w-[760px] text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+                The complete project collection, managed from the portfolio
+                database and limited to delivered work.
+              </p>
+            </div>
+
+            <motion.div
+              className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              data-testid="project-list"
+            >
+              {allProjects
+                .slice()
+                .sort((a, b) => a.displayOrder - b.displayOrder)
+                .map((project, index) => {
+                  const pattern = getCardPattern(index);
+                  return (
+                    <motion.article
+                      key={project.slug}
+                      variants={staggerChildScale}
+                      className={cn(
+                        "group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[hsl(var(--border))] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[hsl(var(--accent))/0.28] hover:shadow-lg",
+                        pattern.bgClass,
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          pattern.blobClass,
+                          "pointer-events-none -z-10",
+                        )}
+                      />
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <span className="rounded-full bg-[hsl(var(--accent))/0.1] px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-widest text-[hsl(var(--accent))]">
+                          {project.category.replace(/_/g, " ")}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 text-[0.62rem] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+                          <CheckCircle2 size={12} className="text-emerald-500" />
+                          Completed
+                        </span>
+                      </div>
+
+                      <h4 className="text-lg font-black leading-tight tracking-tight text-[hsl(var(--foreground))]">
+                        {project.title}
+                      </h4>
+                      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+                        {project.recruiterSummary || project.oneLine}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {project.stack.slice(0, 5).map((technology) => (
+                          <span
+                            key={technology}
+                            className="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.45] px-2 py-1 text-[0.64rem] font-semibold text-[hsl(var(--muted-foreground))]"
+                          >
+                            {technology}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-auto flex flex-wrap gap-2 pt-5">
+                        {project.proof.caseStudy && (
+                          <Link
+                            href={project.proof.caseStudy}
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg bg-[hsl(var(--accent))] px-3 py-2 text-[0.68rem] font-bold uppercase tracking-wider text-white"
+                          >
+                            Case Study <ArrowUpRight size={13} />
+                          </Link>
+                        )}
+                        {project.proof.github && (
+                          <a
+                            href={project.proof.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.65] px-3 py-2 text-[0.68rem] font-bold uppercase tracking-wider text-[hsl(var(--foreground))]"
+                          >
+                            Source <Github size={13} />
+                          </a>
+                        )}
+                        {project.proof.liveDemo && (
+                          <a
+                            href={project.proof.liveDemo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.65] px-3 py-2 text-[0.68rem] font-bold uppercase tracking-wider text-[hsl(var(--foreground))]"
+                          >
+                            Live <ExternalLink size={13} />
+                          </a>
+                        )}
+                      </div>
+                    </motion.article>
+                  );
+                })}
             </motion.div>
           </section>
         )}

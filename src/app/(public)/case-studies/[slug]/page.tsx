@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import {
   Activity,
   ArrowLeft,
-  ArrowUpRight,
   CheckCircle2,
   ExternalLink,
   Github,
@@ -13,14 +12,16 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { caseStudies } from "@/data/case-studies";
 import {
   categoryLabels,
-  getProject,
   statusLegend,
 } from "@/data/professional-projects";
+import { fetchCaseStudies, fetchCompletedProjects } from "@/lib/portfolio-db";
+
+export const revalidate = 60;
 
 export async function generateStaticParams() {
+  const caseStudies = await fetchCaseStudies();
   return caseStudies.map((study) => ({ slug: study.slug }));
 }
 
@@ -30,6 +31,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  const caseStudies = await fetchCaseStudies();
   const study = caseStudies.find((item) => item.slug === slug);
 
   return {
@@ -56,10 +58,14 @@ export default async function CaseStudyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const [caseStudies, projects] = await Promise.all([
+    fetchCaseStudies(),
+    fetchCompletedProjects(),
+  ]);
   const study = caseStudies.find((item) => item.slug === slug);
   if (!study) notFound();
 
-  const project = getProject(study.projectSlug);
+  const project = projects.find((item) => item.slug === study.projectSlug);
   const evidence = project
     ? Object.entries(project.engineeringEvidence).filter(
         ([, enabled]) => enabled,

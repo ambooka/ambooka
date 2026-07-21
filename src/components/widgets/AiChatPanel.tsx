@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X, Send, Trash2, Bot, User, Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { markdownToHtml } from "@/lib/blog-markdown";
 
 interface Message {
   id: string;
@@ -38,7 +39,8 @@ export default function AiChatPanel({
     {
       id: "system-welcome",
       role: "assistant",
-      content: "Hello! I'm your assistant. How can I help you today?",
+      content:
+        "Hello! Ask me about Abdulrahman’s experience, completed projects, or technical skills.",
       timestamp: new Date(),
     },
   ]);
@@ -145,7 +147,8 @@ export default function AiChatPanel({
       {
         id: "system-welcome",
         role: "assistant",
-        content: "Hello! I'm your assistant. How can I help you today?",
+        content:
+          "Hello! Ask me about Abdulrahman’s experience, completed projects, or technical skills.",
         timestamp: new Date(),
       },
     ]);
@@ -185,7 +188,21 @@ export default function AiChatPanel({
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}`,
           },
           body: JSON.stringify({
-            messages: [{ role: "user", content: userMessage }],
+            messages: [
+              ...messages
+                .filter(
+                  (message) =>
+                    message.id !== "system-welcome" &&
+                    !message.isPlaceholder &&
+                    message.content.trim(),
+                )
+                .slice(-9)
+                .map((message) => ({
+                  role: message.role,
+                  content: message.content,
+                })),
+              { role: "user", content: userMessage },
+            ],
           }),
         },
       );
@@ -366,7 +383,7 @@ export default function AiChatPanel({
 
       {/* Chat Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center md:justify-end z-[1000] p-0 md:p-5 pb-[env(safe-area-inset-bottom)] md:pb-5 animate-in fade-in duration-200">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end md:items-center justify-center md:justify-end z-[2000] p-0 md:p-5 pb-[env(safe-area-inset-bottom)] md:pb-5 animate-in fade-in duration-200">
           <div
             ref={chatModalRef}
             role="dialog"
@@ -475,13 +492,16 @@ export default function AiChatPanel({
                       ) : (
                         <div
                           className={cn(
-                            "break-words whitespace-pre-wrap leading-relaxed space-y-2 [&_p]:m-0",
+                            "break-words leading-relaxed",
                             msg.role === "assistant"
-                              ? "prose-sm dark:prose-invert"
-                              : "",
+                              ? "chat-markdown"
+                              : "whitespace-pre-wrap",
                           )}
                           dangerouslySetInnerHTML={{
-                            __html: escapeHtmlAndPreserveNewlines(msg.content),
+                            __html:
+                              msg.role === "assistant"
+                                ? markdownToHtml(msg.content)
+                                : escapeHtmlAndPreserveNewlines(msg.content),
                           }}
                         />
                       )}

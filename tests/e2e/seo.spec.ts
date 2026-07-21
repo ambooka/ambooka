@@ -6,7 +6,7 @@ test.describe("SEO & Metadata Tests", () => {
 
     // 1. Title
     await expect(page).toHaveTitle(
-      "Abdulrahman Ambooka Msah | Software Engineer | Backend, Payments & IT Infrastructure",
+      "Abdulrahman Ambooka Msah | Software Engineer | Backend Systems & Infrastructure",
     );
 
     // 2. Meta Description
@@ -32,7 +32,7 @@ test.describe("SEO & Metadata Tests", () => {
     expect(schema["@type"]).toBe("Person");
     expect(schema.name).toBe("Abdulrahman Ambooka Msah");
     expect(schema.jobTitle).toBe(
-      "Software Engineer | Backend, Payments & IT Infrastructure",
+      "Software Engineer | Backend Systems & Infrastructure",
     );
     expect(schema.url).toBe("https://ambooka.dev");
     expect(schema.sameAs).toContain("https://github.com/ambooka");
@@ -40,7 +40,7 @@ test.describe("SEO & Metadata Tests", () => {
     // 5. Open Graph
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       "content",
-      "Abdulrahman Ambooka Msah | Software Engineer | Backend, Payments & IT Infrastructure",
+      "Abdulrahman Ambooka Msah | Software Engineer | Backend Systems & Infrastructure",
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
       "content",

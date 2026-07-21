@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { GitHubService } from "@/services/github";
 import GitHubStatsWidget from "@/components/widgets/GitHubStatsWidget";
 import LatestBlogWidget from "@/components/widgets/LatestBlogWidget";
 import EngineeringBentoGrid from "@/components/widgets/EngineeringBentoGrid";
@@ -13,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui";
 import AnimatedPage from "@/components/AnimatedPage";
 import { getCardPattern } from "@/lib/design-patterns";
-import { caseStudies } from "@/data/case-studies";
 import {
   PROFESSIONAL_SCOPE,
   PROFESSIONAL_TITLE,
@@ -27,9 +25,7 @@ import {
   defaultViewport,
 } from "@/lib/motion";
 
-const GITHUB_USERNAME = "ambooka";
-const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
-const PROFESSIONAL_FOCUS = "Software · Payments · Infrastructure";
+const PROFESSIONAL_FOCUS = "Backend · Systems · Infrastructure";
 
 // --- Interfaces (from original file) ---
 interface Testimonial {
@@ -89,6 +85,22 @@ interface Technology {
   display_order: number;
 }
 
+interface BuildArea {
+  id: string;
+  section: string;
+  title: string;
+  subtitle: string | null;
+  content: string;
+  metadata: unknown;
+  display_order: number | null;
+}
+
+interface ProofStat {
+  label: string;
+  value: string;
+  display_order: number | null;
+}
+
 interface GitHubStatsData {
   totalRepos: number;
   totalStars: number;
@@ -111,6 +123,10 @@ interface AboutProps {
     testimonials?: Testimonial[];
     technologies?: Technology[];
     githubStats?: GitHubStatsData;
+    projectCount?: number;
+    caseStudyCount?: number;
+    buildAreas?: BuildArea[];
+    proofStats?: ProofStat[];
   };
 }
 
@@ -158,8 +174,8 @@ export default function About({
 }: AboutProps) {
   const [loading, setLoading] = useState(!initialData);
 
-  const [caseStudyCount] = useState(caseStudies.length);
-  const [projectCount, setProjectCount] = useState(25);
+  const [caseStudyCount] = useState(initialData?.caseStudyCount || 0);
+  const [projectCount] = useState(initialData?.projectCount || 0);
   const [kpiStats, setKpiStats] = useState<KpiStats>({
     years_experience:
       initialData?.personalInfo?.kpi_stats?.years_experience || "3+",
@@ -177,9 +193,11 @@ export default function About({
 
   const focusAreas = [
     "Backend & Full-Stack Engineering",
-    "Payment Integrations",
+    "APIs & Systems Integration",
     "IT Infrastructure & ERP",
   ];
+
+  const buildAreaContent = initialData?.buildAreas || [];
 
   useEffect(() => {
     if (!initialData) {
@@ -207,33 +225,6 @@ export default function About({
         }
       }
 
-      try {
-        const githubService = new GitHubService(GITHUB_TOKEN);
-        const repos = await githubService.getRepositories(GITHUB_USERNAME, {
-          maxRepos: 100,
-          sortBy: "updated",
-          includePrivate: Boolean(GITHUB_TOKEN),
-        });
-
-        let count = repos.length;
-        if (personalInfoResult.data) {
-          const info = personalInfoResult.data as unknown as PersonalInfo;
-          const dbStats = info.kpi_stats as unknown as KpiStats;
-          if (dbStats?.project_count && dbStats.project_count > count) {
-            count = dbStats.project_count;
-          }
-        }
-        if (count > 0) setProjectCount(count);
-      } catch (e) {
-        console.error("Error fetching GitHub repos:", e);
-        if (personalInfoResult.data) {
-          const info = personalInfoResult.data as unknown as PersonalInfo;
-          const dbStats = info.kpi_stats as unknown as KpiStats;
-          if (dbStats?.project_count) {
-            setProjectCount(dbStats.project_count);
-          }
-        }
-      }
     } catch (error) {
       console.error("Error fetching about data:", error);
     } finally {
@@ -298,9 +289,8 @@ export default function About({
                 className="!text-[1.75rem] sm:!text-3xl lg:!text-4xl font-extrabold mb-3 leading-tight tracking-tight text-[hsl(var(--foreground))]"
               >
                 <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
-                  Software Engineer
+                  {personalInfo?.title || PROFESSIONAL_TITLE}
                 </span>
-                — Backend, Payments & Infrastructure
               </motion.h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
@@ -333,10 +323,7 @@ export default function About({
               className="flex flex-wrap gap-2.5 max-sm:grid max-sm:grid-cols-3"
             >
               {[
-                {
-                  label: "Years Exp",
-                  value: `${kpiStats.years_experience || "3"}+`,
-                },
+                { label: "Years Exp", value: "3+" },
                 { label: "Case Studies", value: caseStudyCount, counter: true },
                 { label: "Projects", value: projectCount, counter: true },
               ].map((stat, i) => (
@@ -409,7 +396,7 @@ export default function About({
 
           {/* 2. Dashboard Grid (Layout) */}
           <motion.div
-            className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 xl:gap-8"
+            className="dashboard-grid grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2"
             data-testid="dashboard-grid"
             variants={staggerContainer}
             initial="hidden"
@@ -419,7 +406,7 @@ export default function About({
             {/* Center Column (Now Left) */}
             <motion.div
               variants={staggerChild}
-              className="flex flex-col gap-4 min-w-0"
+              className="flex min-w-0 flex-col"
             >
               {/* Profile & Education Widget */}
               <ProfileWidget
@@ -431,9 +418,9 @@ export default function About({
             {/* Right Column */}
             <motion.div
               variants={staggerChild}
-              className="flex flex-col gap-4 min-w-0"
+              className="flex min-w-0 flex-col"
             >
-              <div className="min-w-0 w-full">
+              <div className="h-full min-w-0 w-full">
                 <LatestBlogWidget />
               </div>
             </motion.div>
@@ -448,7 +435,10 @@ export default function About({
             viewport={defaultViewport}
             transition={scrollRevealTransition}
           >
-            <EngineeringBentoGrid />
+            <EngineeringBentoGrid
+              skills={initialData?.technologies}
+              proofStats={initialData?.proofStats}
+            />
           </motion.section>
 
           {/* 4. Expertise Section (What I Build) */}
@@ -472,8 +462,8 @@ export default function About({
               What I Build
             </h2>
             <p className="max-w-[72ch] text-[0.88rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-5">
-              Delivered software, payment integrations, business systems,
-              infrastructure, and applied computer-vision work.
+              Delivered full-stack products, backend integrations, business
+              systems, and dependable IT infrastructure.
             </p>
 
             <motion.div
@@ -485,10 +475,10 @@ export default function About({
             >
               {[
                 {
-                  phase: "Software",
-                  title: "Software Engineering",
-                  desc: "Python, TypeScript, Node.js REST APIs, React frontends, PostgreSQL, Docker, Nginx, and GitHub Actions used in client and portfolio systems.",
-                  tags: ["Python", "TypeScript", "Docker"],
+                  phase: "Software delivery",
+                  title: "Full-Stack Product Engineering",
+                  desc: "Next.js and React interfaces, TypeScript application logic, Supabase-backed content, admin workflows, and end-to-end testing.",
+                  tags: ["Next.js", "TypeScript", "Playwright"],
                   iconBase:
                     "text-[hsl(var(--accent))] bg-[hsl(var(--accent))/0.1]",
                   iconSvg: (
@@ -530,10 +520,10 @@ export default function About({
                   ),
                 },
                 {
-                  phase: "Resume evidence",
-                  title: "Applied Computer Vision",
-                  desc: "Applied computer vision research with YOLO, OpenCV, PyTorch, Flask inference APIs, real-time video processing, and model evaluation.",
-                  tags: ["PyTorch", "HuggingFace", "FastAPI"],
+                  phase: "Production delivery",
+                  title: "Backend APIs & Integrations",
+                  desc: "REST API development, PostgreSQL-backed services, M-Pesa Daraja payment flows, webhook validation, retries, and asynchronous processing.",
+                  tags: ["Node.js", "REST APIs", "PostgreSQL"],
                   iconBase: "text-[hsl(192_82%_37%)] bg-[hsl(192_82%_37%)/0.1]",
                   iconSvg: (
                     <svg
@@ -579,6 +569,18 @@ export default function About({
                   ),
                 },
               ].map((card, i) => {
+                const dynamicContent = buildAreaContent[i];
+                const metadata =
+                  dynamicContent?.metadata &&
+                  typeof dynamicContent.metadata === "object" &&
+                  !Array.isArray(dynamicContent.metadata)
+                    ? (dynamicContent.metadata as { tags?: unknown })
+                    : undefined;
+                const tags = Array.isArray(metadata?.tags)
+                  ? metadata.tags.filter(
+                      (tag): tag is string => typeof tag === "string",
+                    )
+                  : card.tags;
                 const pattern = getCardPattern(i);
                 return (
                   <motion.div
@@ -609,18 +611,18 @@ export default function About({
                     </div>
 
                     <span className="absolute top-4 right-4 text-[0.58rem] font-bold px-2 py-1 bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] rounded-md">
-                      {card.phase}
+                      {dynamicContent?.subtitle || card.phase}
                     </span>
 
                     <h3 className="text-base font-bold text-[hsl(var(--foreground))] mb-1.5">
-                      {card.title}
+                      {dynamicContent?.title || card.title}
                     </h3>
                     <p className="text-[0.82rem] leading-relaxed text-[hsl(var(--muted-foreground))] mb-3">
-                      {card.desc}
+                      {dynamicContent?.content || card.desc}
                     </p>
 
                     <div className="flex flex-wrap gap-1.5 mt-auto">
-                      {card.tags.map((tag) => (
+                      {tags.map((tag) => (
                         <span
                           key={tag}
                           className="text-[0.64rem] font-semibold px-2 py-1 rounded-lg bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] transition-colors group-hover:bg-[hsl(var(--accent))/0.1] group-hover:text-[hsl(var(--accent))]"

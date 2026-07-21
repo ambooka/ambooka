@@ -29,12 +29,14 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
 
     return (
         <div className={cn(
-            "fixed bottom-0 left-0 right-0 z-[1000] w-full md:hidden p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]",
+            "pointer-events-none fixed inset-x-0 bottom-0 z-[1000] w-full px-3 pt-2 md:hidden",
+            "pb-[max(0.65rem,env(safe-area-inset-bottom))]",
             className
         )}>
             <nav className={cn(
-                "glass-nav flex h-14 items-center justify-around px-1 rounded-2xl",
-                "bg-card/85 backdrop-blur-xl border border-border pb-0 shadow-xl shadow-black/5"
+                "glass-nav pointer-events-auto mx-auto grid h-[4.25rem] max-w-[30rem] grid-cols-5 items-stretch rounded-[1.5rem] px-1.5 py-1.5",
+                "border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.96] backdrop-blur-2xl",
+                "shadow-[0_16px_45px_rgba(0,0,0,0.22)] ring-1 ring-white/10"
             )}>
                 {NAV_ITEMS.map((item) => {
                     const active = isNavItemActive(item)
@@ -43,18 +45,18 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
                             key={item.id}
                             href={item.href}
                             className={cn(
-                                "group relative flex flex-1 flex-col items-center justify-center gap-1 rounded-xl transition-all duration-300 h-full",
+                                "group relative flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-[1.15rem] transition-all duration-300",
                                 active
-                                    ? "active text-accent"
-                                    : "text-muted-foreground hover:text-foreground"
+                                    ? "text-[hsl(var(--accent))]"
+                                    : "text-[hsl(var(--muted-foreground))] active:bg-[hsl(var(--muted))/0.7]"
                             )}
                             aria-label={item.label}
                         >
-                            <div className="relative flex h-7 w-11 items-center justify-center transition-all duration-300">
+                            <div className="relative flex h-8 w-11 items-center justify-center transition-all duration-300">
                                 {active && (
                                     <motion.span
                                         layoutId="mobile-nav-indicator"
-                                        className="absolute inset-0 rounded-xl bg-accent/15 border border-accent/20 -z-10"
+                                        className="absolute inset-0 -z-10 rounded-xl border border-[hsl(var(--accent))/0.22] bg-[hsl(var(--accent))/0.12] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
                                         transition={navIndicatorTransition}
                                     />
                                 )}
@@ -67,8 +69,8 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
                             </div>
 
                             <span className={cn(
-                                "text-[11px] font-medium tracking-tight transition-all duration-300",
-                                active ? "translate-y-0 opacity-100" : "opacity-80"
+                                    "max-w-full truncate px-0.5 text-[9px] font-bold tracking-tight transition-all duration-300 min-[390px]:text-[10px]",
+                                    active ? "opacity-100" : "opacity-75"
                             )}>
                                 {item.label}
                             </span>

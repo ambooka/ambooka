@@ -15,7 +15,13 @@ const NAV_ITEMS = [
     { id: 'contact', label: 'Contact', href: '/contact' }
 ] as const
 
-export default function TopHeader({ onProfileClick }: { onProfileClick?: () => void }) {
+interface TopHeaderProfile {
+    location?: string | null
+    github_url?: string | null
+    linkedin_url?: string | null
+}
+
+export default function TopHeader({ onProfileClick, profile }: { onProfileClick?: () => void; profile?: TopHeaderProfile | null }) {
     const pathname = usePathname()
 
     const isNavItemActive = (item: typeof NAV_ITEMS[number]) => {
@@ -116,14 +122,14 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                     )}>
                         <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] shadow-[0_0_0_0.28rem_hsl(var(--accent)/0.14)]" />
                         <span className="text-[hsl(var(--accent))] text-[0.78rem] font-bold whitespace-nowrap">
-                            Available for Hire
+                            {profile?.location || "Nairobi, Kenya"}
                         </span>
                     </div>
 
                     {/* Social links — hidden on mobile */}
                     <div className="hidden lg:flex items-center gap-1.5">
                         <motion.a
-                            href="https://github.com/ambooka"
+                            href={profile?.github_url || "https://github.com/ambooka"}
                             target="_blank"
                             rel="noopener noreferrer"
                             whileHover={{ y: -2 }}
@@ -141,7 +147,7 @@ export default function TopHeader({ onProfileClick }: { onProfileClick?: () => v
                             <Github size={17} />
                         </motion.a>
                         <motion.a
-                            href="https://www.linkedin.com/in/abdulrahman-ambooka/"
+                            href={profile?.linkedin_url || "https://www.linkedin.com/in/abdulrahman-ambooka/"}
                             target="_blank"
                             rel="noopener noreferrer"
                             whileHover={{ y: -2 }}

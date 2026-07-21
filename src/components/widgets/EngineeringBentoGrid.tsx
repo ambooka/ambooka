@@ -2,211 +2,155 @@
 
 import { motion } from "framer-motion";
 import {
-  Code2,
-  Users,
-  Coffee,
-  Terminal,
-  Braces,
-  FileCode2,
   Box,
-  GitBranch,
+  Braces,
+  CheckCircle2,
   Database,
-  PenTool,
-  Rocket,
+  FileCode2,
+  GitBranch,
+  ServerCog,
   ShieldCheck,
-  MessageSquare,
+  Workflow,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 
-// Content cut down to meaningful minimums for high impact
-const WORK_PRINCIPLES = [
-  {
-    title: "Ship Often",
-    icon: Rocket,
-    color: "text-[hsl(var(--accent))] bg-[hsl(var(--accent)/0.12)]",
-  },
-  {
-    title: "Explainable Systems",
-    icon: MessageSquare,
-    color: "text-[hsl(var(--primary))] bg-[hsl(var(--primary)/0.12)]",
-  },
-  {
-    title: "Durable Architecture",
-    icon: ShieldCheck,
-    color: "text-[hsl(var(--secondary))] bg-[hsl(var(--secondary)/0.12)]",
-  },
+const DELIVERY_PRINCIPLES = [
+  { title: "Ship working software", icon: CheckCircle2 },
+  { title: "Design for reliability", icon: ShieldCheck },
+  { title: "Document decisions", icon: Workflow },
 ];
 
-const ALL_TOOLS = [
-  { name: "Neovim", icon: Terminal },
-  { name: "VS Code", icon: Code2 },
+const CORE_STACK = [
   { name: "TypeScript", icon: Braces },
   { name: "Python", icon: FileCode2 },
-  { name: "Docker", icon: Box },
-  { name: "Git Actions", icon: GitBranch },
-  { name: "Supabase", icon: Zap },
+  { name: "Node.js", icon: ServerCog },
   { name: "PostgreSQL", icon: Database },
-  { name: "Figma", icon: PenTool },
+  { name: "Docker", icon: Box },
+  { name: "Supabase", icon: Zap },
+  { name: "GitHub Actions", icon: GitBranch },
 ];
 
-const OFF_HOURS = [
-  "Lo-fi playlists",
-  "Strategy games",
-  "Photography",
-  "Sci-fi reading",
-  "Coffee walks",
-  "Travel days",
+const VERIFIED_PROOF = [
+  { value: "KES 1M+", label: "payments monthly" },
+  { value: "300+", label: "field workers supported" },
+  { value: "40+", label: "workstations deployed" },
 ];
 
-export default function EngineeringBentoGrid() {
+const STACK_ICONS: Record<string, LucideIcon> = {
+  TypeScript: Braces,
+  Python: FileCode2,
+  "Node.js": ServerCog,
+  PostgreSQL: Database,
+  Docker: Box,
+  Supabase: Zap,
+  "GitHub Actions": GitBranch,
+};
+
+const PREFERRED_STACK = Object.keys(STACK_ICONS);
+const PREFERRED_PROOF = [
+  "Payment Volume",
+  "Field Workers Supported",
+  "Workstations Configured",
+];
+
+interface EngineeringBentoGridProps {
+  skills?: Array<{ name: string }>;
+  proofStats?: Array<{ label: string; value: string }>;
+}
+
+export default function EngineeringBentoGrid({
+  skills,
+  proofStats,
+}: EngineeringBentoGridProps) {
+  const databaseStack = PREFERRED_STACK.flatMap((name) => {
+    const skill = skills?.find((item) => item.name === name);
+    return skill ? [{ name: skill.name, icon: STACK_ICONS[name] }] : [];
+  });
+  const stack = databaseStack.length ? databaseStack : CORE_STACK;
+
+  const databaseProof = PREFERRED_PROOF.flatMap((label) => {
+    const stat = proofStats?.find((item) => item.label === label);
+    return stat
+      ? [{ value: stat.value, label: stat.label.toLowerCase() }]
+      : [];
+  });
+  const proof = databaseProof.length ? databaseProof : VERIFIED_PROOF;
+
   return (
     <section className="w-full">
-      <header className="mb-6">
-        <div className="flex items-center gap-3">
-          <span className="w-8 h-[3px] bg-gradient-to-r from-[hsl(var(--accent))] to-transparent rounded-full" />
-          <h2 className="text-xl md:text-2xl font-black tracking-tight text-[hsl(var(--foreground))]">
-            Engineering Routine
-          </h2>
+      <header className="mb-3 flex items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3">
+            <span className="h-[3px] w-8 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-transparent" />
+            <h2 className="text-xl font-black tracking-tight text-[hsl(var(--foreground))] md:text-2xl">
+              Engineering Snapshot
+            </h2>
+          </div>
+          <p className="mt-1.5 text-sm text-[hsl(var(--muted-foreground))]">
+            How I deliver, the tools I use, and evidence from real systems.
+          </p>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {/* Principles Card */}
-        <motion.article
-          whileHover={{ scale: 1.02, y: -2 }}
-          className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md"
-        >
-          <div className="flex items-center gap-3 mb-6 relative z-10">
-            <div className="p-2.5 rounded-xl bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))]">
-              <Code2 size={20} />
-            </div>
-            <h3 className="font-extrabold text-[hsl(var(--foreground))]">
-              Core Principles
-            </h3>
-          </div>
-
-          <div className="flex flex-col gap-4 relative z-10">
-            {WORK_PRINCIPLES.map((item, i) => (
-              <motion.div
+      <motion.article
+        whileHover={{ y: -2 }}
+        className="relative grid overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] p-4 shadow-md backdrop-blur-xl md:grid-cols-2 lg:grid-cols-[0.9fr_1.25fr_0.85fr] lg:p-5"
+      >
+        <div className="min-w-0 border-b border-[hsl(var(--border))] pb-4 md:border-b-0 md:border-r md:pb-0 md:pr-4">
+          <h3 className="mb-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))]">
+            Delivery Principles
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {DELIVERY_PRINCIPLES.map((item) => (
+              <span
                 key={item.title}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="flex items-center gap-4 group cursor-default"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[hsl(var(--muted))/0.45] px-2.5 py-2 text-xs font-bold text-[hsl(var(--foreground))]"
               >
-                <div
-                  className={`p-2.5 rounded-xl ${item.color} group-hover:scale-110 transition-transform`}
-                >
-                  <item.icon size={18} />
-                </div>
-                <span className="font-bold text-sm text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--foreground))] transition-colors">
-                  {item.title}
-                </span>
-              </motion.div>
+                <item.icon size={13} className="text-[hsl(var(--accent))]" />
+                {item.title}
+              </span>
             ))}
           </div>
+        </div>
 
-          {/* Decorative background glow */}
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[hsl(var(--accent))]/5 rounded-full blur-3xl" />
-        </motion.article>
-
-        {/* Daily Tools Card */}
-        <motion.article
-          whileHover={{ scale: 1.01, y: -2 }}
-          className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md col-span-1 lg:col-span-2 flex flex-col justify-between"
-        >
-          <div className="flex items-center gap-3 mb-6 relative z-10">
-            <div className="p-2.5 rounded-xl bg-[hsl(var(--accent)/0.12)] text-[hsl(var(--accent))]">
-              <Box size={20} />
-            </div>
-            <h3 className="font-extrabold text-[hsl(var(--foreground))]">
-              Tech Stack & Tools
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap gap-3.5 relative z-10 overflow-visible py-1">
-            {ALL_TOOLS.map((tool, i) => (
-              <motion.div
+        <div className="min-w-0 border-b border-[hsl(var(--border))] py-4 md:border-b-0 md:py-0 md:pl-4 lg:border-r lg:px-4">
+          <h3 className="mb-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))]">
+            Core Stack
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {stack.map((tool) => (
+              <span
                 key={tool.name}
-                whileHover={{ y: -5, scale: 1.05 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05, type: "spring", stiffness: 300 }}
-                className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[hsl(var(--muted))]/30 border border-transparent hover:border-[hsl(var(--accent))]/30 hover:shadow-sm cursor-default group transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[hsl(var(--border))] bg-white/40 px-2.5 py-2 text-xs font-bold text-[hsl(var(--muted-foreground))] dark:bg-white/5"
               >
-                <tool.icon
-                  size={16}
-                  className="text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--accent))] transition-colors"
-                />
-                <span className="text-xs font-bold text-[hsl(var(--muted-foreground))] group-hover:text-[hsl(var(--foreground))] transition-colors">
-                  {tool.name}
+                <tool.icon size={13} className="text-[hsl(var(--accent))]" />
+                {tool.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="min-w-0 pt-4 md:col-span-2 md:border-t md:border-[hsl(var(--border))] lg:col-span-1 lg:border-0 lg:pl-4 lg:pt-0">
+          <h3 className="mb-2.5 text-[10px] font-black uppercase tracking-[0.16em] text-[hsl(var(--muted-foreground))]">
+            Verified Proof
+          </h3>
+          <div className="grid grid-cols-3 gap-2 lg:grid-cols-1">
+            {proof.map((item) => (
+              <div key={item.label} className="min-w-0">
+                <strong className="block text-sm font-black text-[hsl(var(--foreground))]">
+                  {item.value}
+                </strong>
+                <span className="block truncate text-[9px] font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+                  {item.label}
                 </span>
-              </motion.div>
+              </div>
             ))}
           </div>
+        </div>
 
-          {/* Decorative background glow */}
-          <div className="absolute -top-10 -right-10 w-60 h-60 bg-[hsl(var(--accent)/0.08)] rounded-full blur-3xl pointer-events-none" />
-        </motion.article>
-
-        {/* Professional Proof Card */}
-        <motion.article
-          whileHover={{ scale: 1.02, y: -2 }}
-          className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md col-span-1 md:col-span-2 flex flex-col justify-center"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2.5 rounded-xl bg-[hsl(var(--secondary))]/10 text-[hsl(var(--secondary))]">
-              <Users size={20} />
-            </div>
-            <h3 className="font-extrabold text-[hsl(var(--foreground))]">
-              Professional Proof
-            </h3>
-          </div>
-          <p className="text-sm font-medium leading-relaxed text-[hsl(var(--muted-foreground))] mb-6 max-w-sm">
-            Résumé-backed software, payment, ERP, infrastructure, and computer
-            vision work with measurable operational impact.
-          </p>
-          <div className="flex items-center gap-3">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[hsl(var(--accent))] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[hsl(var(--accent))]"></span>
-            </span>
-            <span className="text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))]">
-              Engine Running
-            </span>
-          </div>
-        </motion.article>
-
-        {/* Off Hours Card */}
-        <motion.article
-          whileHover={{ scale: 1.02, y: -2 }}
-          className="relative overflow-hidden rounded-3xl p-6 lg:p-7 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-500">
-              <Coffee size={20} />
-            </div>
-            <h3 className="font-extrabold text-[hsl(var(--foreground))]">
-              Off Hours
-            </h3>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            {OFF_HOURS.map((hobby, i) => (
-              <motion.span
-                key={hobby}
-                whileHover={{ scale: 1.08, rotate: i % 2 === 0 ? 3 : -3 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1, type: "spring" }}
-                className="inline-flex items-center px-4 py-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/30 text-[0.7rem] uppercase tracking-wider font-bold text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))]/30 transition-colors cursor-default"
-              >
-                {hobby}
-              </motion.span>
-            ))}
-          </div>
-        </motion.article>
-      </div>
+        <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-[hsl(var(--accent))/0.06] blur-3xl" />
+      </motion.article>
     </section>
   );
 }

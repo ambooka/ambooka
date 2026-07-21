@@ -18,7 +18,7 @@ import {
   stripMarkdown,
 } from "@/lib/blog-markdown";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 interface Props {
   params: Promise<{

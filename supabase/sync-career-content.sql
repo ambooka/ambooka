@@ -3,10 +3,63 @@
 
 begin;
 
+create table if not exists public.blog_topics (
+  id uuid primary key default gen_random_uuid(),
+  title text unique not null,
+  context text not null,
+  category text not null,
+  keywords text[] default '{}',
+  is_active boolean default true,
+  display_order int default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+alter table public.blog_topics enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_trigger
+    where tgname = 'blog_topics_set_updated_at'
+      and tgrelid = 'public.blog_topics'::regclass
+  ) then
+    create trigger blog_topics_set_updated_at
+      before update on public.blog_topics
+      for each row execute function public.set_updated_at();
+  end if;
+end;
+$$;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'blog_topics'
+      and policyname = 'public_read_blog_topics'
+  ) then
+    create policy public_read_blog_topics
+      on public.blog_topics for select using (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'blog_topics'
+      and policyname = 'authenticated_manage_blog_topics'
+  ) then
+    create policy authenticated_manage_blog_topics
+      on public.blog_topics for all to authenticated using (true) with check (true);
+  end if;
+end;
+$$;
+
+grant select on public.blog_topics to anon;
+grant all on public.blog_topics to authenticated, service_role;
+
 update public.personal_info
 set
   full_name = 'Abdulrahman Ambooka Msah',
-  title = 'Software Engineer | Backend, Payments & IT Infrastructure',
+  title = 'Software Engineer | Backend Systems & Infrastructure',
   email = 'abdulrahmanambooka@gmail.com',
   phone = '+254 111 384 390',
   location = 'Nairobi, Kenya',
@@ -109,6 +162,14 @@ set
   engineering_evidence = '{"tests":false,"ci":false,"docker":false,"databaseMigrations":false,"monitoring":false,"docs":false,"deployed":true}'::jsonb
 where slug = 'mpesa-payment-integration-library';
 
+update public.projects
+set
+  description = 'Full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, a canonical database-backed resume, GitHub activity sync and Playwright e2e test suite.',
+  problem = 'A static resume could not represent evolving project evidence, portfolio content and GitHub activity.',
+  solution = 'Built a database-backed portfolio platform with admin-managed content, a single canonical resume, GitHub sync and e2e tests.',
+  recruiter_summary = 'Built ambooka.dev as a full-stack Next.js 16 portfolio platform with Supabase backend, admin CMS, GitHub activity sync and Playwright e2e testing.'
+where slug = 'ambooka-dev-portfolio-platform';
+
 delete from public.case_studies;
 
 insert into public.case_studies (
@@ -161,10 +222,36 @@ order by p.display_order, p.created_at;
 delete from public.roadmap_phases;
 delete from public.certifications;
 
+insert into public.blog_topics (title, context, category, keywords, is_active, display_order)
+values
+  ('Reliable backend integrations', 'Lessons from building REST APIs, M-Pesa Daraja payment flows, callback handling, retries, validation and PostgreSQL-backed services.', 'Backend Engineering', array['REST APIs', 'Node.js', 'TypeScript', 'PostgreSQL', 'M-Pesa'], true, 1),
+  ('ERP and business-process implementation', 'Day-to-day lessons from mapping manual workflows into ERPNext accounts, items, inventory and procurement processes.', 'Business Systems', array['ERPNext', 'Process Design', 'Procurement', 'Inventory'], true, 2),
+  ('Practical IT operations', 'Identity administration, staff onboarding, troubleshooting, documentation and maintaining dependable workplace technology.', 'IT Infrastructure', array['Windows Server', 'Active Directory', 'Support', 'Documentation'], true, 3),
+  ('Network and endpoint reliability', 'Practical observations from workstation deployment, DHCP troubleshooting, wireless networks, VoIP and preventative maintenance.', 'IT Infrastructure', array['Networking', 'DHCP', 'Workstations', 'VoIP', 'Troubleshooting'], true, 4),
+  ('Building database-backed web products', 'Engineering lessons from Next.js, TypeScript, Supabase, admin-managed content, deployment and end-to-end testing.', 'Software Engineering', array['Next.js', 'TypeScript', 'Supabase', 'Playwright'], true, 5)
+on conflict (title) do update
+set context = excluded.context,
+    category = excluded.category,
+    keywords = excluded.keywords,
+    is_active = excluded.is_active,
+    display_order = excluded.display_order,
+    updated_at = now();
+
 update public.blog_posts
 set is_published = false,
     published_at = null
 where content ilike 'Draft:%';
+
+update public.blog_posts
+set slug = 'reliable-it-infrastructure-for-growing-teams',
+    title = 'Reliable IT Infrastructure for Growing Teams',
+    excerpt = 'Practical lessons from identity administration, networking, device rollout and end-user support.',
+    content = 'Draft: This article covers Active Directory administration, network reliability, workstation deployment, support workflows and technical documentation for growing teams.',
+    category = 'IT Infrastructure',
+    tags = array['Windows Server', 'Active Directory', 'Networking', 'IT Operations'],
+    updated_at = now()
+where slug = 'computer-vision-final-year-project'
+  and is_published = false;
 
 delete from public.blog_posts
 where is_published = false
@@ -195,7 +282,7 @@ insert into public.portfolio_content (
 values
   (
     'hero',
-    'Software Engineer | Backend, Payments & IT Infrastructure',
+    'Software Engineer | Backend Systems & Infrastructure',
     'Python · TypeScript · Node.js · FastAPI · PostgreSQL · Docker · ERPNext · Windows Server',
     'Computer Science graduate with 3+ years of hands-on experience delivering software, payment integrations, business systems, and IT infrastructure.',
     '{"ctaPrimary":"View Projects","ctaSecondary":"View Resume"}'::jsonb,
@@ -205,10 +292,46 @@ values
   (
     'positioning',
     'Software delivery backed by real operational experience',
-    'Backend APIs, payments, ERP systems, infrastructure, and computer vision.',
+    'Backend services, systems integrations, ERP delivery, and IT infrastructure.',
     'Every public claim is supported by the supplied résumé or public project evidence.',
     '{}'::jsonb,
     2,
+    true
+  ),
+  (
+    'build_area',
+    'Full-Stack Product Engineering',
+    'Software delivery',
+    'Next.js and React interfaces, TypeScript application logic, Supabase-backed content, admin workflows, and end-to-end testing.',
+    '{"tags":["Next.js","TypeScript","Playwright"]}'::jsonb,
+    10,
+    true
+  ),
+  (
+    'build_area',
+    'Business Systems & ERP',
+    'Professional experience',
+    'ERPNext implementation, business-process design, procurement workflows, accounting setup, inventory operations, and CMS enablement.',
+    '{"tags":["ERPNext","Process Design","CMS"]}'::jsonb,
+    11,
+    true
+  ),
+  (
+    'build_area',
+    'Backend APIs & Integrations',
+    'Production delivery',
+    'REST API development, PostgreSQL-backed services, M-Pesa Daraja payment flows, webhook validation, retries, and asynchronous processing.',
+    '{"tags":["Node.js","REST APIs","PostgreSQL"]}'::jsonb,
+    12,
+    true
+  ),
+  (
+    'build_area',
+    'IT Infrastructure & Support',
+    'Professional experience',
+    'Windows Server, Active Directory, networking, VoIP, CCTV, biometric systems, workstation deployment, and end-user support.',
+    '{"tags":["Windows Server","Networking","Active Directory"]}'::jsonb,
+    13,
     true
   );
 

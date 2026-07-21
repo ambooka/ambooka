@@ -13,7 +13,19 @@ import Footer from '@/components/Footer'
 
 type Theme = 'premium-dark' | 'premium-light'
 
-export default function PublicThemeContainer({ children }: { children: React.ReactNode }) {
+interface PublicProfile {
+    full_name: string
+    title: string
+    email: string
+    location: string | null
+    about_text: string | null
+    summary: string | null
+    github_url: string | null
+    linkedin_url: string | null
+    website_url: string | null
+}
+
+export default function PublicThemeContainer({ children, profile }: { children: React.ReactNode; profile?: PublicProfile | null }) {
     const pathname = usePathname()
     const [theme, setTheme] = useState<Theme>('premium-light')
     const [isLoaded, setIsLoaded] = useState(false)
@@ -56,7 +68,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
                 resumeTrigger={resumeTrigger}
             />
 
-            <TopHeader onProfileClick={() => setIsProfileOpen(true)} />
+            <TopHeader profile={profile} onProfileClick={() => setIsProfileOpen(true)} />
 
             <main id="main-content" className="w-full pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-12 pt-4 mb-8 px-3 sm:px-4 md:px-6 lg:px-8 flex justify-center">
                 <div className="w-full max-w-[1440px]">
@@ -68,7 +80,7 @@ export default function PublicThemeContainer({ children }: { children: React.Rea
                 </div>
             </main>
 
-            <Footer />
+            <Footer profile={profile} />
 
             <MobileBottomNav className="public-mobile-nav" />
 

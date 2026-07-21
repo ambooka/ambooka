@@ -2,9 +2,9 @@ import Portfolio from "@/components/Portfolio";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ItemList, WithContext } from "schema-dts";
-import { projects as proofProjects } from "@/data/professional-projects";
+import { fetchCompletedProjects } from "@/lib/portfolio-db";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PortfolioPage() {
-  const featuredProjects = proofProjects
-    .filter((project) => project.featured && project.status === "completed")
-    .sort((a, b) => a.displayOrder - b.displayOrder);
+export default async function PortfolioPage() {
+  const allProjects = await fetchCompletedProjects();
+
+  const featuredProjects = allProjects.filter((project) => project.featured);
 
   const itemListSchema = {
     "@context": "https://schema.org",
@@ -45,6 +45,7 @@ export default function PortfolioPage() {
         isActive
         initialProjects={[]}
         featuredProjects={featuredProjects}
+        allProjects={allProjects}
       />
     </>
   );

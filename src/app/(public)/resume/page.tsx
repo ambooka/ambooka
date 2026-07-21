@@ -28,7 +28,7 @@ interface PersonalInfoMock {
 }
 
 // ISR: Revalidate every hour
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Resume",
@@ -55,23 +55,16 @@ export default async function ResumePage() {
       supabase
         .from("projects")
         .select("id, title, description, stack, status")
-        .in("slug", [
-          "computer-vision-surveillance-system",
-          "mpesa-payment-integration-library",
-        ])
+        .eq("is_featured", true)
         .eq("status", "completed")
         .order("display_order", { ascending: true }),
     ]);
 
   const personalInfo = personalInfoResult.data;
   const skills = skillsResult.data || [];
-  const normalizedPersonalInfo = personalInfo
-    ? { ...personalInfo, title: PROFESSIONAL_TITLE }
-    : null;
-
   const initialData = {
     personal_info:
-      normalizedPersonalInfo ||
+      personalInfo ||
       ({
         id: "mock",
         full_name: "Abdulrahman Ambooka Msah",

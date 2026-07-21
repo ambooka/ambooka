@@ -19,26 +19,22 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
-const SOCIAL_LINKS = [
-  {
-    label: "GitHub",
-    href: "https://github.com/ambooka",
-    icon: <Github size={18} />,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/abdulrahman-ambooka/",
-    icon: <Linkedin size={18} />,
-  },
-  {
-    label: "Email",
-    href: "mailto:abdulrahmanambooka@gmail.com",
-    icon: <Mail size={18} />,
-  },
-] as const;
+interface FooterProfile {
+  full_name?: string;
+  title?: string;
+  email?: string;
+  about_text?: string | null;
+  github_url?: string | null;
+  linkedin_url?: string | null;
+}
 
-export default function Footer() {
+export default function Footer({ profile }: { profile?: FooterProfile | null }) {
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    { label: "GitHub", href: profile?.github_url || "https://github.com/ambooka", icon: <Github size={18} /> },
+    { label: "LinkedIn", href: profile?.linkedin_url || "https://www.linkedin.com/in/abdulrahman-ambooka/", icon: <Linkedin size={18} /> },
+    { label: "Email", href: `mailto:${profile?.email || "abdulrahmanambooka@gmail.com"}`, icon: <Mail size={18} /> },
+  ];
 
   return (
     <motion.footer
@@ -67,12 +63,12 @@ export default function Footer() {
               ambooka
             </Link>
             <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed max-w-[32ch]">
-              Software engineer delivering backend systems, payment
-              integrations, ERP solutions, and reliable IT infrastructure.
+              {profile?.about_text ||
+                "Software engineer delivering backend systems, integrations, business systems, and reliable IT infrastructure."}
             </p>
             {/* Social row */}
             <div className="flex items-center gap-2 pt-1">
-              {SOCIAL_LINKS.map((social) => (
+              {socialLinks.map((social) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
@@ -131,7 +127,7 @@ export default function Footer() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] shadow-[0_0_0_0.2rem_hsl(var(--accent)/0.15)]" />
                 <span className="text-sm font-medium text-[hsl(var(--foreground)/0.8)]">
-                  Available for Hire
+                  {profile?.title || "Software Engineer"}
                 </span>
               </div>
               <Link
@@ -150,7 +146,7 @@ export default function Footer() {
         {/* Divider + bottom row */}
         <div className="h-px w-full bg-[hsl(var(--border))] mb-5" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[hsl(var(--muted-foreground))]">
-          <span>&copy; {currentYear} Abdulrahman Ambooka Msah. All rights reserved.</span>
+          <span>&copy; {currentYear} {profile?.full_name || "Abdulrahman Ambooka Msah"}. All rights reserved.</span>
           <span className="flex items-center gap-1">
             Built with
             <span className="font-semibold text-[hsl(var(--foreground)/0.7)]">

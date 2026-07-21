@@ -51,7 +51,7 @@ const PROFILE_FACTS = [{ label: "Base", value: "Nairobi, Kenya" }];
 
 const CURRENT_FOCUS = [
   "Software Engineering",
-  "Backend & Payments",
+  "Backend Systems",
   "ERP & Infrastructure",
 ];
 
@@ -100,7 +100,7 @@ export default function ProfileWidget({
       is_current: boolean;
     }[]
   >([]);
-  const displayTitle = PROFESSIONAL_TITLE;
+  const displayTitle = profile.title || PROFESSIONAL_TITLE;
 
   useEffect(() => {
     const fetchExperience = async () => {
@@ -154,7 +154,7 @@ export default function ProfileWidget({
   };
 
   return (
-    <article className="relative overflow-hidden rounded-2xl p-4 sm:p-5 border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] backdrop-blur-xl shadow-md transition-all hover:border-[hsl(var(--border))] hover:shadow-lg min-w-0">
+    <article className="relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] p-4 shadow-md backdrop-blur-xl transition-all hover:border-[hsl(var(--border))] hover:shadow-lg sm:p-5">
       <div className="flex items-center gap-3 mb-3.5 text-xs font-extrabold tracking-widest uppercase text-[hsl(var(--foreground))]">
         <div className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[hsl(var(--accent))/0.12] text-[hsl(var(--accent))] shrink-0">
           <Rocket size={16} />
@@ -162,8 +162,7 @@ export default function ProfileWidget({
         <span>Build Profile & Education</span>
       </div>
 
-      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(15rem,0.85fr)] xl:gap-8">
-        {/* Left Column: Bio and CTAs */}
+      <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex min-w-0 flex-col">
           <div className="flex min-w-0 items-start gap-4 mb-4">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[14px] overflow-hidden shrink-0 border border-[hsl(var(--border))] shadow-md bg-[hsl(var(--card))]">
@@ -195,14 +194,7 @@ export default function ProfileWidget({
             {profile.about_text || PROFESSIONAL_SUMMARY}
           </p>
 
-          <p className="m-0 mt-3 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
-            The work I enjoy most sits at the intersection of useful products,
-            dependable infrastructure, and clear communication. I like shipping
-            things people can actually use, then tightening the system until it
-            feels calm and intentional.
-          </p>
-
-          <div className="flex flex-wrap gap-2.5 mt-4">
+          <div className="mt-4 flex flex-wrap gap-2.5">
             {onOpenResume && (
               <button
                 onClick={onOpenResume}
@@ -233,7 +225,7 @@ export default function ProfileWidget({
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="mt-3 flex flex-wrap gap-2">
             {PROFILE_FACTS.map((fact) => (
               <span
                 key={fact.label}
@@ -246,63 +238,53 @@ export default function ProfileWidget({
                 {fact.value}
               </span>
             ))}
-          </div>
-
-          <div className="flex flex-col gap-3 mt-5 pt-5 border-t border-[hsl(var(--border))]">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
-              <Globe size={14} /> Languages
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {LANGUAGES.map((lang) => (
-                <span
-                  key={lang.name}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/5 dark:bg-white/5 border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] text-xs font-semibold shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.1] hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.2] cursor-default"
-                >
+            {LANGUAGES.map((lang) => (
+              <span
+                key={lang.name}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/5 dark:bg-white/5 border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] text-xs font-semibold shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.1] hover:text-[hsl(var(--accent))] hover:border-[hsl(var(--accent))/0.2] cursor-default"
+              >
                   <span className="text-sm leading-none drop-shadow-sm">
                     {lang.flag}
                   </span>
                   <span className="text-[hsl(var(--foreground))]">
                     {lang.name}
                   </span>
-                </span>
-              ))}
-            </div>
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Right Column: Education & Focus Together */}
-        <div className="flex min-w-0 flex-col gap-6">
-          <aside className="flex min-w-0 flex-col gap-3">
+        <div className="mt-4 grid min-w-0 gap-4 border-t border-[hsl(var(--border))] pt-4 sm:grid-cols-2">
+          <aside className="flex min-w-0 flex-col gap-2">
             <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
-              <GraduationCap size={14} /> Education Context
+              <GraduationCap size={14} /> Education
             </span>
-            <div className="flex flex-col gap-2.5">
+            <div className="flex flex-col gap-1.5">
               {EDUCATION.map((item) => (
                 <div
                   key={item.school}
-                  className="flex min-w-0 items-center gap-3 p-2.5 rounded-xl border border-[hsl(var(--border))] bg-white/40 dark:bg-black/20 shadow-sm transition-colors hover:bg-white/60 dark:hover:bg-black/40 cursor-default"
+                  className="flex min-w-0 items-center gap-2 rounded-lg border border-[hsl(var(--border))] bg-white/40 p-2 shadow-sm transition-colors hover:bg-white/60 dark:bg-black/20 dark:hover:bg-black/40"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white dark:bg-white/5 border border-[hsl(var(--border))] flex items-center justify-center shrink-0 overflow-hidden p-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md border border-[hsl(var(--border))] bg-white p-1 dark:bg-white/5">
                     <Image
                       src={item.logo}
                       alt=""
-                      width={32}
-                      height={32}
+                      width={24}
+                      height={24}
                       className="w-full h-full object-contain drop-shadow-sm"
                       unoptimized
                     />
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
-                    <strong className="text-sm font-extrabold text-[hsl(var(--foreground))] leading-tight truncate">
-                      {item.school}
+                    <strong className="truncate text-xs font-extrabold leading-tight text-[hsl(var(--foreground))]">
+                      {item.degree}
                     </strong>
-                    <div className="flex flex-col gap-0.5 mt-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-                      <span className="text-xs text-[hsl(var(--muted-foreground))] font-medium truncate">
-                        {item.degree}
+                    <div className="mt-0.5 flex min-w-0 items-center gap-1 text-[10px] font-medium text-[hsl(var(--muted-foreground))]">
+                      <span className="truncate">
+                        {item.school}
                       </span>
-                      <span className="text-[10px] text-[hsl(var(--muted-foreground))/70] font-bold tracking-wider whitespace-nowrap">
-                        {item.year}
-                      </span>
+                      <span aria-hidden="true">·</span>
+                      <span className="shrink-0">{item.year}</span>
                     </div>
                   </div>
                 </div>
@@ -310,32 +292,12 @@ export default function ProfileWidget({
             </div>
           </aside>
 
-          <aside className="flex min-w-0 flex-col gap-3">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] ml-1">
-              Current Focus
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {CURRENT_FOCUS.map((item) => (
-                <span
-                  key={item}
-                  className="inline-flex items-center px-3 py-2 rounded-full bg-slate-900/5 dark:bg-white/5 text-[hsl(var(--muted-foreground))] text-xs font-semibold"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-            <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))] ml-1">
-              Focused on production software, backend APIs, payment
-              integrations, ERP implementation, and IT infrastructure.
-            </p>
-          </aside>
-
           {experiences.length > 0 && (
-            <aside className="flex min-w-0 flex-col gap-3">
+            <aside className="flex min-w-0 flex-col gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 ml-1">
                 <BriefcaseBusiness size={14} /> Work Experience
               </span>
-              <div className="flex min-w-0 flex-wrap gap-2.5 pt-1">
+            <div className="flex min-w-0 flex-col gap-1.5">
                 {experiences.map((exp) => {
                   const startYear = new Date(exp.start_date).getFullYear();
                   const endYear = exp.is_current
@@ -347,25 +309,23 @@ export default function ProfileWidget({
                   return (
                     <div
                       key={exp.company + exp.position}
-                      className="group relative inline-flex items-center gap-2.5 p-1 pr-4 rounded-full border border-[hsl(var(--border))] bg-gradient-to-b from-white/60 to-white/20 dark:from-white/[0.03] dark:to-transparent backdrop-blur-md shadow-sm transition-all duration-300 hover:border-[hsl(var(--accent))/0.4] hover:shadow-md hover:-translate-y-0.5 cursor-default overflow-hidden"
+                      className="group flex min-w-0 items-center gap-2 rounded-lg border border-[hsl(var(--border))] bg-white/40 p-2 shadow-sm transition-colors hover:border-[hsl(var(--accent))/0.35] dark:bg-black/20"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[hsl(var(--accent))/0.08] to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-1000 ease-in-out" />
-
-                      <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-[hsl(var(--background))] border border-[hsl(var(--border))] shadow-sm text-[hsl(var(--foreground))] font-black text-xs shrink-0 z-10 transition-colors group-hover:border-[hsl(var(--accent))/0.3] group-hover:text-[hsl(var(--accent))]">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-xs font-black text-[hsl(var(--foreground))] transition-colors group-hover:text-[hsl(var(--accent))]">
                         {exp.company.charAt(0).toUpperCase()}
                       </div>
 
-                      <div className="relative flex flex-col justify-center z-10 py-0.5">
-                        <span className="text-[11.5px] font-bold text-[hsl(var(--foreground))] leading-tight">
+                      <div className="flex min-w-0 flex-1 flex-col justify-center">
+                        <span className="truncate text-xs font-bold leading-tight text-[hsl(var(--foreground))]">
                           {exp.position}
                         </span>
-                        <span className="text-[9.5px] font-semibold tracking-wider text-[hsl(var(--muted-foreground))] flex items-center gap-1.5 uppercase mt-[1px]">
-                          <span className="text-[hsl(var(--accent))] truncate max-w-[90px] sm:max-w-[120px]">
+                        <span className="mt-0.5 flex min-w-0 items-center gap-1 text-[9.5px] font-semibold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
+                          <span className="truncate text-[hsl(var(--accent))]">
                             {exp.company}
                           </span>
-                          <span className="w-1 h-1 rounded-full bg-[hsl(var(--border))] shrink-0" />
+                          <span aria-hidden="true">·</span>
                           <span className="shrink-0">
-                            {startYear} - {endYear}
+                            {startYear}–{endYear}
                           </span>
                         </span>
                       </div>
@@ -375,6 +335,22 @@ export default function ProfileWidget({
               </div>
             </aside>
           )}
+
+          <aside className="flex min-w-0 flex-col gap-2 sm:col-span-2">
+            <span className="ml-1 text-[10px] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
+              Current Focus
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {CURRENT_FOCUS.map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center rounded-full bg-slate-900/5 px-2.5 py-1.5 text-[11px] font-semibold text-[hsl(var(--muted-foreground))] dark:bg-white/5"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
+          </aside>
         </div>
       </div>
     </article>
