@@ -2,9 +2,7 @@
   min-height: 100vh;
   isolation: isolate;
 
-  /* The Nexus tracker uses the admin token names but lives outside the admin
-     layout. These route-scoped aliases restore clear surfaces and boundaries
-     without changing any other route. */
+  /* Route-scoped design aliases used by the Nexus tracker. */
   --ad-text-primary: hsl(var(--foreground));
   --ad-text-secondary: hsl(var(--muted-foreground));
   --ad-text-tertiary: hsl(var(--muted-foreground) / 0.78);
@@ -21,7 +19,7 @@
   --ad-bg-card: hsl(var(--card));
   --ad-bg-muted: hsl(var(--muted));
   --ad-border-subtle: hsl(var(--foreground) / 0.18);
-  --ad-border-default: hsl(var(--foreground) / 0.24);
+  --ad-border-default: hsl(var(--foreground) / 0.25);
   --ad-shadow-neu-sm: 0 1px 2px hsl(var(--foreground) / 0.06);
   --ad-shadow-neu-md:
     0 12px 30px hsl(var(--foreground) / 0.08),
@@ -38,308 +36,500 @@
   min-height: 100vh;
 }
 
-.nexus-resource-host {
+/* ===== Full-screen reading workspace ===== */
+#nexus-log-shell .nexus-log-route > div:has(> header) {
   width: 100%;
-  max-width: 760px;
-  margin: 16px auto 0;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
 }
 
-.nexus-inline-resources {
+#nexus-log-shell header {
+  flex: 0 0 auto;
+}
+
+#nexus-log-shell header + div {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+#nexus-log-shell nav {
+  position: sticky !important;
+  top: 0;
+  height: 100%;
+  max-height: 100%;
+  align-self: stretch;
   overflow: hidden;
-  border: 1px solid var(--ad-border-default);
-  border-radius: 14px;
-  background: var(--ad-bg-card);
-  color: var(--ad-text-primary);
-  box-shadow: var(--ad-shadow-neu-md);
+  border-right-color: var(--ad-border-default) !important;
+}
+
+#nexus-log-shell nav > div:last-child {
+  min-height: 0;
+  overscroll-behavior: contain;
+}
+
+#nexus-log-shell main {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  padding: clamp(20px, 2.4vw, 38px) clamp(18px, 3vw, 52px) 90px !important;
+}
+
+#nexus-log-shell main > div {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: clamp(22px, 2.4vw, 38px) !important;
+  border-color: var(--ad-border-default) !important;
+  border-radius: 16px !important;
+}
+
+#nexus-log-shell main h1 {
+  max-width: 1100px;
+  font-size: clamp(1.55rem, 2vw, 2.25rem) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.025em !important;
+}
+
+#nexus-log-shell main h1 + p {
+  max-width: 1050px !important;
+  font-size: 15.5px !important;
+  line-height: 1.75 !important;
+}
+
+#nexus-log-shell main textarea,
+#nexus-log-shell main input,
+#nexus-log-shell main button,
+#nexus-log-shell main a {
   font-family: var(--font-sans);
 }
 
-.nexus-inline-resources-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 20px;
-  border-bottom: 1px solid var(--ad-border-subtle);
+/* ===== Contextual learning embedded into each log row ===== */
+.nexus-task-resource-host {
+  width: 100%;
+  padding: 0 6px 8px 34px;
+}
+
+.nexus-task-learning {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 12px;
   background:
-    linear-gradient(135deg, var(--ad-primary-100), transparent 62%),
+    linear-gradient(135deg, var(--ad-primary-100), transparent 46%),
     var(--ad-bg-card);
+  box-shadow: var(--ad-shadow-neu-sm);
 }
 
-.nexus-inline-resources-eyebrow {
+.nexus-task-learning[open] {
+  border-color: var(--ad-border-default);
+  box-shadow: var(--ad-shadow-neu-md);
+}
+
+.nexus-task-learning > summary {
   display: flex;
+  min-height: 58px;
   align-items: center;
-  gap: 7px;
-  margin-bottom: 8px;
-  color: var(--ad-primary);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 1.25px;
-  text-transform: uppercase;
-}
-
-.nexus-inline-resources-head h2 {
-  max-width: 570px;
-  margin: 0;
+  gap: 10px;
+  padding: 10px 13px;
   color: var(--ad-text-primary);
-  font-family: var(--font-mono);
-  font-size: 19px;
-  line-height: 1.35;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
 }
 
-.nexus-inline-resources-head p {
-  max-width: 610px;
-  margin: 9px 0 0;
-  color: var(--ad-text-secondary);
-  font-size: 13px;
-  line-height: 1.58;
+.nexus-task-learning > summary::-webkit-details-marker {
+  display: none;
 }
 
-.nexus-inline-resource-count {
+.nexus-task-learning > summary:hover {
+  background: hsl(var(--foreground) / 0.025);
+}
+
+.nexus-task-learning-icon {
   display: grid;
-  min-width: 88px;
+  width: 30px;
+  height: 30px;
   flex: 0 0 auto;
   place-items: center;
-  padding: 10px;
-  border: 1px solid var(--ad-border-subtle);
-  border-radius: 10px;
-  background: var(--ad-bg-card);
-  text-align: center;
-}
-
-.nexus-inline-resource-count strong {
+  border-radius: 9px;
+  background: var(--ad-primary-100);
   color: var(--ad-primary);
-  font-family: var(--font-mono);
-  font-size: 20px;
-  line-height: 1;
 }
 
-.nexus-inline-resource-count span {
-  margin-top: 5px;
-  color: var(--ad-text-tertiary);
-  font-size: 9.5px;
-  line-height: 1.25;
+.nexus-task-learning-summary {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nexus-task-learning-summary strong {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.75px;
   text-transform: uppercase;
 }
 
-.nexus-inline-sequence {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--ad-border-subtle);
-  background: hsl(var(--muted) / 0.48);
-}
-
-.nexus-inline-sequence span {
-  position: relative;
-  padding-left: 14px;
+.nexus-task-learning-summary small {
+  overflow: hidden;
   color: var(--ad-text-secondary);
-  font-size: 11.5px;
-  line-height: 1.45;
+  font-size: 12px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.nexus-inline-sequence span::before {
-  position: absolute;
-  top: 0.58em;
-  left: 0;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ad-primary);
-  content: "";
-  transform: translateY(-50%);
+.nexus-task-learning-chevron {
+  flex: 0 0 auto;
+  color: var(--ad-text-tertiary);
+  transition: transform 160ms ease;
 }
 
-.nexus-inline-resource-groups {
+.nexus-task-learning[open] .nexus-task-learning-chevron {
+  transform: rotate(180deg);
+}
+
+.nexus-task-learning-body {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;
+  padding: 0 14px 16px;
+  border-top: 1px solid var(--ad-border-subtle);
 }
 
-.nexus-inline-resource-group {
-  padding: 17px 20px 20px;
-  border-bottom: 1px solid var(--ad-border-subtle);
+.nexus-task-learning-intro {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding-top: 14px;
 }
 
-.nexus-inline-resource-group:last-child {
-  border-bottom: 0;
+.nexus-task-learning-intro > span {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: var(--ad-primary);
+  background: var(--ad-bg-card);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
-.nexus-inline-resource-group-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 11px;
-}
-
-.nexus-inline-resource-group-head h3 {
+.nexus-task-learning-intro p {
   margin: 0;
+  color: var(--ad-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.nexus-task-video {
+  overflow: hidden;
+  border: 1px solid var(--ad-border-default);
+  border-radius: 12px;
+  background: #090909;
+}
+
+.nexus-task-video-head {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--ad-bg-card);
+}
+
+.nexus-task-video-head span,
+.nexus-task-video-head a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nexus-task-video-head span {
   color: var(--ad-text-primary);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.9px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
-.nexus-inline-resource-group-head p {
-  margin: 5px 0 0;
-  color: var(--ad-text-tertiary);
-  font-size: 11.5px;
-  line-height: 1.45;
+.nexus-task-video-head a {
+  color: var(--ad-primary);
+  font-size: 11px;
+  text-decoration: none;
 }
 
-.nexus-inline-resource-group-head > span {
+.nexus-task-video iframe {
+  display: block;
+  width: 100%;
+  max-height: min(68vh, 720px);
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.nexus-task-resource-grid {
   display: grid;
-  min-width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.nexus-task-resource-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 11px;
+  padding: 12px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-primary);
+  text-decoration: none;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.nexus-task-resource-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ad-primary);
+  box-shadow: var(--ad-shadow-neu-md);
+}
+
+.nexus-task-resource-card:focus-visible,
+.nexus-task-checks button:focus-visible,
+.nexus-task-reflection textarea:focus-visible {
+  outline: 2px solid var(--ad-primary);
+  outline-offset: 2px;
+}
+
+.nexus-task-resource-kind {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 3px 7px;
+  background: var(--ad-primary-100);
+  color: var(--ad-primary);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+
+.nexus-task-resource-card > strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.nexus-task-resource-card > p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--ad-text-secondary);
+  font-size: 11.5px;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.nexus-task-resource-card > small {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: auto;
+  color: var(--ad-text-tertiary);
+  font-size: 10px;
+}
+
+.nexus-task-assessment {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 12px;
+  padding: 13px;
+  background: hsl(var(--muted) / 0.42);
+}
+
+.nexus-task-assessment-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.nexus-task-assessment-head > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nexus-task-assessment-head strong {
+  color: var(--ad-text-primary);
+  font-size: 13px;
+}
+
+.nexus-task-assessment-head span {
+  color: var(--ad-text-secondary);
+  font-size: 11.5px;
+}
+
+.nexus-task-assessment-head b {
+  display: grid;
+  min-width: 40px;
+  height: 32px;
   place-items: center;
   border-radius: 999px;
   background: var(--ad-primary-100);
   color: var(--ad-primary);
   font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
 }
 
-.nexus-inline-resource-grid {
+.nexus-task-checks {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
 }
 
-.nexus-inline-resource-card {
+.nexus-task-checks button {
   display: flex;
-  min-width: 0;
-  min-height: 154px;
-  flex-direction: column;
-  padding: 13px;
+  min-height: 48px;
+  align-items: center;
+  gap: 8px;
   border: 1px solid var(--ad-border-subtle);
-  border-radius: 10px;
-  background: hsl(var(--card) / 0.78);
-  color: inherit;
-  text-decoration: none;
-  box-shadow: var(--ad-shadow-neu-sm);
-  transition:
-    transform 150ms ease,
-    border-color 150ms ease,
-    box-shadow 150ms ease,
-    background 150ms ease;
-}
-
-.nexus-inline-resource-card:hover {
-  border-color: var(--ad-primary);
+  border-radius: 9px;
+  padding: 8px 9px;
   background: var(--ad-bg-card);
-  box-shadow: var(--ad-shadow-neu-md);
-  transform: translateY(-2px);
-}
-
-.nexus-inline-resource-card:focus-visible {
-  outline: 2px solid var(--ad-primary);
-  outline-offset: 3px;
-}
-
-.nexus-inline-resource-card-top {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--ad-text-tertiary);
-}
-
-.nexus-inline-resource-card-top > svg:last-child {
-  margin-left: auto;
-}
-
-.nexus-inline-resource-kind {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ad-primary);
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.55px;
-  text-transform: uppercase;
-}
-
-.nexus-inline-resource-priority {
-  padding: 3px 6px;
-  border-radius: 999px;
-  background: var(--ad-primary-100);
-  color: var(--ad-primary);
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.nexus-inline-resource-card h4 {
-  margin: 11px 0 0;
-  color: var(--ad-text-primary);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.nexus-inline-resource-card p {
-  margin: 7px 0 12px;
   color: var(--ad-text-secondary);
-  font-size: 11.75px;
+  font-size: 11px;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nexus-task-checks button > span {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--ad-border-default);
+  border-radius: 6px;
+}
+
+.nexus-task-checks button.is-checked {
+  border-color: var(--ad-primary);
+  background: var(--ad-primary-100);
+  color: var(--ad-text-primary);
+}
+
+.nexus-task-checks button.is-checked > span {
+  border-color: var(--ad-primary);
+  background: var(--ad-primary);
+  color: hsl(var(--accent-foreground));
+}
+
+.nexus-task-reflection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nexus-task-reflection > span {
+  color: var(--ad-text-secondary);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.nexus-task-reflection textarea {
+  width: 100%;
+  min-height: 78px;
+  resize: vertical;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 9px;
+  padding: 10px 11px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-primary);
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
-.nexus-inline-resource-source {
-  margin-top: auto;
-  color: var(--ad-text-tertiary);
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  line-height: 1.35;
+@media (max-width: 1180px) {
+  .nexus-task-resource-grid,
+  .nexus-task-checks {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 700px) {
-  .nexus-resource-host {
-    margin-top: 12px;
+@media (max-width: 860px) {
+  #nexus-log-shell .nexus-log-route > div:has(> header) {
+    height: 100dvh !important;
   }
 
-  .nexus-inline-resources-head {
+  #nexus-log-shell nav {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  #nexus-log-shell main {
+    padding: 14px 12px 70px !important;
+  }
+
+  #nexus-log-shell main > div {
+    padding: 17px 14px !important;
+    border-radius: 12px !important;
+  }
+
+  .nexus-task-resource-host {
+    padding: 0 2px 8px 26px;
+  }
+
+  .nexus-task-learning-intro {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .nexus-task-video-head {
+    align-items: flex-start;
     flex-direction: column;
-    padding: 17px;
+    gap: 4px;
   }
 
-  .nexus-inline-resource-count {
-    display: flex;
-    width: 100%;
-    min-width: 0;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .nexus-inline-resource-count span {
-    margin-top: 0;
-  }
-
-  .nexus-inline-sequence {
-    grid-template-columns: 1fr;
-    padding: 11px 17px;
-  }
-
-  .nexus-inline-resource-group {
-    padding: 15px 17px 17px;
-  }
-
-  .nexus-inline-resource-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .nexus-inline-resource-card {
-    min-height: 0;
+  .nexus-task-learning-summary small {
+    max-width: 65vw;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nexus-inline-resource-card {
+  #nexus-log-shell main {
+    scroll-behavior: auto;
+  }
+
+  .nexus-task-learning-chevron,
+  .nexus-task-resource-card {
     transition: none;
   }
 }
