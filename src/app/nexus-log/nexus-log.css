@@ -1,0 +1,408 @@
+#nexus-log-shell {
+  min-height: 100vh;
+  isolation: isolate;
+
+  /* Route-scoped design tokens. The Nexus page uses the admin token names,
+     but it does not render inside #admin-portal where those tokens normally
+     exist. Keeping the aliases here restores every surface and boundary
+     without changing the admin theme or any public route. */
+  --ad-text-primary: hsl(var(--foreground));
+  --ad-text-secondary: hsl(var(--muted-foreground));
+  --ad-text-tertiary: hsl(var(--muted-foreground) / 0.78);
+  --ad-primary: hsl(var(--accent));
+  --ad-primary-100: hsl(var(--accent) / 0.14);
+  --ad-primary-500: hsl(var(--accent));
+  --ad-primary-700: hsl(var(--accent) / 0.9);
+  --ad-success: hsl(var(--primary));
+  --ad-success-50: hsl(var(--primary) / 0.12);
+  --ad-success-600: hsl(var(--primary) / 0.95);
+  --ad-danger: hsl(var(--destructive));
+  --ad-danger-50: hsl(var(--destructive) / 0.12);
+  --ad-danger-600: hsl(var(--destructive) / 0.95);
+  --ad-bg-card: hsl(var(--card));
+  --ad-bg-muted: hsl(var(--muted));
+  --ad-border-subtle: hsl(var(--foreground) / 0.18);
+  --ad-border-default: hsl(var(--foreground) / 0.24);
+  --ad-shadow-neu-sm: 0 1px 2px hsl(var(--foreground) / 0.06);
+  --ad-shadow-neu-md:
+    0 12px 30px hsl(var(--foreground) / 0.08),
+    0 2px 6px hsl(var(--foreground) / 0.04);
+  --ad-shadow-neu-lg: 0 18px 46px hsl(var(--foreground) / 0.12);
+}
+
+#nexus-log-shell,
+#nexus-log-shell * {
+  box-sizing: border-box;
+}
+
+#nexus-log-shell .nexus-log-route {
+  min-height: 100vh;
+}
+
+.nexus-resource-trigger {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 32;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--ad-border-default);
+  border-radius: 999px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-primary);
+  box-shadow: var(--ad-shadow-neu-lg);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.nexus-resource-trigger:hover {
+  transform: translateY(-2px);
+  border-color: var(--ad-primary);
+}
+
+.nexus-resource-trigger:focus-visible,
+.nexus-resource-close:focus-visible,
+.nexus-resource-filters button:focus-visible,
+.nexus-resource-card:focus-visible {
+  outline: 2px solid var(--ad-primary);
+  outline-offset: 3px;
+}
+
+.nexus-resource-trigger strong {
+  display: grid;
+  min-width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--ad-primary-100);
+  color: var(--ad-primary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.nexus-resource-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 38;
+  display: block;
+  border: 0;
+  background: hsl(var(--foreground) / 0.34);
+  opacity: 0;
+  pointer-events: none;
+  cursor: default;
+  transition: opacity 180ms ease;
+}
+
+.nexus-resource-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nexus-resource-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  width: min(470px, 100vw);
+  flex-direction: column;
+  border-left: 1px solid var(--ad-border-default);
+  background: var(--ad-bg-card);
+  color: var(--ad-text-primary);
+  box-shadow: -18px 0 50px hsl(var(--foreground) / 0.16);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 220ms;
+}
+
+.nexus-resource-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.nexus-resource-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--ad-border-subtle);
+  background:
+    linear-gradient(135deg, var(--ad-primary-100), transparent 62%),
+    var(--ad-bg-card);
+}
+
+.nexus-resource-eyebrow {
+  margin-bottom: 7px;
+  color: var(--ad-primary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+}
+
+.nexus-resource-header h2 {
+  margin: 0;
+  color: var(--ad-text-primary);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.nexus-resource-header p {
+  max-width: 370px;
+  margin: 8px 0 0;
+  color: var(--ad-text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.nexus-resource-close {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 10px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-primary);
+  cursor: pointer;
+}
+
+.nexus-resource-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ad-border-subtle);
+  background: var(--ad-bg-muted);
+}
+
+.nexus-resource-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--ad-border-default);
+  border-radius: 10px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-tertiary);
+}
+
+.nexus-resource-search:focus-within {
+  border-color: var(--ad-primary);
+  box-shadow: 0 0 0 3px var(--ad-primary-100);
+}
+
+.nexus-resource-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ad-text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.nexus-resource-search input::placeholder {
+  color: var(--ad-text-tertiary);
+}
+
+.nexus-resource-filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.nexus-resource-filters button {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 999px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-secondary);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.nexus-resource-filters button.is-active {
+  border-color: var(--ad-primary);
+  background: var(--ad-primary-100);
+  color: var(--ad-primary);
+  font-weight: 600;
+}
+
+.nexus-resource-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px 90px;
+  background: var(--ad-bg-muted);
+}
+
+.nexus-resource-group + .nexus-resource-group {
+  margin-top: 24px;
+}
+
+.nexus-resource-group-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+  padding: 0 2px;
+  color: var(--ad-text-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.nexus-resource-group-title small {
+  display: grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 999px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-tertiary);
+  font-size: 9px;
+}
+
+.nexus-resource-grid {
+  display: grid;
+  gap: 9px;
+}
+
+.nexus-resource-card {
+  display: block;
+  padding: 13px 14px 14px;
+  border: 1px solid var(--ad-border-subtle);
+  border-radius: 12px;
+  background: var(--ad-bg-card);
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--ad-shadow-neu-sm);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.nexus-resource-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--ad-primary);
+  box-shadow: var(--ad-shadow-neu-md);
+}
+
+.nexus-resource-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  color: var(--ad-text-tertiary);
+}
+
+.nexus-resource-card-top > svg {
+  margin-left: auto;
+}
+
+.nexus-resource-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ad-primary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nexus-resource-recommended {
+  padding: 3px 7px;
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  font-weight: 600;
+}
+
+.nexus-resource-card h3 {
+  margin: 10px 0 5px;
+  color: var(--ad-text-primary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.nexus-resource-card p {
+  margin: 0;
+  color: var(--ad-text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.52;
+}
+
+.nexus-resource-empty {
+  padding: 28px 18px;
+  border: 1px dashed var(--ad-border-default);
+  border-radius: 12px;
+  background: var(--ad-bg-card);
+  color: var(--ad-text-secondary);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .nexus-resource-trigger {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .nexus-resource-drawer {
+    width: 100vw;
+    border-left: 0;
+  }
+
+  .nexus-resource-header {
+    padding: 18px 16px 16px;
+  }
+
+  .nexus-resource-controls,
+  .nexus-resource-scroll {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexus-resource-trigger,
+  .nexus-resource-backdrop,
+  .nexus-resource-drawer,
+  .nexus-resource-card {
+    transition: none;
+  }
+}
