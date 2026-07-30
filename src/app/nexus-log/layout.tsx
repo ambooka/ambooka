@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
 import NexusPracticeResources from "./NexusPracticeResources";
-import NexusResourceMediaRestorer from "./NexusResourceMediaRestorer";
 import NexusResourcePlacementGuardV2 from "./NexusResourcePlacementGuardV2";
 import NexusResources from "./NexusResources";
+import NexusStableMedia from "./NexusStableMedia";
 import "./resources/audit";
 import "./nexus-log.css";
 import "./nexus-practice.css";
@@ -18,7 +18,7 @@ export default function NexusLogLayout({
       <div className="nexus-log-route">{children}</div>
       <NexusResources />
       <NexusResourcePlacementGuardV2 />
-      <NexusResourceMediaRestorer />
+      <NexusStableMedia />
       <NexusPracticeResources />
     </div>
   );
