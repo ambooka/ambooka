@@ -114,10 +114,10 @@ export const systemsResources = {
     "Use a current .NET course for file processing, validation, tests, and packaging the Excel validator.",
   ],
   "laravel": [
-    "Laravel Bootcamp",
-    "Course",
+    "Laravel documentation",
+    "Reference",
     "Laravel",
-    "https://bootcamp.laravel.com/",
-    "Official guided build covering routes, validation, authentication, database records, and deployment concepts.",
+    "https://laravel.com/docs",
+    "Authoritative routing, validation, authentication, authorization, database, filesystem, testing, queues, and deployment reference.",
   ],
 } as const satisfies Record<string, NexusResourceTuple>;
