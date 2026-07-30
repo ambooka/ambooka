@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import NexusResourceMediaRestorer from "./NexusResourceMediaRestorer";
 import NexusResourcePlacementGuardV2 from "./NexusResourcePlacementGuardV2";
 import NexusResources from "./NexusResources";
 import "./nexus-log.css";
@@ -14,6 +15,7 @@ export default function NexusLogLayout({
       <div className="nexus-log-route">{children}</div>
       <NexusResources />
       <NexusResourcePlacementGuardV2 />
+      <NexusResourceMediaRestorer />
     </div>
   );
 }
