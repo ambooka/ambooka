@@ -136,7 +136,7 @@ export const aiResources = {
   ],
   "owasp_llm": [
     "OWASP Top 10 for LLM Applications",
-    "Read",
+    "Reference",
     "OWASP GenAI Security Project",
     "https://genai.owasp.org/llm-top-10/",
     "Prompt injection, sensitive data, supply chain, excessive agency, insecure output, and system prompt risks.",
