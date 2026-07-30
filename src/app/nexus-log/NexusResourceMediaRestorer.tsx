@@ -163,7 +163,8 @@ function restorePythonTemplateMedia(details: HTMLElement, grid: HTMLElement) {
     const progress =
       summary.textContent?.match(/self-check\s+\d+\/3/i)?.[0] ??
       "self-check 0/3";
-    summary.textContent = `Video + course + focused references · ${progress}`;
+    const next = `Video + course + focused references · ${progress}`;
+    if (summary.textContent !== next) summary.textContent = next;
   }
 }
 
