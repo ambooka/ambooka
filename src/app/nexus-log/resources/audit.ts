@@ -4,11 +4,19 @@ import { hasCompleteNexusResourceCoverage } from "./plans";
 import { hasCompleteNexusPracticeCoverage } from "./practice";
 
 const entryIds = NEXUS_LOG_ENTRIES.map((entry) => entry.id);
+const missingLearning = entryIds.filter(
+  (entryId) => !hasCompleteNexusResourceCoverage([entryId]),
+);
+const missingPractice = entryIds.filter(
+  (entryId) => !hasCompleteNexusPracticeCoverage([entryId]),
+);
 
 export const NEXUS_RESOURCE_AUDIT = {
   entries: entryIds.length,
-  learningComplete: hasCompleteNexusResourceCoverage(entryIds),
-  practiceComplete: hasCompleteNexusPracticeCoverage(entryIds),
+  learningComplete: missingLearning.length === 0,
+  practiceComplete: missingPractice.length === 0,
+  missingLearning,
+  missingPractice,
 } as const;
 
 if (
@@ -16,6 +24,8 @@ if (
   !NEXUS_RESOURCE_AUDIT.practiceComplete
 ) {
   throw new Error(
-    "Nexus resource audit failed: every sprint and deload must have learning and practice coverage.",
+    `Nexus resource audit failed. Missing learning: ${
+      missingLearning.join(", ") || "none"
+    }. Missing practice: ${missingPractice.join(", ") || "none"}.`,
   );
 }
