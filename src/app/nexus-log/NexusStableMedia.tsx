@@ -113,6 +113,21 @@ function getTaskText(host: HTMLElement) {
   );
 }
 
+function applyStableStyles(video: HTMLElement) {
+  video.style.overflow = "hidden";
+  video.style.border = "1px solid var(--ad-border-default)";
+  video.style.borderRadius = "12px";
+  video.style.background = "#090909";
+
+  const frame = video.querySelector<HTMLIFrameElement>("iframe");
+  if (!frame) return;
+  frame.style.display = "block";
+  frame.style.width = "100%";
+  frame.style.maxHeight = "min(68vh, 720px)";
+  frame.style.aspectRatio = "16 / 9";
+  frame.style.border = "0";
+}
+
 function stabilizeVideo(host: HTMLElement, task: string) {
   const details = host.querySelector<HTMLElement>(".nexus-task-learning");
   const video = details?.querySelector<HTMLElement>(".nexus-task-video");
@@ -122,6 +137,7 @@ function stabilizeVideo(host: HTMLElement, task: string) {
   const rule = MEDIA_RULES.find((candidate) => candidate.task.test(task));
   if (rule && title && !rule.allowed.test(title)) return;
 
+  applyStableStyles(video);
   video.hidden = false;
   video.classList.remove("nexus-task-video");
   video.classList.add("nexus-stable-video");
