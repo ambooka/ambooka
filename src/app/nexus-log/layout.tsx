@@ -4,6 +4,7 @@ import NexusPracticeResources from "./NexusPracticeResources";
 import NexusResourceMediaRestorer from "./NexusResourceMediaRestorer";
 import NexusResourcePlacementGuardV2 from "./NexusResourcePlacementGuardV2";
 import NexusResources from "./NexusResources";
+import "./resources/audit";
 import "./nexus-log.css";
 import "./nexus-practice.css";
 
