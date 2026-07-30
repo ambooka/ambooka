@@ -8,6 +8,19 @@ type Rule = {
   fallback: readonly [title: string, source: string, url: string, description: string];
 };
 
+type ExactResource = readonly [
+  kind: string,
+  title: string,
+  source: string,
+  url: string,
+  description: string,
+];
+
+type ExactResourceSet = {
+  task: RegExp;
+  resources: readonly ExactResource[];
+};
+
 const R = (
   task: RegExp,
   allowed: RegExp,
@@ -25,7 +38,7 @@ const RULES: Rule[] = [
   R(/ssh|ufw|fail2ban|vps|linux|server lockdown|bastion|deploy user|bootstrap/i, /linux|ubuntu|openssh|ssh|missing semester|server/i, "Ubuntu Server documentation", "Canonical", "https://documentation.ubuntu.com/server/", "Server administration, OpenSSH, firewall, networking, storage, and security."),
   R(/docker|compose|container|dockerfile/i, /docker|compose|container/i, "Docker Get Started", "Docker", "https://docs.docker.com/get-started/", "Images, containers, volumes, networks, Compose, and multi-container applications."),
   R(/https|tls|certificate|reverse proxy|nginx|ingress terminates|public domain/i, /nginx|https|tls|certificate|let.s encrypt|ingress/i, "NGINX beginner’s guide", "NGINX", "https://nginx.org/en/docs/beginners_guide.html", "Reverse proxying, routing, static content, and HTTPS-facing configuration."),
-  R(/github actions|ci\/cd|ci gate|ci runs|deploys to vps|deploy on merge|from ci|github security tab|security stage|release artifact|infrastructure-ci|devsecops-pipeline|security pipeline/i, /github actions|workflow|ci\/cd|github security|sarif/i, "GitHub Actions documentation", "GitHub", "https://docs.github.com/en/actions", "Workflow syntax, caching, artifacts, environments, secrets, and deployment."),
+  R(/github actions|ci\/cd|ci skeleton|ci gate|ci runs|deploys to vps|deploy on merge|from ci|github security tab|security stage|release artifact|infrastructure-ci|devsecops-pipeline|security pipeline/i, /github actions|workflow|ci\/cd|github security|sarif/i, "GitHub Actions documentation", "GitHub", "https://docs.github.com/en/actions", "Workflow syntax, caching, artifacts, environments, secrets, and deployment."),
   R(/backup|restore|pg_dump|pg_restore/i, /backup|restore|postgres|s3/i, "PostgreSQL backup and restore", "PostgreSQL", "https://www.postgresql.org/docs/current/backup.html", "Backup, dump, restore, and recovery guidance."),
   R(/fastapi|openapi|crud|api|route|endpoint|pagination|validation|requisition|integration test|seed script/i, /fastapi|openapi|pydantic|sqlalchemy|alembic|api/i, "FastAPI Tutorial", "FastAPI", "https://fastapi.tiangolo.com/tutorial/", "Typed APIs, validation, dependencies, authentication, testing, and deployment."),
   R(/auth|login|logout|password|jwt|rbac|abac|permission|authori[sz]ation|branch scoping|protected route|secure cookie|secret|secrets manager/i, /auth|jwt|owasp|asvs|permission|security|secret/i, "OWASP Cheat Sheet Series", "OWASP", "https://cheatsheetseries.owasp.org/", "Authentication, authorization, sessions, secrets, APIs, and access control."),
@@ -60,48 +73,200 @@ const RULES: Rule[] = [
   R(/physical recovery|sleep|exercise|reconnecting|protected rest/i, /sleep|physical activity|recovery/i, "About sleep", "CDC", "https://www.cdc.gov/sleep/about/index.html", "Use deloads for real recovery, learning consolidation, and sustainable performance."),
 ];
 
-const ACTIONS_RESOURCE = /github actions|workflow syntax|ci\/cd|github security tab/i;
-const ACTIONS_TASK = /github actions|ci\/cd|ci gate|ci runs|deploys to vps|deploy on merge|from ci|github security tab|security stage|release artifact|infrastructure-ci|devsecops-pipeline|security pipeline/i;
+const EXACT_RESOURCE_SETS: ExactResourceSet[] = [
+  {
+    task: /production python template:.*pyproject.*ruff.*mypy.*pytest.*ci skeleton/i,
+    resources: [
+      [
+        "Project setup",
+        "Python Packaging User Guide",
+        "Python Packaging Authority",
+        "https://packaging.python.org/en/latest/tutorials/packaging-projects/",
+        "Create the pyproject.toml, package layout, build configuration, dependencies, and editable installation correctly.",
+      ],
+      [
+        "Linting",
+        "Ruff documentation",
+        "Astral",
+        "https://docs.astral.sh/ruff/",
+        "Configure linting and formatting rules for a clean, repeatable Python project template.",
+      ],
+      [
+        "Typing",
+        "mypy documentation",
+        "mypy",
+        "https://mypy.readthedocs.io/en/stable/",
+        "Set up strict static type checking and understand how to resolve common annotation errors.",
+      ],
+      [
+        "Testing",
+        "pytest documentation",
+        "pytest",
+        "https://docs.pytest.org/en/stable/getting-started.html",
+        "Create the initial test layout, assertions, discovery configuration, and reliable local test command.",
+      ],
+      [
+        "CI substep",
+        "Build and test Python with GitHub Actions",
+        "GitHub",
+        "https://docs.github.com/en/actions/how-tos/writing-workflows/building-and-testing/building-and-testing-python",
+        "Use only for the final CI-skeleton substep that runs Ruff, mypy, and pytest automatically.",
+      ],
+    ],
+  },
+];
+
+const ACTIONS_RESOURCE = /github actions|workflow syntax|ci\/cd|github security tab|build and test python/i;
+const ACTIONS_TASK = /github actions|ci\/cd|ci skeleton|ci gate|ci runs|deploys to vps|deploy on merge|from ci|github security tab|security stage|release artifact|infrastructure-ci|devsecops-pipeline|security pipeline/i;
 
 function taskText(host: HTMLElement) {
   return host.parentElement?.querySelector<HTMLButtonElement>(":scope > button")?.textContent?.trim() ?? "";
 }
 
-function fallbackCard([title, source, url, description]: Rule["fallback"]) {
+function resourceCard(
+  [kind, title, source, url, description]: ExactResource,
+  className: string,
+) {
   const link = document.createElement("a");
-  link.className = "nexus-task-resource-card nexus-placement-fallback";
+  link.className = `nexus-task-resource-card ${className}`;
   link.href = url;
   link.target = "_blank";
   link.rel = "noreferrer";
-  link.innerHTML = `<span class="nexus-task-resource-kind">Reference</span><strong></strong><p></p><small></small>`;
+  link.innerHTML = `<span class="nexus-task-resource-kind"></span><strong></strong><p></p><small></small>`;
+  link.querySelector(".nexus-task-resource-kind")!.textContent = kind;
   link.querySelector("strong")!.textContent = title;
   link.querySelector("p")!.textContent = description;
   link.querySelector("small")!.textContent = source;
   return link;
 }
 
+function fallbackCard([title, source, url, description]: Rule["fallback"]) {
+  return resourceCard(
+    ["Reference", title, source, url, description],
+    "nexus-placement-fallback",
+  );
+}
+
+function hideLegacyHint(host: HTMLElement) {
+  const legacyHint = host.previousElementSibling;
+  if (legacyHint instanceof HTMLDivElement) {
+    legacyHint.hidden = true;
+    legacyHint.dataset.nexusLegacyHint = "hidden";
+  }
+}
+
+function normalisedTitle(card: HTMLAnchorElement) {
+  return (card.querySelector("strong")?.textContent ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function updateSummary(details: HTMLElement, visible: HTMLAnchorElement[]) {
+  const title = visible[0]?.querySelector("strong")?.textContent?.trim();
+  const summary = details.querySelector<HTMLElement>(
+    ".nexus-task-learning-summary small",
+  );
+  if (!title || !summary) return;
+
+  const progress =
+    summary.textContent?.match(/self-check\s+\d+\/3/i)?.[0] ??
+    "self-check 0/3";
+  const next = `${title} · ${progress}`;
+  if (summary.textContent !== next) summary.textContent = next;
+}
+
+function applyExactResources(
+  grid: HTMLElement,
+  details: HTMLElement,
+  exact: ExactResourceSet,
+  originalCards: HTMLAnchorElement[],
+) {
+  originalCards.forEach((card) => {
+    card.hidden = true;
+  });
+  grid.querySelector(".nexus-placement-fallback")?.remove();
+
+  const signature = exact.resources.map((item) => item[3]).join("|");
+  if (grid.dataset.nexusExactSignature !== signature) {
+    grid
+      .querySelectorAll(".nexus-placement-exact")
+      .forEach((card) => card.remove());
+    exact.resources.forEach((item) => {
+      grid.appendChild(resourceCard(item, "nexus-placement-exact"));
+    });
+    grid.dataset.nexusExactSignature = signature;
+  }
+
+  const video = details.querySelector<HTMLElement>(".nexus-task-video");
+  if (video) video.hidden = true;
+
+  const visible = Array.from(
+    grid.querySelectorAll<HTMLAnchorElement>(".nexus-placement-exact"),
+  );
+  updateSummary(details, visible);
+}
+
 function auditHost(host: HTMLElement) {
+  hideLegacyHint(host);
+
   const task = taskText(host);
   const details = host.querySelector<HTMLElement>(".nexus-task-learning");
   const grid = details?.querySelector<HTMLElement>(".nexus-task-resource-grid");
   if (!task || !details || !grid) return;
 
+  const cards = Array.from(
+    grid.querySelectorAll<HTMLAnchorElement>(
+      ".nexus-task-resource-card:not(.nexus-placement-fallback):not(.nexus-placement-exact)",
+    ),
+  );
+  const exact = EXACT_RESOURCE_SETS.find((set) => set.task.test(task));
+  if (exact) {
+    applyExactResources(grid, details, exact, cards);
+    return;
+  }
+
+  grid
+    .querySelectorAll(".nexus-placement-exact")
+    .forEach((card) => card.remove());
+  delete grid.dataset.nexusExactSignature;
+
   const matched = RULES.filter((rule) => rule.task.test(task));
-  const cards = Array.from(grid.querySelectorAll<HTMLAnchorElement>(".nexus-task-resource-card:not(.nexus-placement-fallback)"));
   cards.forEach((card) => {
     const content = card.textContent ?? "";
-    const wrongActions = ACTIONS_RESOURCE.test(content) && !ACTIONS_TASK.test(task);
-    card.hidden = wrongActions || (matched.length > 0 && !matched.some((rule) => rule.allowed.test(content)));
+    const wrongActions =
+      ACTIONS_RESOURCE.test(content) && !ACTIONS_TASK.test(task);
+    card.hidden =
+      wrongActions ||
+      (matched.length > 0 &&
+        !matched.some((rule) => rule.allowed.test(content)));
+  });
+
+  const seenTitles = new Set<string>();
+  cards.forEach((card) => {
+    if (card.hidden) return;
+    const key = normalisedTitle(card);
+    if (key && seenTitles.has(key)) {
+      card.hidden = true;
+      return;
+    }
+    if (key) seenTitles.add(key);
   });
 
   const video = details.querySelector<HTMLElement>(".nexus-task-video");
   const videoTitle = video?.querySelector("iframe")?.title ?? "";
   if (video && videoTitle) {
-    const wrongActions = ACTIONS_RESOURCE.test(videoTitle) && !ACTIONS_TASK.test(task);
-    video.hidden = wrongActions || (matched.length > 0 && !matched.some((rule) => rule.allowed.test(videoTitle)));
+    const wrongActions =
+      ACTIONS_RESOURCE.test(videoTitle) && !ACTIONS_TASK.test(task);
+    video.hidden =
+      wrongActions ||
+      (matched.length > 0 &&
+        !matched.some((rule) => rule.allowed.test(videoTitle)));
   }
 
-  let inserted = grid.querySelector<HTMLAnchorElement>(".nexus-placement-fallback");
+  let inserted = grid.querySelector<HTMLAnchorElement>(
+    ".nexus-placement-fallback",
+  );
   let visible = cards.filter((card) => !card.hidden);
   if (visible.length > 0) {
     inserted?.remove();
@@ -116,13 +281,7 @@ function auditHost(host: HTMLElement) {
     visible = [inserted];
   }
 
-  const title = visible[0]?.querySelector("strong")?.textContent?.trim();
-  const summary = details.querySelector<HTMLElement>(".nexus-task-learning-summary small");
-  if (title && summary) {
-    const progress = summary.textContent?.match(/self-check\s+\d+\/3/i)?.[0] ?? "self-check 0/3";
-    const next = `${title} · ${progress}`;
-    if (summary.textContent !== next) summary.textContent = next;
-  }
+  updateSummary(details, visible);
 }
 
 export default function NexusResourcePlacementGuardV2() {
@@ -133,11 +292,17 @@ export default function NexusResourcePlacementGuardV2() {
     const audit = () => {
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
-        shell.querySelectorAll<HTMLElement>(".nexus-task-resource-host").forEach(auditHost);
+        shell
+          .querySelectorAll<HTMLElement>(".nexus-task-resource-host")
+          .forEach(auditHost);
       });
     };
     const observer = new MutationObserver(audit);
-    observer.observe(shell, { childList: true, subtree: true, characterData: true });
+    observer.observe(shell, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
     audit();
     return () => {
       window.cancelAnimationFrame(frame);
