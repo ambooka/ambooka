@@ -45,7 +45,7 @@ export const cloudSecurityResources = {
   ],
   "aws_exam": [
     "AWS Solutions Architect Associate exam guide",
-    "Read",
+    "Reference",
     "Amazon Web Services",
     "https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03.html",
     "Current SAA-C03 scope, domains, task statements, and exam preparation guidance.",
