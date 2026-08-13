@@ -95,16 +95,16 @@ export const PROGRAM_GUIDE_SECTIONS: ProgramGuideSection[] = [
     ],
   },
   {
-    title: "Six-month phase map",
+    title: "Sprint phase map",
     summary:
       "The curriculum is arranged as a progression from foundation to launch.",
     bullets: [
-      "Weeks 1–2: foundation and deployment proof.",
-      "Weeks 3–6: full-stack business platform and first job-ready milestone.",
-      "Weeks 7–8: data engineering and orchestration.",
-      "Weeks 9–13: AWS, Terraform, Kubernetes, security, DevSecOps.",
-      "Weeks 14–19: ML/MLOps, RAG/LLMOps, AI safety.",
-      "Weeks 20–24: systems breadth, agents, portfolio polish, and launch.",
+      "Sprints 1–2: foundation and deployment proof.",
+      "Sprints 3–6: full-stack business platform and first job-ready milestone.",
+      "Sprints 7–8: data engineering and orchestration.",
+      "Sprints 9–13: AWS, Terraform, Kubernetes, security, DevSecOps.",
+      "Sprints 14–19: ML/MLOps, RAG/LLMOps, AI safety.",
+      "Sprints 20–24: systems breadth, agents, portfolio polish, and launch.",
     ],
   },
   {
@@ -112,7 +112,7 @@ export const PROGRAM_GUIDE_SECTIONS: ProgramGuideSection[] = [
     summary:
       "The plan is designed to produce evidence that recruiters can scan quickly.",
     bullets: [
-      "98 recruiter-visible artifacts span foundations, business stack, cloud, IaC, platform, security, DevSecOps, ML/MLOps, RAG/LLMOps, AI safety, systems, and agents.",
+      "97 named deliverables, including one stretch deliverable, span foundations, business stack, cloud, IaC, platform, security, DevSecOps, ML/MLOps, RAG/LLMOps, AI safety, systems, and agents.",
       "The 8 anchor projects are the ones to polish hardest: business platform, data platform, cloud platform, security platform, MLOps platform, RAG/LLMOps platform, AI safety layer, and systems/security tools.",
       "Every artifact needs a README, screenshots or demo proof, a short problem/solution statement, and a clear resume bullet.",
     ],
@@ -494,7 +494,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
     mission:
       "Never click-ops again: define the entire AWS infrastructure as code, reproducible and version-controlled.",
     days: [
-      "Terraform layout, provider config, S3 remote backend + DynamoDB lock",
+      "Terraform layout, provider config, versioned S3 remote backend + locking supported by the installed Terraform/backend version",
       "VPC module: subnets, IGW, NAT, route tables, NACLs, outputs",
       "Security groups + EC2 compute module",
       "RDS module with Secrets Manager password rotation",
@@ -507,7 +507,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
       "infrastructure-ci-pipeline",
     ],
     dod: [
-      "Full infra reprovisions via terraform apply in <15 min",
+      "Fresh apply is timed by stage; <15 min is the target, and any environment-specific target change is measured and explicitly approved",
       "Remote state, no state in git",
       "All secrets from Secrets Manager/env, never in code",
       "CI runs plan on every PR",
@@ -539,7 +539,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
     dod: [
       "Every service has scoped ServiceAccount",
       "NetworkPolicies whitelist-only",
-      "No plain K8s Secrets for sensitive values",
+      "No plaintext sensitive values in committed K8s Secret manifests; runtime Secret delivery, RBAC, and etcd/control-plane exposure are controlled",
       "Ingress terminates TLS + rate-limits",
       "Security telemetry panel live",
     ],
@@ -599,7 +599,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
       "Critical findings block merge automatically",
       "Secret scan catches seeded credential pre-commit + CI",
       "SBOM published per release tag",
-      "Dashboard shows 4-week posture trend",
+      "Dashboard shows dated scan history; a 4-week trend claim requires four real weekly snapshots",
       "SARIF visible in GitHub Security tab",
     ],
   },
@@ -719,7 +719,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
       "Streaming renders token-by-token",
       "Debug view shows chunks/scores/prompt",
       "30+ test questions documented",
-      "MCP server exposes tools to a generic client",
+      "MCP server exposes at least one narrow authorized tool to a generic client",
     ],
   },
   {
@@ -803,7 +803,7 @@ const RAW: Omit<SprintEntry, "id" | "kind">[] = [
       "Scanner finds seeded secrets across languages",
       "False positives suppressible via config, not rule-disable",
       "JSON/SARIF report parseable by CI with correct exit codes",
-      "Integrity verifier detects any artifact modification",
+      "Integrity verifier detects artifact changes relative to an authenticated or otherwise trusted manifest",
       "README explains rules, entropy threshold, integration",
     ],
   },
