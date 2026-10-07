@@ -1,3 +1,4 @@
+import SufroneShowcase from "@/components/SufroneShowcase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
@@ -76,7 +77,7 @@ export default async function CaseStudyPage({
     : [];
 
   return (
-    <main className="space-y-7">
+    <article className="space-y-7">
       <Link
         href="/case-studies"
         className="inline-flex items-center gap-2 text-sm font-bold text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--accent))]"
@@ -85,6 +86,7 @@ export default async function CaseStudyPage({
         Back to case studies
       </Link>
 
+      {slug !== "sufrone-education" ? (
       <section className="overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.84] p-6 shadow-md sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.38fr)] lg:gap-8">
         <div className="min-w-0">
           <div className="flex flex-wrap gap-2">
@@ -133,15 +135,18 @@ export default async function CaseStudyPage({
               icon={<Activity size={16} />}
             />
             <InfoCard
-              label="Evidence"
-              value={`${evidence.length} proof points`}
+              label="Implementation"
+              value={`${evidence.length} engineering practices`}
               icon={<Sparkles size={16} />}
             />
           </aside>
         )}
       </section>
+      ) : <h1 className="text-3xl font-bold leading-tight text-[hsl(var(--foreground))]">Sufrone Education</h1>}
 
-      {project && (
+      {slug === "sufrone-education" && <SufroneShowcase detail />}
+
+      {project && slug !== "sufrone-education" && (
         <section className="grid gap-4 lg:grid-cols-[minmax(0,0.72fr)_minmax(18rem,0.28fr)]">
           <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-6 shadow-sm">
             <p className="text-[10px] font-black uppercase tracking-widest text-[hsl(var(--accent))]">
@@ -189,14 +194,7 @@ export default async function CaseStudyPage({
                   </p>
                 </div>
               ))
-            ) : (
-              <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-4 shadow-sm">
-                <p className="text-sm font-semibold text-[hsl(var(--muted-foreground))]">
-                  Metrics are described in the results section where public
-                  disclosure is safe.
-                </p>
-              </div>
-            )}
+            ) : null}
           </div>
         </section>
       )}
@@ -214,12 +212,12 @@ export default async function CaseStudyPage({
         />
         {evidence.length > 0 && (
           <CaseBlock
-            title="Public Evidence"
+            title="Engineering practices"
             items={evidence.map(([key]) => formatEvidenceLabel(key))}
           />
         )}
       </div>
-    </main>
+    </article>
   );
 }
 

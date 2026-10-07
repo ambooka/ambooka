@@ -108,6 +108,7 @@ const formatDate = (dateStr: string): string => {
  * Format date range for experience/education
  */
 const formatDateRange = (startDate: string, endDate: string | null, isCurrent: boolean): string => {
+  if (!startDate) return isCurrent ? 'Ongoing' : 'Date not specified'
   const start = formatDate(startDate)
   const end = isCurrent ? 'Present' : (endDate ? formatDate(endDate) : 'Present')
   return `${start} - ${end}`

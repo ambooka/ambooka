@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PROFESSIONAL_SUMMARY, PROFESSIONAL_TITLE } from "@/data/professional-profile";
 import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -12,10 +13,10 @@ import {
 } from "@/lib/motion";
 
 const NAV_LINKS = [
-  { label: "Dashboard", href: "/" },
-  { label: "Resume", href: "/resume" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Blog", href: "/blog" },
+  { label: "Overview", href: "/" },
+  { label: "CV", href: "/resume" },
+  { label: "Work", href: "/portfolio" },
+  { label: "Writing", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -63,8 +64,7 @@ export default function Footer({ profile }: { profile?: FooterProfile | null }) 
               ambooka
             </Link>
             <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed max-w-[32ch]">
-              {profile?.about_text ||
-                "Software engineer delivering backend systems, integrations, business systems, and reliable IT infrastructure."}
+              {PROFESSIONAL_SUMMARY}
             </p>
             {/* Social row */}
             <div className="flex items-center gap-2 pt-1">
@@ -127,7 +127,7 @@ export default function Footer({ profile }: { profile?: FooterProfile | null }) 
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[hsl(var(--accent))] shadow-[0_0_0_0.2rem_hsl(var(--accent)/0.15)]" />
                 <span className="text-sm font-medium text-[hsl(var(--foreground)/0.8)]">
-                  {profile?.title || "Software Engineer"}
+                  {PROFESSIONAL_TITLE || "Software Engineer"}
                 </span>
               </div>
               <Link

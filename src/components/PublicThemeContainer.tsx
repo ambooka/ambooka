@@ -61,7 +61,7 @@ export default function PublicThemeContainer({ children, profile }: { children: 
     return (
         <div className={cn(
             "w-full min-h-screen relative",
-            isLoaded ? "opacity-100" : "opacity-0",
+            "opacity-100",
             "transition-opacity duration-200"
         )}>
             <UtilityBar

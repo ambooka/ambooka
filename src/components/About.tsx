@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import GitHubStatsWidget from "@/components/widgets/GitHubStatsWidget";
-import LatestBlogWidget from "@/components/widgets/LatestBlogWidget";
+import FeaturedWorkWidget from "@/components/widgets/FeaturedWorkWidget";
+import type { Project } from "@/types/portfolio";
 import EngineeringBentoGrid from "@/components/widgets/EngineeringBentoGrid";
 import ProfileWidget from "@/components/widgets/ProfileWidget";
 import { cn } from "@/lib/utils";
@@ -25,7 +26,7 @@ import {
   defaultViewport,
 } from "@/lib/motion";
 
-const PROFESSIONAL_FOCUS = "Backend · Systems · Infrastructure";
+const PROFESSIONAL_FOCUS = "Software · ERPNext/Frappe · Integration";
 
 // --- Interfaces (from original file) ---
 interface Testimonial {
@@ -127,6 +128,7 @@ interface AboutProps {
     caseStudyCount?: number;
     buildAreas?: BuildArea[];
     proofStats?: ProofStat[];
+    featuredProjects?: Project[];
   };
 }
 
@@ -176,7 +178,7 @@ export default function About({
 
   const [caseStudyCount] = useState(initialData?.caseStudyCount || 0);
   const [projectCount] = useState(initialData?.projectCount || 0);
-  const [kpiStats, setKpiStats] = useState<KpiStats>({
+  const [, setKpiStats] = useState<KpiStats>({
     years_experience:
       initialData?.personalInfo?.kpi_stats?.years_experience || "3+",
     expertise_breakdown: initialData?.personalInfo?.kpi_stats
@@ -192,9 +194,9 @@ export default function About({
   );
 
   const focusAreas = [
-    "Backend & Full-Stack Engineering",
+    "Software Development",
     "APIs & Systems Integration",
-    "IT Infrastructure & ERP",
+    "ERPNext / Frappe",
   ];
 
   const buildAreaContent = initialData?.buildAreas || [];
@@ -289,15 +291,15 @@ export default function About({
                 className="!text-[1.75rem] sm:!text-3xl lg:!text-4xl font-extrabold mb-3 leading-tight tracking-tight text-[hsl(var(--foreground))]"
               >
                 <span className="bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--secondary))] bg-clip-text text-transparent">
-                  {personalInfo?.title || PROFESSIONAL_TITLE}
+                  {PROFESSIONAL_TITLE}
                 </span>
               </motion.h1>
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-1 sm:mt-2">
                 <p className="text-[0.8rem] md:text-base text-[hsl(var(--muted-foreground))] leading-relaxed">
-                  {kpiStats.role || PROFESSIONAL_TITLE} •
+                  {PROFESSIONAL_TITLE} •
                   <span className="text-[hsl(var(--accent))] font-semibold ml-1">
-                    {kpiStats.focus || PROFESSIONAL_SCOPE}
+                    {PROFESSIONAL_SCOPE}
                   </span>
                 </p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))]/10 to-[hsl(var(--secondary))]/10 border border-[hsl(var(--accent))]/20 text-[9px] font-bold text-[hsl(var(--accent))] uppercase tracking-wider">
@@ -398,6 +400,7 @@ export default function About({
           <motion.div
             className="dashboard-grid grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2"
             data-testid="dashboard-grid"
+            data-design-contract="restored dashboard: profile and education left; featured projects right; shared independent work experience"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -421,7 +424,7 @@ export default function About({
               className="flex min-w-0 flex-col"
             >
               <div className="h-full min-w-0 w-full">
-                <LatestBlogWidget />
+                <FeaturedWorkWidget projects={initialData?.featuredProjects} />
               </div>
             </motion.div>
           </motion.div>

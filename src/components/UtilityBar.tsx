@@ -18,7 +18,7 @@ export default function UtilityBar({ resumeTrigger = 0 }: UtilityBarProps) {
       {/* Floating pill — trigger buttons inside backdrop-blur container */}
       <div
         className={cn(
-          "fixed z-[1050] flex",
+          "hidden md:flex fixed z-[1050]",
           "md:right-5 md:top-1/2 md:-translate-y-1/2 md:bottom-auto",
           "right-4 bottom-[calc(5.6rem+env(safe-area-inset-bottom))] md:bottom-auto",
           "flex-row items-center gap-1.5 md:flex-col md:gap-3",

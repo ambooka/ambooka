@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 const githubConfig = {
   username: "ambooka",
-  token: process.env.NEXT_PUBLIC_GITHUB_TOKEN || "",
+
   featuredThreshold: 5,
   maxRepos: 100,
   sortBy: "updated" as const,
@@ -57,11 +57,11 @@ export default async function PortfolioPage() {
   let initialProjects: GitHubProject[] | undefined;
 
   try {
-    const githubService = new GitHubService(githubConfig.token);
+    const githubService = new GitHubService(process.env.GITHUB_TOKEN);
     const repos = await githubService.getRepositories(githubConfig.username, {
       maxRepos: githubConfig.maxRepos,
       sortBy: githubConfig.sortBy,
-      includePrivate: Boolean(githubConfig.token),
+      includePrivate: false,
     });
 
     initialProjects = repos

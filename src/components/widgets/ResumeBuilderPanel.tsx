@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Download, Printer, X, Loader2 } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client'
 import { generateVariantResumeHTML, type ResumeData as ATSResumeData } from '@/lib/resume-generator'
+import { withSufroneExperience, PROFESSIONAL_TITLE, PROFESSIONAL_SUMMARY } from '@/data/professional-profile'
+import { educationProject } from '@/data/sufrone-education'
 import { cn } from '@/lib/utils'
 
 interface PersonalInfo {
@@ -54,16 +56,16 @@ export default function ResumeBuilderPanel({ resumeTrigger = 0, hideButton = fal
     const combinedProjects: ProjectItem[] = (projects.data || []).map(p => ({ id: p.id, title: p.title, description: p.description, stack: p.stack, github_url: p.github_url, live_url: p.live_url, is_featured: true as const }))
 
     const resumeData: ResumeData = {
-      personal_info: personal.data as unknown as ResumeData['personal_info'],
+      personal_info: {...personal.data, title: PROFESSIONAL_TITLE, summary: PROFESSIONAL_SUMMARY} as unknown as ResumeData['personal_info'],
       education: edu.data || [],
-      experience: exp.data || [],
+      experience: withSufroneExperience(exp.data || []),
       skills: (skills.data || []) as SkillItem[],
-      projects: combinedProjects
+      projects: [{id: educationProject.slug, title: educationProject.title, description: educationProject.recruiterSummary, stack: educationProject.stack, live_url: educationProject.proof.liveDemo, is_featured: true}, ...combinedProjects.filter(p => p.id !== educationProject.slug)]
     }
 
     return generateVariantResumeHTML(resumeData as unknown as ATSResumeData, {
-      roleTitle: personal.data.title,
-      roleSummary: personal.data.summary || undefined,
+      roleTitle: PROFESSIONAL_TITLE,
+      roleSummary: PROFESSIONAL_SUMMARY,
       portfolioUrl: 'ambooka.dev',
     })
   }, [])

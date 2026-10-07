@@ -337,7 +337,7 @@ export default function Sidebar({
               isModal ? "text-[0.78rem]" : "text-xs line-clamp-2",
             )}
           >
-            {profile.about_text || PROFESSIONAL_SUMMARY}
+            {PROFESSIONAL_SUMMARY}
           </p>
         </div>
         <div className="shrink-0 max-sm:-order-1 max-sm:justify-self-center">

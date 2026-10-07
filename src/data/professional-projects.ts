@@ -8,6 +8,7 @@ export const portfolioMode = "professional-proof" as const;
 
 export const statusLegend: Record<ProjectStatus, string> = {
   completed: "Completed",
+  demo: "Hosted demo",
   archived: "Archived",
 };
 

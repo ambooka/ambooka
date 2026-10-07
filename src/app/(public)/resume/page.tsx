@@ -1,6 +1,8 @@
+import { withEducationResumeProjects } from "@/data/sufrone-education";
 import Resume from "@/components/Resume";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  withSufroneExperience,
   PROFESSIONAL_SUMMARY,
   PROFESSIONAL_TITLE,
 } from "@/data/professional-profile";
@@ -83,9 +85,9 @@ export default async function ResumePage() {
         updated_at: new Date().toISOString(),
       } as PersonalInfoMock),
     education: educationResult.data || [],
-    experience: experienceResult.data || [],
+    experience: withSufroneExperience(experienceResult.data || []),
     skills: skills,
-    projects: projectsResult.data || [],
+    projects: withEducationResumeProjects(projectsResult.data || []),
   };
 
   // JSON-LD Person schema for SEO/LLM discoverability

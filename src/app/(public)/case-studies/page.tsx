@@ -44,7 +44,7 @@ export default async function CaseStudiesPage() {
     { label: "Proof style", value: "Outcome-led" },
   ];
   return (
-    <main className="space-y-8">
+    <article className="space-y-8">
       <section className="overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.82] p-6 shadow-md sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.38fr)] lg:gap-8">
         <div className="min-w-0">
           <span className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--accent))/0.22] bg-[hsl(var(--accent))/0.1] px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[hsl(var(--accent))]">
@@ -164,6 +164,6 @@ export default async function CaseStudiesPage() {
           );
         })}
       </section>
-    </main>
+    </article>
   );
 }

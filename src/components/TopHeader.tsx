@@ -8,10 +8,10 @@ import { cn } from '@/lib/utils'
 import { navIndicatorTransition, buttonTap } from '@/lib/motion'
 
 const NAV_ITEMS = [
-    { id: 'about', label: 'Dashboard', href: '/' },
-    { id: 'resume', label: 'Resume', href: '/resume' },
-    { id: 'portfolio', label: 'Portfolio', href: '/portfolio' },
-    { id: 'blog', label: 'Blog', href: '/blog' },
+    { id: 'about', label: 'Overview', href: '/' },
+    { id: 'resume', label: 'CV', href: '/resume' },
+    { id: 'portfolio', label: 'Work', href: '/portfolio' },
+    { id: 'blog', label: 'Writing', href: '/blog' },
     { id: 'contact', label: 'Contact', href: '/contact' }
 ] as const
 

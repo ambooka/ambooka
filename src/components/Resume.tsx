@@ -1,4 +1,5 @@
 "use client";
+import { withEducationResumeProjects } from "@/data/sufrone-education";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -10,6 +11,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  withSufroneExperience,
+  CV_URL,
   PROFESSIONAL_SUMMARY,
   PROFESSIONAL_TITLE,
 } from "@/data/professional-profile";
@@ -342,9 +345,9 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
       setResumeData({
         personal_info: pInfo,
         education: educationResult.data || [],
-        experience: experienceResult.data || [],
+        experience: withSufroneExperience(experienceResult.data || []),
         skills: skillsResult.data || [],
-        projects: projectsResult.data || [],
+        projects: withEducationResumeProjects(projectsResult.data || []),
       });
     } catch (err: unknown) {
       console.error("Error fetching resume data:", err);
@@ -371,6 +374,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
     endDate: string | null,
     isCurrent: boolean,
   ): string => {
+  if (!startDate) return isCurrent ? 'Ongoing' : 'Date not specified';
     const start = formatDate(startDate, false);
     const end = formatDate(endDate, isCurrent);
     return `${start} — ${end}`;
@@ -471,8 +475,9 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
           transition={scrollRevealTransition}
         >
           <p className="text-sm leading-7 text-[hsl(var(--muted-foreground))]">
-            {resumeData.personal_info.summary || PROFESSIONAL_SUMMARY}
+            {PROFESSIONAL_SUMMARY}
           </p>
+          <a href={CV_URL} download className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-[hsl(var(--primary))] px-4 py-2 text-sm font-semibold text-[hsl(var(--primary-foreground))]">Download ERPNext / Frappe CV</a>
           <p className="mt-4 text-xs font-bold text-[hsl(var(--foreground))]">
             {[
               resumeData.personal_info.email,
@@ -483,70 +488,6 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
               .join(" · ")}
           </p>
         </motion.section>
-
-        {/* Education Section */}
-        {resumeData.education && resumeData.education.length > 0 && (
-          <motion.section
-            className="mb-14"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={defaultViewport}
-            transition={scrollRevealTransition}
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 flex items-center justify-center bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] rounded-xl border border-[hsl(var(--accent))/0.2] shadow-sm">
-                <Book size={24} />
-              </div>
-              <h3 className="text-xl font-black text-[hsl(var(--foreground))] uppercase tracking-tight">
-                Education
-              </h3>
-            </div>
-
-            <div className="relative border-l-2 border-[hsl(var(--border))] ml-6 pb-2 space-y-10 pl-8">
-              {resumeData.education.map((edu) => (
-                <div key={edu.id} className="relative group">
-                  {/* Timeline Dot */}
-                  <span className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-[hsl(var(--accent))] border-4 border-[hsl(var(--card))] shadow-sm transition-transform duration-300 group-hover:scale-125" />
-
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-                    <h4 className="text-lg font-bold text-[hsl(var(--foreground))]">
-                      {edu.institution}
-                    </h4>
-                    <span className="shrink-0 inline-flex items-center text-[hsl(var(--accent))] font-black text-[11px] uppercase tracking-widest bg-[hsl(var(--accent))/0.1] px-3 py-1 rounded-full border border-[hsl(var(--accent))/0.2]">
-                      {formatDateRange(
-                        edu.start_date,
-                        edu.end_date || null,
-                        edu.is_current,
-                      )}
-                    </span>
-                  </div>
-
-                  {(edu.degree || edu.field_of_study) && (
-                    <p className="text-[15px] font-semibold text-[hsl(var(--foreground))] mb-3">
-                      {edu.degree}
-                      {edu.degree && edu.field_of_study ? " in " : ""}
-                      {edu.field_of_study}
-                    </p>
-                  )}
-
-                  {edu.grade && (
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[hsl(var(--muted))] border border-[hsl(var(--border))] rounded-full mb-4 text-[13px] font-medium text-[hsl(var(--muted-foreground))]">
-                      <span className="text-base">🎓</span>
-                      {edu.grade}
-                    </div>
-                  )}
-
-                  {edu.description && (
-                    <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
-                      {edu.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.section>
-        )}
 
         {/* Experience Section */}
         {resumeData.experience && resumeData.experience.length > 0 && (
@@ -568,7 +509,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
             </div>
 
             <div className="relative border-l-2 border-[hsl(var(--border))] ml-6 pb-2 space-y-12 pl-8">
-              {resumeData.experience.map((exp) => (
+              {withSufroneExperience(resumeData.experience).map((exp) => (
                 <div key={exp.id} className="relative group">
                   {/* Timeline Dot */}
                   <span className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-[hsl(var(--accent))] border-4 border-[hsl(var(--card))] shadow-sm transition-transform duration-300 group-hover:scale-125" />
@@ -668,7 +609,7 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
               </h3>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              {resumeData.projects.map((project) => (
+              {withEducationResumeProjects(resumeData.projects).map((project) => (
                 <article
                   key={project.id}
                   className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.8] p-5"
@@ -685,6 +626,70 @@ export default function Resume({ isActive = false, initialData }: ResumeProps) {
                     </p>
                   )}
                 </article>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {/* Education Section */}
+        {resumeData.education && resumeData.education.length > 0 && (
+          <motion.section
+            className="mb-14"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={defaultViewport}
+            transition={scrollRevealTransition}
+          >
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 flex items-center justify-center bg-[hsl(var(--accent))/0.1] text-[hsl(var(--accent))] rounded-xl border border-[hsl(var(--accent))/0.2] shadow-sm">
+                <Book size={24} />
+              </div>
+              <h3 className="text-xl font-black text-[hsl(var(--foreground))] uppercase tracking-tight">
+                Education
+              </h3>
+            </div>
+
+            <div className="relative border-l-2 border-[hsl(var(--border))] ml-6 pb-2 space-y-10 pl-8">
+              {resumeData.education.map((edu) => (
+                <div key={edu.id} className="relative group">
+                  {/* Timeline Dot */}
+                  <span className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full bg-[hsl(var(--accent))] border-4 border-[hsl(var(--card))] shadow-sm transition-transform duration-300 group-hover:scale-125" />
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <h4 className="text-lg font-bold text-[hsl(var(--foreground))]">
+                      {edu.institution}
+                    </h4>
+                    <span className="shrink-0 inline-flex items-center text-[hsl(var(--accent))] font-black text-[11px] uppercase tracking-widest bg-[hsl(var(--accent))/0.1] px-3 py-1 rounded-full border border-[hsl(var(--accent))/0.2]">
+                      {formatDateRange(
+                        edu.start_date,
+                        edu.end_date || null,
+                        edu.is_current,
+                      )}
+                    </span>
+                  </div>
+
+                  {(edu.degree || edu.field_of_study) && (
+                    <p className="text-[15px] font-semibold text-[hsl(var(--foreground))] mb-3">
+                      {edu.degree}
+                      {edu.degree && edu.field_of_study ? " in " : ""}
+                      {edu.field_of_study}
+                    </p>
+                  )}
+
+                  {edu.grade && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-[hsl(var(--muted))] border border-[hsl(var(--border))] rounded-full mb-4 text-[13px] font-medium text-[hsl(var(--muted-foreground))]">
+                      <span className="text-base">🎓</span>
+                      {edu.grade}
+                    </div>
+                  )}
+
+                  {edu.description && (
+                    <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed">
+                      {edu.description}
+                    </p>
+                  )}
+                </div>
               ))}
             </div>
           </motion.section>

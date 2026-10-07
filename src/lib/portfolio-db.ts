@@ -1,3 +1,6 @@
+import { educationProject, educationCaseStudy } from "@/data/sufrone-education";
+import { projects as sourceProjects } from "@/data/professional-projects";
+import { caseStudies as sourceStudies } from "@/data/case-studies";
 import { supabase } from "@/integrations/supabase/client";
 import type {
   CaseStudy,
@@ -47,9 +50,9 @@ export const fetchCompletedProjects = async (): Promise<Project[]> => {
     .eq("status", "completed")
     .order("display_order", { ascending: true });
 
-  if (error) throw error;
+  if (error) console.error("Portfolio content unavailable; using reviewed release content.");
 
-  return (data || []).map((project) => ({
+  const records: Project[] = (data || []).map((project) => ({
     slug: project.slug,
     title: project.title,
     oneLine: project.one_line || project.description || project.title,
@@ -70,6 +73,9 @@ export const fetchCompletedProjects = async (): Promise<Project[]> => {
     recruiterSummary:
       project.recruiter_summary || project.one_line || project.description || "",
   }));
+  const existing = records.length ? records : sourceProjects;
+  const priority = ["sufrone-education", "hebatullah-erpnext-implementation", "mpesa-payment-integration-library"];
+  return [educationProject, ...existing.filter(p => p.slug !== educationProject.slug)].map(p => ({...p, displayOrder: priority.includes(p.slug) ? priority.indexOf(p.slug) : 10 + p.displayOrder})).sort((a,b) => a.displayOrder-b.displayOrder);
 };
 
 export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
@@ -78,9 +84,9 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
     .select("*")
     .order("created_at", { ascending: true });
 
-  if (error) throw error;
+  if (error) console.error("Portfolio content unavailable; using reviewed release content.");
 
-  return (data || []).map((study) => ({
+  const records: CaseStudy[] = (data || []).map((study) => ({
     slug: study.slug,
     projectSlug: study.project_slug || study.slug,
     title: study.title,
@@ -94,4 +100,5 @@ export const fetchCaseStudies = async (): Promise<CaseStudy[]> => {
     results: asStringArray(study.results),
     futureImprovements: asStringArray(study.future_improvements),
   }));
+  return [educationCaseStudy, ...(records.length ? records : sourceStudies).filter(p => p.slug !== educationCaseStudy.slug)];
 };

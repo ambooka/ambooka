@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local review artifacts
+.local/
+.impeccable/review/portfolio/*.png
+.impeccable/review/portfolio-row/*.png

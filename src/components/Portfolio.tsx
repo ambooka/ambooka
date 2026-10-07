@@ -1,5 +1,7 @@
 "use client";
 
+import SufroneShowcase from "@/components/SufroneShowcase";
+import { statusLegend } from "@/data/professional-projects";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -177,7 +179,7 @@ export default function Portfolio({
         const repos = await githubService.getRepositories(github.username, {
           maxRepos: github.maxRepos,
           sortBy: github.sortBy,
-          includePrivate: Boolean(github.token),
+          includePrivate: false,
         });
 
         const mappedProjects = repos.map((repo) => ({
@@ -263,7 +265,7 @@ export default function Portfolio({
   const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
 
   const visibleFeaturedProjects = featuredProjects
-    .filter((project) => project.featured)
+    .filter((project) => project.featured && project.slug !== "sufrone-education")
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .slice(0, FEATURED_LIMIT);
 
@@ -293,15 +295,17 @@ export default function Portfolio({
           animate="visible"
           transition={scrollRevealTransition}
         >
-          <h2 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] relative inline-block pb-3">
+          <h1 className="text-3xl font-extrabold text-[hsl(var(--foreground))] tracking-[-0.03em] relative inline-block pb-3">
             Portfolio
             <div className="absolute bottom-0 left-0 w-10 h-1 rounded-full bg-gradient-to-r from-[hsl(var(--accent))] to-[hsl(var(--secondary))]" />
-          </h2>
+          </h1>
           <p className="mt-4 text-[0.94rem] leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[600px]">
-            Selected completed projects with clear business context,
+            Selected development and implementation work with clear business context,
             implementation details, and verifiable outcomes.
           </p>
         </motion.header>
+
+        <SufroneShowcase />
 
         {visibleFeaturedProjects.length > 0 && (
           <section className="mb-14" aria-labelledby="featured-work-title">
@@ -313,7 +317,7 @@ export default function Portfolio({
                 id="featured-work-title"
                 className="text-2xl font-black tracking-tight text-[hsl(var(--foreground))]"
               >
-                Professional Proof
+                Supporting projects
               </h3>
               <p className="text-sm leading-relaxed text-[hsl(var(--muted-foreground))] max-w-[780px]">
                 Curated projects with real business context, implementation
@@ -358,7 +362,7 @@ export default function Portfolio({
                         {project.category.replace(/_/g, " ")}
                       </span>
                       <span className="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))/0.65] px-3 py-1 text-[0.64rem] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
-                        {project.status.replace(/_/g, " ")}
+                        {statusLegend[project.status]}
                       </span>
                     </div>
 
@@ -369,7 +373,7 @@ export default function Portfolio({
                       {project.oneLine}
                     </p>
 
-                    <div className="mt-4 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.58] p-4">
+                    <div className="mt-4 border-t border-[hsl(var(--border))] pt-4">
                       <p className="text-[0.72rem] font-bold uppercase tracking-widest text-[hsl(var(--muted-foreground))]">
                         Impact
                       </p>
@@ -422,7 +426,7 @@ export default function Portfolio({
                       {project.proof.caseStudy && (
                         <Link
                           href={project.proof.caseStudy}
-                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--accent))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.9] focus-visible:outline-none focus-visible:ring-0"
+                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--accent))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-white shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--foreground))] focus-visible:ring-offset-2"
                         >
                           Case Study <ArrowUpRight size={14} />
                         </Link>
@@ -432,7 +436,7 @@ export default function Portfolio({
                           href={project.proof.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--muted))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.08] hover:text-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-0"
+                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--muted))] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] shadow-sm transition-colors hover:bg-[hsl(var(--accent))/0.08] hover:text-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--foreground))] focus-visible:ring-offset-2"
                         >
                           Source <Github size={14} />
                         </a>
@@ -442,7 +446,7 @@ export default function Portfolio({
                           href={project.proof.liveDemo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--card))/0.68] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--accent))/0.08] hover:text-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-0"
+                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[hsl(var(--card))/0.68] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--accent))/0.08] hover:text-[hsl(var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--foreground))] focus-visible:ring-offset-2"
                         >
                           Live <ExternalLink size={14} />
                         </a>
@@ -459,7 +463,7 @@ export default function Portfolio({
           <section className="mb-14" aria-labelledby="projects-title">
             <div className="mb-6 flex flex-col gap-2">
               <span className="text-[0.68rem] font-bold uppercase tracking-[0.22em] text-[hsl(var(--accent))]">
-                Completed Work
+                Selected Work
               </span>
               <h3
                 id="projects-title"
@@ -469,7 +473,7 @@ export default function Portfolio({
               </h3>
               <p className="max-w-[760px] text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
                 The complete project collection, managed from the portfolio
-                database and limited to delivered work.
+                database, alongside reviewed release content.
               </p>
             </div>
 
@@ -751,7 +755,7 @@ export default function Portfolio({
                                 className={cn(
                                   "flex-1 flex items-center justify-center gap-2 rounded-xl py-2.5",
                                   "bg-[hsl(var(--accent))] text-white text-[11px] font-bold uppercase tracking-widest",
-                                  "shadow-sm transition-all hover:bg-[hsl(var(--accent))/0.9] hover:-translate-y-px focus-visible:outline-none focus-visible:ring-0",
+                                  "shadow-sm transition-all hover:bg-[hsl(var(--accent))/0.9] hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--foreground))] focus-visible:ring-offset-2",
                                 )}
                               >
                                 <Github size={14} /> Source Code

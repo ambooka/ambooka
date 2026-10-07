@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
+  withSufroneExperience,
+  SUFRONE_EXPERIENCE,
   PROFESSIONAL_SUMMARY,
   PROFESSIONAL_TITLE,
 } from "@/data/professional-profile";
@@ -99,8 +101,8 @@ export default function ProfileWidget({
       end_date: string | null;
       is_current: boolean;
     }[]
-  >([]);
-  const displayTitle = profile.title || PROFESSIONAL_TITLE;
+  >([SUFRONE_EXPERIENCE]);
+  const displayTitle = PROFESSIONAL_TITLE;
 
   useEffect(() => {
     const fetchExperience = async () => {
@@ -109,7 +111,7 @@ export default function ProfileWidget({
         .select("*")
         .order("start_date", { ascending: false })
         .limit(3);
-      if (data) setExperiences(data);
+      if (data) setExperiences(withSufroneExperience(data));
     };
     fetchExperience();
   }, []);
@@ -181,17 +183,17 @@ export default function ProfileWidget({
                   Computer Science Graduate
                 </span>
               </div>
-              <h3 className="m-0 text-[1.1rem] sm:text-xl font-extrabold leading-tight tracking-tight text-[hsl(var(--foreground))] truncate">
+              <h3 className="m-0 text-[1.1rem] sm:text-xl font-extrabold leading-tight tracking-tight text-[hsl(var(--foreground))] break-words">
                 {profile.full_name || "Abdulrahman Ambooka Msah"}
               </h3>
-              <div className="text-[0.78rem] sm:text-[0.85rem] text-[hsl(var(--muted-foreground))] font-medium mt-0.5 truncate">
+              <div className="text-[0.78rem] sm:text-[0.85rem] text-[hsl(var(--muted-foreground))] font-medium mt-0.5 break-words">
                 {displayTitle}
               </div>
             </div>
           </div>
 
           <p className="m-0 text-[0.84rem] leading-relaxed text-[hsl(var(--muted-foreground))]">
-            {profile.about_text || PROFESSIONAL_SUMMARY}
+            {PROFESSIONAL_SUMMARY}
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2.5">
@@ -299,7 +301,7 @@ export default function ProfileWidget({
               </span>
             <div className="flex min-w-0 flex-col gap-1.5">
                 {experiences.map((exp) => {
-                  const startYear = new Date(exp.start_date).getFullYear();
+                  const startYear = exp.start_date ? new Date(exp.start_date).getFullYear() : null;
                   const endYear = exp.is_current
                     ? "Present"
                     : exp.end_date
@@ -316,7 +318,7 @@ export default function ProfileWidget({
                       </div>
 
                       <div className="flex min-w-0 flex-1 flex-col justify-center">
-                        <span className="truncate text-xs font-bold leading-tight text-[hsl(var(--foreground))]">
+                        <span className="break-words text-xs font-bold leading-snug text-[hsl(var(--foreground))]">
                           {exp.position}
                         </span>
                         <span className="mt-0.5 flex min-w-0 items-center gap-1 text-[9.5px] font-semibold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">
@@ -325,7 +327,7 @@ export default function ProfileWidget({
                           </span>
                           <span aria-hidden="true">·</span>
                           <span className="shrink-0">
-                            {startYear}–{endYear}
+                            {startYear === null ? "Ongoing" : `${startYear}–${endYear}`}
                           </span>
                         </span>
                       </div>

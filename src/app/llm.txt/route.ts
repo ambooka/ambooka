@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  PROFESSIONAL_SCOPE,
+  PROFESSIONAL_SUMMARY,
   PROFESSIONAL_TITLE,
 } from "@/data/professional-profile";
 
@@ -63,7 +63,7 @@ export async function GET() {
 # ${personalInfo?.full_name || "Abdulrahman Ambooka Msah"} - ${title}
 
 ## Identity & Core Focus
-${personalInfo?.summary || PROFESSIONAL_SCOPE}
+${PROFESSIONAL_SUMMARY}
 
 - **Role**: ${title}
 - **Location**: Nairobi, Kenya

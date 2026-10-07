@@ -1,4 +1,4 @@
-export type ProjectStatus = "completed" | "archived";
+export type ProjectStatus = "completed" | "demo" | "archived";
 
 export type ProjectCategory =
   | "backend"
@@ -43,7 +43,7 @@ export type Project = {
   category: ProjectCategory;
   displayOrder: number;
   status: ProjectStatus;
-  completionPercent: number;
+  completionPercent: number | null;
   featured?: boolean;
   anchor?: boolean;
   problem: string;

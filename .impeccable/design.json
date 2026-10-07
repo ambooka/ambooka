@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T14:37:06.891029+00:00",
+  "title": "Design System: Ambooka Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Olive",
+        "tonalRamp": [
+          "oklch(15% 0.0684 134.33)",
+          "oklch(27% 0.0684 134.33)",
+          "oklch(39% 0.0684 134.33)",
+          "oklch(51% 0.0684 134.33)",
+          "oklch(63% 0.0684 134.33)",
+          "oklch(75% 0.0684 134.33)",
+          "oklch(87% 0.0684 134.33)",
+          "oklch(95% 0.0684 134.33)"
+        ]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Bronze",
+        "tonalRamp": [
+          "oklch(15% 0.0957 59.17)",
+          "oklch(27% 0.0957 59.17)",
+          "oklch(39% 0.0957 59.17)",
+          "oklch(51% 0.0957 59.17)",
+          "oklch(63% 0.0957 59.17)",
+          "oklch(75% 0.0957 59.17)",
+          "oklch(87% 0.0957 59.17)",
+          "oklch(95% 0.0957 59.17)"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Warm sand",
+        "tonalRamp": [
+          "oklch(15% 0.0771 75.07)",
+          "oklch(27% 0.0771 75.07)",
+          "oklch(39% 0.0771 75.07)",
+          "oklch(51% 0.0771 75.07)",
+          "oklch(63% 0.0771 75.07)",
+          "oklch(75% 0.0771 75.07)",
+          "oklch(87% 0.0771 75.07)",
+          "oklch(95% 0.0771 75.07)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Cream",
+        "tonalRamp": [
+          "oklch(15% 0.0694 84.07)",
+          "oklch(27% 0.0694 84.07)",
+          "oklch(39% 0.0694 84.07)",
+          "oklch(51% 0.0694 84.07)",
+          "oklch(63% 0.0694 84.07)",
+          "oklch(75% 0.0694 84.07)",
+          "oklch(87% 0.0694 84.07)",
+          "oklch(95% 0.0694 84.07)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Deep olive charcoal",
+        "tonalRamp": [
+          "oklch(15% 0.0396 130.43)",
+          "oklch(27% 0.0396 130.43)",
+          "oklch(39% 0.0396 130.43)",
+          "oklch(51% 0.0396 130.43)",
+          "oklch(63% 0.0396 130.43)",
+          "oklch(75% 0.0396 130.43)",
+          "oklch(87% 0.0396 130.43)",
+          "oklch(95% 0.0396 130.43)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Light cream",
+        "tonalRamp": [
+          "oklch(15% 0.0604 84.25)",
+          "oklch(27% 0.0604 84.25)",
+          "oklch(39% 0.0604 84.25)",
+          "oklch(51% 0.0604 84.25)",
+          "oklch(63% 0.0604 84.25)",
+          "oklch(75% 0.0604 84.25)",
+          "oklch(87% 0.0604 84.25)",
+          "oklch(95% 0.0604 84.25)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted cream",
+        "tonalRamp": [
+          "oklch(15% 0.0618 87.39)",
+          "oklch(27% 0.0618 87.39)",
+          "oklch(39% 0.0618 87.39)",
+          "oklch(51% 0.0618 87.39)",
+          "oklch(63% 0.0618 87.39)",
+          "oklch(75% 0.0618 87.39)",
+          "oklch(87% 0.0618 87.39)",
+          "oklch(95% 0.0618 87.39)"
+        ]
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Muted olive text",
+        "tonalRamp": [
+          "oklch(15% 0.0396 130.43)",
+          "oklch(27% 0.0396 130.43)",
+          "oklch(39% 0.0396 130.43)",
+          "oklch(51% 0.0396 130.43)",
+          "oklch(63% 0.0396 130.43)",
+          "oklch(75% 0.0396 130.43)",
+          "oklch(87% 0.0396 130.43)",
+          "oklch(95% 0.0396 130.43)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Warm boundary",
+        "tonalRamp": [
+          "oklch(15% 0.0571 87.44)",
+          "oklch(27% 0.0571 87.44)",
+          "oklch(39% 0.0571 87.44)",
+          "oklch(51% 0.0571 87.44)",
+          "oklch(63% 0.0571 87.44)",
+          "oklch(75% 0.0571 87.44)",
+          "oklch(87% 0.0571 87.44)",
+          "oklch(95% 0.0571 87.44)"
+        ]
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Field boundary",
+        "tonalRamp": [
+          "oklch(15% 0.0571 87.44)",
+          "oklch(27% 0.0571 87.44)",
+          "oklch(39% 0.0571 87.44)",
+          "oklch(51% 0.0571 87.44)",
+          "oklch(63% 0.0571 87.44)",
+          "oklch(75% 0.0571 87.44)",
+          "oklch(87% 0.0571 87.44)",
+          "oklch(95% 0.0571 87.44)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Global display",
+        "purpose": "Base h1; scoped components may override."
+      },
+      "headline": {
+        "displayName": "Global headline",
+        "purpose": "Base h2."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shared-small",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
+        "purpose": "Shared cards and buttons."
+      },
+      {
+        "name": "shared-medium",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07)",
+        "purpose": "Header and supporting panels."
+      },
+      {
+        "name": "phone-image",
+        "value": "0 8px 22px rgb(30 35 25 / .12)",
+        "purpose": "Overlapping phone screenshots."
+      },
+      {
+        "name": "mobile-navigation",
+        "value": "0 16px 45px rgba(0,0,0,0.22)",
+        "purpose": "Fixed phone navigation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "transition-fast",
+        "value": "0.15s cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Existing global transition token."
+      },
+      {
+        "name": "transition-base",
+        "value": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Existing global transition token."
+      },
+      {
+        "name": "navigation-indicator",
+        "value": "spring(stiffness: 380, damping: 30)",
+        "purpose": "Framer Motion active navigation indicator."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "showcase-stack",
+        "value": "800px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ],
+    "notes": [
+      "Tonal ramps are synthesized OKLCH display previews, not additional implementation tokens.",
+      "Light-theme primitives are in DESIGN.md; runtime dark overrides remain authoritative in globals.css.",
+      "Snippets require the application semantic CSS variables. Navigation preview reproduces appearance, not routing or spring behavior.",
+      "Global zero-width focus outline and existing component-specific focus treatments are documented as implemented; no focus states were invented for passive previews.",
+      "Featured projects preview uses the shipped /images/education/school-erp.png asset; the host must serve that public image. The old homepage introduction CSS is unused and has no active token or preview."
+    ]
+  },
+  "components": [
+    {
+      "name": "Showcase primary action",
+      "kind": "button",
+      "description": "Work and Education case-study action: The filled project and work action.",
+      "html": "<a class=\"ds-action ds-primary\" href=\"#work\">Explore the case study</a>",
+      "css": ".ds-action{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;font-size:.85rem;font-weight:650;border-radius:10px;text-decoration:none;}.ds-action:hover{filter:brightness(.95)}.ds-action:focus-visible{outline:2px solid hsl(var(--foreground));outline-offset:4px;}.ds-primary{background:hsl(var(--primary));color:hsl(var(--primary-foreground));}",
+      "refersTo": "showcase-primary"
+    },
+    {
+      "name": "Showcase secondary action",
+      "kind": "button",
+      "description": "Work and Education case-study action: The bordered demo or CV action.",
+      "html": "<a class=\"ds-action ds-secondary\" href=\"#demo\">Try the school demo</a>",
+      "css": ".ds-action{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;font-size:.85rem;font-weight:650;border-radius:10px;text-decoration:none;}.ds-action:hover{filter:brightness(.95)}.ds-action:focus-visible{outline:2px solid hsl(var(--foreground));outline-offset:4px;}.ds-secondary{background:hsl(var(--card));color:hsl(var(--foreground));border:1px solid hsl(var(--border));}",
+      "refersTo": "showcase-secondary"
+    },
+    {
+      "name": "Shared default button",
+      "kind": "button",
+      "description": "Default shared Button primitive.",
+      "html": "<button class=\"ds-button ds-default\">Open Resume</button>",
+      "css": ".ds-button{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-sm,0 1px 3px rgb(0 0 0/.06));}.ds-button:focus-visible{outline:none;box-shadow:0 0 0 2px hsl(var(--background)),0 0 0 4px hsl(var(--ring));}.ds-button:disabled{pointer-events:none;opacity:.5;}.ds-default{border:0;background:hsl(var(--primary));color:hsl(var(--primary-foreground));}.ds-default:hover{background:hsl(var(--primary)/.9);}"
+    },
+    {
+      "name": "Shared outline button",
+      "kind": "button",
+      "description": "Outlined shared Button primitive.",
+      "html": "<button class=\"ds-button ds-outline\">Contact Me</button>",
+      "css": ".ds-button{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:8px 16px;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-sm,0 1px 3px rgb(0 0 0/.06));}.ds-button:focus-visible{outline:none;box-shadow:0 0 0 2px hsl(var(--background)),0 0 0 4px hsl(var(--ring));}.ds-button:disabled{pointer-events:none;opacity:.5;}.ds-outline{border:1px solid hsl(var(--border));background:transparent;color:hsl(var(--foreground));}.ds-outline:hover{background:hsl(var(--accent)/.1);color:hsl(var(--accent));}"
+    },
+    {
+      "name": "Shared input",
+      "kind": "input",
+      "description": "Transparent field with an explicit keyboard focus ring.",
+      "html": "<input class=\"ds-input\" aria-label=\"Email\" type=\"email\" placeholder=\"Email address\">",
+      "css": ".ds-input{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:flex;height:40px;width:100%;border:1px solid hsl(var(--input));border-radius:8px;background:transparent;color:hsl(var(--foreground));padding:8px 12px;font-size:.875rem;transition:color .15s,border-color .15s;}.ds-input::placeholder{color:hsl(var(--muted-foreground));}.ds-input:focus-visible{outline:none;box-shadow:0 0 0 2px hsl(var(--background)),0 0 0 4px hsl(var(--ring));}.ds-input:disabled{cursor:not-allowed;opacity:.5;}",
+      "refersTo": "input"
+    },
+    {
+      "name": "Shared card",
+      "kind": "card",
+      "description": "Shared Card structure; supporting sections may override radius and hover.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-head\"><h3>Business systems</h3><p>ERPNext implementation and connected workflows.</p></div></article>",
+      "css": ".ds-card{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);border:1px solid hsl(var(--border));border-radius:12px;background:hsl(var(--card));color:hsl(var(--card-foreground));box-shadow:var(--shadow-sm,0 1px 3px rgb(0 0 0/.06));transition:all .3s;}.ds-card-head{padding:24px;}.ds-card h3{margin:0;font-size:1.125rem;font-weight:600;line-height:1.25;letter-spacing:-.025em;}.ds-card p{margin:6px 0 0;font-size:.875rem;color:hsl(var(--muted-foreground));}"
+    },
+    {
+      "name": "Hosted demo tag",
+      "kind": "chip",
+      "description": "The scoped Education status label.",
+      "html": "<span class=\"ds-status\">Hosted demo</span>",
+      "css": ".ds-status{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:inline-block;padding:5px 10px;border-radius:6px;background:hsl(var(--primary)/.1);color:hsl(var(--foreground));font-size:.8rem;font-weight:600;}"
+    },
+    {
+      "name": "Desktop navigation pills",
+      "kind": "nav",
+      "description": "Static preview of the public header navigation.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary navigation\"><a class=\"ds-nav-item ds-active\" href=\"#overview\" aria-current=\"page\">Overview</a><a class=\"ds-nav-item\" href=\"#cv\">CV</a><a class=\"ds-nav-item\" href=\"#work\">Work</a><a class=\"ds-nav-item\" href=\"#writing\">Writing</a><a class=\"ds-nav-item\" href=\"#contact\">Contact</a></nav>",
+      "css": ".ds-nav{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);display:flex;gap:4px;padding:4px;border-radius:9999px;border:1px solid hsl(var(--border));background:hsl(var(--foreground)/.05);overflow-x:auto;}.ds-nav-item{display:inline-flex;align-items:center;justify-content:center;min-height:2.35rem;padding:10px 14px;border-radius:9999px;font-size:.8rem;font-weight:600;white-space:nowrap;color:hsl(var(--muted-foreground));text-decoration:none;transition:color .2s,background .2s;}.ds-nav-item:hover{color:hsl(var(--foreground));background:hsl(var(--card)/.52);}.ds-active{color:hsl(var(--foreground));background:hsl(var(--card)/.92);box-shadow:var(--shadow-md,0 4px 6px -1px rgb(0 0 0/.07));}"
+    },
+    {
+      "name": "Featured projects widget",
+      "kind": "custom",
+      "description": "Homepage right-hand dashboard panel; follows the profile on phone. Uses the shipped ERP screenshot and compact supporting project rows.",
+      "html": "<section class=\"ds-feature-panel\"><div class=\"ds-feature-heading\"><h2>Featured projects</h2><a href=\"/portfolio\">View all</a></div><article class=\"ds-feature-education\"><a class=\"ds-feature-preview\" href=\"/case-studies/sufrone-education\" aria-label=\"Explore Sufrone Education case study\"><img src=\"/images/education/school-erp.png\" alt=\"Bayinah ERPNext demonstration showing a teacher\u2019s school workspace\"></a><h3>Sufrone Education</h3><p class=\"ds-feature-status\">ERPNext / Frappe development \u00b7 Hosted demo</p><p class=\"ds-feature-contribution\">My contribution: custom apps, Python business logic, DocTypes, permissions, workflows and APIs.</p><div class=\"ds-feature-actions\"><a class=\"ds-feature-primary\" href=\"/case-studies/sufrone-education\">Case study</a><a href=\"https://education.sufrone.com\" target=\"_blank\" rel=\"noopener noreferrer\">Try demo<span class=\"ds-feature-sr\"> (opens in a new tab)</span></a></div><p class=\"ds-feature-note\">Fictional records \u00b7 Private source \u00b7 Active development</p></article><div class=\"ds-feature-supporting\"><article><div><h3><a href=\"/case-studies/hebatullah-erpnext-implementation\">Hebatullah ERPNext implementation</a></h3><p>Accounting, item catalogue and procurement workflows for a trading company.</p></div></article><article><div><h3><a href=\"/case-studies/mpesa-payment-integration-library\">M-Pesa payment integration</a></h3><p>Production Daraja API integration: STK Push, B2C, C2B and reliable callbacks.</p></div></article></div></section>",
+      "css": ".ds-feature-panel{font-family:var(--font-sans,Geist,ui-sans-serif,system-ui,sans-serif);max-width:620px;}.ds-feature-panel{height:100%;min-width:0;padding:24px;border:1px solid hsl(var(--border));border-radius:24px;background:hsl(var(--card)/.8);box-shadow:0 1px 3px rgb(0 0 0/.06);display:flex;flex-direction:column;color:hsl(var(--foreground))}.ds-feature-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.ds-feature-heading h2{font-size:1.5rem;line-height:1.2;letter-spacing:-.02em;font-weight:700}.ds-feature-heading>a{display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:.8rem;font-weight:600;white-space:nowrap}.ds-feature-preview{display:block;overflow:hidden;aspect-ratio:2.2;border:1px solid hsl(var(--border));border-radius:12px;background:white}.ds-feature-preview img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}.ds-feature-education h3{font-size:1.25rem;font-weight:700;line-height:1.3;margin:16px 0 6px}.ds-feature-education p{font-size:.85rem;line-height:1.7;color:hsl(var(--muted-foreground));margin-bottom:10px}.ds-feature-education .ds-feature-status{font-size:.75rem;font-weight:600;color:hsl(var(--foreground))}.ds-feature-education .ds-feature-contribution{font-size:.8rem}.ds-feature-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0 10px}.ds-feature-actions a{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;font-size:.8rem;font-weight:650}.ds-feature-actions .ds-feature-primary{padding:10px 16px;border-radius:10px;background:hsl(var(--primary));color:hsl(var(--primary-foreground))}.ds-feature-education .ds-feature-note{font-size:.72rem;margin-bottom:16px}.ds-feature-supporting{display:grid;margin-top:auto}.ds-feature-supporting article{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0;border-top:1px solid hsl(var(--border))}.ds-feature-supporting article:last-child{padding-bottom:0}.ds-feature-supporting h3{font-size:.94rem;font-weight:650;line-height:1.4;margin:0 0 6px}.ds-feature-supporting p{font-size:.8rem;line-height:1.6;color:hsl(var(--muted-foreground));margin:0;max-width:60ch}.ds-feature-supporting article>a{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;flex-shrink:0}.ds-feature-panel a:focus-visible{outline:2px solid hsl(var(--foreground));outline-offset:4px}.ds-feature-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:640px){.ds-feature-panel{padding:20px}.ds-feature-heading h2{font-size:1.3rem}.ds-feature-heading{margin-bottom:16px}}\n"
+    }
+  ],
+  "narrative": {
+    "northStar": "Inspectable work in the incumbent portfolio",
+    "overview": "The public portfolio retains its established warm cream surfaces, olive actions, bronze accents and Geist typography. Rounded panels and translucent navigation frame the work with a personal, approachable identity. This documents the incumbent system and its approved extension; it does not introduce a replacement visual world.\n\nThe homepage preserves its original gradient-heading banner and dashboard row: Build Profile & Education on the left and Featured projects on the right, replacing the article panel. Independent Sufrone work appears in the profile experience list. Rounded cards, tinted backgrounds, shadows and animated reveals remain part of that dashboard. The standalone Education showcase on Work and the Education case study uses the same palette in a flatter, image-led presentation with dividers and compact sentence-case actions.",
+    "keyCharacteristics": [
+      "Warm cream, olive and bronze with theme-aware semantic colors.",
+      "Geist hierarchy, the incumbent gradient banner heading and scoped project typography.",
+      "Restored homepage dashboard panels; flatter screenshot-led Work and case-study showcase.",
+      "Real work imagery with explicit captions and responsive ordering."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Theme Rule",
+        "body": "Use the source's semantic variables for theme-aware surfaces and text rather than hard-coding the light-theme extraction.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do reuse the semantic HSL variables so surfaces follow the selected theme.",
+      "Do preserve Geist, the cream/olive/bronze identity and the user-pinned homepage gradient heading.",
+      "Do use actual work screenshots and descriptive captions on project showcases.",
+      "Do keep scoped showcase measurements distinct from the shared component defaults.",
+      "Do reserve bottom-navigation safe-area space on phone layouts.",
+      "Do preserve the homepage banner and profile-first dashboard row; use Featured projects in the right panel on desktop."
+    ],
+    "donts": [
+      "Don't replace the approved visual world with a new palette or font pairing.",
+      "Don't turn the standalone Education showcase composition into a mandatory template for every route or move it ahead of the homepage profile row.",
+      "Don't assume global focus styling provides a visible ring; reuse the explicit component focus treatments.",
+      "Don't describe all supporting components as flat or motionless; their existing shadows and reveals remain implemented."
+    ]
+  }
+}

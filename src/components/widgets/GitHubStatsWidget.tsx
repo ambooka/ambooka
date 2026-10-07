@@ -8,7 +8,7 @@ import FeaturedProjectsCarousel from "@/components/widgets/FeaturedProjectsCarou
 import { cn } from "@/lib/utils";
 
 const GITHUB_USERNAME = "ambooka";
-const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
+const GITHUB_TOKEN = "";
 const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
 
 interface LanguageData {
@@ -136,7 +136,7 @@ export default function GitHubStatsWidget({
         const repos = await githubService.getRepositories(GITHUB_USERNAME, {
           maxRepos: 100,
           sortBy: "updated",
-          includePrivate: Boolean(GITHUB_TOKEN),
+          includePrivate: false,
         });
 
         const totalStars = repos.reduce(

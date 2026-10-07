@@ -1,3 +1,4 @@
+import { fetchCompletedProjects } from "@/lib/portfolio-db";
 import About from "@/components/About";
 import { supabase } from "@/integrations/supabase/client";
 import { GitHubService } from "@/services/github";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 const GITHUB_USERNAME = "ambooka";
-const GITHUB_TOKEN = process.env.NEXT_PUBLIC_GITHUB_TOKEN || "";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "";
 
 export default async function DashboardPage() {
   // Fetch initial data for About component
@@ -30,6 +31,7 @@ export default async function DashboardPage() {
     caseStudiesCountResult,
     buildAreasResult,
     proofStatsResult,
+    reviewedProjects,
   ] =
     await Promise.all([
       supabase.from("personal_info").select("*").single(),
@@ -53,6 +55,7 @@ export default async function DashboardPage() {
         .select("label, value, display_order")
         .eq("section", "hero")
         .order("display_order"),
+      fetchCompletedProjects(),
     ]);
 
   const personalInfo = personalInfoResult.data;
@@ -76,7 +79,7 @@ export default async function DashboardPage() {
     const repos = await githubService.getRepositories(GITHUB_USERNAME, {
       maxRepos: 100,
       sortBy: "updated",
-      includePrivate: Boolean(GITHUB_TOKEN),
+      includePrivate: false,
     });
 
     const totalStars = repos.reduce(
@@ -219,8 +222,9 @@ export default async function DashboardPage() {
     testimonials: testimonials ?? [],
     technologies,
     githubStats: githubStats ?? undefined,
-    projectCount: projectsCountResult.count || 0,
-    caseStudyCount: caseStudiesCountResult.count || 0,
+    projectCount: reviewedProjects.length || projectsCountResult.count || 0,
+    caseStudyCount: (caseStudiesCountResult.count || 0) + 1,
+    featuredProjects: reviewedProjects.filter(project => project.featured),
     buildAreas: buildAreasResult.data || [],
     proofStats: proofStatsResult.data || [],
   };
