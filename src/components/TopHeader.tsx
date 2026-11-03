@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Github, Linkedin, PanelLeft, Send } from 'lucide-react'
+import { Github, Linkedin, NotebookPen, PanelLeft, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navIndicatorTransition, buttonTap } from '@/lib/motion'
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
     { id: 'resume', label: 'CV', href: '/resume' },
     { id: 'portfolio', label: 'Work', href: '/portfolio' },
     { id: 'blog', label: 'Writing', href: '/blog' },
+    { id: 'nexus-log', label: 'Nexus Log', href: '/nexus-log' },
     { id: 'contact', label: 'Contact', href: '/contact' }
 ] as const
 

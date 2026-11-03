@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Briefcase, FileText, LayoutDashboard, MessageSquare, Send } from 'lucide-react'
+import { Briefcase, FileText, LayoutDashboard, MessageSquare, NotebookPen, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { navIndicatorTransition } from '@/lib/motion'
 
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
     { id: 'resume', label: 'CV', href: '/resume', icon: <FileText size={20} /> },
     { id: 'portfolio', label: 'Work', href: '/portfolio', icon: <Briefcase size={20} /> },
     { id: 'blog', label: 'Writing', href: '/blog', icon: <MessageSquare size={20} /> },
+    { id: 'nexus-log', label: 'Nexus Log', href: '/nexus-log', icon: <NotebookPen size={20} /> },
     { id: 'contact', label: 'Contact', href: '/contact', icon: <Send size={20} /> }
 ] as const
 
@@ -34,7 +35,7 @@ export default function MobileBottomNav({ className = '' }: MobileBottomNavProps
             className
         )}>
             <nav className={cn(
-                "glass-nav pointer-events-auto mx-auto grid h-[4.25rem] max-w-[30rem] grid-cols-5 items-stretch rounded-[1.5rem] px-1.5 py-1.5",
+                "glass-nav pointer-events-auto mx-auto grid h-[4.25rem] max-w-[30rem] grid-cols-6 items-stretch rounded-[1.5rem] px-1.5 py-1.5",
                 "border border-[hsl(var(--border))] bg-[hsl(var(--card))/0.96] backdrop-blur-2xl",
                 "shadow-[0_16px_45px_rgba(0,0,0,0.22)] ring-1 ring-white/10"
             )}>

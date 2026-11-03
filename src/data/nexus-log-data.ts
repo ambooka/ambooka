@@ -1,4 +1,4 @@
-// Content for the NEXUS Field Log tracker (hidden route: /nexus-log).
+// Content for the NEXUS Field Log tracker at /nexus-log.
 // This mirrors the NEXUS Engineering Logbook (War Mode v3.2). Only the
 // checklist *state* (booleans + notes) lives in Supabase — the copy below
 // is static so editing wording never requires a migration.
